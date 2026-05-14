@@ -1,0 +1,32 @@
+{
+    "name": "@nellisauction/pulumi-stripe",
+    "version": "0.0.0",
+    "description": "A Pulumi package for managing Stripe resources.",
+    "keywords": [
+        "pulumi",
+        "stripe",
+        "category/infrastructure"
+    ],
+    "homepage": "https://github.com/nellisauction/pulumi-stripe",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/nellisauction/pulumi-stripe.git"
+    },
+    "license": "Apache-2.0",
+    "scripts": {
+        "build": "tsc"
+    },
+    "dependencies": {
+        "@pulumi/pulumi": "^3.142.0"
+    },
+    "devDependencies": {
+        "@types/node": "^20",
+        "typescript": "^4.7.0"
+    },
+    "pulumi": {
+        "resource": true,
+        "name": "stripe",
+        "version": "0.0.0",
+        "server": "github://api.github.com/nellisauction/pulumi-stripe"
+    }
+}
