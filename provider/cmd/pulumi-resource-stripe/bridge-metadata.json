@@ -1,1 +1,351 @@
-{}
+{
+    "auto-aliasing": {
+        "resources": {
+            "stripe_billing_meter": {
+                "current": "stripe:index/billingMeter:BillingMeter",
+                "fields": {
+                    "customer_mapping": {
+                        "maxItemsOne": true
+                    },
+                    "default_aggregation": {
+                        "maxItemsOne": true
+                    },
+                    "dimension_payload_keys": {
+                        "maxItemsOne": false
+                    },
+                    "value_settings": {
+                        "maxItemsOne": true
+                    }
+                }
+            },
+            "stripe_coupon": {
+                "current": "stripe:index/coupon:Coupon",
+                "fields": {
+                    "applies_to": {
+                        "maxItemsOne": true,
+                        "elem": {
+                            "fields": {
+                                "products": {
+                                    "maxItemsOne": false
+                                }
+                            }
+                        }
+                    },
+                    "currency_options": {
+                        "maxItemsOne": false
+                    },
+                    "script": {
+                        "maxItemsOne": true
+                    }
+                }
+            },
+            "stripe_customer": {
+                "current": "stripe:index/customer:Customer",
+                "fields": {
+                    "address": {
+                        "maxItemsOne": true
+                    },
+                    "cash_balance": {
+                        "maxItemsOne": true,
+                        "elem": {
+                            "fields": {
+                                "settings": {
+                                    "maxItemsOne": true
+                                }
+                            }
+                        }
+                    },
+                    "invoice_settings": {
+                        "maxItemsOne": true,
+                        "elem": {
+                            "fields": {
+                                "custom_fields": {
+                                    "maxItemsOne": false,
+                                    "elem": {
+                                        "maxItemsOne": false
+                                    }
+                                },
+                                "rendering_options": {
+                                    "maxItemsOne": true
+                                }
+                            }
+                        }
+                    },
+                    "preferred_locales": {
+                        "maxItemsOne": false
+                    },
+                    "shipping": {
+                        "maxItemsOne": true,
+                        "elem": {
+                            "fields": {
+                                "address": {
+                                    "maxItemsOne": true
+                                }
+                            }
+                        }
+                    },
+                    "tax": {
+                        "maxItemsOne": true
+                    },
+                    "tax_id_data": {
+                        "maxItemsOne": false
+                    }
+                }
+            },
+            "stripe_entitlements_feature": {
+                "current": "stripe:index/entitlementsFeature:EntitlementsFeature"
+            },
+            "stripe_price": {
+                "current": "stripe:index/price:Price",
+                "fields": {
+                    "currency_options": {
+                        "maxItemsOne": false,
+                        "elem": {
+                            "fields": {
+                                "custom_unit_amount": {
+                                    "maxItemsOne": true
+                                },
+                                "tiers": {
+                                    "maxItemsOne": false,
+                                    "elem": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "custom_unit_amount": {
+                        "maxItemsOne": true
+                    },
+                    "product_data": {
+                        "maxItemsOne": true
+                    },
+                    "recurring": {
+                        "maxItemsOne": true
+                    },
+                    "tiers": {
+                        "maxItemsOne": false
+                    }
+                }
+            },
+            "stripe_product": {
+                "current": "stripe:index/product:Product",
+                "fields": {
+                    "default_price_data": {
+                        "maxItemsOne": true,
+                        "elem": {
+                            "fields": {
+                                "currency_options": {
+                                    "maxItemsOne": false,
+                                    "elem": {
+                                        "fields": {
+                                            "custom_unit_amount": {
+                                                "maxItemsOne": true
+                                            },
+                                            "tiers": {
+                                                "maxItemsOne": false,
+                                                "elem": {
+                                                    "maxItemsOne": false
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "custom_unit_amount": {
+                                    "maxItemsOne": true
+                                },
+                                "recurring": {
+                                    "maxItemsOne": true
+                                }
+                            }
+                        }
+                    },
+                    "images": {
+                        "maxItemsOne": false
+                    },
+                    "marketing_features": {
+                        "maxItemsOne": false
+                    },
+                    "package_dimensions": {
+                        "maxItemsOne": true
+                    }
+                }
+            },
+            "stripe_promotion_code": {
+                "current": "stripe:index/promotionCode:PromotionCode",
+                "fields": {
+                    "promotion": {
+                        "maxItemsOne": true
+                    },
+                    "restrictions": {
+                        "maxItemsOne": true,
+                        "elem": {
+                            "fields": {
+                                "currency_options": {
+                                    "maxItemsOne": false
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "stripe_shipping_rate": {
+                "current": "stripe:index/shippingRate:ShippingRate",
+                "fields": {
+                    "delivery_estimate": {
+                        "maxItemsOne": true,
+                        "elem": {
+                            "fields": {
+                                "maximum": {
+                                    "maxItemsOne": true
+                                },
+                                "minimum": {
+                                    "maxItemsOne": true
+                                }
+                            }
+                        }
+                    },
+                    "fixed_amount": {
+                        "maxItemsOne": true,
+                        "elem": {
+                            "fields": {
+                                "currency_options": {
+                                    "maxItemsOne": false
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "stripe_tax_rate": {
+                "current": "stripe:index/taxRate:TaxRate"
+            },
+            "stripe_v2_billing_license_fee": {
+                "current": "stripe:index/v2BillingLicenseFee:V2BillingLicenseFee",
+                "fields": {
+                    "tiers": {
+                        "maxItemsOne": false
+                    }
+                }
+            },
+            "stripe_v2_billing_licensed_item": {
+                "current": "stripe:index/v2BillingLicensedItem:V2BillingLicensedItem"
+            },
+            "stripe_v2_billing_metered_item": {
+                "current": "stripe:index/v2BillingMeteredItem:V2BillingMeteredItem",
+                "fields": {
+                    "invoice_presentation_dimensions": {
+                        "maxItemsOne": false
+                    },
+                    "meter_segment_conditions": {
+                        "maxItemsOne": false
+                    }
+                }
+            },
+            "stripe_v2_billing_pricing_plan": {
+                "current": "stripe:index/v2BillingPricingPlan:V2BillingPricingPlan"
+            },
+            "stripe_v2_billing_pricing_plan_component": {
+                "current": "stripe:index/v2BillingPricingPlanComponent:V2BillingPricingPlanComponent",
+                "fields": {
+                    "license_fee": {
+                        "maxItemsOne": true
+                    },
+                    "rate_card": {
+                        "maxItemsOne": true
+                    },
+                    "service_action": {
+                        "maxItemsOne": true
+                    }
+                }
+            },
+            "stripe_v2_billing_rate_card": {
+                "current": "stripe:index/v2BillingRateCard:V2BillingRateCard"
+            },
+            "stripe_v2_billing_rate_card_rate": {
+                "current": "stripe:index/v2BillingRateCardRate:V2BillingRateCardRate",
+                "fields": {
+                    "tiers": {
+                        "maxItemsOne": false
+                    }
+                }
+            },
+            "stripe_v2_billing_service_action": {
+                "current": "stripe:index/v2BillingServiceAction:V2BillingServiceAction",
+                "fields": {
+                    "credit_grant": {
+                        "maxItemsOne": true,
+                        "elem": {
+                            "fields": {
+                                "amount": {
+                                    "maxItemsOne": true,
+                                    "elem": {
+                                        "fields": {
+                                            "custom_pricing_unit": {
+                                                "maxItemsOne": true
+                                            },
+                                            "monetary": {
+                                                "maxItemsOne": true
+                                            }
+                                        }
+                                    }
+                                },
+                                "applicability_config": {
+                                    "maxItemsOne": true,
+                                    "elem": {
+                                        "fields": {
+                                            "scope": {
+                                                "maxItemsOne": true,
+                                                "elem": {
+                                                    "fields": {
+                                                        "billable_items": {
+                                                            "maxItemsOne": false
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "expiry_config": {
+                                    "maxItemsOne": true
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "stripe_v2_core_event_destination": {
+                "current": "stripe:index/v2CoreEventDestination:V2CoreEventDestination",
+                "fields": {
+                    "amazon_eventbridge": {
+                        "maxItemsOne": true
+                    },
+                    "enabled_events": {
+                        "maxItemsOne": false
+                    },
+                    "events_from": {
+                        "maxItemsOne": false
+                    },
+                    "webhook_endpoint": {
+                        "maxItemsOne": true
+                    }
+                }
+            },
+            "stripe_webhook_endpoint": {
+                "current": "stripe:index/webhookEndpoint:WebhookEndpoint",
+                "fields": {
+                    "enabled_events": {
+                        "maxItemsOne": false
+                    }
+                }
+            }
+        },
+        "datasources": {
+            "stripe_billing_meter": {
+                "current": "stripe:index/getBillingMeter:getBillingMeter"
+            }
+        }
+    },
+    "auto-settings": {}
+}
