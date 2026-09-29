@@ -1361,7 +1361,8 @@
             "properties": {
                 "signingSecret": {
                     "type": "string",
-                    "description": "The signing secret of the webhook endpoint, only includable on creation.\n"
+                    "description": "The signing secret of the webhook endpoint, only includable on creation.\n",
+                    "secret": true
                 },
                 "url": {
                     "type": "string",

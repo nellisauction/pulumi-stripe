@@ -3979,8 +3979,8 @@ github.com/stretchr/testify v1.12.1 h1:EuwCh5fleGS7H32xRwO3wRGT7DxrDhLAT6FF8MpWD
 github.com/stretchr/testify v1.12.1/go.mod h1:MDEgiDPPsNp5cuIrHPPCyornHKgEVbtFUmoNlxoYthg=
 github.com/stripe/stripe-go/v84 v84.5.0-alpha.2 h1:TAIDvgSgKawC9DCWNDEUJYlWeFybIOdtDP2IAQxpjt8=
 github.com/stripe/stripe-go/v84 v84.5.0-alpha.2/go.mod h1:Z4gcKw1zl4geDG2+cjpSaJES9jaohGX6n7FP8/kHIqw=
-github.com/stripe/terraform-provider-stripe v0.2.2 h1:gft+FCV+UAv6WvDFzNgPeBjiKd9dg5E4s9+AMGXwkYM=
-github.com/stripe/terraform-provider-stripe v0.2.2/go.mod h1:kToBz3EWqs7yUEUSI3N058iz73nyijrDVNgUOBMatvw=
+github.com/stripe/terraform-provider-stripe v0.2.3 h1:axl15I9I7ppQFgpa+M5oVJcjbLdT+lUe5xGLVCvsHHg=
+github.com/stripe/terraform-provider-stripe v0.2.3/go.mod h1:nqNH6u1fR+DsGXGUzdT+YPstv+jKAUkRdwhnQML3cdY=
 github.com/substrait-io/substrait-go v0.4.2/go.mod h1:qhpnLmrcvAnlZsUyPXZRqldiHapPTXC3t7xFgDi3aQg=
 github.com/teekennedy/goldmark-markdown v0.3.0 h1:ik9/biVGCwGWFg8dQ3KVm2pQ/wiiG0whYiUcz9xH0W8=
 github.com/teekennedy/goldmark-markdown v0.3.0/go.mod h1:kMhDz8La77A9UHvJGsxejd0QUflN9sS+QXCqnhmxmNo=
