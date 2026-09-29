@@ -187,7 +187,7 @@ require (
 	github.com/spf13/pflag v1.0.10 // indirect
 	github.com/spiffe/go-spiffe/v2 v2.7.0 // indirect
 	github.com/stripe/stripe-go/v84 v84.5.0-alpha.2 // indirect
-	github.com/stripe/terraform-provider-stripe v0.2.2 // indirect
+	github.com/stripe/terraform-provider-stripe v0.2.3 // indirect
 	github.com/teekennedy/goldmark-markdown v0.3.0 // indirect
 	github.com/texttheater/golang-levenshtein v1.0.1 // indirect
 	github.com/uber/jaeger-client-go v2.30.0+incompatible // indirect
