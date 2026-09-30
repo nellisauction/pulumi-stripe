@@ -16,9 +16,20 @@ LDFLAGS_STRIP_SYMBOLS=-s -w
 LDFLAGS_PROJ_VERSION=-X $(PROJECT)/$(VERSION_PATH)=$(PROVIDER_VERSION)
 LDFLAGS=$(LDFLAGS_PROJ_VERSION) $(LDFLAGS_STRIP_SYMBOLS)
 
+_ := $(shell mkdir -p .make)
+
 build: provider build_sdks
 
 generate: schema generate_sdks
+
+prepare_local_workspace: upstream
+.PHONY: prepare_local_workspace
+
+upstream: .make/upstream
+.make/upstream: $(wildcard patches/*) $(shell ./scripts/upstream.sh file_target)
+	./scripts/upstream.sh init
+	@touch $@
+.PHONY: upstream
 
 provider: bin/$(PROVIDER)
 

@@ -7,7 +7,9 @@ import * as outputs from "./types/output";
 import * as utilities from "./utilities";
 
 /**
- * Meters specify how to aggregate meter events over a billing period. Meter events represent the actions that customers take in your system. Meters attach to prices and form the basis of the bill. Related guide: [Usage based billing](https://docs.stripe.com/billing/subscriptions/usage-based)
+ * Meters specify how to aggregate meter events over a billing period. Meter events represent the actions that customers take in your system. Meters attach to prices and form the basis of the bill.
+ *
+ * Related guide: [Usage based billing](https://docs.stripe.com/billing/subscriptions/usage-based)
  */
 export class BillingMeter extends pulumi.CustomResource {
     /**
@@ -38,19 +40,13 @@ export class BillingMeter extends pulumi.CustomResource {
     }
 
     /**
-     * Fields that specify how to map a meter event to a customer.
+     * Time at which the object was created. Measured in seconds since the Unix epoch.
      */
+    declare public /*out*/ readonly created: pulumi.Output<number>;
     declare public readonly customerMapping: pulumi.Output<outputs.BillingMeterCustomerMapping | undefined>;
+    declare public readonly defaultAggregation: pulumi.Output<outputs.BillingMeterDefaultAggregation | undefined>;
     /**
-     * The default settings to aggregate a meter's events with.
-     */
-    declare public readonly defaultAggregation: pulumi.Output<outputs.BillingMeterDefaultAggregation>;
-    /**
-     * Set of keys that will be used to group meter events by. Each key must be present in the event payload.
-     */
-    declare public readonly dimensionPayloadKeys: pulumi.Output<string[] | undefined>;
-    /**
-     * The meter’s name. Not visible to the customer.
+     * The meter's name.
      */
     declare public readonly displayName: pulumi.Output<string>;
     /**
@@ -62,12 +58,22 @@ export class BillingMeter extends pulumi.CustomResource {
      */
     declare public readonly eventTimeWindow: pulumi.Output<string>;
     /**
+     * If the object exists in live mode, the value is `true`. If the object exists in test mode, the value is `false`.
+     */
+    declare public /*out*/ readonly livemode: pulumi.Output<boolean>;
+    /**
+     * String representing the object's type. Objects of the same type share the same value.
+     */
+    declare public /*out*/ readonly object: pulumi.Output<string>;
+    /**
      * The meter's status.
      */
     declare public /*out*/ readonly status: pulumi.Output<string>;
+    declare public /*out*/ readonly statusTransitions: pulumi.Output<outputs.BillingMeterStatusTransitions>;
     /**
-     * Fields that specify how to calculate a meter event's value.
+     * Time at which the object was last updated. Measured in seconds since the Unix epoch.
      */
+    declare public /*out*/ readonly updated: pulumi.Output<number>;
     declare public readonly valueSettings: pulumi.Output<outputs.BillingMeterValueSettings | undefined>;
 
     /**
@@ -83,19 +89,20 @@ export class BillingMeter extends pulumi.CustomResource {
         opts = opts || {};
         if (opts.id) {
             const state = argsOrState as BillingMeterState | undefined;
+            resourceInputs["created"] = state?.created;
             resourceInputs["customerMapping"] = state?.customerMapping;
             resourceInputs["defaultAggregation"] = state?.defaultAggregation;
-            resourceInputs["dimensionPayloadKeys"] = state?.dimensionPayloadKeys;
             resourceInputs["displayName"] = state?.displayName;
             resourceInputs["eventName"] = state?.eventName;
             resourceInputs["eventTimeWindow"] = state?.eventTimeWindow;
+            resourceInputs["livemode"] = state?.livemode;
+            resourceInputs["object"] = state?.object;
             resourceInputs["status"] = state?.status;
+            resourceInputs["statusTransitions"] = state?.statusTransitions;
+            resourceInputs["updated"] = state?.updated;
             resourceInputs["valueSettings"] = state?.valueSettings;
         } else {
             const args = argsOrState as BillingMeterArgs | undefined;
-            if (args?.defaultAggregation === undefined && !opts.urn) {
-                throw new Error("Missing required property 'defaultAggregation'");
-            }
             if (args?.displayName === undefined && !opts.urn) {
                 throw new Error("Missing required property 'displayName'");
             }
@@ -104,12 +111,16 @@ export class BillingMeter extends pulumi.CustomResource {
             }
             resourceInputs["customerMapping"] = args?.customerMapping;
             resourceInputs["defaultAggregation"] = args?.defaultAggregation;
-            resourceInputs["dimensionPayloadKeys"] = args?.dimensionPayloadKeys;
             resourceInputs["displayName"] = args?.displayName;
             resourceInputs["eventName"] = args?.eventName;
             resourceInputs["eventTimeWindow"] = args?.eventTimeWindow;
             resourceInputs["valueSettings"] = args?.valueSettings;
+            resourceInputs["created"] = undefined /*out*/;
+            resourceInputs["livemode"] = undefined /*out*/;
+            resourceInputs["object"] = undefined /*out*/;
             resourceInputs["status"] = undefined /*out*/;
+            resourceInputs["statusTransitions"] = undefined /*out*/;
+            resourceInputs["updated"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
         super(BillingMeter.__pulumiType, name, resourceInputs, opts);
@@ -121,19 +132,13 @@ export class BillingMeter extends pulumi.CustomResource {
  */
 export interface BillingMeterState {
     /**
-     * Fields that specify how to map a meter event to a customer.
+     * Time at which the object was created. Measured in seconds since the Unix epoch.
      */
+    created?: pulumi.Input<number | undefined>;
     customerMapping?: pulumi.Input<inputs.BillingMeterCustomerMapping | undefined>;
-    /**
-     * The default settings to aggregate a meter's events with.
-     */
     defaultAggregation?: pulumi.Input<inputs.BillingMeterDefaultAggregation | undefined>;
     /**
-     * Set of keys that will be used to group meter events by. Each key must be present in the event payload.
-     */
-    dimensionPayloadKeys?: pulumi.Input<pulumi.Input<string>[] | undefined>;
-    /**
-     * The meter’s name. Not visible to the customer.
+     * The meter's name.
      */
     displayName?: pulumi.Input<string | undefined>;
     /**
@@ -145,12 +150,22 @@ export interface BillingMeterState {
      */
     eventTimeWindow?: pulumi.Input<string | undefined>;
     /**
+     * If the object exists in live mode, the value is `true`. If the object exists in test mode, the value is `false`.
+     */
+    livemode?: pulumi.Input<boolean | undefined>;
+    /**
+     * String representing the object's type. Objects of the same type share the same value.
+     */
+    object?: pulumi.Input<string | undefined>;
+    /**
      * The meter's status.
      */
     status?: pulumi.Input<string | undefined>;
+    statusTransitions?: pulumi.Input<inputs.BillingMeterStatusTransitions | undefined>;
     /**
-     * Fields that specify how to calculate a meter event's value.
+     * Time at which the object was last updated. Measured in seconds since the Unix epoch.
      */
+    updated?: pulumi.Input<number | undefined>;
     valueSettings?: pulumi.Input<inputs.BillingMeterValueSettings | undefined>;
 }
 
@@ -158,20 +173,10 @@ export interface BillingMeterState {
  * The set of arguments for constructing a BillingMeter resource.
  */
 export interface BillingMeterArgs {
-    /**
-     * Fields that specify how to map a meter event to a customer.
-     */
     customerMapping?: pulumi.Input<inputs.BillingMeterCustomerMapping | undefined>;
+    defaultAggregation?: pulumi.Input<inputs.BillingMeterDefaultAggregation | undefined>;
     /**
-     * The default settings to aggregate a meter's events with.
-     */
-    defaultAggregation: pulumi.Input<inputs.BillingMeterDefaultAggregation>;
-    /**
-     * Set of keys that will be used to group meter events by. Each key must be present in the event payload.
-     */
-    dimensionPayloadKeys?: pulumi.Input<pulumi.Input<string>[] | undefined>;
-    /**
-     * The meter’s name. Not visible to the customer.
+     * The meter's name.
      */
     displayName: pulumi.Input<string>;
     /**
@@ -182,8 +187,5 @@ export interface BillingMeterArgs {
      * The time window which meter events have been pre-aggregated for, if any.
      */
     eventTimeWindow?: pulumi.Input<string | undefined>;
-    /**
-     * Fields that specify how to calculate a meter event's value.
-     */
     valueSettings?: pulumi.Input<inputs.BillingMeterValueSettings | undefined>;
 }

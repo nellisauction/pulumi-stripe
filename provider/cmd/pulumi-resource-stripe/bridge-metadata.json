@@ -1,6 +1,37 @@
 {
     "auto-aliasing": {
         "resources": {
+            "stripe_apple_pay_domain": {
+                "current": "stripe:index/applePayDomain:ApplePayDomain"
+            },
+            "stripe_billing_alert": {
+                "current": "stripe:index/billingAlert:BillingAlert",
+                "fields": {
+                    "usage_threshold": {
+                        "fields": {
+                            "filters": {
+                                "maxItemsOne": false
+                            }
+                        }
+                    }
+                }
+            },
+            "stripe_billing_credit_grant": {
+                "current": "stripe:index/billingCreditGrant:BillingCreditGrant",
+                "fields": {
+                    "applicability_config": {
+                        "fields": {
+                            "scope": {
+                                "fields": {
+                                    "prices": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             "stripe_billing_meter": {
                 "current": "stripe:index/billingMeter:BillingMeter",
                 "fields": {
@@ -10,11 +41,108 @@
                     "default_aggregation": {
                         "maxItemsOne": true
                     },
-                    "dimension_payload_keys": {
-                        "maxItemsOne": false
-                    },
                     "value_settings": {
                         "maxItemsOne": true
+                    }
+                }
+            },
+            "stripe_billing_portal_configuration": {
+                "current": "stripe:index/billingPortalConfiguration:BillingPortalConfiguration",
+                "fields": {
+                    "features": {
+                        "fields": {
+                            "customer_update": {
+                                "fields": {
+                                    "allowed_updates": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            },
+                            "subscription_cancel": {
+                                "fields": {
+                                    "cancellation_reason": {
+                                        "fields": {
+                                            "options": {
+                                                "maxItemsOne": false
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "subscription_update": {
+                                "fields": {
+                                    "default_allowed_updates": {
+                                        "maxItemsOne": false
+                                    },
+                                    "products": {
+                                        "maxItemsOne": false,
+                                        "elem": {
+                                            "fields": {
+                                                "prices": {
+                                                    "maxItemsOne": false
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "schedule_at_period_end": {
+                                        "fields": {
+                                            "conditions": {
+                                                "maxItemsOne": false
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "stripe_charge": {
+                "current": "stripe:index/charge:Charge",
+                "fields": {
+                    "level3": {
+                        "fields": {
+                            "line_items": {
+                                "maxItemsOne": false
+                            }
+                        }
+                    },
+                    "payment_method_details": {
+                        "fields": {
+                            "card_present": {
+                                "fields": {
+                                    "preferred_locales": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            },
+                            "interac_present": {
+                                "fields": {
+                                    "preferred_locales": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            },
+                            "paypal": {
+                                "fields": {
+                                    "seller_protection": {
+                                        "fields": {
+                                            "dispute_categories": {
+                                                "maxItemsOne": false
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "stripe_climate_order": {
+                "current": "stripe:index/climateOrder:ClimateOrder",
+                "fields": {
+                    "delivery_details": {
+                        "maxItemsOne": false
                     }
                 }
             },
@@ -33,9 +161,30 @@
                     },
                     "currency_options": {
                         "maxItemsOne": false
+                    }
+                }
+            },
+            "stripe_credit_note": {
+                "current": "stripe:index/creditNote:CreditNote",
+                "fields": {
+                    "discount_amounts": {
+                        "maxItemsOne": false
                     },
-                    "script": {
-                        "maxItemsOne": true
+                    "pretax_credit_amounts": {
+                        "maxItemsOne": false
+                    },
+                    "refunds": {
+                        "maxItemsOne": false
+                    },
+                    "shipping_cost": {
+                        "fields": {
+                            "taxes": {
+                                "maxItemsOne": false
+                            }
+                        }
+                    },
+                    "total_taxes": {
+                        "maxItemsOne": false
                     }
                 }
             },
@@ -60,10 +209,7 @@
                         "elem": {
                             "fields": {
                                 "custom_fields": {
-                                    "maxItemsOne": false,
-                                    "elem": {
-                                        "maxItemsOne": false
-                                    }
+                                    "maxItemsOne": false
                                 },
                                 "rendering_options": {
                                     "maxItemsOne": true
@@ -85,15 +231,619 @@
                         }
                     },
                     "tax": {
-                        "maxItemsOne": true
+                        "maxItemsOne": true,
+                        "elem": {
+                            "fields": {
+                                "location": {
+                                    "maxItemsOne": false
+                                }
+                            }
+                        }
                     },
                     "tax_id_data": {
                         "maxItemsOne": false
                     }
                 }
             },
+            "stripe_customer_balance_transaction": {
+                "current": "stripe:index/customerBalanceTransaction:CustomerBalanceTransaction"
+            },
             "stripe_entitlements_feature": {
                 "current": "stripe:index/entitlementsFeature:EntitlementsFeature"
+            },
+            "stripe_file": {
+                "current": "stripe:index/file:File"
+            },
+            "stripe_file_link": {
+                "current": "stripe:index/fileLink:FileLink"
+            },
+            "stripe_invoice": {
+                "current": "stripe:index/invoice:Invoice",
+                "fields": {
+                    "account_tax_ids": {
+                        "maxItemsOne": false
+                    },
+                    "custom_fields": {
+                        "maxItemsOne": false
+                    },
+                    "customer_tax_ids": {
+                        "maxItemsOne": false
+                    },
+                    "default_tax_rates": {
+                        "maxItemsOne": false
+                    },
+                    "discounts": {
+                        "maxItemsOne": false
+                    },
+                    "payment_settings": {
+                        "fields": {
+                            "payment_method_options": {
+                                "fields": {
+                                    "us_bank_account": {
+                                        "fields": {
+                                            "financial_connections": {
+                                                "fields": {
+                                                    "filters": {
+                                                        "fields": {
+                                                            "account_subcategories": {
+                                                                "maxItemsOne": false
+                                                            }
+                                                        }
+                                                    },
+                                                    "permissions": {
+                                                        "maxItemsOne": false
+                                                    },
+                                                    "prefetch": {
+                                                        "maxItemsOne": false
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "payment_method_types": {
+                                "maxItemsOne": false
+                            }
+                        }
+                    },
+                    "shipping_cost": {
+                        "fields": {
+                            "taxes": {
+                                "maxItemsOne": false
+                            }
+                        }
+                    },
+                    "threshold_reason": {
+                        "fields": {
+                            "item_reasons": {
+                                "maxItemsOne": false,
+                                "elem": {
+                                    "fields": {
+                                        "line_item_ids": {
+                                            "maxItemsOne": false
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "total_discount_amounts": {
+                        "maxItemsOne": false
+                    },
+                    "total_pretax_credit_amounts": {
+                        "maxItemsOne": false
+                    },
+                    "total_taxes": {
+                        "maxItemsOne": false
+                    }
+                }
+            },
+            "stripe_invoice_item": {
+                "current": "stripe:index/invoiceItem:InvoiceItem",
+                "fields": {
+                    "discounts": {
+                        "maxItemsOne": false
+                    },
+                    "proration_details": {
+                        "fields": {
+                            "credited_items": {
+                                "fields": {
+                                    "invoice_line_item_details": {
+                                        "fields": {
+                                            "invoice_line_items": {
+                                                "maxItemsOne": false
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "discount_amounts": {
+                                "maxItemsOne": false
+                            }
+                        }
+                    },
+                    "tax_rates": {
+                        "maxItemsOne": false
+                    }
+                }
+            },
+            "stripe_issuing_card": {
+                "current": "stripe:index/issuingCard:IssuingCard",
+                "fields": {
+                    "spending_controls": {
+                        "fields": {
+                            "allowed_card_presences": {
+                                "maxItemsOne": false
+                            },
+                            "allowed_categories": {
+                                "maxItemsOne": false
+                            },
+                            "allowed_merchant_countries": {
+                                "maxItemsOne": false
+                            },
+                            "blocked_card_presences": {
+                                "maxItemsOne": false
+                            },
+                            "blocked_categories": {
+                                "maxItemsOne": false
+                            },
+                            "blocked_merchant_countries": {
+                                "maxItemsOne": false
+                            },
+                            "spending_limits": {
+                                "maxItemsOne": false,
+                                "elem": {
+                                    "fields": {
+                                        "categories": {
+                                            "maxItemsOne": false
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "stripe_issuing_cardholder": {
+                "current": "stripe:index/issuingCardholder:IssuingCardholder",
+                "fields": {
+                    "preferred_locales": {
+                        "maxItemsOne": false
+                    },
+                    "requirements": {
+                        "fields": {
+                            "past_due": {
+                                "maxItemsOne": false
+                            }
+                        }
+                    },
+                    "spending_controls": {
+                        "fields": {
+                            "allowed_card_presences": {
+                                "maxItemsOne": false
+                            },
+                            "allowed_categories": {
+                                "maxItemsOne": false
+                            },
+                            "allowed_merchant_countries": {
+                                "maxItemsOne": false
+                            },
+                            "blocked_card_presences": {
+                                "maxItemsOne": false
+                            },
+                            "blocked_categories": {
+                                "maxItemsOne": false
+                            },
+                            "blocked_merchant_countries": {
+                                "maxItemsOne": false
+                            },
+                            "spending_limits": {
+                                "maxItemsOne": false,
+                                "elem": {
+                                    "fields": {
+                                        "categories": {
+                                            "maxItemsOne": false
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "stripe_issuing_dispute": {
+                "current": "stripe:index/issuingDispute:IssuingDispute"
+            },
+            "stripe_issuing_personalization_design": {
+                "current": "stripe:index/issuingPersonalizationDesign:IssuingPersonalizationDesign",
+                "fields": {
+                    "rejection_reasons": {
+                        "fields": {
+                            "card_logo": {
+                                "maxItemsOne": false
+                            },
+                            "carrier_text": {
+                                "maxItemsOne": false
+                            }
+                        }
+                    }
+                }
+            },
+            "stripe_payment_intent": {
+                "current": "stripe:index/paymentIntent:PaymentIntent",
+                "fields": {
+                    "excluded_payment_method_types": {
+                        "maxItemsOne": false
+                    },
+                    "next_action": {
+                        "fields": {
+                            "display_bank_transfer_instructions": {
+                                "fields": {
+                                    "financial_addresses": {
+                                        "maxItemsOne": false,
+                                        "elem": {
+                                            "fields": {
+                                                "supported_networks": {
+                                                    "maxItemsOne": false
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "payment_method_options": {
+                        "fields": {
+                            "card": {
+                                "fields": {
+                                    "installments": {
+                                        "fields": {
+                                            "available_plans": {
+                                                "maxItemsOne": false
+                                            }
+                                        }
+                                    },
+                                    "mandate_options": {
+                                        "fields": {
+                                            "supported_types": {
+                                                "maxItemsOne": false
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "customer_balance": {
+                                "fields": {
+                                    "bank_transfer": {
+                                        "fields": {
+                                            "requested_address_types": {
+                                                "maxItemsOne": false
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "klarna": {
+                                "fields": {
+                                    "subscriptions": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            },
+                            "us_bank_account": {
+                                "fields": {
+                                    "financial_connections": {
+                                        "fields": {
+                                            "filters": {
+                                                "fields": {
+                                                    "account_subcategories": {
+                                                        "maxItemsOne": false
+                                                    }
+                                                }
+                                            },
+                                            "permissions": {
+                                                "maxItemsOne": false
+                                            },
+                                            "prefetch": {
+                                                "maxItemsOne": false
+                                            }
+                                        }
+                                    },
+                                    "networks": {
+                                        "fields": {
+                                            "requested": {
+                                                "maxItemsOne": false
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "stripe_payment_link": {
+                "current": "stripe:index/paymentLink:PaymentLink",
+                "fields": {
+                    "custom_fields": {
+                        "maxItemsOne": false,
+                        "elem": {
+                            "fields": {
+                                "dropdown": {
+                                    "fields": {
+                                        "options": {
+                                            "maxItemsOne": false
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "invoice_creation": {
+                        "fields": {
+                            "invoice_data": {
+                                "fields": {
+                                    "account_tax_ids": {
+                                        "maxItemsOne": false
+                                    },
+                                    "custom_fields": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "line_items": {
+                        "maxItemsOne": false,
+                        "elem": {
+                            "fields": {
+                                "price_data": {
+                                    "fields": {
+                                        "product_data": {
+                                            "fields": {
+                                                "images": {
+                                                    "maxItemsOne": false
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "optional_items": {
+                        "maxItemsOne": false
+                    },
+                    "payment_method_options": {
+                        "fields": {
+                            "card": {
+                                "fields": {
+                                    "restrictions": {
+                                        "fields": {
+                                            "brands_blocked": {
+                                                "maxItemsOne": false
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "payment_method_types": {
+                        "maxItemsOne": false
+                    },
+                    "shipping_address_collection": {
+                        "fields": {
+                            "allowed_countries": {
+                                "maxItemsOne": false
+                            }
+                        }
+                    },
+                    "shipping_options": {
+                        "maxItemsOne": false
+                    }
+                }
+            },
+            "stripe_payment_method": {
+                "current": "stripe:index/paymentMethod:PaymentMethod",
+                "fields": {
+                    "card": {
+                        "fields": {
+                            "generated_from": {
+                                "fields": {
+                                    "payment_method_details": {
+                                        "fields": {
+                                            "card_present": {
+                                                "fields": {
+                                                    "preferred_locales": {
+                                                        "maxItemsOne": false
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "networks": {
+                                "fields": {
+                                    "available": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "card_present": {
+                        "fields": {
+                            "networks": {
+                                "fields": {
+                                    "available": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            },
+                            "preferred_locales": {
+                                "maxItemsOne": false
+                            }
+                        }
+                    },
+                    "interac_present": {
+                        "fields": {
+                            "networks": {
+                                "fields": {
+                                    "available": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            },
+                            "preferred_locales": {
+                                "maxItemsOne": false
+                            }
+                        }
+                    },
+                    "us_bank_account": {
+                        "fields": {
+                            "networks": {
+                                "fields": {
+                                    "supported": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "stripe_payment_method_configuration": {
+                "current": "stripe:index/paymentMethodConfiguration:PaymentMethodConfiguration"
+            },
+            "stripe_payment_method_domain": {
+                "current": "stripe:index/paymentMethodDomain:PaymentMethodDomain"
+            },
+            "stripe_person": {
+                "current": "stripe:index/person:Person",
+                "fields": {
+                    "documents": {
+                        "fields": {
+                            "company_authorization": {
+                                "fields": {
+                                    "files": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            },
+                            "passport": {
+                                "fields": {
+                                    "files": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            },
+                            "visa": {
+                                "fields": {
+                                    "files": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "full_name_aliases": {
+                        "maxItemsOne": false
+                    },
+                    "future_requirements": {
+                        "fields": {
+                            "alternatives": {
+                                "maxItemsOne": false,
+                                "elem": {
+                                    "fields": {
+                                        "alternative_fields_due": {
+                                            "maxItemsOne": false
+                                        },
+                                        "original_fields_due": {
+                                            "maxItemsOne": false
+                                        }
+                                    }
+                                }
+                            },
+                            "currently_due": {
+                                "maxItemsOne": false
+                            },
+                            "errors": {
+                                "maxItemsOne": false
+                            },
+                            "eventually_due": {
+                                "maxItemsOne": false
+                            },
+                            "past_due": {
+                                "maxItemsOne": false
+                            },
+                            "pending_verification": {
+                                "maxItemsOne": false
+                            }
+                        }
+                    },
+                    "requirements": {
+                        "fields": {
+                            "alternatives": {
+                                "maxItemsOne": false,
+                                "elem": {
+                                    "fields": {
+                                        "alternative_fields_due": {
+                                            "maxItemsOne": false
+                                        },
+                                        "original_fields_due": {
+                                            "maxItemsOne": false
+                                        }
+                                    }
+                                }
+                            },
+                            "currently_due": {
+                                "maxItemsOne": false
+                            },
+                            "errors": {
+                                "maxItemsOne": false
+                            },
+                            "eventually_due": {
+                                "maxItemsOne": false
+                            },
+                            "past_due": {
+                                "maxItemsOne": false
+                            },
+                            "pending_verification": {
+                                "maxItemsOne": false
+                            }
+                        }
+                    },
+                    "us_cfpb_data": {
+                        "fields": {
+                            "ethnicity_details": {
+                                "fields": {
+                                    "ethnicity": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            },
+                            "race_details": {
+                                "fields": {
+                                    "race": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "stripe_plan": {
+                "current": "stripe:index/plan:Plan",
+                "fields": {
+                    "tiers": {
+                        "maxItemsOne": false
+                    }
+                }
             },
             "stripe_price": {
                 "current": "stripe:index/price:Price",
@@ -106,10 +856,7 @@
                                     "maxItemsOne": true
                                 },
                                 "tiers": {
-                                    "maxItemsOne": false,
-                                    "elem": {
-                                        "maxItemsOne": false
-                                    }
+                                    "maxItemsOne": false
                                 }
                             }
                         }
@@ -143,10 +890,7 @@
                                                 "maxItemsOne": true
                                             },
                                             "tiers": {
-                                                "maxItemsOne": false,
-                                                "elem": {
-                                                    "maxItemsOne": false
-                                                }
+                                                "maxItemsOne": false
                                             }
                                         }
                                     }
@@ -171,6 +915,9 @@
                     }
                 }
             },
+            "stripe_product_feature": {
+                "current": "stripe:index/productFeature:ProductFeature"
+            },
             "stripe_promotion_code": {
                 "current": "stripe:index/promotionCode:PromotionCode",
                 "fields": {
@@ -186,6 +933,125 @@
                                 }
                             }
                         }
+                    }
+                }
+            },
+            "stripe_quote": {
+                "current": "stripe:index/quote:Quote",
+                "fields": {
+                    "default_tax_rates": {
+                        "maxItemsOne": false
+                    },
+                    "discounts": {
+                        "maxItemsOne": false
+                    },
+                    "line_items": {
+                        "maxItemsOne": false,
+                        "elem": {
+                            "fields": {
+                                "discounts": {
+                                    "maxItemsOne": false
+                                },
+                                "tax_rates": {
+                                    "maxItemsOne": false
+                                }
+                            }
+                        }
+                    },
+                    "total_details": {
+                        "fields": {
+                            "breakdown": {
+                                "fields": {
+                                    "discounts": {
+                                        "maxItemsOne": false
+                                    },
+                                    "taxes": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "stripe_radar_value_list": {
+                "current": "stripe:index/radarValueList:RadarValueList"
+            },
+            "stripe_radar_value_list_item": {
+                "current": "stripe:index/radarValueListItem:RadarValueListItem"
+            },
+            "stripe_setup_intent": {
+                "current": "stripe:index/setupIntent:SetupIntent",
+                "fields": {
+                    "excluded_payment_method_types": {
+                        "maxItemsOne": false
+                    },
+                    "flow_directions": {
+                        "maxItemsOne": false
+                    },
+                    "payment_method_options": {
+                        "fields": {
+                            "acss_debit": {
+                                "fields": {
+                                    "mandate_options": {
+                                        "fields": {
+                                            "default_for": {
+                                                "maxItemsOne": false
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "card": {
+                                "fields": {
+                                    "mandate_options": {
+                                        "fields": {
+                                            "supported_types": {
+                                                "maxItemsOne": false
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "klarna": {
+                                "fields": {
+                                    "subscriptions": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            },
+                            "us_bank_account": {
+                                "fields": {
+                                    "financial_connections": {
+                                        "fields": {
+                                            "filters": {
+                                                "fields": {
+                                                    "account_subcategories": {
+                                                        "maxItemsOne": false
+                                                    }
+                                                }
+                                            },
+                                            "permissions": {
+                                                "maxItemsOne": false
+                                            },
+                                            "prefetch": {
+                                                "maxItemsOne": false
+                                            }
+                                        }
+                                    },
+                                    "networks": {
+                                        "fields": {
+                                            "requested": {
+                                                "maxItemsOne": false
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "payment_method_types": {
+                        "maxItemsOne": false
                     }
                 }
             },
@@ -217,101 +1083,584 @@
                     }
                 }
             },
-            "stripe_tax_rate": {
-                "current": "stripe:index/taxRate:TaxRate"
-            },
-            "stripe_v2_billing_license_fee": {
-                "current": "stripe:index/v2BillingLicenseFee:V2BillingLicenseFee",
+            "stripe_source": {
+                "current": "stripe:index/source:Source",
                 "fields": {
-                    "tiers": {
-                        "maxItemsOne": false
+                    "source_order": {
+                        "fields": {
+                            "items": {
+                                "maxItemsOne": false
+                            }
+                        }
                     }
                 }
             },
-            "stripe_v2_billing_licensed_item": {
-                "current": "stripe:index/v2BillingLicensedItem:V2BillingLicensedItem"
-            },
-            "stripe_v2_billing_metered_item": {
-                "current": "stripe:index/v2BillingMeteredItem:V2BillingMeteredItem",
+            "stripe_subscription": {
+                "current": "stripe:index/subscription:Subscription",
                 "fields": {
-                    "invoice_presentation_dimensions": {
-                        "maxItemsOne": false
-                    },
-                    "meter_segment_conditions": {
-                        "maxItemsOne": false
-                    }
-                }
-            },
-            "stripe_v2_billing_pricing_plan": {
-                "current": "stripe:index/v2BillingPricingPlan:V2BillingPricingPlan"
-            },
-            "stripe_v2_billing_pricing_plan_component": {
-                "current": "stripe:index/v2BillingPricingPlanComponent:V2BillingPricingPlanComponent",
-                "fields": {
-                    "license_fee": {
-                        "maxItemsOne": true
-                    },
-                    "rate_card": {
-                        "maxItemsOne": true
-                    },
-                    "service_action": {
-                        "maxItemsOne": true
-                    }
-                }
-            },
-            "stripe_v2_billing_rate_card": {
-                "current": "stripe:index/v2BillingRateCard:V2BillingRateCard"
-            },
-            "stripe_v2_billing_rate_card_rate": {
-                "current": "stripe:index/v2BillingRateCardRate:V2BillingRateCardRate",
-                "fields": {
-                    "tiers": {
-                        "maxItemsOne": false
-                    }
-                }
-            },
-            "stripe_v2_billing_service_action": {
-                "current": "stripe:index/v2BillingServiceAction:V2BillingServiceAction",
-                "fields": {
-                    "credit_grant": {
-                        "maxItemsOne": true,
+                    "add_invoice_items": {
+                        "maxItemsOne": false,
                         "elem": {
                             "fields": {
-                                "amount": {
-                                    "maxItemsOne": true,
-                                    "elem": {
-                                        "fields": {
-                                            "custom_pricing_unit": {
-                                                "maxItemsOne": true
-                                            },
-                                            "monetary": {
-                                                "maxItemsOne": true
-                                            }
-                                        }
-                                    }
+                                "discounts": {
+                                    "maxItemsOne": false
                                 },
-                                "applicability_config": {
-                                    "maxItemsOne": true,
-                                    "elem": {
+                                "tax_rates": {
+                                    "maxItemsOne": false
+                                }
+                            }
+                        }
+                    },
+                    "billing_schedules": {
+                        "maxItemsOne": false,
+                        "elem": {
+                            "fields": {
+                                "applies_to": {
+                                    "maxItemsOne": false
+                                }
+                            }
+                        }
+                    },
+                    "default_tax_rates": {
+                        "maxItemsOne": false
+                    },
+                    "discounts": {
+                        "maxItemsOne": false
+                    },
+                    "invoice_settings": {
+                        "fields": {
+                            "account_tax_ids": {
+                                "maxItemsOne": false
+                            }
+                        }
+                    },
+                    "items": {
+                        "maxItemsOne": false,
+                        "elem": {
+                            "fields": {
+                                "discounts": {
+                                    "maxItemsOne": false
+                                },
+                                "tax_rates": {
+                                    "maxItemsOne": false
+                                }
+                            }
+                        }
+                    },
+                    "payment_settings": {
+                        "fields": {
+                            "payment_method_options": {
+                                "fields": {
+                                    "us_bank_account": {
                                         "fields": {
-                                            "scope": {
-                                                "maxItemsOne": true,
-                                                "elem": {
-                                                    "fields": {
-                                                        "billable_items": {
-                                                            "maxItemsOne": false
+                                            "financial_connections": {
+                                                "fields": {
+                                                    "filters": {
+                                                        "fields": {
+                                                            "account_subcategories": {
+                                                                "maxItemsOne": false
+                                                            }
                                                         }
+                                                    },
+                                                    "permissions": {
+                                                        "maxItemsOne": false
+                                                    },
+                                                    "prefetch": {
+                                                        "maxItemsOne": false
                                                     }
                                                 }
                                             }
                                         }
                                     }
-                                },
-                                "expiry_config": {
-                                    "maxItemsOne": true
+                                }
+                            },
+                            "payment_method_types": {
+                                "maxItemsOne": false
+                            }
+                        }
+                    }
+                }
+            },
+            "stripe_subscription_item": {
+                "current": "stripe:index/subscriptionItem:SubscriptionItem",
+                "fields": {
+                    "discounts": {
+                        "maxItemsOne": false
+                    },
+                    "tax_rates": {
+                        "maxItemsOne": false
+                    }
+                }
+            },
+            "stripe_subscription_schedule": {
+                "current": "stripe:index/subscriptionSchedule:SubscriptionSchedule",
+                "fields": {
+                    "default_settings": {
+                        "fields": {
+                            "invoice_settings": {
+                                "fields": {
+                                    "account_tax_ids": {
+                                        "maxItemsOne": false
+                                    }
                                 }
                             }
                         }
+                    },
+                    "phases": {
+                        "maxItemsOne": false,
+                        "elem": {
+                            "fields": {
+                                "add_invoice_items": {
+                                    "maxItemsOne": false,
+                                    "elem": {
+                                        "fields": {
+                                            "discounts": {
+                                                "maxItemsOne": false
+                                            },
+                                            "tax_rates": {
+                                                "maxItemsOne": false
+                                            }
+                                        }
+                                    }
+                                },
+                                "default_tax_rates": {
+                                    "maxItemsOne": false
+                                },
+                                "discounts": {
+                                    "maxItemsOne": false
+                                },
+                                "invoice_settings": {
+                                    "fields": {
+                                        "account_tax_ids": {
+                                            "maxItemsOne": false
+                                        }
+                                    }
+                                },
+                                "items": {
+                                    "maxItemsOne": false,
+                                    "elem": {
+                                        "fields": {
+                                            "discounts": {
+                                                "maxItemsOne": false
+                                            },
+                                            "tax_rates": {
+                                                "maxItemsOne": false
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "stripe_tax_id": {
+                "current": "stripe:index/taxId:TaxId"
+            },
+            "stripe_tax_rate": {
+                "current": "stripe:index/taxRate:TaxRate"
+            },
+            "stripe_tax_registration": {
+                "current": "stripe:index/taxRegistration:TaxRegistration",
+                "fields": {
+                    "country_options": {
+                        "fields": {
+                            "us": {
+                                "fields": {
+                                    "state_sales_tax": {
+                                        "fields": {
+                                            "elections": {
+                                                "maxItemsOne": false
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "stripe_terminal_configuration": {
+                "current": "stripe:index/terminalConfiguration:TerminalConfiguration",
+                "fields": {
+                    "tipping": {
+                        "fields": {
+                            "aed": {
+                                "fields": {
+                                    "fixed_amounts": {
+                                        "maxItemsOne": false
+                                    },
+                                    "percentages": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            },
+                            "aud": {
+                                "fields": {
+                                    "fixed_amounts": {
+                                        "maxItemsOne": false
+                                    },
+                                    "percentages": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            },
+                            "cad": {
+                                "fields": {
+                                    "fixed_amounts": {
+                                        "maxItemsOne": false
+                                    },
+                                    "percentages": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            },
+                            "chf": {
+                                "fields": {
+                                    "fixed_amounts": {
+                                        "maxItemsOne": false
+                                    },
+                                    "percentages": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            },
+                            "czk": {
+                                "fields": {
+                                    "fixed_amounts": {
+                                        "maxItemsOne": false
+                                    },
+                                    "percentages": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            },
+                            "dkk": {
+                                "fields": {
+                                    "fixed_amounts": {
+                                        "maxItemsOne": false
+                                    },
+                                    "percentages": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            },
+                            "eur": {
+                                "fields": {
+                                    "fixed_amounts": {
+                                        "maxItemsOne": false
+                                    },
+                                    "percentages": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            },
+                            "gbp": {
+                                "fields": {
+                                    "fixed_amounts": {
+                                        "maxItemsOne": false
+                                    },
+                                    "percentages": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            },
+                            "gip": {
+                                "fields": {
+                                    "fixed_amounts": {
+                                        "maxItemsOne": false
+                                    },
+                                    "percentages": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            },
+                            "hkd": {
+                                "fields": {
+                                    "fixed_amounts": {
+                                        "maxItemsOne": false
+                                    },
+                                    "percentages": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            },
+                            "huf": {
+                                "fields": {
+                                    "fixed_amounts": {
+                                        "maxItemsOne": false
+                                    },
+                                    "percentages": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            },
+                            "jpy": {
+                                "fields": {
+                                    "fixed_amounts": {
+                                        "maxItemsOne": false
+                                    },
+                                    "percentages": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            },
+                            "mxn": {
+                                "fields": {
+                                    "fixed_amounts": {
+                                        "maxItemsOne": false
+                                    },
+                                    "percentages": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            },
+                            "myr": {
+                                "fields": {
+                                    "fixed_amounts": {
+                                        "maxItemsOne": false
+                                    },
+                                    "percentages": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            },
+                            "nok": {
+                                "fields": {
+                                    "fixed_amounts": {
+                                        "maxItemsOne": false
+                                    },
+                                    "percentages": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            },
+                            "nzd": {
+                                "fields": {
+                                    "fixed_amounts": {
+                                        "maxItemsOne": false
+                                    },
+                                    "percentages": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            },
+                            "pln": {
+                                "fields": {
+                                    "fixed_amounts": {
+                                        "maxItemsOne": false
+                                    },
+                                    "percentages": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            },
+                            "ron": {
+                                "fields": {
+                                    "fixed_amounts": {
+                                        "maxItemsOne": false
+                                    },
+                                    "percentages": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            },
+                            "sek": {
+                                "fields": {
+                                    "fixed_amounts": {
+                                        "maxItemsOne": false
+                                    },
+                                    "percentages": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            },
+                            "sgd": {
+                                "fields": {
+                                    "fixed_amounts": {
+                                        "maxItemsOne": false
+                                    },
+                                    "percentages": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            },
+                            "usd": {
+                                "fields": {
+                                    "fixed_amounts": {
+                                        "maxItemsOne": false
+                                    },
+                                    "percentages": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "stripe_terminal_location": {
+                "current": "stripe:index/terminalLocation:TerminalLocation"
+            },
+            "stripe_terminal_reader": {
+                "current": "stripe:index/terminalReader:TerminalReader",
+                "fields": {
+                    "action": {
+                        "fields": {
+                            "collect_inputs": {
+                                "fields": {
+                                    "inputs": {
+                                        "maxItemsOne": false,
+                                        "elem": {
+                                            "fields": {
+                                                "selection": {
+                                                    "fields": {
+                                                        "choices": {
+                                                            "maxItemsOne": false
+                                                        }
+                                                    }
+                                                },
+                                                "toggles": {
+                                                    "maxItemsOne": false
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "set_reader_display": {
+                                "fields": {
+                                    "cart": {
+                                        "fields": {
+                                            "line_items": {
+                                                "maxItemsOne": false
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "stripe_treasury_financial_account": {
+                "current": "stripe:index/treasuryFinancialAccount:TreasuryFinancialAccount",
+                "fields": {
+                    "active_features": {
+                        "maxItemsOne": false
+                    },
+                    "features": {
+                        "fields": {
+                            "card_issuing": {
+                                "fields": {
+                                    "status_details": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            },
+                            "deposit_insurance": {
+                                "fields": {
+                                    "status_details": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            },
+                            "financial_addresses": {
+                                "fields": {
+                                    "aba": {
+                                        "fields": {
+                                            "status_details": {
+                                                "maxItemsOne": false
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "inbound_transfers": {
+                                "fields": {
+                                    "ach": {
+                                        "fields": {
+                                            "status_details": {
+                                                "maxItemsOne": false
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "intra_stripe_flows": {
+                                "fields": {
+                                    "status_details": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            },
+                            "outbound_payments": {
+                                "fields": {
+                                    "ach": {
+                                        "fields": {
+                                            "status_details": {
+                                                "maxItemsOne": false
+                                            }
+                                        }
+                                    },
+                                    "us_domestic_wire": {
+                                        "fields": {
+                                            "status_details": {
+                                                "maxItemsOne": false
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "outbound_transfers": {
+                                "fields": {
+                                    "ach": {
+                                        "fields": {
+                                            "status_details": {
+                                                "maxItemsOne": false
+                                            }
+                                        }
+                                    },
+                                    "us_domestic_wire": {
+                                        "fields": {
+                                            "status_details": {
+                                                "maxItemsOne": false
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "financial_addresses": {
+                        "maxItemsOne": false,
+                        "elem": {
+                            "fields": {
+                                "supported_networks": {
+                                    "maxItemsOne": false
+                                }
+                            }
+                        }
+                    },
+                    "pending_features": {
+                        "maxItemsOne": false
+                    },
+                    "restricted_features": {
+                        "maxItemsOne": false
+                    },
+                    "status_details": {
+                        "fields": {
+                            "closed": {
+                                "fields": {
+                                    "reasons": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "supported_currencies": {
+                        "maxItemsOne": false
                     }
                 }
             },
@@ -327,6 +1676,9 @@
                     "events_from": {
                         "maxItemsOne": false
                     },
+                    "include": {
+                        "maxItemsOne": false
+                    },
                     "webhook_endpoint": {
                         "maxItemsOne": true
                     }
@@ -340,12 +1692,124 @@
                     }
                 }
             }
-        },
-        "datasources": {
+        }
+    },
+    "auto-settings": {
+        "resources": {
             "stripe_billing_meter": {
-                "current": "stripe:index/getBillingMeter:getBillingMeter"
+                "maxItemsOneOverrides": {
+                    "customer_mapping": true,
+                    "default_aggregation": true,
+                    "value_settings": true
+                }
+            },
+            "stripe_coupon": {
+                "maxItemsOneOverrides": {
+                    "applies_to": true
+                }
+            },
+            "stripe_customer": {
+                "maxItemsOneOverrides": {
+                    "address": true,
+                    "cash_balance": true,
+                    "cash_balance.$.settings": true,
+                    "invoice_settings": true,
+                    "invoice_settings.$.rendering_options": true,
+                    "shipping": true,
+                    "shipping.$.address": true,
+                    "tax": true
+                }
+            },
+            "stripe_price": {
+                "maxItemsOneOverrides": {
+                    "currency_options.$.custom_unit_amount": true,
+                    "custom_unit_amount": true,
+                    "product_data": true,
+                    "recurring": true
+                }
+            },
+            "stripe_product": {
+                "maxItemsOneOverrides": {
+                    "default_price_data": true,
+                    "default_price_data.$.currency_options.$.custom_unit_amount": true,
+                    "default_price_data.$.custom_unit_amount": true,
+                    "default_price_data.$.recurring": true,
+                    "package_dimensions": true
+                }
+            },
+            "stripe_promotion_code": {
+                "maxItemsOneOverrides": {
+                    "promotion": true,
+                    "restrictions": true
+                }
+            },
+            "stripe_shipping_rate": {
+                "maxItemsOneOverrides": {
+                    "delivery_estimate": true,
+                    "delivery_estimate.$.maximum": true,
+                    "delivery_estimate.$.minimum": true,
+                    "fixed_amount": true
+                }
+            },
+            "stripe_v2_core_event_destination": {
+                "maxItemsOneOverrides": {
+                    "amazon_eventbridge": true,
+                    "webhook_endpoint": true
+                }
             }
         }
     },
-    "auto-settings": {}
+    "default-resource-schema-fixups": {
+        "resources": {
+            "stripe_apple_pay_domain": {},
+            "stripe_billing_alert": {},
+            "stripe_billing_credit_grant": {},
+            "stripe_billing_meter": {},
+            "stripe_billing_portal_configuration": {},
+            "stripe_charge": {},
+            "stripe_climate_order": {},
+            "stripe_coupon": {},
+            "stripe_credit_note": {},
+            "stripe_customer": {},
+            "stripe_customer_balance_transaction": {},
+            "stripe_entitlements_feature": {},
+            "stripe_file": {},
+            "stripe_file_link": {},
+            "stripe_invoice": {},
+            "stripe_invoice_item": {},
+            "stripe_issuing_card": {},
+            "stripe_issuing_cardholder": {},
+            "stripe_issuing_dispute": {},
+            "stripe_issuing_personalization_design": {},
+            "stripe_payment_intent": {},
+            "stripe_payment_link": {},
+            "stripe_payment_method": {},
+            "stripe_payment_method_configuration": {},
+            "stripe_payment_method_domain": {},
+            "stripe_person": {},
+            "stripe_plan": {},
+            "stripe_price": {},
+            "stripe_product": {},
+            "stripe_product_feature": {},
+            "stripe_promotion_code": {},
+            "stripe_quote": {},
+            "stripe_radar_value_list": {},
+            "stripe_radar_value_list_item": {},
+            "stripe_setup_intent": {},
+            "stripe_shipping_rate": {},
+            "stripe_source": {},
+            "stripe_subscription": {},
+            "stripe_subscription_item": {},
+            "stripe_subscription_schedule": {},
+            "stripe_tax_id": {},
+            "stripe_tax_rate": {},
+            "stripe_tax_registration": {},
+            "stripe_terminal_configuration": {},
+            "stripe_terminal_location": {},
+            "stripe_terminal_reader": {},
+            "stripe_treasury_financial_account": {},
+            "stripe_v2_core_event_destination": {},
+            "stripe_webhook_endpoint": {}
+        }
+    }
 }

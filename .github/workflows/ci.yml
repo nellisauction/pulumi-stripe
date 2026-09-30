@@ -5,17 +5,26 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          submodules: true
+          persist-credentials: false
       - uses: actions/setup-go@v6
         with:
           go-version: '1.27'
       - uses: actions/setup-node@v6
         with:
           node-version: '24'
+
+      - name: Apply upstream patches
+        run: make upstream PROVIDER_VERSION=0.0.0-ci
 
       - name: Build Provider
         run: |

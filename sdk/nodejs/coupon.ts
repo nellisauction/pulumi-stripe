@@ -7,7 +7,9 @@ import * as outputs from "./types/output";
 import * as utilities from "./utilities";
 
 /**
- * A coupon contains information about a percent-off or amount-off discount you might want to apply to a customer. Coupons may be applied to [subscriptions](https://stripe.com/docs/api#subscriptions), [invoices](https://stripe.com/docs/api#invoices), [checkout sessions](https://stripe.com/docs/api/checkout/sessions), [quotes](https://stripe.com/docs/api#quotes), and more. Coupons do not work with conventional one-off [charges](https://stripe.com/docs/api#create_charge) or [payment intents](https://stripe.com/docs/api/payment_intents).
+ * A coupon contains information about a percent-off or amount-off discount you
+ * might want to apply to a customer. Coupons may be applied to [subscriptions](https://api.stripe.com#subscriptions), [invoices](https://api.stripe.com#invoices),
+ * [checkout sessions](https://docs.stripe.com/api/checkout/sessions), [quotes](https://api.stripe.com#quotes), and more. Coupons do not work with conventional one-off [charges](https://docs.stripe.com/api/charges/create) or [payment intents](https://docs.stripe.com/api/payment_intents).
  */
 export class Coupon extends pulumi.CustomResource {
     /**
@@ -38,58 +40,62 @@ export class Coupon extends pulumi.CustomResource {
     }
 
     /**
-     * A positive integer representing the amount to subtract from an invoice total (required if `percentOff` is not passed).
+     * Amount (in the `currency` specified) that will be taken off the subtotal of any invoices for this customer.
      */
     declare public readonly amountOff: pulumi.Output<number>;
-    /**
-     * A hash containing directions for what this Coupon will apply discounts to.
-     */
     declare public readonly appliesTo: pulumi.Output<outputs.CouponAppliesTo | undefined>;
     /**
-     * Three-letter [ISO code for the currency](https://stripe.com/docs/currencies) of the `amountOff` parameter (required if `amountOff` is passed).
+     * Time at which the object was created. Measured in seconds since the Unix epoch.
+     */
+    declare public /*out*/ readonly created: pulumi.Output<number>;
+    /**
+     * If `amountOff` has been set, the three-letter [ISO code for the currency](https://stripe.com/docs/currencies) of the amount to take off.
      */
     declare public readonly currency: pulumi.Output<string>;
     /**
-     * Coupons defined in each available currency option (only supported if `amountOff` is passed). Each key must be a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html) and a [supported currency](https://stripe.com/docs/currencies).
+     * Coupons defined in each available currency option. Each key must be a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html) and a [supported currency](https://stripe.com/docs/currencies).
      */
-    declare public readonly currencyOptions: pulumi.Output<outputs.CouponCurrencyOption[]>;
+    declare public readonly currencyOptions: pulumi.Output<outputs.CouponCurrencyOption[] | undefined>;
     /**
-     * Specifies how long the discount will be in effect if used on a subscription. Defaults to `once`.
+     * One of `forever`, `once`, or `repeating`. Describes how long a customer who applies this coupon will get the discount.
      */
     declare public readonly duration: pulumi.Output<string>;
     /**
-     * Required only if `duration` is `repeating`, in which case it must be a positive integer that specifies the number of months the discount will be in effect.
+     * If `duration` is `repeating`, the number of months the coupon applies. Null if coupon `duration` is `forever` or `once`.
      */
     declare public readonly durationInMonths: pulumi.Output<number>;
     /**
-     * A positive integer specifying the number of times the coupon can be redeemed before it's no longer valid. For example, you might have a 50% off coupon that the first 20 readers of your blog can use.
+     * If the object exists in live mode, the value is `true`. If the object exists in test mode, the value is `false`.
+     */
+    declare public /*out*/ readonly livemode: pulumi.Output<boolean>;
+    /**
+     * Maximum number of times this coupon can be redeemed, in total, across all customers, before it is no longer valid.
      */
     declare public readonly maxRedemptions: pulumi.Output<number>;
+    /**
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+     */
     declare public readonly metadata: pulumi.Output<{[key: string]: string}>;
     /**
-     * Name of the coupon displayed to customers on, for instance invoices, or receipts. By default the `id` is shown if `name` is not set.
+     * Name of the coupon displayed to customers on for instance invoices or receipts.
      */
     declare public readonly name: pulumi.Output<string>;
     /**
-     * A positive float larger than 0, and smaller or equal to 100, that represents the discount the coupon will apply (required if `amountOff` is not passed).
+     * String representing the object's type. Objects of the same type share the same value.
+     */
+    declare public /*out*/ readonly object: pulumi.Output<string>;
+    /**
+     * Percent that will be taken off the subtotal of any invoices for this customer for the duration of the coupon. For example, a coupon with percentOff of 50 will make a $ (or local equivalent)100 invoice $ (or local equivalent)50 instead.
      */
     declare public readonly percentOff: pulumi.Output<number>;
     /**
-     * Unix timestamp specifying the last time at which the coupon can be redeemed. After the redeemBy date, the coupon can no longer be applied to new customers.
+     * Date after which the coupon can no longer be redeemed.
      */
     declare public readonly redeemBy: pulumi.Output<number>;
-    /**
-     * Configuration of the [script](https://docs.stripe.com/billing/subscriptions/script-coupons) used to calculate the discount.
-     */
-    declare public readonly script: pulumi.Output<outputs.CouponScript | undefined>;
     /**
      * Number of times this coupon has been applied to a customer.
      */
     declare public /*out*/ readonly timesRedeemed: pulumi.Output<number>;
-    /**
-     * One of `amountOff`, `percentOff`, or `script`. Describes the type of coupon logic used to calculate the discount.
-     */
-    declare public /*out*/ readonly type: pulumi.Output<string>;
     /**
      * Taking account of the above properties, whether this coupon can still be applied to a customer.
      */
@@ -110,18 +116,19 @@ export class Coupon extends pulumi.CustomResource {
             const state = argsOrState as CouponState | undefined;
             resourceInputs["amountOff"] = state?.amountOff;
             resourceInputs["appliesTo"] = state?.appliesTo;
+            resourceInputs["created"] = state?.created;
             resourceInputs["currency"] = state?.currency;
             resourceInputs["currencyOptions"] = state?.currencyOptions;
             resourceInputs["duration"] = state?.duration;
             resourceInputs["durationInMonths"] = state?.durationInMonths;
+            resourceInputs["livemode"] = state?.livemode;
             resourceInputs["maxRedemptions"] = state?.maxRedemptions;
             resourceInputs["metadata"] = state?.metadata;
             resourceInputs["name"] = state?.name;
+            resourceInputs["object"] = state?.object;
             resourceInputs["percentOff"] = state?.percentOff;
             resourceInputs["redeemBy"] = state?.redeemBy;
-            resourceInputs["script"] = state?.script;
             resourceInputs["timesRedeemed"] = state?.timesRedeemed;
-            resourceInputs["type"] = state?.type;
             resourceInputs["valid"] = state?.valid;
         } else {
             const args = argsOrState as CouponArgs | undefined;
@@ -136,9 +143,10 @@ export class Coupon extends pulumi.CustomResource {
             resourceInputs["name"] = args?.name;
             resourceInputs["percentOff"] = args?.percentOff;
             resourceInputs["redeemBy"] = args?.redeemBy;
-            resourceInputs["script"] = args?.script;
+            resourceInputs["created"] = undefined /*out*/;
+            resourceInputs["livemode"] = undefined /*out*/;
+            resourceInputs["object"] = undefined /*out*/;
             resourceInputs["timesRedeemed"] = undefined /*out*/;
-            resourceInputs["type"] = undefined /*out*/;
             resourceInputs["valid"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
@@ -151,58 +159,62 @@ export class Coupon extends pulumi.CustomResource {
  */
 export interface CouponState {
     /**
-     * A positive integer representing the amount to subtract from an invoice total (required if `percentOff` is not passed).
+     * Amount (in the `currency` specified) that will be taken off the subtotal of any invoices for this customer.
      */
     amountOff?: pulumi.Input<number | undefined>;
-    /**
-     * A hash containing directions for what this Coupon will apply discounts to.
-     */
     appliesTo?: pulumi.Input<inputs.CouponAppliesTo | undefined>;
     /**
-     * Three-letter [ISO code for the currency](https://stripe.com/docs/currencies) of the `amountOff` parameter (required if `amountOff` is passed).
+     * Time at which the object was created. Measured in seconds since the Unix epoch.
+     */
+    created?: pulumi.Input<number | undefined>;
+    /**
+     * If `amountOff` has been set, the three-letter [ISO code for the currency](https://stripe.com/docs/currencies) of the amount to take off.
      */
     currency?: pulumi.Input<string | undefined>;
     /**
-     * Coupons defined in each available currency option (only supported if `amountOff` is passed). Each key must be a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html) and a [supported currency](https://stripe.com/docs/currencies).
+     * Coupons defined in each available currency option. Each key must be a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html) and a [supported currency](https://stripe.com/docs/currencies).
      */
     currencyOptions?: pulumi.Input<pulumi.Input<inputs.CouponCurrencyOption>[] | undefined>;
     /**
-     * Specifies how long the discount will be in effect if used on a subscription. Defaults to `once`.
+     * One of `forever`, `once`, or `repeating`. Describes how long a customer who applies this coupon will get the discount.
      */
     duration?: pulumi.Input<string | undefined>;
     /**
-     * Required only if `duration` is `repeating`, in which case it must be a positive integer that specifies the number of months the discount will be in effect.
+     * If `duration` is `repeating`, the number of months the coupon applies. Null if coupon `duration` is `forever` or `once`.
      */
     durationInMonths?: pulumi.Input<number | undefined>;
     /**
-     * A positive integer specifying the number of times the coupon can be redeemed before it's no longer valid. For example, you might have a 50% off coupon that the first 20 readers of your blog can use.
+     * If the object exists in live mode, the value is `true`. If the object exists in test mode, the value is `false`.
+     */
+    livemode?: pulumi.Input<boolean | undefined>;
+    /**
+     * Maximum number of times this coupon can be redeemed, in total, across all customers, before it is no longer valid.
      */
     maxRedemptions?: pulumi.Input<number | undefined>;
+    /**
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+     */
     metadata?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
     /**
-     * Name of the coupon displayed to customers on, for instance invoices, or receipts. By default the `id` is shown if `name` is not set.
+     * Name of the coupon displayed to customers on for instance invoices or receipts.
      */
     name?: pulumi.Input<string | undefined>;
     /**
-     * A positive float larger than 0, and smaller or equal to 100, that represents the discount the coupon will apply (required if `amountOff` is not passed).
+     * String representing the object's type. Objects of the same type share the same value.
+     */
+    object?: pulumi.Input<string | undefined>;
+    /**
+     * Percent that will be taken off the subtotal of any invoices for this customer for the duration of the coupon. For example, a coupon with percentOff of 50 will make a $ (or local equivalent)100 invoice $ (or local equivalent)50 instead.
      */
     percentOff?: pulumi.Input<number | undefined>;
     /**
-     * Unix timestamp specifying the last time at which the coupon can be redeemed. After the redeemBy date, the coupon can no longer be applied to new customers.
+     * Date after which the coupon can no longer be redeemed.
      */
     redeemBy?: pulumi.Input<number | undefined>;
-    /**
-     * Configuration of the [script](https://docs.stripe.com/billing/subscriptions/script-coupons) used to calculate the discount.
-     */
-    script?: pulumi.Input<inputs.CouponScript | undefined>;
     /**
      * Number of times this coupon has been applied to a customer.
      */
     timesRedeemed?: pulumi.Input<number | undefined>;
-    /**
-     * One of `amountOff`, `percentOff`, or `script`. Describes the type of coupon logic used to calculate the discount.
-     */
-    type?: pulumi.Input<string | undefined>;
     /**
      * Taking account of the above properties, whether this coupon can still be applied to a customer.
      */
@@ -214,48 +226,44 @@ export interface CouponState {
  */
 export interface CouponArgs {
     /**
-     * A positive integer representing the amount to subtract from an invoice total (required if `percentOff` is not passed).
+     * Amount (in the `currency` specified) that will be taken off the subtotal of any invoices for this customer.
      */
     amountOff?: pulumi.Input<number | undefined>;
-    /**
-     * A hash containing directions for what this Coupon will apply discounts to.
-     */
     appliesTo?: pulumi.Input<inputs.CouponAppliesTo | undefined>;
     /**
-     * Three-letter [ISO code for the currency](https://stripe.com/docs/currencies) of the `amountOff` parameter (required if `amountOff` is passed).
+     * If `amountOff` has been set, the three-letter [ISO code for the currency](https://stripe.com/docs/currencies) of the amount to take off.
      */
     currency?: pulumi.Input<string | undefined>;
     /**
-     * Coupons defined in each available currency option (only supported if `amountOff` is passed). Each key must be a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html) and a [supported currency](https://stripe.com/docs/currencies).
+     * Coupons defined in each available currency option. Each key must be a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html) and a [supported currency](https://stripe.com/docs/currencies).
      */
     currencyOptions?: pulumi.Input<pulumi.Input<inputs.CouponCurrencyOption>[] | undefined>;
     /**
-     * Specifies how long the discount will be in effect if used on a subscription. Defaults to `once`.
+     * One of `forever`, `once`, or `repeating`. Describes how long a customer who applies this coupon will get the discount.
      */
     duration?: pulumi.Input<string | undefined>;
     /**
-     * Required only if `duration` is `repeating`, in which case it must be a positive integer that specifies the number of months the discount will be in effect.
+     * If `duration` is `repeating`, the number of months the coupon applies. Null if coupon `duration` is `forever` or `once`.
      */
     durationInMonths?: pulumi.Input<number | undefined>;
     /**
-     * A positive integer specifying the number of times the coupon can be redeemed before it's no longer valid. For example, you might have a 50% off coupon that the first 20 readers of your blog can use.
+     * Maximum number of times this coupon can be redeemed, in total, across all customers, before it is no longer valid.
      */
     maxRedemptions?: pulumi.Input<number | undefined>;
+    /**
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+     */
     metadata?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
     /**
-     * Name of the coupon displayed to customers on, for instance invoices, or receipts. By default the `id` is shown if `name` is not set.
+     * Name of the coupon displayed to customers on for instance invoices or receipts.
      */
     name?: pulumi.Input<string | undefined>;
     /**
-     * A positive float larger than 0, and smaller or equal to 100, that represents the discount the coupon will apply (required if `amountOff` is not passed).
+     * Percent that will be taken off the subtotal of any invoices for this customer for the duration of the coupon. For example, a coupon with percentOff of 50 will make a $ (or local equivalent)100 invoice $ (or local equivalent)50 instead.
      */
     percentOff?: pulumi.Input<number | undefined>;
     /**
-     * Unix timestamp specifying the last time at which the coupon can be redeemed. After the redeemBy date, the coupon can no longer be applied to new customers.
+     * Date after which the coupon can no longer be redeemed.
      */
     redeemBy?: pulumi.Input<number | undefined>;
-    /**
-     * Configuration of the [script](https://docs.stripe.com/billing/subscriptions/script-coupons) used to calculate the discount.
-     */
-    script?: pulumi.Input<inputs.CouponScript | undefined>;
 }

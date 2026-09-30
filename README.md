@@ -49,6 +49,7 @@ dotnet add package Pulumi.Stripe
 The following configuration points are available for the `stripe` provider:
 
 - `stripe:apiKey` (environment: `STRIPE_API_KEY`) - your Stripe API key
+- `stripe:stripeAccount` (environment: `STRIPE_ACCOUNT`) - connected account context for Connect-scoped requests
 
 ## Reference
 

@@ -7,7 +7,12 @@ import * as outputs from "./types/output";
 import * as utilities from "./utilities";
 
 /**
- * Prices define the unit cost, currency, and (optional) billing cycle for both recurring and one-time purchases of products. [Products](https://stripe.com/docs/api#products) help you track inventory or provisioning, and prices help you track payment terms. Different physical goods or levels of service should be represented by products, and pricing options should be represented by prices. This approach lets you change prices without having to change your provisioning scheme. For example, you might have a single \"gold\" product that has prices for $10/month, $100/year, and €9 once. Related guides: [Set up a subscription](https://stripe.com/docs/billing/subscriptions/set-up-subscription), [create an invoice](https://stripe.com/docs/billing/invoices/create), and more about [products and prices](https://stripe.com/docs/products-prices/overview).
+ * Prices define the unit cost, currency, and (optional) billing cycle for both recurring and one-time purchases of products.
+ * [Products](https://api.stripe.com#products) help you track inventory or provisioning, and prices help you track payment terms. Different physical goods or levels of service should be represented by products, and pricing options should be represented by prices. This approach lets you change prices without having to change your provisioning scheme.
+ *
+ * For example, you might have a single "gold" product that has prices for $10/month, $100/year, and €9 once.
+ *
+ * Related guides: [Set up a subscription](https://docs.stripe.com/billing/subscriptions/set-up-subscription), [create an invoice](https://docs.stripe.com/billing/invoices/create), and more about [products and prices](https://docs.stripe.com/products-prices/overview).
  */
 export class Price extends pulumi.CustomResource {
     /**
@@ -38,13 +43,17 @@ export class Price extends pulumi.CustomResource {
     }
 
     /**
-     * Whether the price can be used for new purchases. Defaults to `true`.
+     * Whether the price can be used for new purchases.
      */
-    declare public readonly active: pulumi.Output<boolean | undefined>;
+    declare public readonly active: pulumi.Output<boolean>;
     /**
      * Describes how to compute the price per period. Either `perUnit` or `tiered`. `perUnit` indicates that the fixed amount (specified in `unitAmount` or `unitAmountDecimal`) will be charged per unit in `quantity` (for prices with `usage_type=licensed`), or per unit of total usage (for prices with `usage_type=metered`). `tiered` indicates that the unit pricing will be computed using a tiering strategy as defined using the `tiers` and `tiersMode` attributes.
      */
     declare public readonly billingScheme: pulumi.Output<string>;
+    /**
+     * Time at which the object was created. Measured in seconds since the Unix epoch.
+     */
+    declare public /*out*/ readonly created: pulumi.Output<number>;
     /**
      * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
      */
@@ -52,17 +61,21 @@ export class Price extends pulumi.CustomResource {
     /**
      * Prices defined in each available currency option. Each key must be a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html) and a [supported currency](https://stripe.com/docs/currencies).
      */
-    declare public readonly currencyOptions: pulumi.Output<outputs.PriceCurrencyOption[]>;
+    declare public readonly currencyOptions: pulumi.Output<outputs.PriceCurrencyOption[] | undefined>;
     /**
      * When set, provides configuration for the amount to be adjusted by the customer during Checkout Sessions and Payment Links.
      */
     declare public readonly customUnitAmount: pulumi.Output<outputs.PriceCustomUnitAmount | undefined>;
     /**
+     * If the object exists in live mode, the value is `true`. If the object exists in test mode, the value is `false`.
+     */
+    declare public /*out*/ readonly livemode: pulumi.Output<boolean>;
+    /**
      * A lookup key used to retrieve prices dynamically from a static string. This may be up to 200 characters.
      */
     declare public readonly lookupKey: pulumi.Output<string>;
     /**
-     * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
      */
     declare public readonly metadata: pulumi.Output<{[key: string]: string}>;
     /**
@@ -70,7 +83,11 @@ export class Price extends pulumi.CustomResource {
      */
     declare public readonly nickname: pulumi.Output<string>;
     /**
-     * The ID of the [Product](https://docs.stripe.com/api/products) that this [Price](https://docs.stripe.com/api/prices) will belong to.
+     * String representing the object's type. Objects of the same type share the same value.
+     */
+    declare public /*out*/ readonly object: pulumi.Output<string>;
+    /**
+     * The ID of the product this price is associated with.
      */
     declare public readonly product: pulumi.Output<string>;
     /**
@@ -82,7 +99,7 @@ export class Price extends pulumi.CustomResource {
      */
     declare public readonly recurring: pulumi.Output<outputs.PriceRecurring | undefined>;
     /**
-     * Only required if a [default tax behavior](<https://stripe.com/docs/tax/products-prices-tax-categories-tax-behavior#setting-a-default-tax-behavior-(recommended)>) was not provided in the Stripe Tax settings. Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
+     * Only required if a [default tax behavior](<https://docs.stripe.com/tax/products-prices-tax-categories-tax-behavior#setting-a-default-tax-behavior-(recommended)>) was not provided in the Stripe Tax settings. Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
      */
     declare public readonly taxBehavior: pulumi.Output<string>;
     /**
@@ -90,19 +107,28 @@ export class Price extends pulumi.CustomResource {
      */
     declare public readonly tiers: pulumi.Output<outputs.PriceTier[] | undefined>;
     /**
-     * Defines if the tiering price should be `graduated` or `volume` based. In `volume`-based tiering, the maximum quantity within a period determines the per unit price, in `graduated` tiering pricing can successively change as the quantity grows.
+     * Defines if the tiering price should be `graduated` or `volume` based. In `volume`-based tiering, the maximum quantity within a period determines the per unit price. In `graduated` tiering, pricing can change as the quantity grows.
      */
     declare public readonly tiersMode: pulumi.Output<string>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If set to true, will atomically remove the lookup key from the existing price, and assign it to this price.
+     */
+    declare public readonly transferLookupKey: pulumi.Output<boolean | undefined>;
+    /**
+     * Apply a transformation to the reported usage or set quantity before computing the amount billed. Cannot be combined with `tiers`.
+     */
+    declare public readonly transformQuantity: pulumi.Output<outputs.PriceTransformQuantity>;
     /**
      * One of `oneTime` or `recurring` depending on whether the price is for a one-time purchase or a recurring (subscription) purchase.
      */
     declare public /*out*/ readonly type: pulumi.Output<string>;
     /**
-     * A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge. One of `unitAmount`, `unitAmountDecimal`, or `customUnitAmount` is required, unless `billing_scheme=tiered`.
+     * The unit amount in cents (or local equivalent) to be charged, represented as a whole integer if possible. Only set if `billing_scheme=per_unit`.
      */
     declare public readonly unitAmount: pulumi.Output<number>;
     /**
-     * Same as `unitAmount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unitAmount` and `unitAmountDecimal` can be set.
+     * The unit amount in cents (or local equivalent) to be charged, represented as a decimal string with at most 12 decimal places. Only set if `billing_scheme=per_unit`.
      */
     declare public readonly unitAmountDecimal: pulumi.Output<string>;
 
@@ -121,18 +147,23 @@ export class Price extends pulumi.CustomResource {
             const state = argsOrState as PriceState | undefined;
             resourceInputs["active"] = state?.active;
             resourceInputs["billingScheme"] = state?.billingScheme;
+            resourceInputs["created"] = state?.created;
             resourceInputs["currency"] = state?.currency;
             resourceInputs["currencyOptions"] = state?.currencyOptions;
             resourceInputs["customUnitAmount"] = state?.customUnitAmount;
+            resourceInputs["livemode"] = state?.livemode;
             resourceInputs["lookupKey"] = state?.lookupKey;
             resourceInputs["metadata"] = state?.metadata;
             resourceInputs["nickname"] = state?.nickname;
+            resourceInputs["object"] = state?.object;
             resourceInputs["product"] = state?.product;
             resourceInputs["productData"] = state?.productData;
             resourceInputs["recurring"] = state?.recurring;
             resourceInputs["taxBehavior"] = state?.taxBehavior;
             resourceInputs["tiers"] = state?.tiers;
             resourceInputs["tiersMode"] = state?.tiersMode;
+            resourceInputs["transferLookupKey"] = state?.transferLookupKey;
+            resourceInputs["transformQuantity"] = state?.transformQuantity;
             resourceInputs["type"] = state?.type;
             resourceInputs["unitAmount"] = state?.unitAmount;
             resourceInputs["unitAmountDecimal"] = state?.unitAmountDecimal;
@@ -155,8 +186,13 @@ export class Price extends pulumi.CustomResource {
             resourceInputs["taxBehavior"] = args?.taxBehavior;
             resourceInputs["tiers"] = args?.tiers;
             resourceInputs["tiersMode"] = args?.tiersMode;
+            resourceInputs["transferLookupKey"] = args?.transferLookupKey;
+            resourceInputs["transformQuantity"] = args?.transformQuantity;
             resourceInputs["unitAmount"] = args?.unitAmount;
             resourceInputs["unitAmountDecimal"] = args?.unitAmountDecimal;
+            resourceInputs["created"] = undefined /*out*/;
+            resourceInputs["livemode"] = undefined /*out*/;
+            resourceInputs["object"] = undefined /*out*/;
             resourceInputs["type"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
@@ -169,13 +205,17 @@ export class Price extends pulumi.CustomResource {
  */
 export interface PriceState {
     /**
-     * Whether the price can be used for new purchases. Defaults to `true`.
+     * Whether the price can be used for new purchases.
      */
     active?: pulumi.Input<boolean | undefined>;
     /**
      * Describes how to compute the price per period. Either `perUnit` or `tiered`. `perUnit` indicates that the fixed amount (specified in `unitAmount` or `unitAmountDecimal`) will be charged per unit in `quantity` (for prices with `usage_type=licensed`), or per unit of total usage (for prices with `usage_type=metered`). `tiered` indicates that the unit pricing will be computed using a tiering strategy as defined using the `tiers` and `tiersMode` attributes.
      */
     billingScheme?: pulumi.Input<string | undefined>;
+    /**
+     * Time at which the object was created. Measured in seconds since the Unix epoch.
+     */
+    created?: pulumi.Input<number | undefined>;
     /**
      * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
      */
@@ -189,11 +229,15 @@ export interface PriceState {
      */
     customUnitAmount?: pulumi.Input<inputs.PriceCustomUnitAmount | undefined>;
     /**
+     * If the object exists in live mode, the value is `true`. If the object exists in test mode, the value is `false`.
+     */
+    livemode?: pulumi.Input<boolean | undefined>;
+    /**
      * A lookup key used to retrieve prices dynamically from a static string. This may be up to 200 characters.
      */
     lookupKey?: pulumi.Input<string | undefined>;
     /**
-     * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
      */
     metadata?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
     /**
@@ -201,7 +245,11 @@ export interface PriceState {
      */
     nickname?: pulumi.Input<string | undefined>;
     /**
-     * The ID of the [Product](https://docs.stripe.com/api/products) that this [Price](https://docs.stripe.com/api/prices) will belong to.
+     * String representing the object's type. Objects of the same type share the same value.
+     */
+    object?: pulumi.Input<string | undefined>;
+    /**
+     * The ID of the product this price is associated with.
      */
     product?: pulumi.Input<string | undefined>;
     /**
@@ -213,7 +261,7 @@ export interface PriceState {
      */
     recurring?: pulumi.Input<inputs.PriceRecurring | undefined>;
     /**
-     * Only required if a [default tax behavior](<https://stripe.com/docs/tax/products-prices-tax-categories-tax-behavior#setting-a-default-tax-behavior-(recommended)>) was not provided in the Stripe Tax settings. Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
+     * Only required if a [default tax behavior](<https://docs.stripe.com/tax/products-prices-tax-categories-tax-behavior#setting-a-default-tax-behavior-(recommended)>) was not provided in the Stripe Tax settings. Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
      */
     taxBehavior?: pulumi.Input<string | undefined>;
     /**
@@ -221,19 +269,28 @@ export interface PriceState {
      */
     tiers?: pulumi.Input<pulumi.Input<inputs.PriceTier>[] | undefined>;
     /**
-     * Defines if the tiering price should be `graduated` or `volume` based. In `volume`-based tiering, the maximum quantity within a period determines the per unit price, in `graduated` tiering pricing can successively change as the quantity grows.
+     * Defines if the tiering price should be `graduated` or `volume` based. In `volume`-based tiering, the maximum quantity within a period determines the per unit price. In `graduated` tiering, pricing can change as the quantity grows.
      */
     tiersMode?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If set to true, will atomically remove the lookup key from the existing price, and assign it to this price.
+     */
+    transferLookupKey?: pulumi.Input<boolean | undefined>;
+    /**
+     * Apply a transformation to the reported usage or set quantity before computing the amount billed. Cannot be combined with `tiers`.
+     */
+    transformQuantity?: pulumi.Input<inputs.PriceTransformQuantity | undefined>;
     /**
      * One of `oneTime` or `recurring` depending on whether the price is for a one-time purchase or a recurring (subscription) purchase.
      */
     type?: pulumi.Input<string | undefined>;
     /**
-     * A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge. One of `unitAmount`, `unitAmountDecimal`, or `customUnitAmount` is required, unless `billing_scheme=tiered`.
+     * The unit amount in cents (or local equivalent) to be charged, represented as a whole integer if possible. Only set if `billing_scheme=per_unit`.
      */
     unitAmount?: pulumi.Input<number | undefined>;
     /**
-     * Same as `unitAmount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unitAmount` and `unitAmountDecimal` can be set.
+     * The unit amount in cents (or local equivalent) to be charged, represented as a decimal string with at most 12 decimal places. Only set if `billing_scheme=per_unit`.
      */
     unitAmountDecimal?: pulumi.Input<string | undefined>;
 }
@@ -243,7 +300,7 @@ export interface PriceState {
  */
 export interface PriceArgs {
     /**
-     * Whether the price can be used for new purchases. Defaults to `true`.
+     * Whether the price can be used for new purchases.
      */
     active?: pulumi.Input<boolean | undefined>;
     /**
@@ -267,7 +324,7 @@ export interface PriceArgs {
      */
     lookupKey?: pulumi.Input<string | undefined>;
     /**
-     * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
      */
     metadata?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
     /**
@@ -275,7 +332,7 @@ export interface PriceArgs {
      */
     nickname?: pulumi.Input<string | undefined>;
     /**
-     * The ID of the [Product](https://docs.stripe.com/api/products) that this [Price](https://docs.stripe.com/api/prices) will belong to.
+     * The ID of the product this price is associated with.
      */
     product?: pulumi.Input<string | undefined>;
     /**
@@ -287,7 +344,7 @@ export interface PriceArgs {
      */
     recurring?: pulumi.Input<inputs.PriceRecurring | undefined>;
     /**
-     * Only required if a [default tax behavior](<https://stripe.com/docs/tax/products-prices-tax-categories-tax-behavior#setting-a-default-tax-behavior-(recommended)>) was not provided in the Stripe Tax settings. Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
+     * Only required if a [default tax behavior](<https://docs.stripe.com/tax/products-prices-tax-categories-tax-behavior#setting-a-default-tax-behavior-(recommended)>) was not provided in the Stripe Tax settings. Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
      */
     taxBehavior?: pulumi.Input<string | undefined>;
     /**
@@ -295,15 +352,24 @@ export interface PriceArgs {
      */
     tiers?: pulumi.Input<pulumi.Input<inputs.PriceTier>[] | undefined>;
     /**
-     * Defines if the tiering price should be `graduated` or `volume` based. In `volume`-based tiering, the maximum quantity within a period determines the per unit price, in `graduated` tiering pricing can successively change as the quantity grows.
+     * Defines if the tiering price should be `graduated` or `volume` based. In `volume`-based tiering, the maximum quantity within a period determines the per unit price. In `graduated` tiering, pricing can change as the quantity grows.
      */
     tiersMode?: pulumi.Input<string | undefined>;
     /**
-     * A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge. One of `unitAmount`, `unitAmountDecimal`, or `customUnitAmount` is required, unless `billing_scheme=tiered`.
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If set to true, will atomically remove the lookup key from the existing price, and assign it to this price.
+     */
+    transferLookupKey?: pulumi.Input<boolean | undefined>;
+    /**
+     * Apply a transformation to the reported usage or set quantity before computing the amount billed. Cannot be combined with `tiers`.
+     */
+    transformQuantity?: pulumi.Input<inputs.PriceTransformQuantity | undefined>;
+    /**
+     * The unit amount in cents (or local equivalent) to be charged, represented as a whole integer if possible. Only set if `billing_scheme=per_unit`.
      */
     unitAmount?: pulumi.Input<number | undefined>;
     /**
-     * Same as `unitAmount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unitAmount` and `unitAmountDecimal` can be set.
+     * The unit amount in cents (or local equivalent) to be charged, represented as a decimal string with at most 12 decimal places. Only set if `billing_scheme=per_unit`.
      */
     unitAmountDecimal?: pulumi.Input<string | undefined>;
 }

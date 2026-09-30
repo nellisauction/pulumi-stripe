@@ -7,7 +7,8 @@ import * as outputs from "./types/output";
 import * as utilities from "./utilities";
 
 /**
- * Shipping rates describe the price of shipping presented to your customers and applied to a purchase. For more information, see [Charge for shipping](https://stripe.com/docs/payments/during-payment/charge-shipping).
+ * Shipping rates describe the price of shipping presented to your customers and
+ * applied to a purchase. For more information, see [Charge for shipping](https://docs.stripe.com/payments/during-payment/charge-shipping).
  */
 export class ShippingRate extends pulumi.CustomResource {
     /**
@@ -40,7 +41,11 @@ export class ShippingRate extends pulumi.CustomResource {
     /**
      * Whether the shipping rate can be used for new purchases. Defaults to `true`.
      */
-    declare public /*out*/ readonly active: pulumi.Output<boolean>;
+    declare public readonly active: pulumi.Output<boolean>;
+    /**
+     * Time at which the object was created. Measured in seconds since the Unix epoch.
+     */
+    declare public /*out*/ readonly created: pulumi.Output<number>;
     /**
      * The estimated range for how long shipping will take, meant to be displayable to the customer. This will appear on CheckoutSessions.
      */
@@ -49,20 +54,25 @@ export class ShippingRate extends pulumi.CustomResource {
      * The name of the shipping rate, meant to be displayable to the customer. This will appear on CheckoutSessions.
      */
     declare public readonly displayName: pulumi.Output<string>;
-    /**
-     * Describes a fixed amount to charge for shipping. Must be present if type is `fixedAmount`.
-     */
     declare public readonly fixedAmount: pulumi.Output<outputs.ShippingRateFixedAmount | undefined>;
     /**
-     * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
+     * If the object exists in live mode, the value is `true`. If the object exists in test mode, the value is `false`.
+     */
+    declare public /*out*/ readonly livemode: pulumi.Output<boolean>;
+    /**
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
      */
     declare public readonly metadata: pulumi.Output<{[key: string]: string}>;
+    /**
+     * String representing the object's type. Objects of the same type share the same value.
+     */
+    declare public /*out*/ readonly object: pulumi.Output<string>;
     /**
      * Specifies whether the rate is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`.
      */
     declare public readonly taxBehavior: pulumi.Output<string>;
     /**
-     * A [tax code](https://stripe.com/docs/tax/tax-categories) ID. The Shipping tax code is `txcd92010001`.
+     * A [tax code](https://docs.stripe.com/tax/tax-categories) ID. The Shipping tax code is `txcd92010001`.
      */
     declare public readonly taxCode: pulumi.Output<string>;
     /**
@@ -84,10 +94,13 @@ export class ShippingRate extends pulumi.CustomResource {
         if (opts.id) {
             const state = argsOrState as ShippingRateState | undefined;
             resourceInputs["active"] = state?.active;
+            resourceInputs["created"] = state?.created;
             resourceInputs["deliveryEstimate"] = state?.deliveryEstimate;
             resourceInputs["displayName"] = state?.displayName;
             resourceInputs["fixedAmount"] = state?.fixedAmount;
+            resourceInputs["livemode"] = state?.livemode;
             resourceInputs["metadata"] = state?.metadata;
+            resourceInputs["object"] = state?.object;
             resourceInputs["taxBehavior"] = state?.taxBehavior;
             resourceInputs["taxCode"] = state?.taxCode;
             resourceInputs["type"] = state?.type;
@@ -96,6 +109,7 @@ export class ShippingRate extends pulumi.CustomResource {
             if (args?.displayName === undefined && !opts.urn) {
                 throw new Error("Missing required property 'displayName'");
             }
+            resourceInputs["active"] = args?.active;
             resourceInputs["deliveryEstimate"] = args?.deliveryEstimate;
             resourceInputs["displayName"] = args?.displayName;
             resourceInputs["fixedAmount"] = args?.fixedAmount;
@@ -103,7 +117,9 @@ export class ShippingRate extends pulumi.CustomResource {
             resourceInputs["taxBehavior"] = args?.taxBehavior;
             resourceInputs["taxCode"] = args?.taxCode;
             resourceInputs["type"] = args?.type;
-            resourceInputs["active"] = undefined /*out*/;
+            resourceInputs["created"] = undefined /*out*/;
+            resourceInputs["livemode"] = undefined /*out*/;
+            resourceInputs["object"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
         super(ShippingRate.__pulumiType, name, resourceInputs, opts);
@@ -119,6 +135,10 @@ export interface ShippingRateState {
      */
     active?: pulumi.Input<boolean | undefined>;
     /**
+     * Time at which the object was created. Measured in seconds since the Unix epoch.
+     */
+    created?: pulumi.Input<number | undefined>;
+    /**
      * The estimated range for how long shipping will take, meant to be displayable to the customer. This will appear on CheckoutSessions.
      */
     deliveryEstimate?: pulumi.Input<inputs.ShippingRateDeliveryEstimate | undefined>;
@@ -126,20 +146,25 @@ export interface ShippingRateState {
      * The name of the shipping rate, meant to be displayable to the customer. This will appear on CheckoutSessions.
      */
     displayName?: pulumi.Input<string | undefined>;
-    /**
-     * Describes a fixed amount to charge for shipping. Must be present if type is `fixedAmount`.
-     */
     fixedAmount?: pulumi.Input<inputs.ShippingRateFixedAmount | undefined>;
     /**
-     * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
+     * If the object exists in live mode, the value is `true`. If the object exists in test mode, the value is `false`.
+     */
+    livemode?: pulumi.Input<boolean | undefined>;
+    /**
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
      */
     metadata?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
+    /**
+     * String representing the object's type. Objects of the same type share the same value.
+     */
+    object?: pulumi.Input<string | undefined>;
     /**
      * Specifies whether the rate is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`.
      */
     taxBehavior?: pulumi.Input<string | undefined>;
     /**
-     * A [tax code](https://stripe.com/docs/tax/tax-categories) ID. The Shipping tax code is `txcd92010001`.
+     * A [tax code](https://docs.stripe.com/tax/tax-categories) ID. The Shipping tax code is `txcd92010001`.
      */
     taxCode?: pulumi.Input<string | undefined>;
     /**
@@ -153,6 +178,10 @@ export interface ShippingRateState {
  */
 export interface ShippingRateArgs {
     /**
+     * Whether the shipping rate can be used for new purchases. Defaults to `true`.
+     */
+    active?: pulumi.Input<boolean | undefined>;
+    /**
      * The estimated range for how long shipping will take, meant to be displayable to the customer. This will appear on CheckoutSessions.
      */
     deliveryEstimate?: pulumi.Input<inputs.ShippingRateDeliveryEstimate | undefined>;
@@ -160,12 +189,9 @@ export interface ShippingRateArgs {
      * The name of the shipping rate, meant to be displayable to the customer. This will appear on CheckoutSessions.
      */
     displayName: pulumi.Input<string>;
-    /**
-     * Describes a fixed amount to charge for shipping. Must be present if type is `fixedAmount`.
-     */
     fixedAmount?: pulumi.Input<inputs.ShippingRateFixedAmount | undefined>;
     /**
-     * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
      */
     metadata?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
     /**
@@ -173,7 +199,7 @@ export interface ShippingRateArgs {
      */
     taxBehavior?: pulumi.Input<string | undefined>;
     /**
-     * A [tax code](https://stripe.com/docs/tax/tax-categories) ID. The Shipping tax code is `txcd92010001`.
+     * A [tax code](https://docs.stripe.com/tax/tax-categories) ID. The Shipping tax code is `txcd92010001`.
      */
     taxCode?: pulumi.Input<string | undefined>;
     /**

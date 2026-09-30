@@ -5,68 +5,298 @@ import * as pulumi from "@pulumi/pulumi";
 import * as inputs from "../types/input";
 import * as outputs from "../types/output";
 
+export interface BillingAlertUsageThreshold {
+    /**
+     * The filters allow limiting the scope of this usage alert. You can only specify up to one filter at this time.
+     */
+    filters?: pulumi.Input<pulumi.Input<inputs.BillingAlertUsageThresholdFilter>[] | undefined>;
+    /**
+     * The value at which this alert will trigger.
+     */
+    gte: pulumi.Input<number>;
+    /**
+     * The [Billing Meter](https://docs.stripe.com/api/billing/meter) ID whose usage is monitored.
+     */
+    meter: pulumi.Input<string>;
+    /**
+     * Defines how the alert will behave.
+     */
+    recurrence: pulumi.Input<string>;
+}
+
+export interface BillingAlertUsageThresholdFilter {
+    /**
+     * Limit the scope of the alert to this customer ID
+     */
+    customer?: pulumi.Input<string | undefined>;
+    type: pulumi.Input<string>;
+}
+
+export interface BillingCreditGrantAmount {
+    /**
+     * The monetary amount.
+     */
+    monetary?: pulumi.Input<inputs.BillingCreditGrantAmountMonetary | undefined>;
+    /**
+     * The type of this amount. We currently only support `monetary` billing credits.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface BillingCreditGrantAmountMonetary {
+    /**
+     * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+     */
+    currency: pulumi.Input<string>;
+    /**
+     * A positive integer representing the amount.
+     */
+    value: pulumi.Input<number>;
+}
+
+export interface BillingCreditGrantApplicabilityConfig {
+    scope: pulumi.Input<inputs.BillingCreditGrantApplicabilityConfigScope>;
+}
+
+export interface BillingCreditGrantApplicabilityConfigScope {
+    /**
+     * The price type that credit grants can apply to. We currently only support the `metered` price type. This refers to prices that have a [Billing Meter](https://docs.stripe.com/api/billing/meter) attached to them. Cannot be used in combination with `prices`.
+     */
+    priceType?: pulumi.Input<string | undefined>;
+    /**
+     * The prices that credit grants can apply to. We currently only support `metered` prices. This refers to prices that have a [Billing Meter](https://docs.stripe.com/api/billing/meter) attached to them. Cannot be used in combination with `priceType`.
+     */
+    prices?: pulumi.Input<pulumi.Input<inputs.BillingCreditGrantApplicabilityConfigScopePrice>[] | undefined>;
+}
+
+export interface BillingCreditGrantApplicabilityConfigScopePrice {
+    /**
+     * Unique identifier for the object.
+     */
+    id?: pulumi.Input<string | undefined>;
+}
+
 export interface BillingMeterCustomerMapping {
     /**
      * The key in the meter event payload to use for mapping the event to a customer.
      */
     eventPayloadKey: pulumi.Input<string>;
     /**
-     * The method for mapping a meter event to a customer. Must be `byId`.
+     * The method for mapping a meter event to a customer.
      */
     type: pulumi.Input<string>;
 }
 
 export interface BillingMeterDefaultAggregation {
     /**
-     * Specifies how events are aggregated. Allowed values are `count` to count the number of events, `sum` to sum each event's value and `last` to take the last event's value in the window.
+     * Specifies how events are aggregated.
      */
     formula: pulumi.Input<string>;
 }
 
+export interface BillingMeterStatusTransitions {
+    /**
+     * The time the meter was deactivated, if any. Measured in seconds since Unix epoch.
+     */
+    deactivatedAt?: pulumi.Input<number | undefined>;
+}
+
 export interface BillingMeterValueSettings {
     /**
-     * The key in the usage event payload to use as the value for this meter. For example, if the event payload contains usage on a `bytesUsed` field, then set the event*payload*key to \"bytes_used\".
+     * The key in the meter event payload to use as the value for this meter.
      */
     eventPayloadKey?: pulumi.Input<string | undefined>;
 }
 
-export interface CouponAppliesTo {
+export interface BillingPortalConfigurationBusinessProfile {
     /**
-     * An array of Product IDs that this Coupon will apply to.
+     * The messaging shown to customers in the portal.
      */
-    products?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    headline?: pulumi.Input<string | undefined>;
+    /**
+     * A link to the business’s publicly available privacy policy.
+     */
+    privacyPolicyUrl?: pulumi.Input<string | undefined>;
+    /**
+     * A link to the business’s publicly available terms of service.
+     */
+    termsOfServiceUrl?: pulumi.Input<string | undefined>;
 }
 
-export interface CouponCurrencyOption {
-    /**
-     * A positive integer representing the amount to subtract from an invoice total.
-     */
-    amountOff: pulumi.Input<number>;
-    key: pulumi.Input<string>;
+export interface BillingPortalConfigurationFeatures {
+    customerUpdate?: pulumi.Input<inputs.BillingPortalConfigurationFeaturesCustomerUpdate | undefined>;
+    invoiceHistory?: pulumi.Input<inputs.BillingPortalConfigurationFeaturesInvoiceHistory | undefined>;
+    paymentMethodUpdate?: pulumi.Input<inputs.BillingPortalConfigurationFeaturesPaymentMethodUpdate | undefined>;
+    subscriptionCancel?: pulumi.Input<inputs.BillingPortalConfigurationFeaturesSubscriptionCancel | undefined>;
+    subscriptionUpdate?: pulumi.Input<inputs.BillingPortalConfigurationFeaturesSubscriptionUpdate | undefined>;
 }
 
-export interface CouponScript {
+export interface BillingPortalConfigurationFeaturesCustomerUpdate {
     /**
-     * The configuration values of the script. The keys and values are specific to the script implementation.
+     * The types of customer updates that are supported. When empty, customers are not updateable.
      */
-    configuration: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
+    allowedUpdates?: pulumi.Input<pulumi.Input<string>[] | undefined>;
     /**
-     * The name of the script used to calculate the discount.
+     * Whether the feature is enabled.
      */
-    displayName?: pulumi.Input<string | undefined>;
-    /**
-     * The script implementation ID for this coupon.
-     */
-    id: pulumi.Input<string>;
+    enabled: pulumi.Input<boolean>;
 }
 
-export interface CustomerAddress {
+export interface BillingPortalConfigurationFeaturesInvoiceHistory {
+    /**
+     * Whether the feature is enabled.
+     */
+    enabled: pulumi.Input<boolean>;
+}
+
+export interface BillingPortalConfigurationFeaturesPaymentMethodUpdate {
+    /**
+     * Whether the feature is enabled.
+     */
+    enabled: pulumi.Input<boolean>;
+    /**
+     * The [Payment Method Configuration](https://docs.stripe.com/api/payment_method_configurations) to use for this portal session. When specified, customers will be able to update their payment method to one of the options specified by the payment method configuration. If not set, the default payment method configuration is used.
+     */
+    paymentMethodConfiguration?: pulumi.Input<string | undefined>;
+}
+
+export interface BillingPortalConfigurationFeaturesSubscriptionCancel {
+    cancellationReason?: pulumi.Input<inputs.BillingPortalConfigurationFeaturesSubscriptionCancelCancellationReason | undefined>;
+    /**
+     * Whether the feature is enabled.
+     */
+    enabled: pulumi.Input<boolean>;
+    /**
+     * Whether to cancel subscriptions immediately or at the end of the billing period.
+     */
+    mode?: pulumi.Input<string | undefined>;
+    /**
+     * Whether to create prorations when canceling subscriptions. Possible values are `none` and `createProrations`.
+     */
+    prorationBehavior?: pulumi.Input<string | undefined>;
+}
+
+export interface BillingPortalConfigurationFeaturesSubscriptionCancelCancellationReason {
+    /**
+     * Whether the feature is enabled.
+     */
+    enabled: pulumi.Input<boolean>;
+    /**
+     * Which cancellation reasons will be given as options to the customer.
+     */
+    options: pulumi.Input<pulumi.Input<string>[]>;
+}
+
+export interface BillingPortalConfigurationFeaturesSubscriptionUpdate {
+    /**
+     * Determines the value to use for the billing cycle anchor on subscription updates. Valid values are `now` or `unchanged`, and the default value is `unchanged`. Setting the value to `now` resets the subscription's billing cycle anchor to the current time (in UTC). For more information, see the billing cycle [documentation](https://docs.stripe.com/billing/subscriptions/billing-cycle).
+     */
+    billingCycleAnchor?: pulumi.Input<string | undefined>;
+    /**
+     * The types of subscription updates that are supported for items listed in the `products` attribute. When empty, subscriptions are not updateable.
+     */
+    defaultAllowedUpdates?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * Whether the feature is enabled.
+     */
+    enabled: pulumi.Input<boolean>;
+    /**
+     * The list of up to 10 products that support subscription updates.
+     */
+    products?: pulumi.Input<pulumi.Input<inputs.BillingPortalConfigurationFeaturesSubscriptionUpdateProduct>[] | undefined>;
+    /**
+     * Determines how to handle prorations resulting from subscription updates. Valid values are `none`, `createProrations`, and `alwaysInvoice`. Defaults to a value of `none` if you don't set it during creation.
+     */
+    prorationBehavior?: pulumi.Input<string | undefined>;
+    scheduleAtPeriodEnd?: pulumi.Input<inputs.BillingPortalConfigurationFeaturesSubscriptionUpdateScheduleAtPeriodEnd | undefined>;
+    /**
+     * Determines how handle updates to trialing subscriptions. Valid values are `endTrial` and `continueTrial`. Defaults to a value of `endTrial` if you don't set it during creation.
+     */
+    trialUpdateBehavior?: pulumi.Input<string | undefined>;
+}
+
+export interface BillingPortalConfigurationFeaturesSubscriptionUpdateProduct {
+    adjustableQuantity?: pulumi.Input<inputs.BillingPortalConfigurationFeaturesSubscriptionUpdateProductAdjustableQuantity | undefined>;
+    /**
+     * The list of price IDs which, when subscribed to, a subscription can be updated.
+     */
+    prices: pulumi.Input<pulumi.Input<string>[]>;
+    /**
+     * The product ID.
+     */
+    product: pulumi.Input<string>;
+}
+
+export interface BillingPortalConfigurationFeaturesSubscriptionUpdateProductAdjustableQuantity {
+    /**
+     * If true, the quantity can be adjusted to any non-negative integer.
+     */
+    enabled: pulumi.Input<boolean>;
+    /**
+     * The maximum quantity that can be set for the product.
+     */
+    maximum?: pulumi.Input<number | undefined>;
+    /**
+     * The minimum quantity that can be set for the product.
+     */
+    minimum?: pulumi.Input<number | undefined>;
+}
+
+export interface BillingPortalConfigurationFeaturesSubscriptionUpdateScheduleAtPeriodEnd {
+    /**
+     * List of conditions. When any condition is true, an update will be scheduled at the end of the current period.
+     */
+    conditions?: pulumi.Input<pulumi.Input<inputs.BillingPortalConfigurationFeaturesSubscriptionUpdateScheduleAtPeriodEndCondition>[] | undefined>;
+}
+
+export interface BillingPortalConfigurationFeaturesSubscriptionUpdateScheduleAtPeriodEndCondition {
+    /**
+     * The type of condition.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface BillingPortalConfigurationLoginPage {
+    /**
+     * If `true`, a shareable `url` will be generated that will take your customers to a hosted login page for the customer portal.
+     */
+    enabled: pulumi.Input<boolean>;
+    /**
+     * A shareable URL to the hosted portal login page. Your customers will be able to log in with their [email](https://docs.stripe.com/api/customers/object#customer_object-email) and receive a link to their customer portal.
+     */
+    url?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargeBillingDetails {
+    /**
+     * Billing address.
+     */
+    address?: pulumi.Input<inputs.ChargeBillingDetailsAddress | undefined>;
+    /**
+     * Email address.
+     */
+    email?: pulumi.Input<string | undefined>;
+    /**
+     * Full name.
+     */
+    name?: pulumi.Input<string | undefined>;
+    /**
+     * Billing phone number (including extension).
+     */
+    phone?: pulumi.Input<string | undefined>;
+    /**
+     * Taxpayer identification number. Used only for transactions between LATAM buyers and non-LATAM sellers.
+     */
+    taxId?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargeBillingDetailsAddress {
     /**
      * City, district, suburb, town, or village.
      */
     city?: pulumi.Input<string | undefined>;
     /**
-     * A freeform text field for the country. However, in order to activate some tax features, the format should be a two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
      */
     country?: pulumi.Input<string | undefined>;
     /**
@@ -82,39 +312,2137 @@ export interface CustomerAddress {
      */
     postalCode?: pulumi.Input<string | undefined>;
     /**
-     * State, county, province, or region.
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargeDestination {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * ID of an existing, connected Stripe account.
+     */
+    account: pulumi.Input<string>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The amount to transfer to the destination account without creating an `Application Fee` object. Cannot be combined with the `applicationFee` parameter. Must be less than or equal to the charge amount.
+     */
+    amount?: pulumi.Input<number | undefined>;
+}
+
+export interface ChargeFraudDetails {
+    /**
+     * Assessments from Stripe. If set, the value is `fraudulent`.
+     */
+    stripeReport?: pulumi.Input<string | undefined>;
+    /**
+     * Assessments reported by you. If set, possible values of are `safe` and `fraudulent`.
+     */
+    userReport?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargeLevel3 {
+    customerReference?: pulumi.Input<string | undefined>;
+    lineItems?: pulumi.Input<pulumi.Input<inputs.ChargeLevel3LineItem>[] | undefined>;
+    merchantReference?: pulumi.Input<string | undefined>;
+    shippingAddressZip?: pulumi.Input<string | undefined>;
+    shippingAmount?: pulumi.Input<number | undefined>;
+    shippingFromZip?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargeLevel3LineItem {
+    discountAmount?: pulumi.Input<number | undefined>;
+    productCode?: pulumi.Input<string | undefined>;
+    productDescription?: pulumi.Input<string | undefined>;
+    quantity?: pulumi.Input<number | undefined>;
+    taxAmount?: pulumi.Input<number | undefined>;
+    unitCost?: pulumi.Input<number | undefined>;
+}
+
+export interface ChargeOutcome {
+    /**
+     * An enumerated value providing a more detailed explanation on [how to proceed with an error](https://docs.stripe.com/declines#retrying-issuer-declines).
+     */
+    adviceCode?: pulumi.Input<string | undefined>;
+    /**
+     * For charges declined by the network, a 2 digit code which indicates the advice returned by the network on how to proceed with an error.
+     */
+    networkAdviceCode?: pulumi.Input<string | undefined>;
+    /**
+     * For charges declined by the network, an alphanumeric code which indicates the reason the charge failed.
+     */
+    networkDeclineCode?: pulumi.Input<string | undefined>;
+    /**
+     * Possible values are `approvedByNetwork`, `declinedByNetwork`, `notSentToNetwork`, and `reversedAfterApproval`. The value `reversedAfterApproval` indicates the payment was [blocked by Stripe](https://docs.stripe.com/declines#blocked-payments) after bank authorization, and may temporarily appear as "pending" on a cardholder's statement.
+     */
+    networkStatus?: pulumi.Input<string | undefined>;
+    /**
+     * An enumerated value providing a more detailed explanation of the outcome's `type`. Charges blocked by Radar's default block rule have the value `highestRiskLevel`. Charges placed in review by Radar's default review rule have the value `elevatedRiskLevel`. Charges blocked because the payment is unlikely to be authorized have the value `lowProbabilityOfAuthorization`. Charges authorized, blocked, or placed in review by custom rules have the value `rule`. See [understanding declines](https://docs.stripe.com/declines) for more details.
+     */
+    reason?: pulumi.Input<string | undefined>;
+    /**
+     * Stripe Radar's evaluation of the riskiness of the payment. Possible values for evaluated payments are `normal`, `elevated`, `highest`. For non-card payments, and card-based payments predating the public assignment of risk levels, this field will have the value `notAssessed`. In the event of an error in the evaluation, this field will have the value `unknown`. This field is only available with Radar.
+     */
+    riskLevel?: pulumi.Input<string | undefined>;
+    /**
+     * Stripe Radar's evaluation of the riskiness of the payment. Possible values for evaluated payments are between 0 and 100. For non-card payments, card-based payments predating the public assignment of risk scores, or in the event of an error during evaluation, this field will not be present. This field is only available with Radar for Fraud Teams.
+     */
+    riskScore?: pulumi.Input<number | undefined>;
+    /**
+     * The ID of the Radar rule that matched the payment, if applicable.
+     */
+    rule?: pulumi.Input<string | undefined>;
+    /**
+     * A human-readable description of the outcome type and reason, designed for you (the recipient of the payment), not your customer.
+     */
+    sellerMessage?: pulumi.Input<string | undefined>;
+    /**
+     * Possible values are `authorized`, `manualReview`, `issuerDeclined`, `blocked`, and `invalid`. See [understanding declines](https://docs.stripe.com/declines) and [Radar reviews](https://docs.stripe.com/radar/reviews) for details.
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetails {
+    achCreditTransfer?: pulumi.Input<inputs.ChargePaymentMethodDetailsAchCreditTransfer | undefined>;
+    achDebit?: pulumi.Input<inputs.ChargePaymentMethodDetailsAchDebit | undefined>;
+    acssDebit?: pulumi.Input<inputs.ChargePaymentMethodDetailsAcssDebit | undefined>;
+    affirm?: pulumi.Input<inputs.ChargePaymentMethodDetailsAffirm | undefined>;
+    afterpayClearpay?: pulumi.Input<inputs.ChargePaymentMethodDetailsAfterpayClearpay | undefined>;
+    alipay?: pulumi.Input<inputs.ChargePaymentMethodDetailsAlipay | undefined>;
+    alma?: pulumi.Input<inputs.ChargePaymentMethodDetailsAlma | undefined>;
+    amazonPay?: pulumi.Input<inputs.ChargePaymentMethodDetailsAmazonPay | undefined>;
+    auBecsDebit?: pulumi.Input<inputs.ChargePaymentMethodDetailsAuBecsDebit | undefined>;
+    bacsDebit?: pulumi.Input<inputs.ChargePaymentMethodDetailsBacsDebit | undefined>;
+    bancontact?: pulumi.Input<inputs.ChargePaymentMethodDetailsBancontact | undefined>;
+    billie?: pulumi.Input<inputs.ChargePaymentMethodDetailsBillie | undefined>;
+    bizum?: pulumi.Input<inputs.ChargePaymentMethodDetailsBizum | undefined>;
+    blik?: pulumi.Input<inputs.ChargePaymentMethodDetailsBlik | undefined>;
+    boleto?: pulumi.Input<inputs.ChargePaymentMethodDetailsBoleto | undefined>;
+    card?: pulumi.Input<inputs.ChargePaymentMethodDetailsCard | undefined>;
+    cardPresent?: pulumi.Input<inputs.ChargePaymentMethodDetailsCardPresent | undefined>;
+    cashapp?: pulumi.Input<inputs.ChargePaymentMethodDetailsCashapp | undefined>;
+    crypto?: pulumi.Input<inputs.ChargePaymentMethodDetailsCrypto | undefined>;
+    eps?: pulumi.Input<inputs.ChargePaymentMethodDetailsEps | undefined>;
+    fpx?: pulumi.Input<inputs.ChargePaymentMethodDetailsFpx | undefined>;
+    giropay?: pulumi.Input<inputs.ChargePaymentMethodDetailsGiropay | undefined>;
+    grabpay?: pulumi.Input<inputs.ChargePaymentMethodDetailsGrabpay | undefined>;
+    ideal?: pulumi.Input<inputs.ChargePaymentMethodDetailsIdeal | undefined>;
+    interacPresent?: pulumi.Input<inputs.ChargePaymentMethodDetailsInteracPresent | undefined>;
+    kakaoPay?: pulumi.Input<inputs.ChargePaymentMethodDetailsKakaoPay | undefined>;
+    klarna?: pulumi.Input<inputs.ChargePaymentMethodDetailsKlarna | undefined>;
+    konbini?: pulumi.Input<inputs.ChargePaymentMethodDetailsKonbini | undefined>;
+    krCard?: pulumi.Input<inputs.ChargePaymentMethodDetailsKrCard | undefined>;
+    link?: pulumi.Input<inputs.ChargePaymentMethodDetailsLink | undefined>;
+    mobilepay?: pulumi.Input<inputs.ChargePaymentMethodDetailsMobilepay | undefined>;
+    multibanco?: pulumi.Input<inputs.ChargePaymentMethodDetailsMultibanco | undefined>;
+    naverPay?: pulumi.Input<inputs.ChargePaymentMethodDetailsNaverPay | undefined>;
+    nzBankAccount?: pulumi.Input<inputs.ChargePaymentMethodDetailsNzBankAccount | undefined>;
+    oxxo?: pulumi.Input<inputs.ChargePaymentMethodDetailsOxxo | undefined>;
+    p24?: pulumi.Input<inputs.ChargePaymentMethodDetailsP24 | undefined>;
+    payco?: pulumi.Input<inputs.ChargePaymentMethodDetailsPayco | undefined>;
+    paynow?: pulumi.Input<inputs.ChargePaymentMethodDetailsPaynow | undefined>;
+    paypal?: pulumi.Input<inputs.ChargePaymentMethodDetailsPaypal | undefined>;
+    payto?: pulumi.Input<inputs.ChargePaymentMethodDetailsPayto | undefined>;
+    pix?: pulumi.Input<inputs.ChargePaymentMethodDetailsPix | undefined>;
+    promptpay?: pulumi.Input<inputs.ChargePaymentMethodDetailsPromptpay | undefined>;
+    revolutPay?: pulumi.Input<inputs.ChargePaymentMethodDetailsRevolutPay | undefined>;
+    samsungPay?: pulumi.Input<inputs.ChargePaymentMethodDetailsSamsungPay | undefined>;
+    satispay?: pulumi.Input<inputs.ChargePaymentMethodDetailsSatispay | undefined>;
+    scalapay?: pulumi.Input<inputs.ChargePaymentMethodDetailsScalapay | undefined>;
+    sepaCreditTransfer?: pulumi.Input<inputs.ChargePaymentMethodDetailsSepaCreditTransfer | undefined>;
+    sepaDebit?: pulumi.Input<inputs.ChargePaymentMethodDetailsSepaDebit | undefined>;
+    sofort?: pulumi.Input<inputs.ChargePaymentMethodDetailsSofort | undefined>;
+    sunbit?: pulumi.Input<inputs.ChargePaymentMethodDetailsSunbit | undefined>;
+    swish?: pulumi.Input<inputs.ChargePaymentMethodDetailsSwish | undefined>;
+    twint?: pulumi.Input<inputs.ChargePaymentMethodDetailsTwint | undefined>;
+    /**
+     * The type of transaction-specific details of the payment method used in the payment. See [PaymentMethod.type](https://docs.stripe.com/api/payment_methods/object#payment_method_object-type) for the full list of possible types.
+     * An additional hash is included on `paymentMethodDetails` with a name matching this value.
+     * It contains information specific to the payment method.
+     */
+    type?: pulumi.Input<string | undefined>;
+    upi?: pulumi.Input<inputs.ChargePaymentMethodDetailsUpi | undefined>;
+    usBankAccount?: pulumi.Input<inputs.ChargePaymentMethodDetailsUsBankAccount | undefined>;
+    wechatPay?: pulumi.Input<inputs.ChargePaymentMethodDetailsWechatPay | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsAchCreditTransfer {
+    /**
+     * Account number to transfer funds to.
+     */
+    accountNumber?: pulumi.Input<string | undefined>;
+    /**
+     * Name of the bank associated with the routing number.
+     */
+    bankName?: pulumi.Input<string | undefined>;
+    /**
+     * Routing transit number for the bank account to transfer funds to.
+     */
+    routingNumber?: pulumi.Input<string | undefined>;
+    /**
+     * SWIFT code of the bank associated with the routing number.
+     */
+    swiftCode?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsAchDebit {
+    /**
+     * Type of entity that holds the account. This can be either `individual` or `company`.
+     */
+    accountHolderType?: pulumi.Input<string | undefined>;
+    /**
+     * Name of the bank associated with the bank account.
+     */
+    bankName?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter ISO code representing the country the bank account is located in.
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Uniquely identifies this particular bank account. You can use this attribute to check whether two bank accounts are the same.
+     */
+    fingerprint?: pulumi.Input<string | undefined>;
+    /**
+     * Last four digits of the bank account number.
+     */
+    last4?: pulumi.Input<string | undefined>;
+    /**
+     * Routing transit number of the bank account.
+     */
+    routingNumber?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsAcssDebit {
+    /**
+     * Name of the bank associated with the bank account.
+     */
+    bankName?: pulumi.Input<string | undefined>;
+    /**
+     * Estimated date to debit the customer's bank account. A date string in YYYY-MM-DD format.
+     */
+    expectedDebitDate?: pulumi.Input<string | undefined>;
+    /**
+     * Uniquely identifies this particular bank account. You can use this attribute to check whether two bank accounts are the same.
+     */
+    fingerprint?: pulumi.Input<string | undefined>;
+    /**
+     * Institution number of the bank account
+     */
+    institutionNumber?: pulumi.Input<string | undefined>;
+    /**
+     * Last four digits of the bank account number.
+     */
+    last4?: pulumi.Input<string | undefined>;
+    /**
+     * ID of the mandate used to make this payment.
+     */
+    mandate?: pulumi.Input<string | undefined>;
+    /**
+     * Transit number of the bank account.
+     */
+    transitNumber?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsAffirm {
+    /**
+     * ID of the location that this reader is assigned to.
+     */
+    location?: pulumi.Input<string | undefined>;
+    /**
+     * ID of the reader this transaction was made on.
+     */
+    reader?: pulumi.Input<string | undefined>;
+    /**
+     * The Affirm transaction ID associated with this payment.
+     */
+    transactionId?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsAfterpayClearpay {
+    /**
+     * The Afterpay order ID associated with this payment intent.
+     */
+    orderId?: pulumi.Input<string | undefined>;
+    /**
+     * Order identifier shown to the merchant in Afterpay's online portal.
+     */
+    reference?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsAlipay {
+    /**
+     * Uniquely identifies this particular Alipay account. You can use this attribute to check whether two Alipay accounts are the same.
+     */
+    buyerId?: pulumi.Input<string | undefined>;
+    /**
+     * Uniquely identifies this particular Alipay account. You can use this attribute to check whether two Alipay accounts are the same.
+     */
+    fingerprint?: pulumi.Input<string | undefined>;
+    /**
+     * Transaction ID of this particular Alipay transaction.
+     */
+    transactionId?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsAlma {
+    installments?: pulumi.Input<inputs.ChargePaymentMethodDetailsAlmaInstallments | undefined>;
+    /**
+     * The Alma transaction ID associated with this payment.
+     */
+    transactionId?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsAlmaInstallments {
+    /**
+     * The number of installments.
+     */
+    count?: pulumi.Input<number | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsAmazonPay {
+    funding?: pulumi.Input<inputs.ChargePaymentMethodDetailsAmazonPayFunding | undefined>;
+    /**
+     * The Amazon Pay transaction ID associated with this payment.
+     */
+    transactionId?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsAmazonPayFunding {
+    card?: pulumi.Input<inputs.ChargePaymentMethodDetailsAmazonPayFundingCard | undefined>;
+    /**
+     * funding type of the underlying payment method.
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsAmazonPayFundingCard {
+    /**
+     * Card brand. Can be `amex`, `cartesBancaires`, `diners`, `discover`, `eftposAu`, `jcb`, `link`, `mastercard`, `unionpay`, `visa` or `unknown`.
+     */
+    brand?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter ISO code representing the country of the card. You could use this attribute to get a sense of the international breakdown of cards you've collected.
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Two-digit number representing the card's expiration month.
+     */
+    expMonth?: pulumi.Input<number | undefined>;
+    /**
+     * Four-digit number representing the card's expiration year.
+     */
+    expYear?: pulumi.Input<number | undefined>;
+    /**
+     * Card funding type. Can be `credit`, `debit`, `prepaid`, or `unknown`.
+     */
+    funding?: pulumi.Input<string | undefined>;
+    /**
+     * The last four digits of the card.
+     */
+    last4?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsAuBecsDebit {
+    /**
+     * Bank-State-Branch number of the bank account.
+     */
+    bsbNumber?: pulumi.Input<string | undefined>;
+    /**
+     * Estimated date to debit the customer's bank account. A date string in YYYY-MM-DD format.
+     */
+    expectedDebitDate?: pulumi.Input<string | undefined>;
+    /**
+     * Uniquely identifies this particular bank account. You can use this attribute to check whether two bank accounts are the same.
+     */
+    fingerprint?: pulumi.Input<string | undefined>;
+    /**
+     * Last four digits of the bank account number.
+     */
+    last4?: pulumi.Input<string | undefined>;
+    /**
+     * ID of the mandate used to make this payment.
+     */
+    mandate?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsBacsDebit {
+    /**
+     * Estimated date to debit the customer's bank account. A date string in YYYY-MM-DD format.
+     */
+    expectedDebitDate?: pulumi.Input<string | undefined>;
+    /**
+     * Uniquely identifies this particular bank account. You can use this attribute to check whether two bank accounts are the same.
+     */
+    fingerprint?: pulumi.Input<string | undefined>;
+    /**
+     * Last four digits of the bank account number.
+     */
+    last4?: pulumi.Input<string | undefined>;
+    /**
+     * ID of the mandate used to make this payment.
+     */
+    mandate?: pulumi.Input<string | undefined>;
+    /**
+     * Sort code of the bank account. (e.g., `10-20-30`)
+     */
+    sortCode?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsBancontact {
+    /**
+     * Bank code of bank associated with the bank account.
+     */
+    bankCode?: pulumi.Input<string | undefined>;
+    /**
+     * Name of the bank associated with the bank account.
+     */
+    bankName?: pulumi.Input<string | undefined>;
+    /**
+     * Bank Identifier Code of the bank associated with the bank account.
+     */
+    bic?: pulumi.Input<string | undefined>;
+    /**
+     * The ID of the SEPA Direct Debit PaymentMethod which was generated by this Charge.
+     */
+    generatedSepaDebit?: pulumi.Input<string | undefined>;
+    /**
+     * The mandate for the SEPA Direct Debit PaymentMethod which was generated by this Charge.
+     */
+    generatedSepaDebitMandate?: pulumi.Input<string | undefined>;
+    /**
+     * Last four characters of the IBAN.
+     */
+    ibanLast4?: pulumi.Input<string | undefined>;
+    /**
+     * Preferred language of the Bancontact authorization page that the customer is redirected to.
+     * Can be one of `en`, `de`, `fr`, or `nl`
+     */
+    preferredLanguage?: pulumi.Input<string | undefined>;
+    /**
+     * Owner's verified full name. Values are verified or provided by Bancontact directly
+     * (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    verifiedName?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsBillie {
+    /**
+     * The Billie transaction ID associated with this payment.
+     */
+    transactionId?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsBizum {
+    /**
+     * The Bizum transaction ID associated with this payment.
+     */
+    transactionId?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsBlik {
+    /**
+     * A unique and immutable identifier assigned by BLIK to every buyer.
+     */
+    buyerId?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsBoleto {
+    /**
+     * The tax ID of the customer (CPF for individuals consumers or CNPJ for businesses consumers)
+     */
+    taxId?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsCard {
+    /**
+     * The authorized amount.
+     */
+    amountAuthorized?: pulumi.Input<number | undefined>;
+    /**
+     * Authorization code on the charge.
+     */
+    authorizationCode?: pulumi.Input<string | undefined>;
+    /**
+     * Card brand. Can be `amex`, `cartesBancaires`, `diners`, `discover`, `eftposAu`, `jcb`, `link`, `mastercard`, `unionpay`, `visa` or `unknown`.
+     */
+    brand?: pulumi.Input<string | undefined>;
+    /**
+     * When using manual capture, a future timestamp at which the charge will be automatically refunded if uncaptured.
+     */
+    captureBefore?: pulumi.Input<number | undefined>;
+    /**
+     * Check results by Card networks on Card address and CVC at time of payment.
+     */
+    checks?: pulumi.Input<inputs.ChargePaymentMethodDetailsCardChecks | undefined>;
+    /**
+     * Two-letter ISO code representing the country of the card. You could use this attribute to get a sense of the international breakdown of cards you've collected.
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * A high-level description of the type of cards issued in this range. (For internal use only and not typically available in standard API requests.)
+     */
+    description?: pulumi.Input<string | undefined>;
+    /**
+     * Two-digit number representing the card's expiration month.
+     */
+    expMonth?: pulumi.Input<number | undefined>;
+    /**
+     * Four-digit number representing the card's expiration year.
+     */
+    expYear?: pulumi.Input<number | undefined>;
+    extendedAuthorization?: pulumi.Input<inputs.ChargePaymentMethodDetailsCardExtendedAuthorization | undefined>;
+    /**
+     * Uniquely identifies this particular card number. You can use this attribute to check whether two customers who’ve signed up with you are using the same card number, for example. For payment methods that tokenize card information (Apple Pay, Google Pay), the tokenized number might be provided instead of the underlying card number.
+     */
+    fingerprint?: pulumi.Input<string | undefined>;
+    /**
+     * Card funding type. Can be `credit`, `debit`, `prepaid`, or `unknown`.
+     */
+    funding?: pulumi.Input<string | undefined>;
+    /**
+     * Issuer identification number of the card. (For internal use only and not typically available in standard API requests.)
+     */
+    iin?: pulumi.Input<string | undefined>;
+    incrementalAuthorization?: pulumi.Input<inputs.ChargePaymentMethodDetailsCardIncrementalAuthorization | undefined>;
+    /**
+     * Installment details for this payment.
+     *
+     * For more information, see the [installments integration guide](https://docs.stripe.com/payments/installments).
+     */
+    installments?: pulumi.Input<inputs.ChargePaymentMethodDetailsCardInstallments | undefined>;
+    /**
+     * The name of the card's issuing bank. (For internal use only and not typically available in standard API requests.)
+     */
+    issuer?: pulumi.Input<string | undefined>;
+    /**
+     * The last four digits of the card.
+     */
+    last4?: pulumi.Input<string | undefined>;
+    /**
+     * ID of the mandate used to make this payment or created by it.
+     */
+    mandate?: pulumi.Input<string | undefined>;
+    /**
+     * True if this payment was marked as MOTO and out of scope for SCA.
+     */
+    moto?: pulumi.Input<boolean | undefined>;
+    multicapture?: pulumi.Input<inputs.ChargePaymentMethodDetailsCardMulticapture | undefined>;
+    /**
+     * Identifies which network this charge was processed on. Can be `amex`, `cartesBancaires`, `diners`, `discover`, `eftposAu`, `interac`, `jcb`, `link`, `mastercard`, `unionpay`, `visa`, or `unknown`.
+     */
+    network?: pulumi.Input<string | undefined>;
+    /**
+     * If this card has network token credentials, this contains the details of the network token credentials.
+     */
+    networkToken?: pulumi.Input<inputs.ChargePaymentMethodDetailsCardNetworkToken | undefined>;
+    /**
+     * This is used by the financial networks to identify a transaction. Visa calls this the Transaction ID, Mastercard calls this the Trace ID, and American Express calls this the Acquirer Reference Data. This value will be present if it is returned by the financial network in the authorization response, and null otherwise.
+     */
+    networkTransactionId?: pulumi.Input<string | undefined>;
+    overcapture?: pulumi.Input<inputs.ChargePaymentMethodDetailsCardOvercapture | undefined>;
+    /**
+     * Status of a card based on the card issuer.
+     */
+    regulatedStatus?: pulumi.Input<string | undefined>;
+    /**
+     * Populated if this transaction used 3D Secure authentication.
+     */
+    threeDSecure?: pulumi.Input<inputs.ChargePaymentMethodDetailsCardThreeDSecure | undefined>;
+    /**
+     * If this Card is part of a card wallet, this contains the details of the card wallet.
+     */
+    wallet?: pulumi.Input<inputs.ChargePaymentMethodDetailsCardWallet | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsCardChecks {
+    /**
+     * If a address line1 was provided, results of the check, one of `pass`, `fail`, `unavailable`, or `unchecked`.
+     */
+    addressLine1Check?: pulumi.Input<string | undefined>;
+    /**
+     * If a address postal code was provided, results of the check, one of `pass`, `fail`, `unavailable`, or `unchecked`.
+     */
+    addressPostalCodeCheck?: pulumi.Input<string | undefined>;
+    /**
+     * If a CVC was provided, results of the check, one of `pass`, `fail`, `unavailable`, or `unchecked`.
+     */
+    cvcCheck?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsCardExtendedAuthorization {
+    /**
+     * Indicates whether or not the capture window is extended beyond the standard authorization.
+     */
+    status?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsCardIncrementalAuthorization {
+    /**
+     * Indicates whether or not the incremental authorization feature is supported.
+     */
+    status?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsCardInstallments {
+    /**
+     * Installment plan selected for the payment.
+     */
+    plan?: pulumi.Input<inputs.ChargePaymentMethodDetailsCardInstallmentsPlan | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsCardInstallmentsPlan {
+    /**
+     * For `fixedCount` installment plans, this is the number of installment payments your customer will make to their credit card.
+     */
+    count?: pulumi.Input<number | undefined>;
+    /**
+     * For `fixedCount` installment plans, this is the interval between installment payments your customer will make to their credit card.
+     * One of `month`.
+     */
+    interval?: pulumi.Input<string | undefined>;
+    /**
+     * Type of installment plan, one of `fixedCount`, `bonus`, or `revolving`.
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsCardMulticapture {
+    /**
+     * Indicates whether or not multiple captures are supported.
+     */
+    status?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsCardNetworkToken {
+    /**
+     * Indicates if Stripe used a network token, either user provided or Stripe managed when processing the transaction.
+     */
+    used?: pulumi.Input<boolean | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsCardOvercapture {
+    /**
+     * The maximum amount that can be captured.
+     */
+    maximumAmountCapturable?: pulumi.Input<number | undefined>;
+    /**
+     * Indicates whether or not the authorized amount can be over-captured.
+     */
+    status?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsCardPresent {
+    /**
+     * The authorized amount
+     */
+    amountAuthorized?: pulumi.Input<number | undefined>;
+    /**
+     * Card brand. Can be `amex`, `cartesBancaires`, `diners`, `discover`, `eftposAu`, `jcb`, `link`, `mastercard`, `unionpay`, `visa` or `unknown`.
+     */
+    brand?: pulumi.Input<string | undefined>;
+    /**
+     * The [product code](https://stripe.com/docs/card-product-codes) that identifies the specific program or product associated with a card.
+     */
+    brandProduct?: pulumi.Input<string | undefined>;
+    /**
+     * When using manual capture, a future timestamp after which the charge will be automatically refunded if uncaptured.
+     */
+    captureBefore?: pulumi.Input<number | undefined>;
+    /**
+     * The cardholder name as read from the card, in [ISO 7813](https://en.wikipedia.org/wiki/ISO/IEC_7813) format. May include alphanumeric characters, special characters and first/last name separator (`/`). In some cases, the cardholder name may not be available depending on how the issuer has configured the card. Cardholder name is typically not available on swipe or contactless payments, such as those made with Apple Pay and Google Pay.
+     */
+    cardholderName?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter ISO code representing the country of the card. You could use this attribute to get a sense of the international breakdown of cards you've collected.
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * A high-level description of the type of cards issued in this range. (For internal use only and not typically available in standard API requests.)
+     */
+    description?: pulumi.Input<string | undefined>;
+    /**
+     * Authorization response cryptogram.
+     */
+    emvAuthData?: pulumi.Input<string | undefined>;
+    /**
+     * Two-digit number representing the card's expiration month.
+     */
+    expMonth?: pulumi.Input<number | undefined>;
+    /**
+     * Four-digit number representing the card's expiration year.
+     */
+    expYear?: pulumi.Input<number | undefined>;
+    /**
+     * Uniquely identifies this particular card number. You can use this attribute to check whether two customers who’ve signed up with you are using the same card number, for example. For payment methods that tokenize card information (Apple Pay, Google Pay), the tokenized number might be provided instead of the underlying card number.
+     */
+    fingerprint?: pulumi.Input<string | undefined>;
+    /**
+     * Card funding type. Can be `credit`, `debit`, `prepaid`, or `unknown`.
+     */
+    funding?: pulumi.Input<string | undefined>;
+    /**
+     * ID of a card PaymentMethod generated from the cardPresent PaymentMethod that may be attached to a Customer for future transactions. Only present if it was possible to generate a card PaymentMethod.
+     */
+    generatedCard?: pulumi.Input<string | undefined>;
+    /**
+     * Issuer identification number of the card. (For internal use only and not typically available in standard API requests.)
+     */
+    iin?: pulumi.Input<string | undefined>;
+    /**
+     * Whether this [PaymentIntent](https://docs.stripe.com/api/payment_intents) is eligible for incremental authorizations. Request support using [requestIncrementalAuthorizationSupport](https://docs.stripe.com/api/payment_intents/create#create_payment_intent-payment_method_options-card_present-request_incremental_authorization_support).
+     */
+    incrementalAuthorizationSupported?: pulumi.Input<boolean | undefined>;
+    /**
+     * The name of the card's issuing bank. (For internal use only and not typically available in standard API requests.)
+     */
+    issuer?: pulumi.Input<string | undefined>;
+    /**
+     * The last four digits of the card.
+     */
+    last4?: pulumi.Input<string | undefined>;
+    /**
+     * ID of the [location](https://docs.stripe.com/api/terminal/locations) that this transaction's reader is assigned to.
+     */
+    location?: pulumi.Input<string | undefined>;
+    /**
+     * Identifies which network this charge was processed on. Can be `amex`, `cartesBancaires`, `diners`, `discover`, `eftposAu`, `interac`, `jcb`, `link`, `mastercard`, `unionpay`, `visa`, or `unknown`.
+     */
+    network?: pulumi.Input<string | undefined>;
+    /**
+     * This is used by the financial networks to identify a transaction. Visa calls this the Transaction ID, Mastercard calls this the Trace ID, and American Express calls this the Acquirer Reference Data. This value will be present if it is returned by the financial network in the authorization response, and null otherwise.
+     */
+    networkTransactionId?: pulumi.Input<string | undefined>;
+    /**
+     * Details about payments collected offline.
+     */
+    offline?: pulumi.Input<inputs.ChargePaymentMethodDetailsCardPresentOffline | undefined>;
+    /**
+     * Defines whether the authorized amount can be over-captured or not
+     */
+    overcaptureSupported?: pulumi.Input<boolean | undefined>;
+    /**
+     * The languages that the issuing bank recommends using for localizing any customer-facing text, as read from the card. Referenced from EMV tag 5F2D, data encoded on the card's chip.
+     */
+    preferredLocales?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * How card details were read in this transaction.
+     */
+    readMethod?: pulumi.Input<string | undefined>;
+    /**
+     * ID of the [reader](https://docs.stripe.com/api/terminal/readers) this transaction was made on.
+     */
+    reader?: pulumi.Input<string | undefined>;
+    /**
+     * A collection of fields required to be displayed on receipts. Only required for EMV transactions.
+     */
+    receipt?: pulumi.Input<inputs.ChargePaymentMethodDetailsCardPresentReceipt | undefined>;
+    wallet?: pulumi.Input<inputs.ChargePaymentMethodDetailsCardPresentWallet | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsCardPresentOffline {
+    /**
+     * Time at which the payment was collected while offline
+     */
+    storedAt?: pulumi.Input<number | undefined>;
+    /**
+     * The method used to process this payment method offline. Only deferred is allowed.
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsCardPresentReceipt {
+    /**
+     * The type of account being debited or credited
+     */
+    accountType?: pulumi.Input<string | undefined>;
+    /**
+     * The Application Cryptogram, a unique value generated by the card to authenticate the transaction with issuers.
+     */
+    applicationCryptogram?: pulumi.Input<string | undefined>;
+    /**
+     * The Application Identifier (AID) on the card used to determine which networks are eligible to process the transaction. Referenced from EMV tag 9F12, data encoded on the card's chip.
+     */
+    applicationPreferredName?: pulumi.Input<string | undefined>;
+    /**
+     * Identifier for this transaction.
+     */
+    authorizationCode?: pulumi.Input<string | undefined>;
+    /**
+     * EMV tag 8A. A code returned by the card issuer.
+     */
+    authorizationResponseCode?: pulumi.Input<string | undefined>;
+    /**
+     * Describes the method used by the cardholder to verify ownership of the card. One of the following: `approval`, `failure`, `none`, `offlinePin`, `offlinePinAndSignature`, `onlinePin`, or `signature`.
+     */
+    cardholderVerificationMethod?: pulumi.Input<string | undefined>;
+    /**
+     * Similar to the application*preferred*name, identifying the applications (AIDs) available on the card. Referenced from EMV tag 84.
+     */
+    dedicatedFileName?: pulumi.Input<string | undefined>;
+    /**
+     * A 5-byte string that records the checks and validations that occur between the card and the terminal. These checks determine how the terminal processes the transaction and what risk tolerance is acceptable. Referenced from EMV Tag 95.
+     */
+    terminalVerificationResults?: pulumi.Input<string | undefined>;
+    /**
+     * An indication of which steps were completed during the card read process. Referenced from EMV Tag 9B.
+     */
+    transactionStatusInformation?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsCardPresentWallet {
+    /**
+     * The type of mobile wallet, one of `applePay`, `googlePay`, `samsungPay`, or `unknown`.
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsCardThreeDSecure {
+    /**
+     * For authenticated transactions: how the customer was authenticated by
+     * the issuing bank.
+     */
+    authenticationFlow?: pulumi.Input<string | undefined>;
+    /**
+     * The Electronic Commerce Indicator (ECI). A protocol-level field
+     * indicating what degree of authentication was performed.
+     */
+    electronicCommerceIndicator?: pulumi.Input<string | undefined>;
+    /**
+     * The exemption requested via 3DS and accepted by the issuer at authentication time.
+     */
+    exemptionIndicator?: pulumi.Input<string | undefined>;
+    /**
+     * Whether Stripe requested the value of `exemptionIndicator` in the transaction. This will depend on
+     * the outcome of Stripe's internal risk assessment.
+     */
+    exemptionIndicatorApplied?: pulumi.Input<boolean | undefined>;
+    /**
+     * Indicates the outcome of 3D Secure authentication.
+     */
+    result?: pulumi.Input<string | undefined>;
+    /**
+     * Additional information about why 3D Secure succeeded or failed based
+     * on the `result`.
+     */
+    resultReason?: pulumi.Input<string | undefined>;
+    /**
+     * The 3D Secure 1 XID or 3D Secure 2 Directory Server Transaction ID
+     * (dsTransId) for this payment.
+     */
+    transactionId?: pulumi.Input<string | undefined>;
+    /**
+     * The version of 3D Secure that was used.
+     */
+    version?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsCardWallet {
+    /**
+     * (For tokenized numbers only.) The last four digits of the device account number.
+     */
+    dynamicLast4?: pulumi.Input<string | undefined>;
+    masterpass?: pulumi.Input<inputs.ChargePaymentMethodDetailsCardWalletMasterpass | undefined>;
+    /**
+     * The type of the card wallet, one of `amexExpressCheckout`, `applePay`, `googlePay`, `masterpass`, `samsungPay`, `visaCheckout`, or `link`. An additional hash is included on the Wallet subhash with a name matching this value. It contains additional information specific to the card wallet type.
+     */
+    type?: pulumi.Input<string | undefined>;
+    visaCheckout?: pulumi.Input<inputs.ChargePaymentMethodDetailsCardWalletVisaCheckout | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsCardWalletMasterpass {
+    /**
+     * Owner's verified billing address. Values are verified or provided by the wallet directly (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    billingAddress?: pulumi.Input<inputs.ChargePaymentMethodDetailsCardWalletMasterpassBillingAddress | undefined>;
+    /**
+     * Owner's verified email. Values are verified or provided by the wallet directly (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    email?: pulumi.Input<string | undefined>;
+    /**
+     * Owner's verified full name. Values are verified or provided by the wallet directly (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    name?: pulumi.Input<string | undefined>;
+    /**
+     * Owner's verified shipping address. Values are verified or provided by the wallet directly (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    shippingAddress?: pulumi.Input<inputs.ChargePaymentMethodDetailsCardWalletMasterpassShippingAddress | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsCardWalletMasterpassBillingAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode?: pulumi.Input<string | undefined>;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsCardWalletMasterpassShippingAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode?: pulumi.Input<string | undefined>;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsCardWalletVisaCheckout {
+    /**
+     * Owner's verified billing address. Values are verified or provided by the wallet directly (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    billingAddress?: pulumi.Input<inputs.ChargePaymentMethodDetailsCardWalletVisaCheckoutBillingAddress | undefined>;
+    /**
+     * Owner's verified email. Values are verified or provided by the wallet directly (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    email?: pulumi.Input<string | undefined>;
+    /**
+     * Owner's verified full name. Values are verified or provided by the wallet directly (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    name?: pulumi.Input<string | undefined>;
+    /**
+     * Owner's verified shipping address. Values are verified or provided by the wallet directly (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    shippingAddress?: pulumi.Input<inputs.ChargePaymentMethodDetailsCardWalletVisaCheckoutShippingAddress | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsCardWalletVisaCheckoutBillingAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode?: pulumi.Input<string | undefined>;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsCardWalletVisaCheckoutShippingAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode?: pulumi.Input<string | undefined>;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsCashapp {
+    /**
+     * A unique and immutable identifier assigned by Cash App to every buyer.
+     */
+    buyerId?: pulumi.Input<string | undefined>;
+    /**
+     * A public identifier for buyers using Cash App.
+     */
+    cashtag?: pulumi.Input<string | undefined>;
+    /**
+     * A unique and immutable identifier of payments assigned by Cash App
+     */
+    transactionId?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsCrypto {
+    /**
+     * The wallet address of the customer.
+     */
+    buyerAddress?: pulumi.Input<string | undefined>;
+    /**
+     * The blockchain network that the transaction was sent on.
+     */
+    network?: pulumi.Input<string | undefined>;
+    /**
+     * The token currency that the transaction was sent with.
+     */
+    tokenCurrency?: pulumi.Input<string | undefined>;
+    /**
+     * The blockchain transaction hash of the crypto payment.
+     */
+    transactionHash?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsEps {
+    /**
+     * The customer's bank. Should be one of `arzteUndApothekerBank`, `austrianAnadiBankAg`, `bankAustria`, `bankhausCarlSpangler`, `bankhausSchelhammerUndSchatteraAg`, `bawagPskAg`, `bksBankAg`, `brullKallmusBankAg`, `btvVierLanderBank`, `capitalBankGraweGruppeAg`, `deutscheBankAg`, `dolomitenbank`, `easybankAg`, `ersteBankUndSparkassen`, `hypoAlpeadriabankInternationalAg`, `hypoNoeLbFurNiederosterreichUWien`, `hypoOberosterreichSalzburgSteiermark`, `hypoTirolBankAg`, `hypoVorarlbergBankAg`, `hypoBankBurgenlandAktiengesellschaft`, `marchfelderBank`, `oberbankAg`, `raiffeisenBankengruppeOsterreich`, `schoellerbankAg`, `spardaBankWien`, `volksbankGruppe`, `volkskreditbankAg`, or `vrBankBraunau`.
+     */
+    bank?: pulumi.Input<string | undefined>;
+    /**
+     * Owner's verified full name. Values are verified or provided by EPS directly
+     * (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     * EPS rarely provides this information so the attribute is usually empty.
+     */
+    verifiedName?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsFpx {
+    /**
+     * Account holder type, if provided. Can be one of `individual` or `company`.
+     */
+    accountHolderType?: pulumi.Input<string | undefined>;
+    /**
+     * The customer's bank. Can be one of `affinBank`, `agrobank`, `allianceBank`, `ambank`, `bankIslam`, `bankMuamalat`, `bankRakyat`, `bsn`, `cimb`, `hongLeongBank`, `hsbc`, `kfh`, `maybank2u`, `ocbc`, `publicBank`, `rhb`, `standardChartered`, `uob`, `deutscheBank`, `maybank2e`, `pbEnterprise`, or `bankOfChina`.
+     */
+    bank?: pulumi.Input<string | undefined>;
+    /**
+     * Unique transaction id generated by FPX for every request from the merchant
+     */
+    transactionId?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsGiropay {
+    /**
+     * Bank code of bank associated with the bank account.
+     */
+    bankCode?: pulumi.Input<string | undefined>;
+    /**
+     * Name of the bank associated with the bank account.
+     */
+    bankName?: pulumi.Input<string | undefined>;
+    /**
+     * Bank Identifier Code of the bank associated with the bank account.
+     */
+    bic?: pulumi.Input<string | undefined>;
+    /**
+     * Owner's verified full name. Values are verified or provided by Giropay directly
+     * (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     * Giropay rarely provides this information so the attribute is usually empty.
+     */
+    verifiedName?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsGrabpay {
+    /**
+     * Unique transaction id generated by GrabPay
+     */
+    transactionId?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsIdeal {
+    /**
+     * The customer's bank. Can be one of `abnAmro`, `adyen`, `asnBank`, `bunq`, `buut`, `finom`, `handelsbanken`, `ing`, `knab`, `mollie`, `moneyou`, `n26`, `nn`, `rabobank`, `regiobank`, `revolut`, `snsBank`, `triodosBank`, `vanLanschot`, or `yoursafe`.
+     */
+    bank?: pulumi.Input<string | undefined>;
+    /**
+     * The Bank Identifier Code of the customer's bank.
+     */
+    bic?: pulumi.Input<string | undefined>;
+    /**
+     * The ID of the SEPA Direct Debit PaymentMethod which was generated by this Charge.
+     */
+    generatedSepaDebit?: pulumi.Input<string | undefined>;
+    /**
+     * The mandate for the SEPA Direct Debit PaymentMethod which was generated by this Charge.
+     */
+    generatedSepaDebitMandate?: pulumi.Input<string | undefined>;
+    /**
+     * Last four characters of the IBAN.
+     */
+    ibanLast4?: pulumi.Input<string | undefined>;
+    /**
+     * Unique transaction ID generated by iDEAL.
+     */
+    transactionId?: pulumi.Input<string | undefined>;
+    /**
+     * Owner's verified full name. Values are verified or provided by iDEAL directly
+     * (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    verifiedName?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsInteracPresent {
+    /**
+     * Card brand. Can be `interac`, `mastercard` or `visa`.
+     */
+    brand?: pulumi.Input<string | undefined>;
+    /**
+     * The cardholder name as read from the card, in [ISO 7813](https://en.wikipedia.org/wiki/ISO/IEC_7813) format. May include alphanumeric characters, special characters and first/last name separator (`/`). In some cases, the cardholder name may not be available depending on how the issuer has configured the card. Cardholder name is typically not available on swipe or contactless payments, such as those made with Apple Pay and Google Pay.
+     */
+    cardholderName?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter ISO code representing the country of the card. You could use this attribute to get a sense of the international breakdown of cards you've collected.
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * A high-level description of the type of cards issued in this range. (For internal use only and not typically available in standard API requests.)
+     */
+    description?: pulumi.Input<string | undefined>;
+    /**
+     * Authorization response cryptogram.
+     */
+    emvAuthData?: pulumi.Input<string | undefined>;
+    /**
+     * Two-digit number representing the card's expiration month.
+     */
+    expMonth?: pulumi.Input<number | undefined>;
+    /**
+     * Four-digit number representing the card's expiration year.
+     */
+    expYear?: pulumi.Input<number | undefined>;
+    /**
+     * Uniquely identifies this particular card number. You can use this attribute to check whether two customers who’ve signed up with you are using the same card number, for example. For payment methods that tokenize card information (Apple Pay, Google Pay), the tokenized number might be provided instead of the underlying card number.
+     */
+    fingerprint?: pulumi.Input<string | undefined>;
+    /**
+     * Card funding type. Can be `credit`, `debit`, `prepaid`, or `unknown`.
+     */
+    funding?: pulumi.Input<string | undefined>;
+    /**
+     * ID of a card PaymentMethod generated from the cardPresent PaymentMethod that may be attached to a Customer for future transactions. Only present if it was possible to generate a card PaymentMethod.
+     */
+    generatedCard?: pulumi.Input<string | undefined>;
+    /**
+     * Issuer identification number of the card. (For internal use only and not typically available in standard API requests.)
+     */
+    iin?: pulumi.Input<string | undefined>;
+    /**
+     * The name of the card's issuing bank. (For internal use only and not typically available in standard API requests.)
+     */
+    issuer?: pulumi.Input<string | undefined>;
+    /**
+     * The last four digits of the card.
+     */
+    last4?: pulumi.Input<string | undefined>;
+    /**
+     * ID of the [location](https://docs.stripe.com/api/terminal/locations) that this transaction's reader is assigned to.
+     */
+    location?: pulumi.Input<string | undefined>;
+    /**
+     * Identifies which network this charge was processed on. Can be `amex`, `cartesBancaires`, `diners`, `discover`, `eftposAu`, `interac`, `jcb`, `link`, `mastercard`, `unionpay`, `visa`, or `unknown`.
+     */
+    network?: pulumi.Input<string | undefined>;
+    /**
+     * This is used by the financial networks to identify a transaction. Visa calls this the Transaction ID, Mastercard calls this the Trace ID, and American Express calls this the Acquirer Reference Data. This value will be present if it is returned by the financial network in the authorization response, and null otherwise.
+     */
+    networkTransactionId?: pulumi.Input<string | undefined>;
+    /**
+     * The languages that the issuing bank recommends using for localizing any customer-facing text, as read from the card. Referenced from EMV tag 5F2D, data encoded on the card's chip.
+     */
+    preferredLocales?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * How card details were read in this transaction.
+     */
+    readMethod?: pulumi.Input<string | undefined>;
+    /**
+     * ID of the [reader](https://docs.stripe.com/api/terminal/readers) this transaction was made on.
+     */
+    reader?: pulumi.Input<string | undefined>;
+    /**
+     * A collection of fields required to be displayed on receipts. Only required for EMV transactions.
+     */
+    receipt?: pulumi.Input<inputs.ChargePaymentMethodDetailsInteracPresentReceipt | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsInteracPresentReceipt {
+    /**
+     * The type of account being debited or credited
+     */
+    accountType?: pulumi.Input<string | undefined>;
+    /**
+     * The Application Cryptogram, a unique value generated by the card to authenticate the transaction with issuers.
+     */
+    applicationCryptogram?: pulumi.Input<string | undefined>;
+    /**
+     * The Application Identifier (AID) on the card used to determine which networks are eligible to process the transaction. Referenced from EMV tag 9F12, data encoded on the card's chip.
+     */
+    applicationPreferredName?: pulumi.Input<string | undefined>;
+    /**
+     * Identifier for this transaction.
+     */
+    authorizationCode?: pulumi.Input<string | undefined>;
+    /**
+     * EMV tag 8A. A code returned by the card issuer.
+     */
+    authorizationResponseCode?: pulumi.Input<string | undefined>;
+    /**
+     * Describes the method used by the cardholder to verify ownership of the card. One of the following: `approval`, `failure`, `none`, `offlinePin`, `offlinePinAndSignature`, `onlinePin`, or `signature`.
+     */
+    cardholderVerificationMethod?: pulumi.Input<string | undefined>;
+    /**
+     * Similar to the application*preferred*name, identifying the applications (AIDs) available on the card. Referenced from EMV tag 84.
+     */
+    dedicatedFileName?: pulumi.Input<string | undefined>;
+    /**
+     * A 5-byte string that records the checks and validations that occur between the card and the terminal. These checks determine how the terminal processes the transaction and what risk tolerance is acceptable. Referenced from EMV Tag 95.
+     */
+    terminalVerificationResults?: pulumi.Input<string | undefined>;
+    /**
+     * An indication of which steps were completed during the card read process. Referenced from EMV Tag 9B.
+     */
+    transactionStatusInformation?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsKakaoPay {
+    /**
+     * A unique identifier for the buyer as determined by the local payment processor.
+     */
+    buyerId?: pulumi.Input<string | undefined>;
+    /**
+     * The Kakao Pay transaction ID associated with this payment.
+     */
+    transactionId?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsKlarna {
+    /**
+     * ID of the [location](https://docs.stripe.com/api/terminal/locations) that this transaction's reader is assigned to.
+     */
+    location?: pulumi.Input<string | undefined>;
+    /**
+     * The payer details for this transaction.
+     */
+    payerDetails?: pulumi.Input<inputs.ChargePaymentMethodDetailsKlarnaPayerDetails | undefined>;
+    /**
+     * The Klarna payment method used for this transaction.
+     * Can be one of `payLater`, `payNow`, `payWithFinancing`, or `payInInstallments`
+     */
+    paymentMethodCategory?: pulumi.Input<string | undefined>;
+    /**
+     * Preferred language of the Klarna authorization page that the customer is redirected to.
+     * Can be one of `de-AT`, `en-AT`, `nl-BE`, `fr-BE`, `en-BE`, `de-DE`, `en-DE`, `da-DK`, `en-DK`, `es-ES`, `en-ES`, `fi-FI`, `sv-FI`, `en-FI`, `en-GB`, `en-IE`, `it-IT`, `en-IT`, `nl-NL`, `en-NL`, `nb-NO`, `en-NO`, `sv-SE`, `en-SE`, `en-US`, `es-US`, `fr-FR`, `en-FR`, `cs-CZ`, `en-CZ`, `ro-RO`, `en-RO`, `el-GR`, `en-GR`, `en-AU`, `en-NZ`, `en-CA`, `fr-CA`, `pl-PL`, `en-PL`, `pt-PT`, `en-PT`, `de-CH`, `fr-CH`, `it-CH`, or `en-CH`
+     */
+    preferredLocale?: pulumi.Input<string | undefined>;
+    /**
+     * ID of the [reader](https://docs.stripe.com/api/terminal/readers) this transaction was made on.
+     */
+    reader?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsKlarnaPayerDetails {
+    /**
+     * The payer's address
+     */
+    address?: pulumi.Input<inputs.ChargePaymentMethodDetailsKlarnaPayerDetailsAddress | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsKlarnaPayerDetailsAddress {
+    /**
+     * The payer address country
+     */
+    country?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsKonbini {
+    /**
+     * If the payment succeeded, this contains the details of the convenience store where the payment was completed.
+     */
+    store?: pulumi.Input<inputs.ChargePaymentMethodDetailsKonbiniStore | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsKonbiniStore {
+    /**
+     * The name of the convenience store chain where the payment was completed.
+     */
+    chain?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsKrCard {
+    /**
+     * The local credit or debit card brand.
+     */
+    brand?: pulumi.Input<string | undefined>;
+    /**
+     * A unique identifier for the buyer as determined by the local payment processor.
+     */
+    buyerId?: pulumi.Input<string | undefined>;
+    /**
+     * The last four digits of the card. This may not be present for American Express cards.
+     */
+    last4?: pulumi.Input<string | undefined>;
+    /**
+     * The Korean Card transaction ID associated with this payment.
+     */
+    transactionId?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsLink {
+    /**
+     * Two-letter ISO code representing the funding source country beneath the Link payment.
+     * You could use this attribute to get a sense of international fees.
+     */
+    country?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsMobilepay {
+    /**
+     * Internal card details
+     */
+    card?: pulumi.Input<inputs.ChargePaymentMethodDetailsMobilepayCard | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsMobilepayCard {
+    /**
+     * Brand of the card used in the transaction
+     */
+    brand?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter ISO code representing the country of the card
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Two digit number representing the card's expiration month
+     */
+    expMonth?: pulumi.Input<number | undefined>;
+    /**
+     * Two digit number representing the card's expiration year
+     */
+    expYear?: pulumi.Input<number | undefined>;
+    /**
+     * The last 4 digits of the card
+     */
+    last4?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsMultibanco {
+    /**
+     * Entity number associated with this Multibanco payment.
+     */
+    entity?: pulumi.Input<string | undefined>;
+    /**
+     * Reference number associated with this Multibanco payment.
+     */
+    reference?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsNaverPay {
+    /**
+     * A unique identifier for the buyer as determined by the local payment processor.
+     */
+    buyerId?: pulumi.Input<string | undefined>;
+    /**
+     * The Naver Pay transaction ID associated with this payment.
+     */
+    transactionId?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsNzBankAccount {
+    /**
+     * The name on the bank account. Only present if the account holder name is different from the name of the authorized signatory collected in the PaymentMethod’s billing details.
+     */
+    accountHolderName?: pulumi.Input<string | undefined>;
+    /**
+     * The numeric code for the bank account's bank.
+     */
+    bankCode?: pulumi.Input<string | undefined>;
+    /**
+     * The name of the bank.
+     */
+    bankName?: pulumi.Input<string | undefined>;
+    /**
+     * The numeric code for the bank account's bank branch.
+     */
+    branchCode?: pulumi.Input<string | undefined>;
+    /**
+     * Estimated date to debit the customer's bank account. A date string in YYYY-MM-DD format.
+     */
+    expectedDebitDate?: pulumi.Input<string | undefined>;
+    /**
+     * Last four digits of the bank account number.
+     */
+    last4?: pulumi.Input<string | undefined>;
+    /**
+     * The suffix of the bank account number.
+     */
+    suffix?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsOxxo {
+    /**
+     * OXXO reference number
+     */
+    number?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsP24 {
+    /**
+     * The customer's bank. Can be one of `ing`, `citiHandlowy`, `tmobileUsbugiBankowe`, `plusBank`, `etransferPocztowy24`, `bankiSpbdzielcze`, `bankNowyBfgSa`, `getinBank`, `velobank`, `blik`, `noblePay`, `ideabank`, `envelobank`, `santanderPrzelew24`, `nestPrzelew`, `mbankMtransfer`, `inteligo`, `pbacZIpko`, `bnpParibas`, `creditAgricole`, `toyotaBank`, `bankPekaoSa`, `volkswagenBank`, `bankMillennium`, `aliorBank`, or `boz`.
+     */
+    bank?: pulumi.Input<string | undefined>;
+    /**
+     * Unique reference for this Przelewy24 payment.
+     */
+    reference?: pulumi.Input<string | undefined>;
+    /**
+     * Owner's verified full name. Values are verified or provided by Przelewy24 directly
+     * (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     * Przelewy24 rarely provides this information so the attribute is usually empty.
+     */
+    verifiedName?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsPayco {
+    /**
+     * A unique identifier for the buyer as determined by the local payment processor.
+     */
+    buyerId?: pulumi.Input<string | undefined>;
+    /**
+     * The Payco transaction ID associated with this payment.
+     */
+    transactionId?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsPaynow {
+    /**
+     * ID of the [location](https://docs.stripe.com/api/terminal/locations) that this transaction's reader is assigned to.
+     */
+    location?: pulumi.Input<string | undefined>;
+    /**
+     * ID of the [reader](https://docs.stripe.com/api/terminal/readers) this transaction was made on.
+     */
+    reader?: pulumi.Input<string | undefined>;
+    /**
+     * Reference number associated with this PayNow payment
+     */
+    reference?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsPaypal {
+    /**
+     * Two-letter ISO code representing the buyer's country. Values are provided by PayPal directly (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Owner's email. Values are provided by PayPal directly
+     * (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    payerEmail?: pulumi.Input<string | undefined>;
+    /**
+     * PayPal account PayerID. This identifier uniquely identifies the PayPal customer.
+     */
+    payerId?: pulumi.Input<string | undefined>;
+    /**
+     * Owner's full name. Values provided by PayPal directly
+     * (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    payerName?: pulumi.Input<string | undefined>;
+    /**
+     * The level of protection offered as defined by PayPal Seller Protection for Merchants, for this transaction.
+     */
+    sellerProtection?: pulumi.Input<inputs.ChargePaymentMethodDetailsPaypalSellerProtection | undefined>;
+    /**
+     * A unique ID generated by PayPal for this transaction.
+     */
+    transactionId?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsPaypalSellerProtection {
+    /**
+     * An array of conditions that are covered for the transaction, if applicable.
+     */
+    disputeCategories?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * Indicates whether the transaction is eligible for PayPal's seller protection.
+     */
+    status?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsPayto {
+    /**
+     * Bank-State-Branch number of the bank account.
+     */
+    bsbNumber?: pulumi.Input<string | undefined>;
+    /**
+     * Last four digits of the bank account number.
+     */
+    last4?: pulumi.Input<string | undefined>;
+    /**
+     * ID of the mandate used to make this payment.
+     */
+    mandate?: pulumi.Input<string | undefined>;
+    /**
+     * The PayID alias for the bank account.
+     */
+    payId?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsPix {
+    /**
+     * Unique transaction id generated by BCB
+     */
+    bankTransactionId?: pulumi.Input<string | undefined>;
+    /**
+     * ID of the multi use Mandate generated by the PaymentIntent
+     */
+    mandate?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsPromptpay {
+    /**
+     * Bill reference generated by PromptPay
+     */
+    reference?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsRevolutPay {
+    funding?: pulumi.Input<inputs.ChargePaymentMethodDetailsRevolutPayFunding | undefined>;
+    /**
+     * The Revolut Pay transaction ID associated with this payment.
+     */
+    transactionId?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsRevolutPayFunding {
+    card?: pulumi.Input<inputs.ChargePaymentMethodDetailsRevolutPayFundingCard | undefined>;
+    /**
+     * funding type of the underlying payment method.
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsRevolutPayFundingCard {
+    /**
+     * Card brand. Can be `amex`, `cartesBancaires`, `diners`, `discover`, `eftposAu`, `jcb`, `link`, `mastercard`, `unionpay`, `visa` or `unknown`.
+     */
+    brand?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter ISO code representing the country of the card. You could use this attribute to get a sense of the international breakdown of cards you've collected.
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Two-digit number representing the card's expiration month.
+     */
+    expMonth?: pulumi.Input<number | undefined>;
+    /**
+     * Four-digit number representing the card's expiration year.
+     */
+    expYear?: pulumi.Input<number | undefined>;
+    /**
+     * Card funding type. Can be `credit`, `debit`, `prepaid`, or `unknown`.
+     */
+    funding?: pulumi.Input<string | undefined>;
+    /**
+     * The last four digits of the card.
+     */
+    last4?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsSamsungPay {
+    /**
+     * A unique identifier for the buyer as determined by the local payment processor.
+     */
+    buyerId?: pulumi.Input<string | undefined>;
+    /**
+     * The Samsung Pay transaction ID associated with this payment.
+     */
+    transactionId?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsSatispay {
+    /**
+     * The Satispay transaction ID associated with this payment.
+     */
+    transactionId?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsScalapay {
+    /**
+     * The Scalapay transaction ID associated with this payment.
+     */
+    transactionId?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsSepaCreditTransfer {
+    /**
+     * Name of the bank associated with the bank account.
+     */
+    bankName?: pulumi.Input<string | undefined>;
+    /**
+     * Bank Identifier Code of the bank associated with the bank account.
+     */
+    bic?: pulumi.Input<string | undefined>;
+    /**
+     * IBAN of the bank account to transfer funds to.
+     */
+    iban?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsSepaDebit {
+    /**
+     * Bank code of bank associated with the bank account.
+     */
+    bankCode?: pulumi.Input<string | undefined>;
+    /**
+     * Branch code of bank associated with the bank account.
+     */
+    branchCode?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter ISO code representing the country the bank account is located in.
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Estimated date to debit the customer's bank account. A date string in YYYY-MM-DD format.
+     */
+    expectedDebitDate?: pulumi.Input<string | undefined>;
+    /**
+     * Uniquely identifies this particular bank account. You can use this attribute to check whether two bank accounts are the same.
+     */
+    fingerprint?: pulumi.Input<string | undefined>;
+    /**
+     * Last four characters of the IBAN.
+     */
+    last4?: pulumi.Input<string | undefined>;
+    /**
+     * Find the ID of the mandate used for this payment under the [payment*method*details.sepa_debit.mandate](https://docs.stripe.com/api/charges/object#charge_object-payment_method_details-sepa_debit-mandate) property on the Charge. Use this mandate ID to [retrieve the Mandate](https://docs.stripe.com/api/mandates/retrieve).
+     */
+    mandate?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsSofort {
+    /**
+     * Bank code of bank associated with the bank account.
+     */
+    bankCode?: pulumi.Input<string | undefined>;
+    /**
+     * Name of the bank associated with the bank account.
+     */
+    bankName?: pulumi.Input<string | undefined>;
+    /**
+     * Bank Identifier Code of the bank associated with the bank account.
+     */
+    bic?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter ISO code representing the country the bank account is located in.
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * The ID of the SEPA Direct Debit PaymentMethod which was generated by this Charge.
+     */
+    generatedSepaDebit?: pulumi.Input<string | undefined>;
+    /**
+     * The mandate for the SEPA Direct Debit PaymentMethod which was generated by this Charge.
+     */
+    generatedSepaDebitMandate?: pulumi.Input<string | undefined>;
+    /**
+     * Last four characters of the IBAN.
+     */
+    ibanLast4?: pulumi.Input<string | undefined>;
+    /**
+     * Preferred language of the SOFORT authorization page that the customer is redirected to.
+     * Can be one of `de`, `en`, `es`, `fr`, `it`, `nl`, or `pl`
+     */
+    preferredLanguage?: pulumi.Input<string | undefined>;
+    /**
+     * Owner's verified full name. Values are verified or provided by SOFORT directly
+     * (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    verifiedName?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsSunbit {
+    /**
+     * The Sunbit transaction ID associated with this payment.
+     */
+    transactionId?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsSwish {
+    /**
+     * Uniquely identifies the payer's Swish account. You can use this attribute to check whether two Swish transactions were paid for by the same payer
+     */
+    fingerprint?: pulumi.Input<string | undefined>;
+    /**
+     * Payer bank reference number for the payment
+     */
+    paymentReference?: pulumi.Input<string | undefined>;
+    /**
+     * The last four digits of the Swish account phone number
+     */
+    verifiedPhoneLast4?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsTwint {
+    /**
+     * ID of the multi use Mandate generated by the PaymentIntent
+     */
+    mandate?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsUpi {
+    /**
+     * Customer's unique Virtual Payment Address.
+     */
+    vpa?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsUsBankAccount {
+    /**
+     * Account holder type: individual or company.
+     */
+    accountHolderType?: pulumi.Input<string | undefined>;
+    /**
+     * Account type: checkings or savings. Defaults to checking if omitted.
+     */
+    accountType?: pulumi.Input<string | undefined>;
+    /**
+     * Name of the bank associated with the bank account.
+     */
+    bankName?: pulumi.Input<string | undefined>;
+    /**
+     * Estimated date to debit the customer's bank account. A date string in YYYY-MM-DD format.
+     */
+    expectedDebitDate?: pulumi.Input<string | undefined>;
+    /**
+     * Uniquely identifies this particular bank account. You can use this attribute to check whether two bank accounts are the same.
+     */
+    fingerprint?: pulumi.Input<string | undefined>;
+    /**
+     * Last four digits of the bank account number.
+     */
+    last4?: pulumi.Input<string | undefined>;
+    /**
+     * ID of the mandate used to make this payment.
+     */
+    mandate?: pulumi.Input<string | undefined>;
+    /**
+     * Reference number to locate ACH payments with customer's bank.
+     */
+    paymentReference?: pulumi.Input<string | undefined>;
+    /**
+     * Routing number of the bank account.
+     */
+    routingNumber?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePaymentMethodDetailsWechatPay {
+    /**
+     * Uniquely identifies this particular WeChat Pay account. You can use this attribute to check whether two WeChat accounts are the same.
+     */
+    fingerprint?: pulumi.Input<string | undefined>;
+    /**
+     * ID of the [location](https://docs.stripe.com/api/terminal/locations) that this transaction's reader is assigned to.
+     */
+    location?: pulumi.Input<string | undefined>;
+    /**
+     * ID of the [reader](https://docs.stripe.com/api/terminal/readers) this transaction was made on.
+     */
+    reader?: pulumi.Input<string | undefined>;
+    /**
+     * Transaction ID of this particular WeChat Pay transaction.
+     */
+    transactionId?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargePresentmentDetails {
+    /**
+     * Amount intended to be collected by this payment, denominated in `presentmentCurrency`.
+     */
+    presentmentAmount?: pulumi.Input<number | undefined>;
+    /**
+     * Currency presented to the customer during payment.
+     */
+    presentmentCurrency?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargeRadarOptions {
+    /**
+     * A [Radar Session](https://docs.stripe.com/radar/radar-session) is a snapshot of the browser metadata and device details that help Radar make more accurate predictions on your payments.
+     */
+    session?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargeShipping {
+    address: pulumi.Input<inputs.ChargeShippingAddress>;
+    /**
+     * The delivery service that shipped a physical product, such as Fedex, UPS, USPS, etc.
+     */
+    carrier?: pulumi.Input<string | undefined>;
+    /**
+     * Recipient name.
+     */
+    name: pulumi.Input<string>;
+    /**
+     * Recipient phone (including extension).
+     */
+    phone?: pulumi.Input<string | undefined>;
+    /**
+     * The tracking number for a physical product, obtained from the delivery service. If multiple tracking numbers were generated for this purchase, please separate them with commas.
+     */
+    trackingNumber?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargeShippingAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode?: pulumi.Input<string | undefined>;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: pulumi.Input<string | undefined>;
+}
+
+export interface ChargeTransferData {
+    /**
+     * The amount transferred to the destination account, if specified. By default, the entire charge amount is transferred to the destination account.
+     */
+    amount?: pulumi.Input<number | undefined>;
+    /**
+     * An arbitrary string attached to the transfer. Often useful for displaying to users.
+     */
+    description?: pulumi.Input<string | undefined>;
+    /**
+     * ID of an existing, connected Stripe account to transfer funds to if `transferData` was specified in the charge request.
+     */
+    destination: pulumi.Input<string>;
+}
+
+export interface ClimateOrderBeneficiary {
+    /**
+     * Publicly displayable name for the end beneficiary of carbon removal.
+     */
+    publicName: pulumi.Input<string>;
+}
+
+export interface ClimateOrderDeliveryDetail {
+    /**
+     * Time at which the delivery occurred. Measured in seconds since the Unix epoch.
+     */
+    deliveredAt?: pulumi.Input<number | undefined>;
+    /**
+     * Specific location of this delivery.
+     */
+    location?: pulumi.Input<inputs.ClimateOrderDeliveryDetailLocation | undefined>;
+    /**
+     * Quantity of carbon removal supplied by this delivery.
+     */
+    metricTons?: pulumi.Input<string | undefined>;
+    /**
+     * Once retired, a URL to the registry entry for the tons from this delivery.
+     */
+    registryUrl?: pulumi.Input<string | undefined>;
+    /**
+     * A supplier of carbon removal.
+     */
+    supplier?: pulumi.Input<string | undefined>;
+}
+
+export interface ClimateOrderDeliveryDetailLocation {
+    /**
+     * The city where the supplier is located.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter ISO code representing the country where the supplier is located.
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * The geographic latitude where the supplier is located.
+     */
+    latitude?: pulumi.Input<number | undefined>;
+    /**
+     * The geographic longitude where the supplier is located.
+     */
+    longitude?: pulumi.Input<number | undefined>;
+    /**
+     * The state/county/province/region where the supplier is located.
+     */
+    region?: pulumi.Input<string | undefined>;
+}
+
+export interface CouponAppliesTo {
+    /**
+     * A list of product IDs this coupon applies to
+     */
+    products?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+}
+
+export interface CouponCurrencyOption {
+    /**
+     * Amount (in the `currency` specified) that will be taken off the subtotal of any invoices for this customer.
+     */
+    amountOff: pulumi.Input<number>;
+    /**
+     * Key for this entry.
+     */
+    key: pulumi.Input<string>;
+}
+
+export interface CreditNoteDiscountAmount {
+    /**
+     * The amount, in cents (or local equivalent), of the discount.
+     */
+    amount?: pulumi.Input<number | undefined>;
+    /**
+     * The discount that was applied to get this discount amount.
+     */
+    discount?: pulumi.Input<string | undefined>;
+}
+
+export interface CreditNotePretaxCreditAmount {
+    /**
+     * The amount, in cents (or local equivalent), of the pretax credit amount.
+     */
+    amount?: pulumi.Input<number | undefined>;
+    /**
+     * The credit balance transaction that was applied to get this pretax credit amount.
+     */
+    creditBalanceTransaction?: pulumi.Input<string | undefined>;
+    /**
+     * The discount that was applied to get this pretax credit amount.
+     */
+    discount?: pulumi.Input<string | undefined>;
+    /**
+     * Type of the pretax credit amount referenced.
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface CreditNoteRefund {
+    /**
+     * Amount of the refund that applies to this credit note, in cents (or local equivalent).
+     */
+    amountRefunded?: pulumi.Input<number | undefined>;
+    /**
+     * The PaymentRecord refund details associated with this credit note refund.
+     */
+    paymentRecordRefund?: pulumi.Input<inputs.CreditNoteRefundPaymentRecordRefund | undefined>;
+    /**
+     * ID of the refund.
+     */
+    refund?: pulumi.Input<string | undefined>;
+    /**
+     * Type of the refund, one of `refund` or `paymentRecordRefund`.
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface CreditNoteRefundPaymentRecordRefund {
+    /**
+     * ID of the payment record.
+     */
+    paymentRecord: pulumi.Input<string>;
+    /**
+     * ID of the refund group.
+     */
+    refundGroup: pulumi.Input<string>;
+}
+
+export interface CreditNoteShippingCost {
+    /**
+     * Total shipping cost before any taxes are applied.
+     */
+    amountSubtotal?: pulumi.Input<number | undefined>;
+    /**
+     * Total tax amount applied due to shipping costs. If no tax was applied, defaults to 0.
+     */
+    amountTax?: pulumi.Input<number | undefined>;
+    /**
+     * Total shipping cost after taxes are applied.
+     */
+    amountTotal?: pulumi.Input<number | undefined>;
+    /**
+     * The ID of the ShippingRate for this invoice.
+     */
+    shippingRate?: pulumi.Input<string | undefined>;
+    /**
+     * The taxes applied to the shipping rate.
+     */
+    taxes?: pulumi.Input<pulumi.Input<inputs.CreditNoteShippingCostTax>[] | undefined>;
+}
+
+export interface CreditNoteShippingCostTax {
+    /**
+     * Amount of tax applied for this rate.
+     */
+    amount?: pulumi.Input<number | undefined>;
+    /**
+     * Tax rates can be applied to [invoices](https://docs.stripe.com/invoicing/taxes/tax-rates), [subscriptions](https://docs.stripe.com/billing/taxes/tax-rates) and [Checkout Sessions](https://docs.stripe.com/payments/checkout/use-manual-tax-rates) to collect tax.
+     */
+    rate?: pulumi.Input<string | undefined>;
+    /**
+     * The reasoning behind this tax, for example, if the product is tax exempt. The possible values for this field may be extended as new tax rules are supported.
+     */
+    taxabilityReason?: pulumi.Input<string | undefined>;
+    /**
+     * The amount on which tax is calculated, in cents (or local equivalent).
+     */
+    taxableAmount?: pulumi.Input<number | undefined>;
+}
+
+export interface CreditNoteTotalTax {
+    /**
+     * The amount of the tax, in cents (or local equivalent).
+     */
+    amount?: pulumi.Input<number | undefined>;
+    /**
+     * Whether this tax is inclusive or exclusive.
+     */
+    taxBehavior?: pulumi.Input<string | undefined>;
+    /**
+     * Additional details about the tax rate. Only present when `type` is `taxRateDetails`.
+     */
+    taxRateDetails?: pulumi.Input<inputs.CreditNoteTotalTaxTaxRateDetails | undefined>;
+    /**
+     * The reasoning behind this tax, for example, if the product is tax exempt. The possible values for this field may be extended as new tax rules are supported.
+     */
+    taxabilityReason?: pulumi.Input<string | undefined>;
+    /**
+     * The amount on which tax is calculated, in cents (or local equivalent).
+     */
+    taxableAmount?: pulumi.Input<number | undefined>;
+    /**
+     * The type of tax information.
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface CreditNoteTotalTaxTaxRateDetails {
+    /**
+     * ID of the tax rate
+     */
+    taxRate?: pulumi.Input<string | undefined>;
+}
+
+export interface CustomerAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode?: pulumi.Input<string | undefined>;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
      */
     state?: pulumi.Input<string | undefined>;
 }
 
 export interface CustomerCashBalance {
     /**
-     * A hash of all cash balances available to this customer. You cannot delete a customer with any cash balances, even if the balance is 0. Amounts are represented in the [smallest currency unit](https://stripe.com/docs/currencies#zero-decimal).
+     * A hash of all cash balances available to this customer. You cannot delete a customer with any cash balances, even if the balance is 0. Amounts are represented in the [smallest currency unit](https://docs.stripe.com/currencies#zero-decimal).
      */
-    available?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
+    available?: pulumi.Input<{[key: string]: pulumi.Input<number>} | undefined>;
     /**
      * The ID of the customer whose cash balance this object represents.
      */
     customer?: pulumi.Input<string | undefined>;
     /**
-     * The ID of the account whose cash balance this object represents.
+     * The ID of an Account representing a customer whose cash balance this object represents.
      */
     customerAccount?: pulumi.Input<string | undefined>;
     /**
-     * Settings controlling the behavior of the customer's cash balance, such as reconciliation of funds received.
+     * If the object exists in live mode, the value is `true`. If the object exists in test mode, the value is `false`.
      */
+    livemode?: pulumi.Input<boolean | undefined>;
+    /**
+     * String representing the object's type. Objects of the same type share the same value.
+     */
+    object?: pulumi.Input<string | undefined>;
     settings?: pulumi.Input<inputs.CustomerCashBalanceSettings | undefined>;
 }
 
 export interface CustomerCashBalanceSettings {
     /**
-     * Controls how funds transferred by the customer are applied to payment intents and invoices. Valid options are `automatic`, `manual`, or `merchantDefault`. For more information about these reconciliation modes, see [Reconciliation](https://stripe.com/docs/payments/customer-balance/reconciliation).
+     * The configuration for how funds that land in the customer cash balance are reconciled.
      */
     reconciliationMode?: pulumi.Input<string | undefined>;
+    /**
+     * A flag to indicate if reconciliation mode returned is the user's default or is specific to this customer cash balance
+     */
+    usingMerchantDefault?: pulumi.Input<boolean | undefined>;
 }
 
 export interface CustomerInvoiceSettings {
-    customFields?: pulumi.Input<pulumi.Input<any[]>[] | undefined>;
+    /**
+     * Default custom fields to be displayed on invoices for this customer.
+     */
+    customFields?: pulumi.Input<pulumi.Input<inputs.CustomerInvoiceSettingsCustomField>[] | undefined>;
     /**
      * ID of a payment method that's attached to the customer, to be used as the customer's default payment method for subscriptions and invoices.
      */
@@ -123,35 +2451,46 @@ export interface CustomerInvoiceSettings {
      * Default footer to be displayed on invoices for this customer.
      */
     footer?: pulumi.Input<string | undefined>;
+    /**
+     * Default options for invoice PDF rendering for this customer.
+     */
     renderingOptions?: pulumi.Input<inputs.CustomerInvoiceSettingsRenderingOptions | undefined>;
+}
+
+export interface CustomerInvoiceSettingsCustomField {
+    /**
+     * The name of the custom field.
+     */
+    name: pulumi.Input<string>;
+    /**
+     * The value of the custom field.
+     */
+    value: pulumi.Input<string>;
 }
 
 export interface CustomerInvoiceSettingsRenderingOptions {
     /**
-     * How line-item prices and amounts will be displayed with respect to tax on invoice PDFs. One of `excludeTax` or `includeInclusiveTax`. `includeInclusiveTax` will include inclusive tax (and exclude exclusive tax) in invoice PDF amounts. `excludeTax` will exclude all tax (inclusive and exclusive alike) from invoice PDF amounts.
+     * How line-item prices and amounts will be displayed with respect to tax on invoice PDFs.
      */
     amountTaxDisplay?: pulumi.Input<string | undefined>;
     /**
-     * ID of the invoice rendering template to use for future invoices.
+     * ID of the invoice rendering template to be used for this customer's invoices. If set, the template will be used on all invoices for this customer unless a template is set directly on the invoice.
      */
     template?: pulumi.Input<string | undefined>;
 }
 
 export interface CustomerShipping {
-    /**
-     * Customer shipping address.
-     */
-    address: pulumi.Input<inputs.CustomerShippingAddress>;
+    address?: pulumi.Input<inputs.CustomerShippingAddress | undefined>;
     /**
      * The delivery service that shipped a physical product, such as Fedex, UPS, USPS, etc.
      */
     carrier?: pulumi.Input<string | undefined>;
     /**
-     * Customer name.
+     * Recipient name.
      */
     name: pulumi.Input<string>;
     /**
-     * Customer phone (including extension).
+     * Recipient phone (including extension).
      */
     phone?: pulumi.Input<string | undefined>;
     /**
@@ -166,7 +2505,7 @@ export interface CustomerShippingAddress {
      */
     city?: pulumi.Input<string | undefined>;
     /**
-     * A freeform text field for the country. However, in order to activate some tax features, the format should be a two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
      */
     country?: pulumi.Input<string | undefined>;
     /**
@@ -182,7 +2521,7 @@ export interface CustomerShippingAddress {
      */
     postalCode?: pulumi.Input<string | undefined>;
     /**
-     * State, county, province, or region.
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
      */
     state?: pulumi.Input<string | undefined>;
 }
@@ -192,9 +2531,16 @@ export interface CustomerTax {
      * Surfaces if automatic tax computation is possible given the current customer location information.
      */
     automaticTax?: pulumi.Input<string | undefined>;
+    /**
+     * A recent IP address of the customer used for tax reporting and tax location inference.
+     */
     ipAddress?: pulumi.Input<string | undefined>;
     /**
-     * The tax calculation provider used for location resolution. Defaults to `stripe` when not using a [third-party provider](https://www.terraform.io/tax/third-party-apps).
+     * The identified tax location of the customer.
+     */
+    locations?: pulumi.Input<pulumi.Input<inputs.CustomerTaxLocation>[] | undefined>;
+    /**
+     * The tax calculation provider used for location resolution. Defaults to `stripe` when not using a [third-party provider](https://docs.stripe.com/tax/third-party-apps).
      */
     provider?: pulumi.Input<string | undefined>;
     /**
@@ -205,7 +2551,7 @@ export interface CustomerTax {
 
 export interface CustomerTaxIdData {
     /**
-     * Type of the tax ID, one of `adNrt`, `aeTrn`, `alTin`, `amTin`, `aoTin`, `arCuit`, `auAbn`, `auArn`, `awTin`, `azTin`, `baTin`, `bbTin`, `bdBin`, `bfIfu`, `bgUic`, `bhVat`, `bjIfu`, `boTin`, `brCnpj`, `brCpf`, `bsTin`, `byTin`, `caBn`, `caGstHst`, `caPstBc`, `caPstMb`, `caPstSk`, `caQst`, `cdNif`, `chUid`, `chVat`, `clTin`, `cmNiu`, `cnTin`, `coNit`, `crTin`, `cvNif`, `deStn`, `doRcn`, `ecRuc`, `egTin`, `esCif`, `etTin`, `euOssVat`, `euVat`, `gbVat`, `geVat`, `gnNif`, `hkBr`, `hrOib`, `huTin`, `idNpwp`, `ilVat`, `inGst`, `isVat`, `jpCn`, `jpRn`, `jpTrn`, `kePin`, `kgTin`, `khTin`, `krBrn`, `kzBin`, `laTin`, `liUid`, `liVat`, `maVat`, `mdVat`, `mePib`, `mkVat`, `mrNif`, `mxRfc`, `myFrp`, `myItn`, `mySst`, `ngTin`, `noVat`, `noVoec`, `npPan`, `nzGst`, `omVat`, `peRuc`, `phTin`, `roTin`, `rsPib`, `ruInn`, `ruKpp`, `saVat`, `sgGst`, `sgUen`, `siTin`, `snNinea`, `srFin`, `svNit`, `thVat`, `tjTin`, `trTin`, `twVat`, `tzVat`, `uaVat`, `ugTin`, `usEin`, `uyRuc`, `uzTin`, `uzVat`, `veRif`, `vnTin`, `zaVat`, `zmTin`, or `zwTin`
+     * Type of the tax ID, one of `adNrt`, `aeTrn`, `alTin`, `amTin`, `aoTin`, `arCuit`, `auAbn`, `auArn`, `awTin`, `azTin`, `baTin`, `bbTin`, `bdBin`, `bfIfu`, `bgUic`, `bhVat`, `bjIfu`, `boTin`, `brCnpj`, `brCpf`, `bsTin`, `byTin`, `caBn`, `caGstHst`, `caPstBc`, `caPstMb`, `caPstSk`, `caQst`, `cdNif`, `chUid`, `chVat`, `clTin`, `cmNiu`, `cnTin`, `coNit`, `crTin`, `cvNif`, `deStn`, `doRcn`, `ecRuc`, `egTin`, `esCif`, `etTin`, `euOssVat`, `euVat`, `foVat`, `gbVat`, `geVat`, `giTin`, `gnNif`, `hkBr`, `hrOib`, `huTin`, `idNpwp`, `ilVat`, `inGst`, `isVat`, `itCf`, `jpCn`, `jpRn`, `jpTrn`, `kePin`, `kgTin`, `khTin`, `krBrn`, `kzBin`, `laTin`, `liUid`, `liVat`, `lkVat`, `maVat`, `mdVat`, `mePib`, `mkVat`, `mrNif`, `mxRfc`, `myFrp`, `myItn`, `mySst`, `ngTin`, `noVat`, `noVoec`, `npPan`, `nzGst`, `omVat`, `peRuc`, `phTin`, `plNip`, `pyRuc`, `roTin`, `rsPib`, `ruInn`, `ruKpp`, `saVat`, `sgGst`, `sgUen`, `siTin`, `snNinea`, `srFin`, `svNit`, `thVat`, `tjTin`, `trTin`, `twVat`, `tzVat`, `uaVat`, `ugTin`, `usEin`, `uyRuc`, `uzTin`, `uzVat`, `veRif`, `vnTin`, `zaVat`, `zmTin`, or `zwTin`
      */
     type: pulumi.Input<string>;
     /**
@@ -214,26 +2560,8085 @@ export interface CustomerTaxIdData {
     value: pulumi.Input<string>;
 }
 
+export interface CustomerTaxLocation {
+    /**
+     * The identified tax country of the customer.
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * The data source used to infer the customer's location.
+     */
+    source?: pulumi.Input<string | undefined>;
+    /**
+     * The identified tax state, county, province, or region of the customer.
+     */
+    state?: pulumi.Input<string | undefined>;
+}
+
+export interface FileFileLinkData {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Set this to `true` to create a file link for the newly created file. Creating a link is only possible when the file's `purpose` is one of the following: `businessIcon`, `businessLogo`, `customerSignature`, `disputeEvidence`, `issuingRegulatoryReporting`, `pciDocument`, `taxDocumentUserUpload`, `terminalAndroidApk`, or `terminalReaderSplashscreen`.
+     */
+    create: pulumi.Input<boolean>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The link isn't available after this future timestamp.
+     */
+    expiresAt?: pulumi.Input<number | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
+     */
+    metadata?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
+}
+
+export interface InvoiceAutomaticTax {
+    /**
+     * If Stripe disabled automatic tax, this enum describes why.
+     */
+    disabledReason?: pulumi.Input<string | undefined>;
+    /**
+     * Whether Stripe automatically computes tax on this invoice. Note that incompatible invoice items (invoice items with manually specified [tax rates](https://docs.stripe.com/api/tax_rates), negative amounts, or `tax_behavior=unspecified`) cannot be added to automatic tax invoices.
+     */
+    enabled: pulumi.Input<boolean>;
+    /**
+     * The account that's liable for tax. If set, the business address and tax registrations required to perform the tax calculation are loaded from this account. The tax transaction is returned in the report of the connected account.
+     */
+    liability?: pulumi.Input<inputs.InvoiceAutomaticTaxLiability | undefined>;
+    /**
+     * The tax provider powering automatic tax.
+     */
+    provider?: pulumi.Input<string | undefined>;
+    /**
+     * The status of the most recent automated tax calculation for this invoice.
+     */
+    status?: pulumi.Input<string | undefined>;
+}
+
+export interface InvoiceAutomaticTaxLiability {
+    /**
+     * The connected account being referenced when `type` is `account`.
+     */
+    account?: pulumi.Input<string | undefined>;
+    /**
+     * Type of the account referenced.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface InvoiceConfirmationSecret {
+    /**
+     * The clientSecret of the payment that Stripe creates for the invoice after finalization.
+     */
+    clientSecret?: pulumi.Input<string | undefined>;
+    /**
+     * The type of client*secret. Currently this is always payment*intent, referencing the default paymentIntent that Stripe creates during invoice finalization
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface InvoiceCustomField {
+    /**
+     * The name of the custom field.
+     */
+    name: pulumi.Input<string>;
+    /**
+     * The value of the custom field.
+     */
+    value: pulumi.Input<string>;
+}
+
+export interface InvoiceCustomerAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode?: pulumi.Input<string | undefined>;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: pulumi.Input<string | undefined>;
+}
+
+export interface InvoiceCustomerShipping {
+    address?: pulumi.Input<inputs.InvoiceCustomerShippingAddress | undefined>;
+    /**
+     * The delivery service that shipped a physical product, such as Fedex, UPS, USPS, etc.
+     */
+    carrier?: pulumi.Input<string | undefined>;
+    /**
+     * Recipient name.
+     */
+    name?: pulumi.Input<string | undefined>;
+    /**
+     * Recipient phone (including extension).
+     */
+    phone?: pulumi.Input<string | undefined>;
+    /**
+     * The tracking number for a physical product, obtained from the delivery service. If multiple tracking numbers were generated for this purchase, please separate them with commas.
+     */
+    trackingNumber?: pulumi.Input<string | undefined>;
+}
+
+export interface InvoiceCustomerShippingAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode?: pulumi.Input<string | undefined>;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: pulumi.Input<string | undefined>;
+}
+
+export interface InvoiceCustomerTaxId {
+    /**
+     * The type of the tax ID, one of `adNrt`, `arCuit`, `euVat`, `boTin`, `brCnpj`, `brCpf`, `cnTin`, `coNit`, `crTin`, `doRcn`, `ecRuc`, `euOssVat`, `hrOib`, `peRuc`, `roTin`, `rsPib`, `svNit`, `uyRuc`, `veRif`, `vnTin`, `gbVat`, `nzGst`, `auAbn`, `auArn`, `inGst`, `noVat`, `noVoec`, `zaVat`, `chVat`, `mxRfc`, `sgUen`, `ruInn`, `ruKpp`, `caBn`, `hkBr`, `esCif`, `plNip`, `itCf`, `foVat`, `giTin`, `pyRuc`, `twVat`, `thVat`, `jpCn`, `jpRn`, `jpTrn`, `liUid`, `liVat`, `lkVat`, `myItn`, `usEin`, `krBrn`, `caQst`, `caGstHst`, `caPstBc`, `caPstMb`, `caPstSk`, `mySst`, `sgGst`, `aeTrn`, `clTin`, `saVat`, `idNpwp`, `myFrp`, `ilVat`, `geVat`, `uaVat`, `isVat`, `bgUic`, `huTin`, `siTin`, `kePin`, `trTin`, `egTin`, `phTin`, `alTin`, `bhVat`, `kzBin`, `ngTin`, `omVat`, `deStn`, `chUid`, `tzVat`, `uzVat`, `uzTin`, `mdVat`, `maVat`, `byTin`, `aoTin`, `bsTin`, `bbTin`, `cdNif`, `mrNif`, `mePib`, `zwTin`, `baTin`, `gnNif`, `mkVat`, `srFin`, `snNinea`, `amTin`, `npPan`, `tjTin`, `ugTin`, `zmTin`, `khTin`, `awTin`, `azTin`, `bdBin`, `bjIfu`, `etTin`, `kgTin`, `laTin`, `cmNiu`, `cvNif`, `bfIfu`, or `unknown`
+     */
+    type?: pulumi.Input<string | undefined>;
+    /**
+     * The value of the tax ID.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface InvoiceDiscount {
+    /**
+     * ID of the coupon to create a new discount for.
+     */
+    coupon?: pulumi.Input<string | undefined>;
+    /**
+     * ID of an existing discount on the object (or one of its ancestors) to reuse.
+     */
+    discount?: pulumi.Input<string | undefined>;
+    /**
+     * ID of the promotion code to create a new discount for.
+     */
+    promotionCode?: pulumi.Input<string | undefined>;
+}
+
+export interface InvoiceFromInvoice {
+    /**
+     * The relation between this invoice and the cloned invoice
+     */
+    action: pulumi.Input<string>;
+    /**
+     * The invoice that was cloned.
+     */
+    invoice: pulumi.Input<string>;
+}
+
+export interface InvoiceIssuer {
+    /**
+     * The connected account being referenced when `type` is `account`.
+     */
+    account?: pulumi.Input<string | undefined>;
+    /**
+     * Type of the account referenced.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface InvoiceItemDiscount {
+    /**
+     * ID of the coupon to create a new discount for.
+     */
+    coupon?: pulumi.Input<string | undefined>;
+    /**
+     * ID of an existing discount on the object (or one of its ancestors) to reuse.
+     */
+    discount?: pulumi.Input<string | undefined>;
+    /**
+     * ID of the promotion code to create a new discount for.
+     */
+    promotionCode?: pulumi.Input<string | undefined>;
+}
+
+export interface InvoiceItemParent {
+    /**
+     * Details about the subscription that generated this invoice item
+     */
+    subscriptionDetails?: pulumi.Input<inputs.InvoiceItemParentSubscriptionDetails | undefined>;
+    /**
+     * The type of parent that generated this invoice item
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface InvoiceItemParentSubscriptionDetails {
+    /**
+     * The subscription that generated this invoice item
+     */
+    subscription?: pulumi.Input<string | undefined>;
+    /**
+     * The subscription item that generated this invoice item
+     */
+    subscriptionItem?: pulumi.Input<string | undefined>;
+}
+
+export interface InvoiceItemPeriod {
+    /**
+     * The end of the period, which must be greater than or equal to the start. This value is inclusive.
+     */
+    end: pulumi.Input<number>;
+    /**
+     * The start of the period. This value is inclusive.
+     */
+    start: pulumi.Input<number>;
+}
+
+export interface InvoiceItemPriceData {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+     */
+    currency: pulumi.Input<string>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The ID of the [Product](https://docs.stripe.com/api/products) that this [Price](https://docs.stripe.com/api/prices) will belong to.
+     */
+    product: pulumi.Input<string>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Only required if a [default tax behavior](<https://docs.stripe.com/tax/products-prices-tax-categories-tax-behavior#setting-a-default-tax-behavior-(recommended)>) was not provided in the Stripe Tax settings. Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
+     */
+    taxBehavior?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge.
+     */
+    unitAmount?: pulumi.Input<number | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Same as `unitAmount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unitAmount` and `unitAmountDecimal` can be set.
+     */
+    unitAmountDecimal?: pulumi.Input<number | undefined>;
+}
+
+export interface InvoiceItemPricing {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The ID of the price object.
+     */
+    price?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     */
+    priceDetails?: pulumi.Input<inputs.InvoiceItemPricingPriceDetails | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The type of the pricing details.
+     */
+    type?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The unit amount (in the `currency` specified) of the item which contains a decimal value with at most 12 decimal places.
+     */
+    unitAmountDecimal?: pulumi.Input<number | undefined>;
+}
+
+export interface InvoiceItemPricingPriceDetails {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The ID of the price this item is associated with.
+     */
+    price?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The ID of the product this item is associated with.
+     */
+    product?: pulumi.Input<string | undefined>;
+}
+
+export interface InvoiceItemProrationDetails {
+    /**
+     * For a credit proration, links to the debit invoice line items or invoice item that the credit applies to.
+     */
+    creditedItems?: pulumi.Input<inputs.InvoiceItemProrationDetailsCreditedItems | undefined>;
+    /**
+     * Discount amounts applied when the proration was created.
+     */
+    discountAmounts?: pulumi.Input<pulumi.Input<inputs.InvoiceItemProrationDetailsDiscountAmount>[] | undefined>;
+}
+
+export interface InvoiceItemProrationDetailsCreditedItems {
+    /**
+     * When `type` is `invoiceItem`, the invoice item id for the debited invoice item corresponding to this credit proration.
+     */
+    invoiceItem?: pulumi.Input<string | undefined>;
+    invoiceLineItemDetails?: pulumi.Input<inputs.InvoiceItemProrationDetailsCreditedItemsInvoiceLineItemDetails | undefined>;
+    /**
+     * Whether the credit references a pending invoice item or one or more invoice line items on an invoice.
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface InvoiceItemProrationDetailsCreditedItemsInvoiceLineItemDetails {
+    /**
+     * The invoice id for the debited line item(s).
+     */
+    invoice?: pulumi.Input<string | undefined>;
+    /**
+     * IDs of the debited invoice line item(s) on the invoice that correspond to the credit proration.
+     */
+    invoiceLineItems?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+}
+
+export interface InvoiceItemProrationDetailsDiscountAmount {
+    /**
+     * The amount, in cents (or local equivalent), of the discount.
+     */
+    amount?: pulumi.Input<number | undefined>;
+    /**
+     * The discount that was applied to get this discount amount.
+     */
+    discount?: pulumi.Input<string | undefined>;
+}
+
+export interface InvoiceLastFinalizationError {
+    /**
+     * For card errors resulting from a card issuer decline, a short string indicating [how to proceed with an error](https://docs.stripe.com/declines#retrying-issuer-declines) if they provide one.
+     */
+    adviceCode?: pulumi.Input<string | undefined>;
+    /**
+     * For card errors, the ID of the failed charge.
+     */
+    charge?: pulumi.Input<string | undefined>;
+    /**
+     * For some errors that could be handled programmatically, a short string indicating the [error code](https://docs.stripe.com/error-codes) reported.
+     */
+    code?: pulumi.Input<string | undefined>;
+    /**
+     * For card errors resulting from a card issuer decline, a short string indicating the [card issuer's reason for the decline](https://docs.stripe.com/declines#issuer-declines) if they provide one.
+     */
+    declineCode?: pulumi.Input<string | undefined>;
+    /**
+     * A URL to more information about the [error code](https://docs.stripe.com/error-codes) reported.
+     */
+    docUrl?: pulumi.Input<string | undefined>;
+    /**
+     * A human-readable message providing more details about the error. For card errors, these messages can be shown to your users.
+     */
+    message?: pulumi.Input<string | undefined>;
+    /**
+     * For card errors resulting from a card issuer decline, a 2 digit code which indicates the advice given to merchant by the card network on how to proceed with an error.
+     */
+    networkAdviceCode?: pulumi.Input<string | undefined>;
+    /**
+     * For payments declined by the network, an alphanumeric code which indicates the reason the payment failed.
+     */
+    networkDeclineCode?: pulumi.Input<string | undefined>;
+    /**
+     * If the error is parameter-specific, the parameter related to the error. For example, you can use this to display a message near the correct form field.
+     */
+    param?: pulumi.Input<string | undefined>;
+    /**
+     * A PaymentIntent guides you through the process of collecting a payment from your customer.
+     * We recommend that you create exactly one PaymentIntent for each order or
+     * customer session in your system. You can reference the PaymentIntent later to
+     * see the history of payment attempts for a particular session.
+     */
+    paymentIntent?: pulumi.Input<string | undefined>;
+    /**
+     * PaymentMethod objects represent your customer's payment instruments.
+     * You can use them with [PaymentIntents](https://docs.stripe.com/payments/payment-intents) to collect payments or save them to
+     * Customer objects to store instrument details for future payments.
+     *
+     * Related guides: [Payment Methods](https://docs.stripe.com/payments/payment-methods) and [More Payment Scenarios](https://docs.stripe.com/payments/more-payment-scenarios).
+     */
+    paymentMethod?: pulumi.Input<string | undefined>;
+    /**
+     * If the error is specific to the type of payment method, the payment method type that had a problem. This field is only populated for invoice-related errors.
+     */
+    paymentMethodType?: pulumi.Input<string | undefined>;
+    /**
+     * A URL to the request log entry in your dashboard.
+     */
+    requestLogUrl?: pulumi.Input<string | undefined>;
+    /**
+     * A SetupIntent guides you through the process of setting up and saving a customer's payment credentials for future payments.
+     * For example, you can use a SetupIntent to set up and save your customer's card without immediately collecting a payment.
+     * Later, you can use [PaymentIntents](https://api.stripe.com#payment_intents) to drive the payment flow.
+     *
+     * Create a SetupIntent when you're ready to collect your customer's payment credentials.
+     * Don't maintain long-lived, unconfirmed SetupIntents because they might not be valid.
+     * The SetupIntent transitions through multiple [statuses](https://docs.stripe.com/payments/intents#intent-statuses) as it guides
+     * you through the setup process.
+     *
+     * Successful SetupIntents result in payment credentials that are optimized for future payments.
+     * For example, cardholders in [certain regions](https://stripe.com/guides/strong-customer-authentication) might need to be run through
+     * [Strong Customer Authentication](https://docs.stripe.com/strong-customer-authentication) during payment method collection
+     * to streamline later [off-session payments](https://docs.stripe.com/payments/setup-intents).
+     * If you use the SetupIntent with a [Customer](https://api.stripe.com#setup_intent_object-customer),
+     * it automatically attaches the resulting payment method to that Customer after successful setup.
+     * We recommend using SetupIntents or [setupFutureUsage](https://api.stripe.com#payment_intent_object-setup_future_usage) on
+     * PaymentIntents to save payment methods to prevent saving invalid or unoptimized payment methods.
+     *
+     * By using SetupIntents, you can reduce friction for your customers, even as regulations change over time.
+     *
+     * Related guide: [Setup Intents API](https://docs.stripe.com/payments/setup-intents)
+     */
+    setupIntent?: pulumi.Input<string | undefined>;
+    source?: pulumi.Input<string | undefined>;
+    /**
+     * The type of error returned. One of `apiError`, `cardError`, `idempotencyError`, or `invalidRequestError`
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface InvoiceParent {
+    /**
+     * Details about the quote that generated this invoice
+     */
+    quoteDetails?: pulumi.Input<inputs.InvoiceParentQuoteDetails | undefined>;
+    /**
+     * Details about the subscription that generated this invoice
+     */
+    subscriptionDetails?: pulumi.Input<inputs.InvoiceParentSubscriptionDetails | undefined>;
+    /**
+     * The type of parent that generated this invoice
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface InvoiceParentQuoteDetails {
+    /**
+     * The quote that generated this invoice
+     */
+    quote?: pulumi.Input<string | undefined>;
+}
+
+export interface InvoiceParentSubscriptionDetails {
+    /**
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) defined as subscription metadata when an invoice is created. Becomes an immutable snapshot of the subscription metadata at the time of invoice finalization.
+     * *Note: This attribute is populated only for invoices created on or after June 29, 2023.*
+     */
+    metadata?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
+    /**
+     * The subscription that generated this invoice
+     */
+    subscription?: pulumi.Input<string | undefined>;
+    /**
+     * Only set for upcoming invoices that preview prorations. The time used to calculate prorations.
+     */
+    subscriptionProrationDate?: pulumi.Input<number | undefined>;
+}
+
+export interface InvoicePaymentSettings {
+    /**
+     * ID of the mandate to be used for this invoice. It must correspond to the payment method used to pay the invoice, including the invoice's default*payment*method or default_source, if set.
+     */
+    defaultMandate?: pulumi.Input<string | undefined>;
+    /**
+     * Payment-method-specific configuration to provide to the invoice’s PaymentIntent.
+     */
+    paymentMethodOptions?: pulumi.Input<inputs.InvoicePaymentSettingsPaymentMethodOptions | undefined>;
+    /**
+     * The list of payment method types (e.g. card) to provide to the invoice’s PaymentIntent. If not set, Stripe attempts to automatically determine the types to use by looking at the invoice’s default payment method, the subscription’s default payment method, the customer’s default payment method, and your [invoice template settings](https://dashboard.stripe.com/settings/billing/invoice).
+     */
+    paymentMethodTypes?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+}
+
+export interface InvoicePaymentSettingsPaymentMethodOptions {
+    /**
+     * If paying by `acssDebit`, this sub-hash contains details about the Canadian pre-authorized debit payment method options to pass to the invoice’s PaymentIntent.
+     */
+    acssDebit?: pulumi.Input<inputs.InvoicePaymentSettingsPaymentMethodOptionsAcssDebit | undefined>;
+    /**
+     * If paying by `bancontact`, this sub-hash contains details about the Bancontact payment method options to pass to the invoice’s PaymentIntent.
+     */
+    bancontact?: pulumi.Input<inputs.InvoicePaymentSettingsPaymentMethodOptionsBancontact | undefined>;
+    /**
+     * If paying by `card`, this sub-hash contains details about the Card payment method options to pass to the invoice’s PaymentIntent.
+     */
+    card?: pulumi.Input<inputs.InvoicePaymentSettingsPaymentMethodOptionsCard | undefined>;
+    /**
+     * If paying by `customerBalance`, this sub-hash contains details about the Bank transfer payment method options to pass to the invoice’s PaymentIntent.
+     */
+    customerBalance?: pulumi.Input<inputs.InvoicePaymentSettingsPaymentMethodOptionsCustomerBalance | undefined>;
+    /**
+     * If paying by `payto`, this sub-hash contains details about the PayTo payment method options to pass to the invoice’s PaymentIntent.
+     */
+    payto?: pulumi.Input<inputs.InvoicePaymentSettingsPaymentMethodOptionsPayto | undefined>;
+    /**
+     * If paying by `pix`, this sub-hash contains details about the Pix payment method options to pass to the invoice’s PaymentIntent.
+     */
+    pix?: pulumi.Input<inputs.InvoicePaymentSettingsPaymentMethodOptionsPix | undefined>;
+    /**
+     * If paying by `upi`, this sub-hash contains details about the UPI payment method options to pass to the invoice’s PaymentIntent.
+     */
+    upi?: pulumi.Input<inputs.InvoicePaymentSettingsPaymentMethodOptionsUpi | undefined>;
+    /**
+     * If paying by `usBankAccount`, this sub-hash contains details about the ACH direct debit payment method options to pass to the invoice’s PaymentIntent.
+     */
+    usBankAccount?: pulumi.Input<inputs.InvoicePaymentSettingsPaymentMethodOptionsUsBankAccount | undefined>;
+}
+
+export interface InvoicePaymentSettingsPaymentMethodOptionsAcssDebit {
+    mandateOptions?: pulumi.Input<inputs.InvoicePaymentSettingsPaymentMethodOptionsAcssDebitMandateOptions | undefined>;
+    /**
+     * Bank account verification method. The default value is `automatic`.
+     */
+    verificationMethod?: pulumi.Input<string | undefined>;
+}
+
+export interface InvoicePaymentSettingsPaymentMethodOptionsAcssDebitMandateOptions {
+    /**
+     * Transaction type of the mandate.
+     */
+    transactionType?: pulumi.Input<string | undefined>;
+}
+
+export interface InvoicePaymentSettingsPaymentMethodOptionsBancontact {
+    /**
+     * Preferred language of the Bancontact authorization page that the customer is redirected to.
+     */
+    preferredLanguage?: pulumi.Input<string | undefined>;
+}
+
+export interface InvoicePaymentSettingsPaymentMethodOptionsCard {
+    installments?: pulumi.Input<inputs.InvoicePaymentSettingsPaymentMethodOptionsCardInstallments | undefined>;
+    /**
+     * We strongly recommend that you rely on our SCA Engine to automatically prompt your customers for authentication based on risk level and [other requirements](https://docs.stripe.com/strong-customer-authentication). However, if you wish to request 3D Secure based on logic from your own fraud engine, provide this option. Read our guide on [manually requesting 3D Secure](https://docs.stripe.com/payments/3d-secure/authentication-flow#manual-three-ds) for more information on how this configuration interacts with Radar and our SCA Engine.
+     */
+    requestThreeDSecure?: pulumi.Input<string | undefined>;
+}
+
+export interface InvoicePaymentSettingsPaymentMethodOptionsCardInstallments {
+    /**
+     * Whether Installments are enabled for this Invoice.
+     */
+    enabled?: pulumi.Input<boolean | undefined>;
+    /**
+     * The selected installment plan to use for this invoice.
+     */
+    plan?: pulumi.Input<inputs.InvoicePaymentSettingsPaymentMethodOptionsCardInstallmentsPlan | undefined>;
+}
+
+export interface InvoicePaymentSettingsPaymentMethodOptionsCardInstallmentsPlan {
+    /**
+     * For `fixedCount` installment plans, this is required. It represents the number of installment payments your customer will make to their credit card.
+     */
+    count?: pulumi.Input<number | undefined>;
+    /**
+     * For `fixedCount` installment plans, this is required. It represents the interval between installment payments your customer will make to their credit card.
+     * One of `month`.
+     */
+    interval?: pulumi.Input<string | undefined>;
+    /**
+     * Type of installment plan, one of `fixedCount`, `bonus`, or `revolving`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface InvoicePaymentSettingsPaymentMethodOptionsCustomerBalance {
+    bankTransfer?: pulumi.Input<inputs.InvoicePaymentSettingsPaymentMethodOptionsCustomerBalanceBankTransfer | undefined>;
+    /**
+     * The funding method type to be used when there are not enough funds in the customer balance. Permitted values include: `bankTransfer`.
+     */
+    fundingType?: pulumi.Input<string | undefined>;
+}
+
+export interface InvoicePaymentSettingsPaymentMethodOptionsCustomerBalanceBankTransfer {
+    euBankTransfer?: pulumi.Input<inputs.InvoicePaymentSettingsPaymentMethodOptionsCustomerBalanceBankTransferEuBankTransfer | undefined>;
+    /**
+     * The bank transfer type that can be used for funding. Permitted values include: `euBankTransfer`, `gbBankTransfer`, `jpBankTransfer`, `mxBankTransfer`, or `usBankTransfer`.
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface InvoicePaymentSettingsPaymentMethodOptionsCustomerBalanceBankTransferEuBankTransfer {
+    /**
+     * The desired country code of the bank account information. Permitted values include: `DE`, `FR`, `IE`, or `NL`.
+     */
+    country: pulumi.Input<string>;
+}
+
+export interface InvoicePaymentSettingsPaymentMethodOptionsPayto {
+    mandateOptions?: pulumi.Input<inputs.InvoicePaymentSettingsPaymentMethodOptionsPaytoMandateOptions | undefined>;
+}
+
+export interface InvoicePaymentSettingsPaymentMethodOptionsPaytoMandateOptions {
+    /**
+     * The maximum amount that can be collected in a single invoice. If you don't specify a maximum, then there is no limit.
+     */
+    amount?: pulumi.Input<number | undefined>;
+    /**
+     * Only `maximum` is supported.
+     */
+    amountType?: pulumi.Input<string | undefined>;
+    /**
+     * The purpose for which payments are made. Has a default value based on your merchant category code.
+     */
+    purpose?: pulumi.Input<string | undefined>;
+}
+
+export interface InvoicePaymentSettingsPaymentMethodOptionsPix {
+    /**
+     * Determines if the amount includes the IOF tax.
+     */
+    amountIncludesIof?: pulumi.Input<string | undefined>;
+    /**
+     * The number of seconds (between 10 and 1209600) after which Pix payment will expire. Defaults to 86400 seconds.
+     */
+    expiresAfterSeconds?: pulumi.Input<number | undefined>;
+}
+
+export interface InvoicePaymentSettingsPaymentMethodOptionsUpi {
+    mandateOptions?: pulumi.Input<inputs.InvoicePaymentSettingsPaymentMethodOptionsUpiMandateOptions | undefined>;
+}
+
+export interface InvoicePaymentSettingsPaymentMethodOptionsUpiMandateOptions {
+    /**
+     * Amount to be charged for future payments.
+     */
+    amount?: pulumi.Input<number | undefined>;
+    /**
+     * One of `fixed` or `maximum`. If `fixed`, the `amount` param refers to the exact amount to be charged in future payments. If `maximum`, the amount charged can be up to the value passed for the `amount` param.
+     */
+    amountType?: pulumi.Input<string | undefined>;
+    /**
+     * A description of the mandate or subscription that is meant to be displayed to the customer.
+     */
+    description?: pulumi.Input<string | undefined>;
+    /**
+     * End date of the mandate or subscription.
+     */
+    endDate?: pulumi.Input<number | undefined>;
+}
+
+export interface InvoicePaymentSettingsPaymentMethodOptionsUsBankAccount {
+    financialConnections?: pulumi.Input<inputs.InvoicePaymentSettingsPaymentMethodOptionsUsBankAccountFinancialConnections | undefined>;
+    /**
+     * Bank account verification method. The default value is `automatic`.
+     */
+    verificationMethod?: pulumi.Input<string | undefined>;
+}
+
+export interface InvoicePaymentSettingsPaymentMethodOptionsUsBankAccountFinancialConnections {
+    filters?: pulumi.Input<inputs.InvoicePaymentSettingsPaymentMethodOptionsUsBankAccountFinancialConnectionsFilters | undefined>;
+    /**
+     * The list of permissions to request. The `paymentMethod` permission must be included.
+     */
+    permissions?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * Data features requested to be retrieved upon account creation.
+     */
+    prefetches?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+}
+
+export interface InvoicePaymentSettingsPaymentMethodOptionsUsBankAccountFinancialConnectionsFilters {
+    /**
+     * The account subcategories to use to filter for possible accounts to link. Valid subcategories are `checking` and `savings`.
+     */
+    accountSubcategories?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+}
+
+export interface InvoiceRendering {
+    /**
+     * How line-item prices and amounts will be displayed with respect to tax on invoice PDFs.
+     */
+    amountTaxDisplay?: pulumi.Input<string | undefined>;
+    /**
+     * Invoice pdf rendering options
+     */
+    pdf?: pulumi.Input<inputs.InvoiceRenderingPdf | undefined>;
+    /**
+     * ID of the rendering template that the invoice is formatted by.
+     */
+    template?: pulumi.Input<string | undefined>;
+    /**
+     * Version of the rendering template that the invoice is using.
+     */
+    templateVersion?: pulumi.Input<number | undefined>;
+}
+
+export interface InvoiceRenderingPdf {
+    /**
+     * Page size of invoice pdf. Options include a4, letter, and auto. If set to auto, page size will be switched to a4 or letter based on customer locale.
+     */
+    pageSize?: pulumi.Input<string | undefined>;
+}
+
+export interface InvoiceShippingCost {
+    /**
+     * Total shipping cost before any taxes are applied.
+     */
+    amountSubtotal?: pulumi.Input<number | undefined>;
+    /**
+     * Total tax amount applied due to shipping costs. If no tax was applied, defaults to 0.
+     */
+    amountTax?: pulumi.Input<number | undefined>;
+    /**
+     * Total shipping cost after taxes are applied.
+     */
+    amountTotal?: pulumi.Input<number | undefined>;
+    /**
+     * The ID of the ShippingRate for this invoice.
+     */
+    shippingRate?: pulumi.Input<string | undefined>;
+    /**
+     * Parameters to create a new ad-hoc shipping rate for this order.
+     */
+    shippingRateData?: pulumi.Input<inputs.InvoiceShippingCostShippingRateData | undefined>;
+    /**
+     * The taxes applied to the shipping rate.
+     */
+    taxes?: pulumi.Input<pulumi.Input<inputs.InvoiceShippingCostTax>[] | undefined>;
+}
+
+export interface InvoiceShippingCostShippingRateData {
+    /**
+     * The estimated range for how long shipping will take, meant to be displayable to the customer. This will appear on CheckoutSessions.
+     */
+    deliveryEstimate?: pulumi.Input<inputs.InvoiceShippingCostShippingRateDataDeliveryEstimate | undefined>;
+    /**
+     * The name of the shipping rate, meant to be displayable to the customer. This will appear on CheckoutSessions.
+     */
+    displayName: pulumi.Input<string>;
+    /**
+     * Describes a fixed amount to charge for shipping. Must be present if type is `fixedAmount`.
+     */
+    fixedAmount?: pulumi.Input<inputs.InvoiceShippingCostShippingRateDataFixedAmount | undefined>;
+    /**
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
+     */
+    metadata?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
+    /**
+     * Specifies whether the rate is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`.
+     */
+    taxBehavior?: pulumi.Input<string | undefined>;
+    /**
+     * A [tax code](https://docs.stripe.com/tax/tax-categories) ID. The Shipping tax code is `txcd92010001`.
+     */
+    taxCode?: pulumi.Input<string | undefined>;
+    /**
+     * The type of calculation to use on the shipping rate.
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface InvoiceShippingCostShippingRateDataDeliveryEstimate {
+    /**
+     * The upper bound of the estimated range. If empty, represents no upper bound i.e., infinite.
+     */
+    maximum?: pulumi.Input<inputs.InvoiceShippingCostShippingRateDataDeliveryEstimateMaximum | undefined>;
+    /**
+     * The lower bound of the estimated range. If empty, represents no lower bound.
+     */
+    minimum?: pulumi.Input<inputs.InvoiceShippingCostShippingRateDataDeliveryEstimateMinimum | undefined>;
+}
+
+export interface InvoiceShippingCostShippingRateDataDeliveryEstimateMaximum {
+    /**
+     * A unit of time.
+     */
+    unit: pulumi.Input<string>;
+    /**
+     * Must be greater than 0.
+     */
+    value: pulumi.Input<number>;
+}
+
+export interface InvoiceShippingCostShippingRateDataDeliveryEstimateMinimum {
+    /**
+     * A unit of time.
+     */
+    unit: pulumi.Input<string>;
+    /**
+     * Must be greater than 0.
+     */
+    value: pulumi.Input<number>;
+}
+
+export interface InvoiceShippingCostShippingRateDataFixedAmount {
+    /**
+     * A non-negative integer in cents representing how much to charge.
+     */
+    amount: pulumi.Input<number>;
+    /**
+     * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+     */
+    currency: pulumi.Input<string>;
+    /**
+     * Shipping rates defined in each available currency option. Each key must be a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html) and a [supported currency](https://stripe.com/docs/currencies).
+     */
+    currencyOptions?: pulumi.Input<{[key: string]: pulumi.Input<inputs.InvoiceShippingCostShippingRateDataFixedAmountCurrencyOptions>} | undefined>;
+}
+
+export interface InvoiceShippingCostShippingRateDataFixedAmountCurrencyOptions {
+    /**
+     * A non-negative integer in cents representing how much to charge.
+     */
+    amount: pulumi.Input<number>;
+    /**
+     * Specifies whether the rate is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`.
+     */
+    taxBehavior?: pulumi.Input<string | undefined>;
+}
+
+export interface InvoiceShippingCostTax {
+    /**
+     * Amount of tax applied for this rate.
+     */
+    amount?: pulumi.Input<number | undefined>;
+    /**
+     * Tax rates can be applied to [invoices](https://docs.stripe.com/invoicing/taxes/tax-rates), [subscriptions](https://docs.stripe.com/billing/taxes/tax-rates) and [Checkout Sessions](https://docs.stripe.com/payments/checkout/use-manual-tax-rates) to collect tax.
+     */
+    rate?: pulumi.Input<string | undefined>;
+    /**
+     * The reasoning behind this tax, for example, if the product is tax exempt. The possible values for this field may be extended as new tax rules are supported.
+     */
+    taxabilityReason?: pulumi.Input<string | undefined>;
+    /**
+     * The amount on which tax is calculated, in cents (or local equivalent).
+     */
+    taxableAmount?: pulumi.Input<number | undefined>;
+}
+
+export interface InvoiceShippingDetails {
+    address: pulumi.Input<inputs.InvoiceShippingDetailsAddress>;
+    /**
+     * The delivery service that shipped a physical product, such as Fedex, UPS, USPS, etc.
+     */
+    carrier?: pulumi.Input<string | undefined>;
+    /**
+     * Recipient name.
+     */
+    name: pulumi.Input<string>;
+    /**
+     * Recipient phone (including extension).
+     */
+    phone?: pulumi.Input<string | undefined>;
+    /**
+     * The tracking number for a physical product, obtained from the delivery service. If multiple tracking numbers were generated for this purchase, please separate them with commas.
+     */
+    trackingNumber?: pulumi.Input<string | undefined>;
+}
+
+export interface InvoiceShippingDetailsAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode?: pulumi.Input<string | undefined>;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: pulumi.Input<string | undefined>;
+}
+
+export interface InvoiceStatusTransitions {
+    /**
+     * The time that the invoice draft was finalized.
+     */
+    finalizedAt?: pulumi.Input<number | undefined>;
+    /**
+     * The time that the invoice was marked uncollectible.
+     */
+    markedUncollectibleAt?: pulumi.Input<number | undefined>;
+    /**
+     * The time that the invoice was paid.
+     */
+    paidAt?: pulumi.Input<number | undefined>;
+    /**
+     * The time that the invoice was voided.
+     */
+    voidedAt?: pulumi.Input<number | undefined>;
+}
+
+export interface InvoiceThresholdReason {
+    /**
+     * The total invoice amount threshold boundary if it triggered the threshold invoice.
+     */
+    amountGte?: pulumi.Input<number | undefined>;
+    /**
+     * Indicates which line items triggered a threshold invoice.
+     */
+    itemReasons?: pulumi.Input<pulumi.Input<inputs.InvoiceThresholdReasonItemReason>[] | undefined>;
+}
+
+export interface InvoiceThresholdReasonItemReason {
+    /**
+     * The IDs of the line items that triggered the threshold invoice.
+     */
+    lineItemIds?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * The quantity threshold boundary that applied to the given line item.
+     */
+    usageGte?: pulumi.Input<number | undefined>;
+}
+
+export interface InvoiceTotalDiscountAmount {
+    /**
+     * The amount, in cents (or local equivalent), of the discount.
+     */
+    amount?: pulumi.Input<number | undefined>;
+    /**
+     * The discount that was applied to get this discount amount.
+     */
+    discount?: pulumi.Input<string | undefined>;
+}
+
+export interface InvoiceTotalPretaxCreditAmount {
+    /**
+     * The amount, in cents (or local equivalent), of the pretax credit amount.
+     */
+    amount?: pulumi.Input<number | undefined>;
+    /**
+     * The credit balance transaction that was applied to get this pretax credit amount.
+     */
+    creditBalanceTransaction?: pulumi.Input<string | undefined>;
+    /**
+     * The discount that was applied to get this pretax credit amount.
+     */
+    discount?: pulumi.Input<string | undefined>;
+    /**
+     * Type of the pretax credit amount referenced.
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface InvoiceTotalTax {
+    /**
+     * The amount of the tax, in cents (or local equivalent).
+     */
+    amount?: pulumi.Input<number | undefined>;
+    /**
+     * Whether this tax is inclusive or exclusive.
+     */
+    taxBehavior?: pulumi.Input<string | undefined>;
+    /**
+     * Additional details about the tax rate. Only present when `type` is `taxRateDetails`.
+     */
+    taxRateDetails?: pulumi.Input<inputs.InvoiceTotalTaxTaxRateDetails | undefined>;
+    /**
+     * The reasoning behind this tax, for example, if the product is tax exempt. The possible values for this field may be extended as new tax rules are supported.
+     */
+    taxabilityReason?: pulumi.Input<string | undefined>;
+    /**
+     * The amount on which tax is calculated, in cents (or local equivalent).
+     */
+    taxableAmount?: pulumi.Input<number | undefined>;
+    /**
+     * The type of tax information.
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface InvoiceTotalTaxTaxRateDetails {
+    /**
+     * ID of the tax rate
+     */
+    taxRate?: pulumi.Input<string | undefined>;
+}
+
+export interface InvoiceTransferData {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The amount that will be transferred automatically when the invoice is paid. If no amount is set, the full amount is transferred.
+     */
+    amount?: pulumi.Input<number | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * ID of an existing, connected Stripe account.
+     */
+    destination: pulumi.Input<string>;
+}
+
+export interface IssuingCardLatestFraudWarning {
+    /**
+     * Timestamp of the most recent fraud warning.
+     */
+    startedAt?: pulumi.Input<number | undefined>;
+    /**
+     * The type of fraud warning that most recently took place on this card. This field updates with every new fraud warning, so the value changes over time. If populated, cancel and reissue the card.
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface IssuingCardLifecycleControls {
+    cancelAfter: pulumi.Input<inputs.IssuingCardLifecycleControlsCancelAfter>;
+}
+
+export interface IssuingCardLifecycleControlsCancelAfter {
+    /**
+     * The card is automatically cancelled when it makes this number of non-zero payment authorizations and transactions. The count includes penny authorizations, but doesn't include non-payment actions, such as authorization advice.
+     */
+    paymentCount: pulumi.Input<number>;
+}
+
+export interface IssuingCardPin {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The card's desired new PIN, encrypted under Stripe's public key.
+     */
+    encryptedNumber?: pulumi.Input<string | undefined>;
+}
+
+export interface IssuingCardShipping {
+    address: pulumi.Input<inputs.IssuingCardShippingAddress>;
+    /**
+     * Address validation details for the shipment.
+     */
+    addressValidation?: pulumi.Input<inputs.IssuingCardShippingAddressValidation | undefined>;
+    /**
+     * The delivery company that shipped a card.
+     */
+    carrier?: pulumi.Input<string | undefined>;
+    /**
+     * Additional information that may be required for clearing customs.
+     */
+    customs?: pulumi.Input<inputs.IssuingCardShippingCustoms | undefined>;
+    /**
+     * A unix timestamp representing a best estimate of when the card will be delivered.
+     */
+    eta?: pulumi.Input<number | undefined>;
+    /**
+     * Recipient name.
+     */
+    name: pulumi.Input<string>;
+    /**
+     * The phone number of the receiver of the shipment. Our courier partners will use this number to contact you in the event of card delivery issues. For individual shipments to the EU/UK, if this field is empty, we will provide them with the phone number provided when the cardholder was initially created.
+     */
+    phoneNumber?: pulumi.Input<string | undefined>;
+    /**
+     * Whether a signature is required for card delivery. This feature is only supported for US users. Standard shipping service does not support signature on delivery. The default value for standard shipping service is false and for express and priority services is true.
+     */
+    requireSignature?: pulumi.Input<boolean | undefined>;
+    /**
+     * Shipment service, such as `standard` or `express`.
+     */
+    service?: pulumi.Input<string | undefined>;
+    /**
+     * The delivery status of the card.
+     */
+    status?: pulumi.Input<string | undefined>;
+    /**
+     * A tracking number for a card shipment.
+     */
+    trackingNumber?: pulumi.Input<string | undefined>;
+    /**
+     * A link to the shipping carrier's site where you can view detailed information about a card shipment.
+     */
+    trackingUrl?: pulumi.Input<string | undefined>;
+    /**
+     * Packaging options.
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface IssuingCardShippingAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city: pulumi.Input<string>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: pulumi.Input<string>;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1: pulumi.Input<string>;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: pulumi.Input<string>;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: pulumi.Input<string | undefined>;
+}
+
+export interface IssuingCardShippingAddressValidation {
+    /**
+     * The address validation capabilities to use.
+     */
+    mode: pulumi.Input<string>;
+    /**
+     * The normalized shipping address.
+     */
+    normalizedAddress?: pulumi.Input<inputs.IssuingCardShippingAddressValidationNormalizedAddress | undefined>;
+    /**
+     * The validation result for the shipping address.
+     */
+    result?: pulumi.Input<string | undefined>;
+}
+
+export interface IssuingCardShippingAddressValidationNormalizedAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode?: pulumi.Input<string | undefined>;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: pulumi.Input<string | undefined>;
+}
+
+export interface IssuingCardShippingCustoms {
+    /**
+     * A registration number used for customs in Europe. See [https://www.gov.uk/eori](https://www.gov.uk/eori) for the UK and [https://ec.europa.eu/taxation*customs/business/customs-procedures-import-and-export/customs-procedures/economic-operators-registration-and-identification-number-eori*en](https://ec.europa.eu/taxation_customs/business/customs-procedures-import-and-export/customs-procedures/economic-operators-registration-and-identification-number-eori_en) for the EU.
+     */
+    eoriNumber?: pulumi.Input<string | undefined>;
+}
+
+export interface IssuingCardSpendingControls {
+    /**
+     * Array of card presence statuses from which authorizations will be allowed. Possible options are `present`, `notPresent`. All other statuses will be blocked. Cannot be set with `blockedCardPresences`. Provide an empty value to unset this control.
+     */
+    allowedCardPresences?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * Array of strings containing [categories](https://docs.stripe.com/api#issuing_authorization_object-merchant_data-category) of authorizations to allow. All other categories will be blocked. Cannot be set with `blockedCategories`.
+     */
+    allowedCategories?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * Array of strings containing representing countries from which authorizations will be allowed. Authorizations from merchants in all other countries will be declined. Country codes should be ISO 3166 alpha-2 country codes (e.g. `US`). Cannot be set with `blockedMerchantCountries`. Provide an empty value to unset this control.
+     */
+    allowedMerchantCountries?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * Array of card presence statuses from which authorizations will be declined. Possible options are `present`, `notPresent`. Cannot be set with `allowedCardPresences`. Provide an empty value to unset this control.
+     */
+    blockedCardPresences?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * Array of strings containing [categories](https://docs.stripe.com/api#issuing_authorization_object-merchant_data-category) of authorizations to decline. All other categories will be allowed. Cannot be set with `allowedCategories`.
+     */
+    blockedCategories?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * Array of strings containing representing countries from which authorizations will be declined. Country codes should be ISO 3166 alpha-2 country codes (e.g. `US`). Cannot be set with `allowedMerchantCountries`. Provide an empty value to unset this control.
+     */
+    blockedMerchantCountries?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * Limit spending with amount-based rules that apply across any cards this card replaced (i.e., its `replacementFor` card and *that* card's `replacementFor` card, up the chain).
+     */
+    spendingLimits?: pulumi.Input<pulumi.Input<inputs.IssuingCardSpendingControlsSpendingLimit>[] | undefined>;
+    /**
+     * Currency of the amounts within `spendingLimits`. Always the same as the currency of the card.
+     */
+    spendingLimitsCurrency?: pulumi.Input<string | undefined>;
+}
+
+export interface IssuingCardSpendingControlsSpendingLimit {
+    /**
+     * Maximum amount allowed to spend per interval. This amount is in the card's currency and in the [smallest currency unit](https://docs.stripe.com/currencies#zero-decimal).
+     */
+    amount: pulumi.Input<number>;
+    /**
+     * Array of strings containing [categories](https://docs.stripe.com/api#issuing_authorization_object-merchant_data-category) this limit applies to. Omitting this field will apply the limit to all categories.
+     */
+    categories?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * Interval (or event) to which the amount applies.
+     */
+    interval: pulumi.Input<string>;
+}
+
+export interface IssuingCardWallets {
+    applePay?: pulumi.Input<inputs.IssuingCardWalletsApplePay | undefined>;
+    googlePay?: pulumi.Input<inputs.IssuingCardWalletsGooglePay | undefined>;
+    /**
+     * Unique identifier for a card used with digital wallets
+     */
+    primaryAccountIdentifier?: pulumi.Input<string | undefined>;
+}
+
+export interface IssuingCardWalletsApplePay {
+    /**
+     * Apple Pay Eligibility
+     */
+    eligible?: pulumi.Input<boolean | undefined>;
+    /**
+     * Reason the card is ineligible for Apple Pay
+     */
+    ineligibleReason?: pulumi.Input<string | undefined>;
+}
+
+export interface IssuingCardWalletsGooglePay {
+    /**
+     * Google Pay Eligibility
+     */
+    eligible?: pulumi.Input<boolean | undefined>;
+    /**
+     * Reason the card is ineligible for Google Pay
+     */
+    ineligibleReason?: pulumi.Input<string | undefined>;
+}
+
+export interface IssuingCardholderBilling {
+    address: pulumi.Input<inputs.IssuingCardholderBillingAddress>;
+}
+
+export interface IssuingCardholderBillingAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city: pulumi.Input<string>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: pulumi.Input<string>;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1: pulumi.Input<string>;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: pulumi.Input<string>;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: pulumi.Input<string | undefined>;
+}
+
+export interface IssuingCardholderCompany {
+    /**
+     * The entity's business ID number.
+     */
+    taxId?: pulumi.Input<string | undefined>;
+    /**
+     * Whether the company's business ID number was provided.
+     */
+    taxIdProvided?: pulumi.Input<boolean | undefined>;
+}
+
+export interface IssuingCardholderIndividual {
+    /**
+     * Information related to the card*issuing program for this cardholder.
+     */
+    cardIssuing?: pulumi.Input<inputs.IssuingCardholderIndividualCardIssuing | undefined>;
+    /**
+     * The date of birth of this cardholder.
+     */
+    dob?: pulumi.Input<inputs.IssuingCardholderIndividualDob | undefined>;
+    /**
+     * The first name of this cardholder. Required before activating Cards. This field cannot contain any numbers, special characters (except periods, commas, hyphens, spaces and apostrophes) or non-latin letters.
+     */
+    firstName?: pulumi.Input<string | undefined>;
+    /**
+     * The last name of this cardholder. Required before activating Cards. This field cannot contain any numbers, special characters (except periods, commas, hyphens, spaces and apostrophes) or non-latin letters.
+     */
+    lastName?: pulumi.Input<string | undefined>;
+    /**
+     * Government-issued ID document for this cardholder.
+     */
+    verification?: pulumi.Input<inputs.IssuingCardholderIndividualVerification | undefined>;
+}
+
+export interface IssuingCardholderIndividualCardIssuing {
+    /**
+     * Information about cardholder acceptance of Celtic [Authorized User Terms](https://stripe.com/docs/issuing/cards#accept-authorized-user-terms). Required for cards backed by a Celtic program.
+     */
+    userTermsAcceptance?: pulumi.Input<inputs.IssuingCardholderIndividualCardIssuingUserTermsAcceptance | undefined>;
+}
+
+export interface IssuingCardholderIndividualCardIssuingUserTermsAcceptance {
+    /**
+     * The Unix timestamp marking when the cardholder accepted the Authorized User Terms.
+     */
+    date?: pulumi.Input<number | undefined>;
+    /**
+     * The IP address from which the cardholder accepted the Authorized User Terms.
+     */
+    ip?: pulumi.Input<string | undefined>;
+    /**
+     * The user agent of the browser from which the cardholder accepted the Authorized User Terms.
+     */
+    userAgent?: pulumi.Input<string | undefined>;
+}
+
+export interface IssuingCardholderIndividualDob {
+    /**
+     * The day of birth, between 1 and 31.
+     */
+    day: pulumi.Input<number>;
+    /**
+     * The month of birth, between 1 and 12.
+     */
+    month: pulumi.Input<number>;
+    /**
+     * The four-digit year of birth.
+     */
+    year: pulumi.Input<number>;
+}
+
+export interface IssuingCardholderIndividualVerification {
+    /**
+     * An identifying document, either a passport or local ID card.
+     */
+    document?: pulumi.Input<inputs.IssuingCardholderIndividualVerificationDocument | undefined>;
+}
+
+export interface IssuingCardholderIndividualVerificationDocument {
+    /**
+     * The back of a document returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `identityDocument`.
+     */
+    back?: pulumi.Input<string | undefined>;
+    /**
+     * The front of a document returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `identityDocument`.
+     */
+    front?: pulumi.Input<string | undefined>;
+}
+
+export interface IssuingCardholderRequirements {
+    /**
+     * Array of fields that need to be collected in order to verify and re-enable the cardholder.
+     */
+    pastDues?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+}
+
+export interface IssuingCardholderSpendingControls {
+    /**
+     * Array of card presence statuses from which authorizations will be allowed. Possible options are `present`, `notPresent`. All other statuses will be blocked. Cannot be set with `blockedCardPresences`. Provide an empty value to unset this control.
+     */
+    allowedCardPresences?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * Array of strings containing [categories](https://docs.stripe.com/api#issuing_authorization_object-merchant_data-category) of authorizations to allow. All other categories will be blocked. Cannot be set with `blockedCategories`.
+     */
+    allowedCategories?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * Array of strings containing representing countries from which authorizations will be allowed. Authorizations from merchants in all other countries will be declined. Country codes should be ISO 3166 alpha-2 country codes (e.g. `US`). Cannot be set with `blockedMerchantCountries`. Provide an empty value to unset this control.
+     */
+    allowedMerchantCountries?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * Array of card presence statuses from which authorizations will be declined. Possible options are `present`, `notPresent`. Cannot be set with `allowedCardPresences`. Provide an empty value to unset this control.
+     */
+    blockedCardPresences?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * Array of strings containing [categories](https://docs.stripe.com/api#issuing_authorization_object-merchant_data-category) of authorizations to decline. All other categories will be allowed. Cannot be set with `allowedCategories`.
+     */
+    blockedCategories?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * Array of strings containing representing countries from which authorizations will be declined. Country codes should be ISO 3166 alpha-2 country codes (e.g. `US`). Cannot be set with `allowedMerchantCountries`. Provide an empty value to unset this control.
+     */
+    blockedMerchantCountries?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * Limit spending with amount-based rules that apply across this cardholder's cards.
+     */
+    spendingLimits?: pulumi.Input<pulumi.Input<inputs.IssuingCardholderSpendingControlsSpendingLimit>[] | undefined>;
+    /**
+     * Currency of the amounts within `spendingLimits`.
+     */
+    spendingLimitsCurrency?: pulumi.Input<string | undefined>;
+}
+
+export interface IssuingCardholderSpendingControlsSpendingLimit {
+    /**
+     * Maximum amount allowed to spend per interval. This amount is in the card's currency and in the [smallest currency unit](https://docs.stripe.com/currencies#zero-decimal).
+     */
+    amount: pulumi.Input<number>;
+    /**
+     * Array of strings containing [categories](https://docs.stripe.com/api#issuing_authorization_object-merchant_data-category) this limit applies to. Omitting this field will apply the limit to all categories.
+     */
+    categories?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * Interval (or event) to which the amount applies.
+     */
+    interval: pulumi.Input<string>;
+}
+
+export interface IssuingDisputeEvidence {
+    canceled?: pulumi.Input<inputs.IssuingDisputeEvidenceCanceled | undefined>;
+    duplicate?: pulumi.Input<inputs.IssuingDisputeEvidenceDuplicate | undefined>;
+    fraudulent?: pulumi.Input<inputs.IssuingDisputeEvidenceFraudulent | undefined>;
+    merchandiseNotAsDescribed?: pulumi.Input<inputs.IssuingDisputeEvidenceMerchandiseNotAsDescribed | undefined>;
+    noValidAuthorization?: pulumi.Input<inputs.IssuingDisputeEvidenceNoValidAuthorization | undefined>;
+    notReceived?: pulumi.Input<inputs.IssuingDisputeEvidenceNotReceived | undefined>;
+    other?: pulumi.Input<inputs.IssuingDisputeEvidenceOther | undefined>;
+    /**
+     * The reason for filing the dispute. Its value will match the field containing the evidence.
+     */
+    reason?: pulumi.Input<string | undefined>;
+    serviceNotAsDescribed?: pulumi.Input<inputs.IssuingDisputeEvidenceServiceNotAsDescribed | undefined>;
+}
+
+export interface IssuingDisputeEvidenceCanceled {
+    /**
+     * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Additional documentation supporting the dispute.
+     */
+    additionalDocumentation?: pulumi.Input<string | undefined>;
+    /**
+     * Date when order was canceled.
+     */
+    canceledAt?: pulumi.Input<number | undefined>;
+    /**
+     * Whether the cardholder was provided with a cancellation policy.
+     */
+    cancellationPolicyProvided?: pulumi.Input<boolean | undefined>;
+    /**
+     * Reason for canceling the order.
+     */
+    cancellationReason?: pulumi.Input<string | undefined>;
+    /**
+     * Date when the cardholder expected to receive the product.
+     */
+    expectedAt?: pulumi.Input<number | undefined>;
+    /**
+     * Explanation of why the cardholder is disputing this transaction.
+     */
+    explanation?: pulumi.Input<string | undefined>;
+    /**
+     * Description of the merchandise or service that was purchased.
+     */
+    productDescription?: pulumi.Input<string | undefined>;
+    /**
+     * Whether the product was a merchandise or service.
+     */
+    productType?: pulumi.Input<string | undefined>;
+    /**
+     * Result of cardholder's attempt to return the product.
+     */
+    returnStatus?: pulumi.Input<string | undefined>;
+    /**
+     * Date when the product was returned or attempted to be returned.
+     */
+    returnedAt?: pulumi.Input<number | undefined>;
+}
+
+export interface IssuingDisputeEvidenceDuplicate {
+    /**
+     * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Additional documentation supporting the dispute.
+     */
+    additionalDocumentation?: pulumi.Input<string | undefined>;
+    /**
+     * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Copy of the card statement showing that the product had already been paid for.
+     */
+    cardStatement?: pulumi.Input<string | undefined>;
+    /**
+     * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Copy of the receipt showing that the product had been paid for in cash.
+     */
+    cashReceipt?: pulumi.Input<string | undefined>;
+    /**
+     * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Image of the front and back of the check that was used to pay for the product.
+     */
+    checkImage?: pulumi.Input<string | undefined>;
+    /**
+     * Explanation of why the cardholder is disputing this transaction.
+     */
+    explanation?: pulumi.Input<string | undefined>;
+    /**
+     * Transaction (e.g., ipi_...) that the disputed transaction is a duplicate of. Of the two or more transactions that are copies of each other, this is original undisputed one.
+     */
+    originalTransaction?: pulumi.Input<string | undefined>;
+}
+
+export interface IssuingDisputeEvidenceFraudulent {
+    /**
+     * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Additional documentation supporting the dispute.
+     */
+    additionalDocumentation?: pulumi.Input<string | undefined>;
+    /**
+     * Explanation of why the cardholder is disputing this transaction.
+     */
+    explanation?: pulumi.Input<string | undefined>;
+}
+
+export interface IssuingDisputeEvidenceMerchandiseNotAsDescribed {
+    /**
+     * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Additional documentation supporting the dispute.
+     */
+    additionalDocumentation?: pulumi.Input<string | undefined>;
+    /**
+     * Explanation of why the cardholder is disputing this transaction.
+     */
+    explanation?: pulumi.Input<string | undefined>;
+    /**
+     * Date when the product was received.
+     */
+    receivedAt?: pulumi.Input<number | undefined>;
+    /**
+     * Description of the cardholder's attempt to return the product.
+     */
+    returnDescription?: pulumi.Input<string | undefined>;
+    /**
+     * Result of cardholder's attempt to return the product.
+     */
+    returnStatus?: pulumi.Input<string | undefined>;
+    /**
+     * Date when the product was returned or attempted to be returned.
+     */
+    returnedAt?: pulumi.Input<number | undefined>;
+}
+
+export interface IssuingDisputeEvidenceNoValidAuthorization {
+    /**
+     * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Additional documentation supporting the dispute.
+     */
+    additionalDocumentation?: pulumi.Input<string | undefined>;
+    /**
+     * Explanation of why the cardholder is disputing this transaction.
+     */
+    explanation?: pulumi.Input<string | undefined>;
+}
+
+export interface IssuingDisputeEvidenceNotReceived {
+    /**
+     * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Additional documentation supporting the dispute.
+     */
+    additionalDocumentation?: pulumi.Input<string | undefined>;
+    /**
+     * Date when the cardholder expected to receive the product.
+     */
+    expectedAt?: pulumi.Input<number | undefined>;
+    /**
+     * Explanation of why the cardholder is disputing this transaction.
+     */
+    explanation?: pulumi.Input<string | undefined>;
+    /**
+     * Description of the merchandise or service that was purchased.
+     */
+    productDescription?: pulumi.Input<string | undefined>;
+    /**
+     * Whether the product was a merchandise or service.
+     */
+    productType?: pulumi.Input<string | undefined>;
+}
+
+export interface IssuingDisputeEvidenceOther {
+    /**
+     * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Additional documentation supporting the dispute.
+     */
+    additionalDocumentation?: pulumi.Input<string | undefined>;
+    /**
+     * Explanation of why the cardholder is disputing this transaction.
+     */
+    explanation?: pulumi.Input<string | undefined>;
+    /**
+     * Description of the merchandise or service that was purchased.
+     */
+    productDescription?: pulumi.Input<string | undefined>;
+    /**
+     * Whether the product was a merchandise or service.
+     */
+    productType?: pulumi.Input<string | undefined>;
+}
+
+export interface IssuingDisputeEvidenceServiceNotAsDescribed {
+    /**
+     * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Additional documentation supporting the dispute.
+     */
+    additionalDocumentation?: pulumi.Input<string | undefined>;
+    /**
+     * Date when order was canceled.
+     */
+    canceledAt?: pulumi.Input<number | undefined>;
+    /**
+     * Reason for canceling the order.
+     */
+    cancellationReason?: pulumi.Input<string | undefined>;
+    /**
+     * Explanation of why the cardholder is disputing this transaction.
+     */
+    explanation?: pulumi.Input<string | undefined>;
+    /**
+     * Date when the product was received.
+     */
+    receivedAt?: pulumi.Input<number | undefined>;
+}
+
+export interface IssuingDisputeTreasury {
+    /**
+     * The Treasury [DebitReversal](https://docs.stripe.com/api/treasury/debit_reversals) representing this Issuing dispute
+     */
+    debitReversal?: pulumi.Input<string | undefined>;
+    /**
+     * The Treasury [ReceivedDebit](https://docs.stripe.com/api/treasury/received_debits) that is being disputed.
+     */
+    receivedDebit: pulumi.Input<string>;
+}
+
+export interface IssuingPersonalizationDesignCarrierText {
+    /**
+     * The footer body text of the carrier letter.
+     */
+    footerBody?: pulumi.Input<string | undefined>;
+    /**
+     * The footer title text of the carrier letter.
+     */
+    footerTitle?: pulumi.Input<string | undefined>;
+    /**
+     * The header body text of the carrier letter.
+     */
+    headerBody?: pulumi.Input<string | undefined>;
+    /**
+     * The header title text of the carrier letter.
+     */
+    headerTitle?: pulumi.Input<string | undefined>;
+}
+
+export interface IssuingPersonalizationDesignPreferences {
+    /**
+     * Whether we use this personalization design to create cards when one isn't specified. A connected account uses the Connect platform's default design if no personalization design is set as the default design.
+     */
+    isDefault: pulumi.Input<boolean>;
+    /**
+     * Whether this personalization design is used to create cards when one is not specified and a default for this connected account does not exist.
+     */
+    isPlatformDefault?: pulumi.Input<boolean | undefined>;
+}
+
+export interface IssuingPersonalizationDesignRejectionReasons {
+    /**
+     * The reason(s) the card logo was rejected.
+     */
+    cardLogos?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * The reason(s) the carrier text was rejected.
+     */
+    carrierTexts?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+}
+
+export interface PaymentIntentAutomaticPaymentMethods {
+    /**
+     * Controls whether this PaymentIntent will accept redirect-based payment methods.
+     */
+    allowRedirects?: pulumi.Input<string | undefined>;
+    /**
+     * Automatically calculates compatible payment methods
+     */
+    enabled: pulumi.Input<boolean>;
+}
+
+export interface PaymentIntentHooks {
+    inputs?: pulumi.Input<inputs.PaymentIntentHooksInputs | undefined>;
+}
+
+export interface PaymentIntentHooksInputs {
+    tax?: pulumi.Input<inputs.PaymentIntentHooksInputsTax | undefined>;
+}
+
+export interface PaymentIntentHooksInputsTax {
+    /**
+     * The [TaxCalculation](https://docs.stripe.com/api/tax/calculations) id
+     */
+    calculation: pulumi.Input<string>;
+}
+
+export interface PaymentIntentLastPaymentError {
+    /**
+     * For card errors resulting from a card issuer decline, a short string indicating [how to proceed with an error](https://docs.stripe.com/declines#retrying-issuer-declines) if they provide one.
+     */
+    adviceCode?: pulumi.Input<string | undefined>;
+    /**
+     * For card errors, the ID of the failed charge.
+     */
+    charge?: pulumi.Input<string | undefined>;
+    /**
+     * For some errors that could be handled programmatically, a short string indicating the [error code](https://docs.stripe.com/error-codes) reported.
+     */
+    code?: pulumi.Input<string | undefined>;
+    /**
+     * For card errors resulting from a card issuer decline, a short string indicating the [card issuer's reason for the decline](https://docs.stripe.com/declines#issuer-declines) if they provide one.
+     */
+    declineCode?: pulumi.Input<string | undefined>;
+    /**
+     * A URL to more information about the [error code](https://docs.stripe.com/error-codes) reported.
+     */
+    docUrl?: pulumi.Input<string | undefined>;
+    /**
+     * A human-readable message providing more details about the error. For card errors, these messages can be shown to your users.
+     */
+    message?: pulumi.Input<string | undefined>;
+    /**
+     * For card errors resulting from a card issuer decline, a 2 digit code which indicates the advice given to merchant by the card network on how to proceed with an error.
+     */
+    networkAdviceCode?: pulumi.Input<string | undefined>;
+    /**
+     * For payments declined by the network, an alphanumeric code which indicates the reason the payment failed.
+     */
+    networkDeclineCode?: pulumi.Input<string | undefined>;
+    /**
+     * If the error is parameter-specific, the parameter related to the error. For example, you can use this to display a message near the correct form field.
+     */
+    param?: pulumi.Input<string | undefined>;
+    /**
+     * A PaymentIntent guides you through the process of collecting a payment from your customer.
+     * We recommend that you create exactly one PaymentIntent for each order or
+     * customer session in your system. You can reference the PaymentIntent later to
+     * see the history of payment attempts for a particular session.
+     */
+    paymentIntent?: pulumi.Input<string | undefined>;
+    /**
+     * PaymentMethod objects represent your customer's payment instruments.
+     * You can use them with [PaymentIntents](https://docs.stripe.com/payments/payment-intents) to collect payments or save them to
+     * Customer objects to store instrument details for future payments.
+     *
+     * Related guides: [Payment Methods](https://docs.stripe.com/payments/payment-methods) and [More Payment Scenarios](https://docs.stripe.com/payments/more-payment-scenarios).
+     */
+    paymentMethod?: pulumi.Input<string | undefined>;
+    /**
+     * If the error is specific to the type of payment method, the payment method type that had a problem. This field is only populated for invoice-related errors.
+     */
+    paymentMethodType?: pulumi.Input<string | undefined>;
+    /**
+     * A URL to the request log entry in your dashboard.
+     */
+    requestLogUrl?: pulumi.Input<string | undefined>;
+    /**
+     * A SetupIntent guides you through the process of setting up and saving a customer's payment credentials for future payments.
+     * For example, you can use a SetupIntent to set up and save your customer's card without immediately collecting a payment.
+     * Later, you can use [PaymentIntents](https://api.stripe.com#payment_intents) to drive the payment flow.
+     *
+     * Create a SetupIntent when you're ready to collect your customer's payment credentials.
+     * Don't maintain long-lived, unconfirmed SetupIntents because they might not be valid.
+     * The SetupIntent transitions through multiple [statuses](https://docs.stripe.com/payments/intents#intent-statuses) as it guides
+     * you through the setup process.
+     *
+     * Successful SetupIntents result in payment credentials that are optimized for future payments.
+     * For example, cardholders in [certain regions](https://stripe.com/guides/strong-customer-authentication) might need to be run through
+     * [Strong Customer Authentication](https://docs.stripe.com/strong-customer-authentication) during payment method collection
+     * to streamline later [off-session payments](https://docs.stripe.com/payments/setup-intents).
+     * If you use the SetupIntent with a [Customer](https://api.stripe.com#setup_intent_object-customer),
+     * it automatically attaches the resulting payment method to that Customer after successful setup.
+     * We recommend using SetupIntents or [setupFutureUsage](https://api.stripe.com#payment_intent_object-setup_future_usage) on
+     * PaymentIntents to save payment methods to prevent saving invalid or unoptimized payment methods.
+     *
+     * By using SetupIntents, you can reduce friction for your customers, even as regulations change over time.
+     *
+     * Related guide: [Setup Intents API](https://docs.stripe.com/payments/setup-intents)
+     */
+    setupIntent?: pulumi.Input<string | undefined>;
+    source?: pulumi.Input<string | undefined>;
+    /**
+     * The type of error returned. One of `apiError`, `cardError`, `idempotencyError`, or `invalidRequestError`
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentManagedPayments {
+    /**
+     * Set to `true` to enable [Managed Payments](https://docs.stripe.com/payments/managed-payments), Stripe's merchant of record solution, for this session.
+     */
+    enabled?: pulumi.Input<boolean | undefined>;
+}
+
+export interface PaymentIntentMandateData {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * This hash contains details about the customer acceptance of the Mandate.
+     */
+    customerAcceptance: pulumi.Input<inputs.PaymentIntentMandateDataCustomerAcceptance>;
+}
+
+export interface PaymentIntentMandateDataCustomerAcceptance {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The time at which the customer accepted the Mandate.
+     */
+    acceptedAt?: pulumi.Input<number | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a Mandate accepted online, this hash contains details about the online acceptance.
+     */
+    online?: pulumi.Input<inputs.PaymentIntentMandateDataCustomerAcceptanceOnline | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The type of customer acceptance information included with the Mandate. One of `online` or `offline`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface PaymentIntentMandateDataCustomerAcceptanceOnline {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The IP address from which the Mandate was accepted by the customer.
+     */
+    ipAddress: pulumi.Input<string>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The user agent of the browser from which the Mandate was accepted by the customer.
+     */
+    userAgent: pulumi.Input<string>;
+}
+
+export interface PaymentIntentNextAction {
+    alipayHandleRedirect?: pulumi.Input<inputs.PaymentIntentNextActionAlipayHandleRedirect | undefined>;
+    boletoDisplayDetails?: pulumi.Input<inputs.PaymentIntentNextActionBoletoDisplayDetails | undefined>;
+    cardAwaitNotification?: pulumi.Input<inputs.PaymentIntentNextActionCardAwaitNotification | undefined>;
+    cashappHandleRedirectOrDisplayQrCode?: pulumi.Input<inputs.PaymentIntentNextActionCashappHandleRedirectOrDisplayQrCode | undefined>;
+    displayBankTransferInstructions?: pulumi.Input<inputs.PaymentIntentNextActionDisplayBankTransferInstructions | undefined>;
+    klarnaDisplayQrCode?: pulumi.Input<inputs.PaymentIntentNextActionKlarnaDisplayQrCode | undefined>;
+    konbiniDisplayDetails?: pulumi.Input<inputs.PaymentIntentNextActionKonbiniDisplayDetails | undefined>;
+    multibancoDisplayDetails?: pulumi.Input<inputs.PaymentIntentNextActionMultibancoDisplayDetails | undefined>;
+    oxxoDisplayDetails?: pulumi.Input<inputs.PaymentIntentNextActionOxxoDisplayDetails | undefined>;
+    paynowDisplayQrCode?: pulumi.Input<inputs.PaymentIntentNextActionPaynowDisplayQrCode | undefined>;
+    pixDisplayQrCode?: pulumi.Input<inputs.PaymentIntentNextActionPixDisplayQrCode | undefined>;
+    promptpayDisplayQrCode?: pulumi.Input<inputs.PaymentIntentNextActionPromptpayDisplayQrCode | undefined>;
+    redirectToUrl?: pulumi.Input<inputs.PaymentIntentNextActionRedirectToUrl | undefined>;
+    swishHandleRedirectOrDisplayQrCode?: pulumi.Input<inputs.PaymentIntentNextActionSwishHandleRedirectOrDisplayQrCode | undefined>;
+    /**
+     * Type of the next action to perform. Refer to the other child attributes under `nextAction` for available values. Examples include: `redirectToUrl`, `useStripeSdk`, `alipayHandleRedirect`, `oxxoDisplayDetails`, or `verifyWithMicrodeposits`.
+     */
+    type?: pulumi.Input<string | undefined>;
+    upiHandleRedirectOrDisplayQrCode?: pulumi.Input<inputs.PaymentIntentNextActionUpiHandleRedirectOrDisplayQrCode | undefined>;
+    /**
+     * When confirming a PaymentIntent with Stripe.js, Stripe.js depends on the contents of this dictionary to invoke authentication flows. The shape of the contents is subject to change and is only intended to be used by Stripe.js.
+     */
+    useStripeSdk?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
+    verifyWithMicrodeposits?: pulumi.Input<inputs.PaymentIntentNextActionVerifyWithMicrodeposits | undefined>;
+    wechatPayDisplayQrCode?: pulumi.Input<inputs.PaymentIntentNextActionWechatPayDisplayQrCode | undefined>;
+    wechatPayRedirectToAndroidApp?: pulumi.Input<inputs.PaymentIntentNextActionWechatPayRedirectToAndroidApp | undefined>;
+    wechatPayRedirectToIosApp?: pulumi.Input<inputs.PaymentIntentNextActionWechatPayRedirectToIosApp | undefined>;
+}
+
+export interface PaymentIntentNextActionAlipayHandleRedirect {
+    /**
+     * The native data to be used with Alipay SDK you must redirect your customer to in order to authenticate the payment in an Android App.
+     */
+    nativeData?: pulumi.Input<string | undefined>;
+    /**
+     * The native URL you must redirect your customer to in order to authenticate the payment in an iOS App.
+     */
+    nativeUrl?: pulumi.Input<string | undefined>;
+    /**
+     * If the customer does not exit their browser while authenticating, they will be redirected to this specified URL after completion.
+     */
+    returnUrl?: pulumi.Input<string | undefined>;
+    /**
+     * The URL you must redirect your customer to in order to authenticate the payment.
+     */
+    url?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentNextActionBoletoDisplayDetails {
+    /**
+     * The timestamp after which the boleto expires.
+     */
+    expiresAt?: pulumi.Input<number | undefined>;
+    /**
+     * The URL to the hosted boleto voucher page, which allows customers to view the boleto voucher.
+     */
+    hostedVoucherUrl?: pulumi.Input<string | undefined>;
+    /**
+     * The boleto number.
+     */
+    number?: pulumi.Input<string | undefined>;
+    /**
+     * The URL to the downloadable boleto voucher PDF.
+     */
+    pdf?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentNextActionCardAwaitNotification {
+    /**
+     * The time that payment will be attempted. If customer approval is required, they need to provide approval before this time.
+     */
+    chargeAttemptAt?: pulumi.Input<number | undefined>;
+    /**
+     * For payments greater than INR 15000, the customer must provide explicit approval of the payment with their bank. For payments of lower amount, no customer action is required.
+     */
+    customerApprovalRequired?: pulumi.Input<boolean | undefined>;
+}
+
+export interface PaymentIntentNextActionCashappHandleRedirectOrDisplayQrCode {
+    /**
+     * The URL to the hosted Cash App Pay instructions page, which allows customers to view the QR code, and supports QR code refreshing on expiration.
+     */
+    hostedInstructionsUrl?: pulumi.Input<string | undefined>;
+    /**
+     * The url for mobile redirect based auth
+     */
+    mobileAuthUrl?: pulumi.Input<string | undefined>;
+    qrCode?: pulumi.Input<inputs.PaymentIntentNextActionCashappHandleRedirectOrDisplayQrCodeQrCode | undefined>;
+}
+
+export interface PaymentIntentNextActionCashappHandleRedirectOrDisplayQrCodeQrCode {
+    /**
+     * The date (unix timestamp) when the QR code expires.
+     */
+    expiresAt?: pulumi.Input<number | undefined>;
+    /**
+     * The image*url*png string used to render QR code
+     */
+    imageUrlPng?: pulumi.Input<string | undefined>;
+    /**
+     * The image*url*svg string used to render QR code
+     */
+    imageUrlSvg?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructions {
+    /**
+     * The remaining amount that needs to be transferred to complete the payment.
+     */
+    amountRemaining?: pulumi.Input<number | undefined>;
+    /**
+     * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+     */
+    currency?: pulumi.Input<string | undefined>;
+    /**
+     * A list of financial addresses that can be used to fund the customer balance
+     */
+    financialAddresses?: pulumi.Input<pulumi.Input<inputs.PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddress>[] | undefined>;
+    /**
+     * A link to a hosted page that guides your customer through completing the transfer.
+     */
+    hostedInstructionsUrl?: pulumi.Input<string | undefined>;
+    /**
+     * A string identifying this payment. Instruct your customer to include this code in the reference or memo field of their bank transfer.
+     */
+    reference?: pulumi.Input<string | undefined>;
+    /**
+     * Type of bank transfer
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddress {
+    /**
+     * ABA Records contain U.S. bank account details per the ABA format.
+     */
+    aba?: pulumi.Input<inputs.PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressAba | undefined>;
+    /**
+     * Iban Records contain E.U. bank account details per the SEPA format.
+     */
+    iban?: pulumi.Input<inputs.PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressIban | undefined>;
+    /**
+     * Sort Code Records contain U.K. bank account details per the sort code format.
+     */
+    sortCode?: pulumi.Input<inputs.PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressSortCode | undefined>;
+    /**
+     * SPEI Records contain Mexico bank account details per the SPEI format.
+     */
+    spei?: pulumi.Input<inputs.PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressSpei | undefined>;
+    /**
+     * The payment networks supported by this FinancialAddress
+     */
+    supportedNetworks?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * SWIFT Records contain U.S. bank account details per the SWIFT format.
+     */
+    swift?: pulumi.Input<inputs.PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressSwift | undefined>;
+    /**
+     * The type of financial address
+     */
+    type?: pulumi.Input<string | undefined>;
+    /**
+     * Zengin Records contain Japan bank account details per the Zengin format.
+     */
+    zengin?: pulumi.Input<inputs.PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressZengin | undefined>;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressAba {
+    accountHolderAddress?: pulumi.Input<inputs.PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressAbaAccountHolderAddress | undefined>;
+    /**
+     * The account holder name
+     */
+    accountHolderName?: pulumi.Input<string | undefined>;
+    /**
+     * The ABA account number
+     */
+    accountNumber?: pulumi.Input<string | undefined>;
+    /**
+     * The account type
+     */
+    accountType?: pulumi.Input<string | undefined>;
+    bankAddress?: pulumi.Input<inputs.PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressAbaBankAddress | undefined>;
+    /**
+     * The bank name
+     */
+    bankName?: pulumi.Input<string | undefined>;
+    /**
+     * The ABA routing number
+     */
+    routingNumber?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressAbaAccountHolderAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode?: pulumi.Input<string | undefined>;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressAbaBankAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode?: pulumi.Input<string | undefined>;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressIban {
+    accountHolderAddress?: pulumi.Input<inputs.PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressIbanAccountHolderAddress | undefined>;
+    /**
+     * The name of the person or business that owns the bank account
+     */
+    accountHolderName?: pulumi.Input<string | undefined>;
+    bankAddress?: pulumi.Input<inputs.PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressIbanBankAddress | undefined>;
+    /**
+     * The BIC/SWIFT code of the account.
+     */
+    bic?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * The IBAN of the account.
+     */
+    iban?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressIbanAccountHolderAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode?: pulumi.Input<string | undefined>;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressIbanBankAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode?: pulumi.Input<string | undefined>;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressSortCode {
+    accountHolderAddress?: pulumi.Input<inputs.PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressSortCodeAccountHolderAddress | undefined>;
+    /**
+     * The name of the person or business that owns the bank account
+     */
+    accountHolderName?: pulumi.Input<string | undefined>;
+    /**
+     * The account number
+     */
+    accountNumber?: pulumi.Input<string | undefined>;
+    bankAddress?: pulumi.Input<inputs.PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressSortCodeBankAddress | undefined>;
+    /**
+     * The six-digit sort code
+     */
+    sortCode?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressSortCodeAccountHolderAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode?: pulumi.Input<string | undefined>;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressSortCodeBankAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode?: pulumi.Input<string | undefined>;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressSpei {
+    accountHolderAddress?: pulumi.Input<inputs.PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressSpeiAccountHolderAddress | undefined>;
+    /**
+     * The account holder name
+     */
+    accountHolderName?: pulumi.Input<string | undefined>;
+    bankAddress?: pulumi.Input<inputs.PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressSpeiBankAddress | undefined>;
+    /**
+     * The three-digit bank code
+     */
+    bankCode?: pulumi.Input<string | undefined>;
+    /**
+     * The short banking institution name
+     */
+    bankName?: pulumi.Input<string | undefined>;
+    /**
+     * The CLABE number
+     */
+    clabe?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressSpeiAccountHolderAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode?: pulumi.Input<string | undefined>;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressSpeiBankAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode?: pulumi.Input<string | undefined>;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressSwift {
+    accountHolderAddress?: pulumi.Input<inputs.PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressSwiftAccountHolderAddress | undefined>;
+    /**
+     * The account holder name
+     */
+    accountHolderName?: pulumi.Input<string | undefined>;
+    /**
+     * The account number
+     */
+    accountNumber?: pulumi.Input<string | undefined>;
+    /**
+     * The account type
+     */
+    accountType?: pulumi.Input<string | undefined>;
+    bankAddress?: pulumi.Input<inputs.PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressSwiftBankAddress | undefined>;
+    /**
+     * The bank name
+     */
+    bankName?: pulumi.Input<string | undefined>;
+    /**
+     * The SWIFT code
+     */
+    swiftCode?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressSwiftAccountHolderAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode?: pulumi.Input<string | undefined>;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressSwiftBankAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode?: pulumi.Input<string | undefined>;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressZengin {
+    accountHolderAddress?: pulumi.Input<inputs.PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressZenginAccountHolderAddress | undefined>;
+    /**
+     * The account holder name
+     */
+    accountHolderName?: pulumi.Input<string | undefined>;
+    /**
+     * The account number
+     */
+    accountNumber?: pulumi.Input<string | undefined>;
+    /**
+     * The bank account type. In Japan, this can only be `futsu` or `toza`.
+     */
+    accountType?: pulumi.Input<string | undefined>;
+    bankAddress?: pulumi.Input<inputs.PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressZenginBankAddress | undefined>;
+    /**
+     * The bank code of the account
+     */
+    bankCode?: pulumi.Input<string | undefined>;
+    /**
+     * The bank name of the account
+     */
+    bankName?: pulumi.Input<string | undefined>;
+    /**
+     * The branch code of the account
+     */
+    branchCode?: pulumi.Input<string | undefined>;
+    /**
+     * The branch name of the account
+     */
+    branchName?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressZenginAccountHolderAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode?: pulumi.Input<string | undefined>;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressZenginBankAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode?: pulumi.Input<string | undefined>;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentNextActionKlarnaDisplayQrCode {
+    /**
+     * The data being used to generate QR code
+     */
+    data?: pulumi.Input<string | undefined>;
+    /**
+     * The timestamp at which the QR code expires.
+     */
+    expiresAt?: pulumi.Input<number | undefined>;
+    /**
+     * The image*url*png string used to render QR code
+     */
+    imageUrlPng?: pulumi.Input<string | undefined>;
+    /**
+     * The image*url*svg string used to render QR code
+     */
+    imageUrlSvg?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentNextActionKonbiniDisplayDetails {
+    /**
+     * The timestamp at which the pending Konbini payment expires.
+     */
+    expiresAt?: pulumi.Input<number | undefined>;
+    /**
+     * The URL for the Konbini payment instructions page, which allows customers to view and print a Konbini voucher.
+     */
+    hostedVoucherUrl?: pulumi.Input<string | undefined>;
+    stores?: pulumi.Input<inputs.PaymentIntentNextActionKonbiniDisplayDetailsStores | undefined>;
+}
+
+export interface PaymentIntentNextActionKonbiniDisplayDetailsStores {
+    /**
+     * FamilyMart instruction details.
+     */
+    familymart?: pulumi.Input<inputs.PaymentIntentNextActionKonbiniDisplayDetailsStoresFamilymart | undefined>;
+    /**
+     * Lawson instruction details.
+     */
+    lawson?: pulumi.Input<inputs.PaymentIntentNextActionKonbiniDisplayDetailsStoresLawson | undefined>;
+    /**
+     * Ministop instruction details.
+     */
+    ministop?: pulumi.Input<inputs.PaymentIntentNextActionKonbiniDisplayDetailsStoresMinistop | undefined>;
+    /**
+     * Seicomart instruction details.
+     */
+    seicomart?: pulumi.Input<inputs.PaymentIntentNextActionKonbiniDisplayDetailsStoresSeicomart | undefined>;
+}
+
+export interface PaymentIntentNextActionKonbiniDisplayDetailsStoresFamilymart {
+    /**
+     * The confirmation number.
+     */
+    confirmationNumber?: pulumi.Input<string | undefined>;
+    /**
+     * The payment code.
+     */
+    paymentCode?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentNextActionKonbiniDisplayDetailsStoresLawson {
+    /**
+     * The confirmation number.
+     */
+    confirmationNumber?: pulumi.Input<string | undefined>;
+    /**
+     * The payment code.
+     */
+    paymentCode?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentNextActionKonbiniDisplayDetailsStoresMinistop {
+    /**
+     * The confirmation number.
+     */
+    confirmationNumber?: pulumi.Input<string | undefined>;
+    /**
+     * The payment code.
+     */
+    paymentCode?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentNextActionKonbiniDisplayDetailsStoresSeicomart {
+    /**
+     * The confirmation number.
+     */
+    confirmationNumber?: pulumi.Input<string | undefined>;
+    /**
+     * The payment code.
+     */
+    paymentCode?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentNextActionMultibancoDisplayDetails {
+    /**
+     * Entity number associated with this Multibanco payment.
+     */
+    entity?: pulumi.Input<string | undefined>;
+    /**
+     * The timestamp at which the Multibanco voucher expires.
+     */
+    expiresAt?: pulumi.Input<number | undefined>;
+    /**
+     * The URL for the hosted Multibanco voucher page, which allows customers to view a Multibanco voucher.
+     */
+    hostedVoucherUrl?: pulumi.Input<string | undefined>;
+    /**
+     * Reference number associated with this Multibanco payment.
+     */
+    reference?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentNextActionOxxoDisplayDetails {
+    /**
+     * The timestamp after which the OXXO voucher expires.
+     */
+    expiresAfter?: pulumi.Input<number | undefined>;
+    /**
+     * The URL for the hosted OXXO voucher page, which allows customers to view and print an OXXO voucher.
+     */
+    hostedVoucherUrl?: pulumi.Input<string | undefined>;
+    /**
+     * OXXO reference number.
+     */
+    number?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentNextActionPaynowDisplayQrCode {
+    /**
+     * The raw data string used to generate QR code, it should be used together with QR code library.
+     */
+    data?: pulumi.Input<string | undefined>;
+    /**
+     * The URL to the hosted PayNow instructions page, which allows customers to view the PayNow QR code.
+     */
+    hostedInstructionsUrl?: pulumi.Input<string | undefined>;
+    /**
+     * The image*url*png string used to render QR code
+     */
+    imageUrlPng?: pulumi.Input<string | undefined>;
+    /**
+     * The image*url*svg string used to render QR code
+     */
+    imageUrlSvg?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentNextActionPixDisplayQrCode {
+    /**
+     * The raw data string used to generate QR code, it should be used together with QR code library.
+     */
+    data?: pulumi.Input<string | undefined>;
+    /**
+     * The date (unix timestamp) when the PIX expires.
+     */
+    expiresAt?: pulumi.Input<number | undefined>;
+    /**
+     * The URL to the hosted pix instructions page, which allows customers to view the pix QR code.
+     */
+    hostedInstructionsUrl?: pulumi.Input<string | undefined>;
+    /**
+     * The image*url*png string used to render png QR code
+     */
+    imageUrlPng?: pulumi.Input<string | undefined>;
+    /**
+     * The image*url*svg string used to render svg QR code
+     */
+    imageUrlSvg?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentNextActionPromptpayDisplayQrCode {
+    /**
+     * The raw data string used to generate QR code, it should be used together with QR code library.
+     */
+    data?: pulumi.Input<string | undefined>;
+    /**
+     * The URL to the hosted PromptPay instructions page, which allows customers to view the PromptPay QR code.
+     */
+    hostedInstructionsUrl?: pulumi.Input<string | undefined>;
+    /**
+     * The PNG path used to render the QR code, can be used as the source in an HTML img tag
+     */
+    imageUrlPng?: pulumi.Input<string | undefined>;
+    /**
+     * The SVG path used to render the QR code, can be used as the source in an HTML img tag
+     */
+    imageUrlSvg?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentNextActionRedirectToUrl {
+    /**
+     * If the customer does not exit their browser while authenticating, they will be redirected to this specified URL after completion.
+     */
+    returnUrl?: pulumi.Input<string | undefined>;
+    /**
+     * The URL you must redirect your customer to in order to authenticate the payment.
+     */
+    url?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentNextActionSwishHandleRedirectOrDisplayQrCode {
+    /**
+     * The URL to the hosted Swish instructions page, which allows customers to view the QR code.
+     */
+    hostedInstructionsUrl?: pulumi.Input<string | undefined>;
+    /**
+     * The url for mobile redirect based auth (for internal use only and not typically available in standard API requests).
+     */
+    mobileAuthUrl?: pulumi.Input<string | undefined>;
+    qrCode?: pulumi.Input<inputs.PaymentIntentNextActionSwishHandleRedirectOrDisplayQrCodeQrCode | undefined>;
+}
+
+export interface PaymentIntentNextActionSwishHandleRedirectOrDisplayQrCodeQrCode {
+    /**
+     * The raw data string used to generate QR code, it should be used together with QR code library.
+     */
+    data?: pulumi.Input<string | undefined>;
+    /**
+     * The image*url*png string used to render QR code
+     */
+    imageUrlPng?: pulumi.Input<string | undefined>;
+    /**
+     * The image*url*svg string used to render QR code
+     */
+    imageUrlSvg?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentNextActionUpiHandleRedirectOrDisplayQrCode {
+    /**
+     * The URL to the hosted UPI instructions page, which allows customers to view the QR code.
+     */
+    hostedInstructionsUrl?: pulumi.Input<string | undefined>;
+    qrCode?: pulumi.Input<inputs.PaymentIntentNextActionUpiHandleRedirectOrDisplayQrCodeQrCode | undefined>;
+}
+
+export interface PaymentIntentNextActionUpiHandleRedirectOrDisplayQrCodeQrCode {
+    /**
+     * The date (unix timestamp) when the QR code expires.
+     */
+    expiresAt?: pulumi.Input<number | undefined>;
+    /**
+     * The image*url*png string used to render QR code
+     */
+    imageUrlPng?: pulumi.Input<string | undefined>;
+    /**
+     * The image*url*svg string used to render QR code
+     */
+    imageUrlSvg?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentNextActionVerifyWithMicrodeposits {
+    /**
+     * The timestamp when the microdeposits are expected to land.
+     */
+    arrivalDate?: pulumi.Input<number | undefined>;
+    /**
+     * The URL for the hosted verification page, which allows customers to verify their bank account.
+     */
+    hostedVerificationUrl?: pulumi.Input<string | undefined>;
+    /**
+     * The type of the microdeposit sent to the customer. Used to distinguish between different verification methods.
+     */
+    microdepositType?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentNextActionWechatPayDisplayQrCode {
+    /**
+     * The data being used to generate QR code
+     */
+    data?: pulumi.Input<string | undefined>;
+    /**
+     * The URL to the hosted WeChat Pay instructions page, which allows customers to view the WeChat Pay QR code.
+     */
+    hostedInstructionsUrl?: pulumi.Input<string | undefined>;
+    /**
+     * The base64 image data for a pre-generated QR code
+     */
+    imageDataUrl?: pulumi.Input<string | undefined>;
+    /**
+     * The image*url*png string used to render QR code
+     */
+    imageUrlPng?: pulumi.Input<string | undefined>;
+    /**
+     * The image*url*svg string used to render QR code
+     */
+    imageUrlSvg?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentNextActionWechatPayRedirectToAndroidApp {
+    /**
+     * app_id is the APP ID registered on WeChat open platform
+     */
+    appId?: pulumi.Input<string | undefined>;
+    /**
+     * nonce_str is a random string
+     */
+    nonceStr?: pulumi.Input<string | undefined>;
+    /**
+     * package is static value
+     */
+    package?: pulumi.Input<string | undefined>;
+    /**
+     * an unique merchant ID assigned by WeChat Pay
+     */
+    partnerId?: pulumi.Input<string | undefined>;
+    /**
+     * an unique trading ID assigned by WeChat Pay
+     */
+    prepayId?: pulumi.Input<string | undefined>;
+    /**
+     * A signature
+     */
+    sign?: pulumi.Input<string | undefined>;
+    /**
+     * Specifies the current time in epoch format
+     */
+    timestamp?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentNextActionWechatPayRedirectToIosApp {
+    /**
+     * An universal link that redirect to WeChat Pay app
+     */
+    nativeUrl?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentDetails {
+    /**
+     * A unique value to identify the customer. This field is available only for card payments.
+     */
+    customerReference?: pulumi.Input<string | undefined>;
+    /**
+     * A unique value assigned by the business to identify the transaction. Required for L2 and L3 rates.
+     *
+     * For Cards, this field is truncated to 25 alphanumeric characters, excluding spaces, before being sent to card networks. For Klarna, this field is truncated to 255 characters and is visible to customers when they view the order in the Klarna app.
+     */
+    orderReference?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodConfigurationDetails {
+    /**
+     * ID of the payment method configuration used.
+     */
+    id?: pulumi.Input<string | undefined>;
+    /**
+     * ID of the parent payment method configuration used.
+     */
+    parent?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodData {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is an `acssDebit` PaymentMethod, this hash contains details about the ACSS Debit payment method.
+     */
+    acssDebit?: pulumi.Input<inputs.PaymentIntentPaymentMethodDataAcssDebit | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * This field indicates whether this payment method can be shown again to its customer in a checkout flow. Stripe products such as Checkout and Elements use this field to determine whether a payment method can be shown as a saved payment method in a checkout flow. The field defaults to `unspecified`.
+     */
+    allowRedisplay?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is an `auBecsDebit` PaymentMethod, this hash contains details about the bank account.
+     */
+    auBecsDebit?: pulumi.Input<inputs.PaymentIntentPaymentMethodDataAuBecsDebit | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a `bacsDebit` PaymentMethod, this hash contains details about the Bacs Direct Debit bank account.
+     */
+    bacsDebit?: pulumi.Input<inputs.PaymentIntentPaymentMethodDataBacsDebit | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Billing information associated with the PaymentMethod that may be used or required by particular types of payment methods.
+     */
+    billingDetails?: pulumi.Input<inputs.PaymentIntentPaymentMethodDataBillingDetails | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a `boleto` PaymentMethod, this hash contains details about the Boleto payment method.
+     */
+    boleto?: pulumi.Input<inputs.PaymentIntentPaymentMethodDataBoleto | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is an `eps` PaymentMethod, this hash contains details about the EPS payment method.
+     */
+    eps?: pulumi.Input<inputs.PaymentIntentPaymentMethodDataEps | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is an `fpx` PaymentMethod, this hash contains details about the FPX payment method.
+     */
+    fpx?: pulumi.Input<inputs.PaymentIntentPaymentMethodDataFpx | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is an `ideal` PaymentMethod, this hash contains details about the iDEAL payment method.
+     */
+    ideal?: pulumi.Input<inputs.PaymentIntentPaymentMethodDataIdeal | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a `klarna` PaymentMethod, this hash contains details about the Klarna payment method.
+     */
+    klarna?: pulumi.Input<inputs.PaymentIntentPaymentMethodDataKlarna | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
+     */
+    metadata?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a `naverPay` PaymentMethod, this hash contains details about the Naver Pay payment method.
+     */
+    naverPay?: pulumi.Input<inputs.PaymentIntentPaymentMethodDataNaverPay | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is an nz*bank*account PaymentMethod, this hash contains details about the nz*bank*account payment method.
+     */
+    nzBankAccount?: pulumi.Input<inputs.PaymentIntentPaymentMethodDataNzBankAccount | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a `p24` PaymentMethod, this hash contains details about the P24 payment method.
+     */
+    p24?: pulumi.Input<inputs.PaymentIntentPaymentMethodDataP24 | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a `payto` PaymentMethod, this hash contains details about the PayTo payment method.
+     */
+    payto?: pulumi.Input<inputs.PaymentIntentPaymentMethodDataPayto | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Options to configure Radar. See [Radar Session](https://docs.stripe.com/radar/radar-session) for more information.
+     */
+    radarOptions?: pulumi.Input<inputs.PaymentIntentPaymentMethodDataRadarOptions | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a `sepaDebit` PaymentMethod, this hash contains details about the SEPA debit bank account.
+     */
+    sepaDebit?: pulumi.Input<inputs.PaymentIntentPaymentMethodDataSepaDebit | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a `sofort` PaymentMethod, this hash contains details about the SOFORT payment method.
+     */
+    sofort?: pulumi.Input<inputs.PaymentIntentPaymentMethodDataSofort | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The type of the PaymentMethod. An additional hash is included on the PaymentMethod with a name matching this value. It contains additional information specific to the PaymentMethod type.
+     */
+    type: pulumi.Input<string>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a `upi` PaymentMethod, this hash contains details about the UPI payment method.
+     */
+    upi?: pulumi.Input<inputs.PaymentIntentPaymentMethodDataUpi | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is an `usBankAccount` PaymentMethod, this hash contains details about the US bank account payment method.
+     */
+    usBankAccount?: pulumi.Input<inputs.PaymentIntentPaymentMethodDataUsBankAccount | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodDataAcssDebit {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Customer's bank account number.
+     */
+    accountNumber: pulumi.Input<string>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Institution number of the customer's bank.
+     */
+    institutionNumber: pulumi.Input<string>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Transit number of the customer's bank.
+     */
+    transitNumber: pulumi.Input<string>;
+}
+
+export interface PaymentIntentPaymentMethodDataAuBecsDebit {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The account number for the bank account.
+     */
+    accountNumber: pulumi.Input<string>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Bank-State-Branch number of the bank account.
+     */
+    bsbNumber: pulumi.Input<string>;
+}
+
+export interface PaymentIntentPaymentMethodDataBacsDebit {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Account number of the bank account that the funds will be debited from.
+     */
+    accountNumber?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Sort code of the bank account. (e.g., `10-20-30`)
+     */
+    sortCode?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodDataBillingDetails {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Billing address.
+     */
+    address?: pulumi.Input<inputs.PaymentIntentPaymentMethodDataBillingDetailsAddress | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Email address.
+     */
+    email?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Full name.
+     */
+    name?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Billing phone number (including extension).
+     */
+    phone?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Taxpayer identification number. Used only for transactions between LATAM buyers and non-LATAM sellers.
+     */
+    taxId?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodDataBillingDetailsAddress {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * City, district, suburb, town, or village.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * ZIP or postal code.
+     */
+    postalCode?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodDataBoleto {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The tax ID of the customer (CPF for individual consumers or CNPJ for businesses consumers)
+     */
+    taxId: pulumi.Input<string>;
+}
+
+export interface PaymentIntentPaymentMethodDataEps {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The customer's bank.
+     */
+    bank?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodDataFpx {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Account holder type for FPX transaction
+     */
+    accountHolderType?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The customer's bank.
+     */
+    bank: pulumi.Input<string>;
+}
+
+export interface PaymentIntentPaymentMethodDataIdeal {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The customer's bank. Only use this parameter for existing customers. Don't use it for new customers.
+     */
+    bank?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodDataKlarna {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Customer's date of birth
+     */
+    dob?: pulumi.Input<inputs.PaymentIntentPaymentMethodDataKlarnaDob | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodDataKlarnaDob {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The day of birth, between 1 and 31.
+     */
+    day: pulumi.Input<number>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The month of birth, between 1 and 12.
+     */
+    month: pulumi.Input<number>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The four-digit year of birth.
+     */
+    year: pulumi.Input<number>;
+}
+
+export interface PaymentIntentPaymentMethodDataNaverPay {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether to use Naver Pay points or a card to fund this transaction. If not provided, this defaults to `card`.
+     */
+    funding?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodDataNzBankAccount {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The name on the bank account. Only required if the account holder name is different from the name of the authorized signatory collected in the PaymentMethod’s billing details.
+     */
+    accountHolderName?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The account number for the bank account.
+     */
+    accountNumber: pulumi.Input<string>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The numeric code for the bank account's bank.
+     */
+    bankCode: pulumi.Input<string>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The numeric code for the bank account's bank branch.
+     */
+    branchCode: pulumi.Input<string>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     */
+    reference?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The suffix of the bank account number.
+     */
+    suffix: pulumi.Input<string>;
+}
+
+export interface PaymentIntentPaymentMethodDataP24 {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The customer's bank.
+     */
+    bank?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodDataPayto {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The account number for the bank account.
+     */
+    accountNumber?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Bank-State-Branch number of the bank account.
+     */
+    bsbNumber?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The PayID alias for the bank account.
+     */
+    payId?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodDataRadarOptions {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * A [Radar Session](https://docs.stripe.com/radar/radar-session) is a snapshot of the browser metadata and device details that help Radar make more accurate predictions on your payments.
+     */
+    session?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodDataSepaDebit {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * IBAN of the bank account.
+     */
+    iban: pulumi.Input<string>;
+}
+
+export interface PaymentIntentPaymentMethodDataSofort {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Two-letter ISO code representing the country the bank account is located in.
+     */
+    country: pulumi.Input<string>;
+}
+
+export interface PaymentIntentPaymentMethodDataUpi {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Configuration options for setting up an eMandate
+     */
+    mandateOptions?: pulumi.Input<inputs.PaymentIntentPaymentMethodDataUpiMandateOptions | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodDataUpiMandateOptions {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Amount to be charged for future payments.
+     */
+    amount?: pulumi.Input<number | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * One of `fixed` or `maximum`. If `fixed`, the `amount` param refers to the exact amount to be charged in future payments. If `maximum`, the amount charged can be up to the value passed for the `amount` param.
+     */
+    amountType?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * A description of the mandate or subscription that is meant to be displayed to the customer.
+     */
+    description?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * End date of the mandate or subscription.
+     */
+    endDate?: pulumi.Input<number | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodDataUsBankAccount {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Account holder type: individual or company.
+     */
+    accountHolderType?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Account number of the bank account.
+     */
+    accountNumber?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Account type: checkings or savings. Defaults to checking if omitted.
+     */
+    accountType?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The ID of a Financial Connections Account to use as a payment method.
+     */
+    financialConnectionsAccount?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Routing number of the bank account.
+     */
+    routingNumber?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptions {
+    acssDebit?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsAcssDebit | undefined>;
+    affirm?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsAffirm | undefined>;
+    afterpayClearpay?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsAfterpayClearpay | undefined>;
+    alipay?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsAlipay | undefined>;
+    alma?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsAlma | undefined>;
+    amazonPay?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsAmazonPay | undefined>;
+    auBecsDebit?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsAuBecsDebit | undefined>;
+    bacsDebit?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsBacsDebit | undefined>;
+    bancontact?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsBancontact | undefined>;
+    billie?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsBillie | undefined>;
+    blik?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsBlik | undefined>;
+    boleto?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsBoleto | undefined>;
+    card?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsCard | undefined>;
+    cardPresent?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsCardPresent | undefined>;
+    cashapp?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsCashapp | undefined>;
+    crypto?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsCrypto | undefined>;
+    customerBalance?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsCustomerBalance | undefined>;
+    eps?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsEps | undefined>;
+    fpx?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsFpx | undefined>;
+    giropay?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsGiropay | undefined>;
+    grabpay?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsGrabpay | undefined>;
+    ideal?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsIdeal | undefined>;
+    kakaoPay?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsKakaoPay | undefined>;
+    klarna?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsKlarna | undefined>;
+    konbini?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsKonbini | undefined>;
+    krCard?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsKrCard | undefined>;
+    mbWay?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsMbWay | undefined>;
+    mobilepay?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsMobilepay | undefined>;
+    multibanco?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsMultibanco | undefined>;
+    naverPay?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsNaverPay | undefined>;
+    nzBankAccount?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsNzBankAccount | undefined>;
+    oxxo?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsOxxo | undefined>;
+    p24?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsP24 | undefined>;
+    payco?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsPayco | undefined>;
+    paynow?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsPaynow | undefined>;
+    paypal?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsPaypal | undefined>;
+    payto?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsPayto | undefined>;
+    pix?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsPix | undefined>;
+    promptpay?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsPromptpay | undefined>;
+    revolutPay?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsRevolutPay | undefined>;
+    samsungPay?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsSamsungPay | undefined>;
+    satispay?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsSatispay | undefined>;
+    scalapay?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsScalapay | undefined>;
+    sepaDebit?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsSepaDebit | undefined>;
+    sofort?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsSofort | undefined>;
+    swish?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsSwish | undefined>;
+    twint?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsTwint | undefined>;
+    upi?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsUpi | undefined>;
+    usBankAccount?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsUsBankAccount | undefined>;
+    wechatPay?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsWechatPay | undefined>;
+    zip?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsZip | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsAcssDebit {
+    mandateOptions?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsAcssDebitMandateOptions | undefined>;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+    /**
+     * Controls when Stripe will attempt to debit the funds from the customer's account. The date must be a string in YYYY-MM-DD format. The date must be in the future and between 3 and 15 calendar days from now.
+     */
+    targetDate?: pulumi.Input<string | undefined>;
+    /**
+     * Bank account verification method. The default value is `automatic`.
+     */
+    verificationMethod?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsAcssDebitMandateOptions {
+    /**
+     * A URL for custom mandate text
+     */
+    customMandateUrl?: pulumi.Input<string | undefined>;
+    /**
+     * Description of the interval. Only required if the 'payment_schedule' parameter is 'interval' or 'combined'.
+     */
+    intervalDescription?: pulumi.Input<string | undefined>;
+    /**
+     * Payment schedule for the mandate.
+     */
+    paymentSchedule?: pulumi.Input<string | undefined>;
+    /**
+     * Transaction type of the mandate.
+     */
+    transactionType?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsAffirm {
+    /**
+     * Controls when the funds will be captured from the customer's account.
+     */
+    captureMethod?: pulumi.Input<string | undefined>;
+    /**
+     * Preferred language of the Affirm authorization page that the customer is redirected to.
+     */
+    preferredLocale?: pulumi.Input<string | undefined>;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsAfterpayClearpay {
+    /**
+     * Controls when the funds will be captured from the customer's account.
+     */
+    captureMethod?: pulumi.Input<string | undefined>;
+    /**
+     * An internal identifier or reference that this payment corresponds to. You must limit the identifier to 128 characters, and it can only contain letters, numbers, underscores, backslashes, and dashes.
+     * This field differs from the statement descriptor and item name.
+     */
+    reference?: pulumi.Input<string | undefined>;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsAlipay {
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsAlma {
+    /**
+     * Controls when the funds will be captured from the customer's account.
+     */
+    captureMethod?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsAmazonPay {
+    /**
+     * Controls when the funds will be captured from the customer's account.
+     */
+    captureMethod?: pulumi.Input<string | undefined>;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsAuBecsDebit {
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+    /**
+     * Controls when Stripe will attempt to debit the funds from the customer's account. The date must be a string in YYYY-MM-DD format. The date must be in the future and between 3 and 15 calendar days from now.
+     */
+    targetDate?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsBacsDebit {
+    mandateOptions?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsBacsDebitMandateOptions | undefined>;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+    /**
+     * Controls when Stripe will attempt to debit the funds from the customer's account. The date must be a string in YYYY-MM-DD format. The date must be in the future and between 3 and 15 calendar days from now.
+     */
+    targetDate?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsBacsDebitMandateOptions {
+    /**
+     * Prefix used to generate the Mandate reference. Must be at most 12 characters long. Must consist of only uppercase letters, numbers, spaces, or the following special characters: '/', '_', '-', '&', '.'. Cannot begin with 'DDIC' or 'STRIPE'.
+     */
+    referencePrefix?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsBancontact {
+    /**
+     * Preferred language of the Bancontact authorization page that the customer is redirected to.
+     */
+    preferredLanguage?: pulumi.Input<string | undefined>;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsBillie {
+    /**
+     * Controls when the funds will be captured from the customer's account.
+     */
+    captureMethod?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsBlik {
+    /**
+     * The 6-digit BLIK code that a customer has generated using their banking application. Can only be set on confirmation.
+     */
+    code?: pulumi.Input<string | undefined>;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsBoleto {
+    /**
+     * The number of calendar days before a Boleto voucher expires. For example, if you create a Boleto voucher on Monday and you set expires*after*days to 2, the Boleto voucher will expire on Wednesday at 23:59 America/Sao_Paulo time.
+     */
+    expiresAfterDays?: pulumi.Input<number | undefined>;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsCard {
+    /**
+     * Controls when the funds will be captured from the customer's account.
+     */
+    captureMethod?: pulumi.Input<string | undefined>;
+    /**
+     * A single-use `cvcUpdate` Token that represents a card CVC value. When provided, the CVC value will be verified during the card payment attempt. This parameter can only be provided during confirmation.
+     */
+    cvcToken?: pulumi.Input<string | undefined>;
+    /**
+     * Installment details for this payment.
+     */
+    installments?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsCardInstallments | undefined>;
+    /**
+     * Configuration options for setting up an eMandate for cards issued in India.
+     */
+    mandateOptions?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsCardMandateOptions | undefined>;
+    /**
+     * When specified, this parameter indicates that a transaction will be marked
+     * as MOTO (Mail Order Telephone Order) and thus out of scope for SCA. This
+     * parameter can only be provided during confirmation.
+     */
+    moto?: pulumi.Input<boolean | undefined>;
+    /**
+     * Selected network to process this payment intent on. Depends on the available networks of the card attached to the payment intent. Can be only set confirm-time.
+     */
+    network?: pulumi.Input<string | undefined>;
+    /**
+     * Request ability to [capture beyond the standard authorization validity window](https://docs.stripe.com/payments/extended-authorization) for this PaymentIntent.
+     */
+    requestExtendedAuthorization?: pulumi.Input<string | undefined>;
+    /**
+     * Request ability to [increment the authorization](https://docs.stripe.com/payments/incremental-authorization) for this PaymentIntent.
+     */
+    requestIncrementalAuthorization?: pulumi.Input<string | undefined>;
+    /**
+     * Request ability to make [multiple captures](https://docs.stripe.com/payments/multicapture) for this PaymentIntent.
+     */
+    requestMulticapture?: pulumi.Input<string | undefined>;
+    /**
+     * Request ability to [overcapture](https://docs.stripe.com/payments/overcapture) for this PaymentIntent.
+     */
+    requestOvercapture?: pulumi.Input<string | undefined>;
+    /**
+     * We strongly recommend that you rely on our SCA Engine to automatically prompt your customers for authentication based on risk level and [other requirements](https://docs.stripe.com/strong-customer-authentication). However, if you wish to request 3D Secure based on logic from your own fraud engine, provide this option. If not provided, this value defaults to `automatic`. Read our guide on [manually requesting 3D Secure](https://docs.stripe.com/payments/3d-secure/authentication-flow#manual-three-ds) for more information on how this configuration interacts with Radar and our SCA Engine.
+     */
+    requestThreeDSecure?: pulumi.Input<string | undefined>;
+    /**
+     * When enabled, using a card that is attached to a customer will require the CVC to be provided again (i.e. using the cvcToken parameter).
+     */
+    requireCvcRecollection?: pulumi.Input<boolean | undefined>;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     *
+     * If you provide a Customer with the PaymentIntent, you can use this parameter to [attach the payment method](https://docs.stripe.com/payments/save-during-payment) to the Customer after the PaymentIntent is confirmed and the customer completes any required actions. If you don't provide a Customer, you can still [attach](https://docs.stripe.com/api/payment_methods/attach) the payment method to a Customer after the transaction completes.
+     *
+     * If the payment method is `cardPresent` and isn't a digital wallet, Stripe creates and attaches a [generatedCard](https://docs.stripe.com/api/charges/object#charge_object-payment_method_details-card_present-generated_card) payment method representing the card to the Customer instead.
+     *
+     * When processing card payments, Stripe uses `setupFutureUsage` to help you comply with regional legislation and network rules, such as [SCA](https://docs.stripe.com/strong-customer-authentication).
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+    /**
+     * Provides information about a card payment that customers see on their statements. Concatenated with the Kana prefix (shortened Kana descriptor) or Kana statement descriptor that’s set on the account to form the complete statement descriptor. Maximum 22 characters. On card statements, the *concatenation* of both prefix and suffix (including separators) will appear truncated to 22 characters.
+     */
+    statementDescriptorSuffixKana?: pulumi.Input<string | undefined>;
+    /**
+     * Provides information about a card payment that customers see on their statements. Concatenated with the Kanji prefix (shortened Kanji descriptor) or Kanji statement descriptor that’s set on the account to form the complete statement descriptor. Maximum 17 characters. On card statements, the *concatenation* of both prefix and suffix (including separators) will appear truncated to 17 characters.
+     */
+    statementDescriptorSuffixKanji?: pulumi.Input<string | undefined>;
+    /**
+     * If 3D Secure authentication was performed with a third-party provider,
+     * the authentication details to use for this payment.
+     */
+    threeDSecure?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsCardThreeDSecure | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsCardInstallments {
+    /**
+     * Installment plans that may be selected for this PaymentIntent.
+     */
+    availablePlans?: pulumi.Input<pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsCardInstallmentsAvailablePlan>[] | undefined>;
+    /**
+     * Whether Installments are enabled for this PaymentIntent.
+     */
+    enabled?: pulumi.Input<boolean | undefined>;
+    /**
+     * Installment plan selected for this PaymentIntent.
+     */
+    plan?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsCardInstallmentsPlan | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsCardInstallmentsAvailablePlan {
+    /**
+     * For `fixedCount` installment plans, this is the number of installment payments your customer will make to their credit card.
+     */
+    count?: pulumi.Input<number | undefined>;
+    /**
+     * For `fixedCount` installment plans, this is the interval between installment payments your customer will make to their credit card.
+     * One of `month`.
+     */
+    interval?: pulumi.Input<string | undefined>;
+    /**
+     * Type of installment plan, one of `fixedCount`, `bonus`, or `revolving`.
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsCardInstallmentsPlan {
+    /**
+     * For `fixedCount` installment plans, this is the number of installment payments your customer will make to their credit card.
+     */
+    count?: pulumi.Input<number | undefined>;
+    /**
+     * For `fixedCount` installment plans, this is the interval between installment payments your customer will make to their credit card.
+     * One of `month`.
+     */
+    interval?: pulumi.Input<string | undefined>;
+    /**
+     * Type of installment plan, one of `fixedCount`, `bonus`, or `revolving`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsCardMandateOptions {
+    /**
+     * Amount to be charged for future payments, specified in the presentment currency.
+     */
+    amount: pulumi.Input<number>;
+    /**
+     * One of `fixed` or `maximum`. If `fixed`, the `amount` param refers to the exact amount to be charged in future payments. If `maximum`, the amount charged can be up to the value passed for the `amount` param.
+     */
+    amountType: pulumi.Input<string>;
+    /**
+     * A description of the mandate or subscription that is meant to be displayed to the customer.
+     */
+    description?: pulumi.Input<string | undefined>;
+    /**
+     * End date of the mandate or subscription. If not provided, the mandate will be active until canceled. If provided, end date should be after start date.
+     */
+    endDate?: pulumi.Input<number | undefined>;
+    /**
+     * Specifies payment frequency. One of `day`, `week`, `month`, `year`, or `sporadic`.
+     */
+    interval: pulumi.Input<string>;
+    /**
+     * The number of intervals between payments. For example, `interval=month` and `interval_count=3` indicates one payment every three months. Maximum of one year interval allowed (1 year, 12 months, or 52 weeks). This parameter is optional when `interval=sporadic`.
+     */
+    intervalCount?: pulumi.Input<number | undefined>;
+    /**
+     * Unique identifier for the mandate or subscription.
+     */
+    reference: pulumi.Input<string>;
+    /**
+     * Start date of the mandate or subscription. Start date should not be lesser than yesterday.
+     */
+    startDate: pulumi.Input<number>;
+    /**
+     * Specifies the type of mandates supported. Possible values are `india`.
+     */
+    supportedTypes?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsCardPresent {
+    /**
+     * Controls when the funds will be captured from the customer's account.
+     */
+    captureMethod?: pulumi.Input<string | undefined>;
+    /**
+     * Request ability to capture this payment beyond the standard [authorization validity window](https://docs.stripe.com/terminal/features/extended-authorizations#authorization-validity)
+     */
+    requestExtendedAuthorization?: pulumi.Input<boolean | undefined>;
+    /**
+     * Request ability to [increment](https://docs.stripe.com/terminal/features/incremental-authorizations) this PaymentIntent if the combination of MCC and card brand is eligible. Check [incremental*authorization*supported](https://docs.stripe.com/api/charges/object#charge_object-payment_method_details-card_present-incremental_authorization_supported) in the [Confirm](https://docs.stripe.com/api/payment_intents/confirm) response to verify support.
+     */
+    requestIncrementalAuthorizationSupport?: pulumi.Input<boolean | undefined>;
+    routing?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsCardPresentRouting | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsCardPresentRouting {
+    /**
+     * Requested routing priority
+     */
+    requestedPriority?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsCardThreeDSecure {
+    /**
+     * The `transStatus` returned from the card Issuer’s ACS in the ARes.
+     */
+    aresTransStatus?: pulumi.Input<string | undefined>;
+    /**
+     * The cryptogram, also known as the "authentication value" (AAV, CAVV or
+     * AEVV). This value is 20 bytes, base64-encoded into a 28-character string.
+     * (Most 3D Secure providers will return the base64-encoded version, which
+     * is what you should specify here.)
+     */
+    cryptogram: pulumi.Input<string>;
+    /**
+     * The Electronic Commerce Indicator (ECI) is returned by your 3D Secure
+     * provider and indicates what degree of authentication was performed.
+     */
+    electronicCommerceIndicator?: pulumi.Input<string | undefined>;
+    /**
+     * The exemption requested via 3DS and accepted by the issuer at authentication time.
+     */
+    exemptionIndicator?: pulumi.Input<string | undefined>;
+    /**
+     * Network specific 3DS fields. Network specific arguments require an
+     * explicit card brand choice. The parameter `payment_method_options.card.network``
+     * must be populated accordingly
+     */
+    networkOptions?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsCardThreeDSecureNetworkOptions | undefined>;
+    /**
+     * The challenge indicator (`threeDSRequestorChallengeInd`) which was requested in the
+     * AReq sent to the card Issuer's ACS. A string containing 2 digits from 01-99.
+     */
+    requestorChallengeIndicator?: pulumi.Input<string | undefined>;
+    /**
+     * For 3D Secure 1, the XID. For 3D Secure 2, the Directory Server
+     * Transaction ID (dsTransID).
+     */
+    transactionId: pulumi.Input<string>;
+    /**
+     * The version of 3D Secure that was performed.
+     */
+    version: pulumi.Input<string>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsCardThreeDSecureNetworkOptions {
+    /**
+     * Cartes Bancaires-specific 3DS fields.
+     */
+    cartesBancaires?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsCardThreeDSecureNetworkOptionsCartesBancaires | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsCardThreeDSecureNetworkOptionsCartesBancaires {
+    /**
+     * The cryptogram calculation algorithm used by the card Issuer's ACS
+     * to calculate the Authentication cryptogram. Also known as `cavvAlgorithm`.
+     * messageExtension: CB-AVALGO
+     */
+    cbAvalgo: pulumi.Input<string>;
+    /**
+     * The exemption indicator returned from Cartes Bancaires in the ARes.
+     * message extension: CB-EXEMPTION; string (4 characters)
+     * This is a 3 byte bitmap (low significant byte first and most significant
+     * bit first) that has been Base64 encoded
+     */
+    cbExemption?: pulumi.Input<string | undefined>;
+    /**
+     * The risk score returned from Cartes Bancaires in the ARes.
+     * message extension: CB-SCORE; numeric value 0-99
+     */
+    cbScore?: pulumi.Input<number | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsCashapp {
+    /**
+     * Controls when the funds will be captured from the customer's account.
+     */
+    captureMethod?: pulumi.Input<string | undefined>;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsCrypto {
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsCustomerBalance {
+    bankTransfer?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsCustomerBalanceBankTransfer | undefined>;
+    /**
+     * The funding method type to be used when there are not enough funds in the customer balance. Permitted values include: `bankTransfer`.
+     */
+    fundingType?: pulumi.Input<string | undefined>;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsCustomerBalanceBankTransfer {
+    euBankTransfer?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsCustomerBalanceBankTransferEuBankTransfer | undefined>;
+    /**
+     * List of address types that should be returned in the financialAddresses response. If not specified, all valid types will be returned.
+     */
+    requestedAddressTypes?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * The bank transfer type that this PaymentIntent is allowed to use for funding Permitted values include: `euBankTransfer`, `gbBankTransfer`, `jpBankTransfer`, `mxBankTransfer`, or `usBankTransfer`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsCustomerBalanceBankTransferEuBankTransfer {
+    /**
+     * The desired country code of the bank account information. Permitted values include: `DE`, `FR`, `IE`, or `NL`.
+     */
+    country: pulumi.Input<string>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsEps {
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsFpx {
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsGiropay {
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsGrabpay {
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsIdeal {
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsKakaoPay {
+    /**
+     * Controls when the funds will be captured from the customer's account.
+     */
+    captureMethod?: pulumi.Input<string | undefined>;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsKlarna {
+    /**
+     * Controls when the funds will be captured from the customer's account.
+     */
+    captureMethod?: pulumi.Input<string | undefined>;
+    /**
+     * On-demand details if setting up or charging an on-demand payment.
+     */
+    onDemand?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsKlarnaOnDemand | undefined>;
+    /**
+     * Preferred locale of the Klarna checkout page that the customer is redirected to.
+     */
+    preferredLocale?: pulumi.Input<string | undefined>;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+    /**
+     * Subscription details if setting up or charging a subscription.
+     */
+    subscriptions?: pulumi.Input<pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsKlarnaSubscription>[] | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsKlarnaOnDemand {
+    /**
+     * Your average amount value. You can use a value across your customer base, or segment based on customer type, country, etc.
+     */
+    averageAmount?: pulumi.Input<number | undefined>;
+    /**
+     * The maximum value you may charge a customer per purchase. You can use a value across your customer base, or segment based on customer type, country, etc.
+     */
+    maximumAmount?: pulumi.Input<number | undefined>;
+    /**
+     * The lowest or minimum value you may charge a customer per purchase. You can use a value across your customer base, or segment based on customer type, country, etc.
+     */
+    minimumAmount?: pulumi.Input<number | undefined>;
+    /**
+     * Interval at which the customer is making purchases
+     */
+    purchaseInterval?: pulumi.Input<string | undefined>;
+    /**
+     * The number of `purchaseInterval` between charges
+     */
+    purchaseIntervalCount?: pulumi.Input<number | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsKlarnaSubscription {
+    /**
+     * Unit of time between subscription charges.
+     */
+    interval: pulumi.Input<string>;
+    /**
+     * The number of intervals (specified in the `interval` attribute) between subscription charges. For example, `interval=month` and `interval_count=3` charges every 3 months.
+     */
+    intervalCount?: pulumi.Input<number | undefined>;
+    /**
+     * Name for subscription.
+     */
+    name?: pulumi.Input<string | undefined>;
+    /**
+     * Describes the upcoming charge for this subscription.
+     */
+    nextBilling?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsKlarnaSubscriptionNextBilling | undefined>;
+    /**
+     * A non-customer-facing reference to correlate subscription charges in the Klarna app. Use a value that persists across subscription charges.
+     */
+    reference: pulumi.Input<string>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsKlarnaSubscriptionNextBilling {
+    /**
+     * The amount of the next charge for the subscription.
+     */
+    amount: pulumi.Input<number>;
+    /**
+     * The date of the next charge for the subscription in YYYY-MM-DD format.
+     */
+    date: pulumi.Input<string>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsKonbini {
+    /**
+     * An optional 10 to 11 digit numeric-only string determining the confirmation code at applicable convenience stores.
+     */
+    confirmationNumber?: pulumi.Input<string | undefined>;
+    /**
+     * The number of calendar days (between 1 and 60) after which Konbini payment instructions will expire. For example, if a PaymentIntent is confirmed with Konbini and `expiresAfterDays` set to 2 on Monday JST, the instructions will expire on Wednesday 23:59:59 JST.
+     */
+    expiresAfterDays?: pulumi.Input<number | undefined>;
+    /**
+     * The timestamp at which the Konbini payment instructions will expire. Only one of `expiresAfterDays` or `expiresAt` may be set.
+     */
+    expiresAt?: pulumi.Input<number | undefined>;
+    /**
+     * A product descriptor of up to 22 characters, which will appear to customers at the convenience store.
+     */
+    productDescription?: pulumi.Input<string | undefined>;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsKrCard {
+    /**
+     * Controls when the funds will be captured from the customer's account.
+     */
+    captureMethod?: pulumi.Input<string | undefined>;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsMbWay {
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsMobilepay {
+    /**
+     * Controls when the funds will be captured from the customer's account.
+     */
+    captureMethod?: pulumi.Input<string | undefined>;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsMultibanco {
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsNaverPay {
+    /**
+     * Controls when the funds will be captured from the customer's account.
+     */
+    captureMethod?: pulumi.Input<string | undefined>;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsNzBankAccount {
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+    /**
+     * Controls when Stripe will attempt to debit the funds from the customer's account. The date must be a string in YYYY-MM-DD format. The date must be in the future and between 3 and 15 calendar days from now.
+     */
+    targetDate?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsOxxo {
+    /**
+     * The number of calendar days before an OXXO invoice expires. For example, if you create an OXXO invoice on Monday and you set expires*after*days to 2, the OXXO invoice will expire on Wednesday at 23:59 America/Mexico_City time.
+     */
+    expiresAfterDays?: pulumi.Input<number | undefined>;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsP24 {
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+    /**
+     * Confirm that the payer has accepted the P24 terms and conditions.
+     */
+    tosShownAndAccepted?: pulumi.Input<boolean | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsPayco {
+    /**
+     * Controls when the funds will be captured from the customer's account.
+     */
+    captureMethod?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsPaynow {
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsPaypal {
+    /**
+     * Controls when the funds will be captured from the customer's account.
+     */
+    captureMethod?: pulumi.Input<string | undefined>;
+    /**
+     * Preferred locale of the PayPal checkout page that the customer is redirected to.
+     */
+    preferredLocale?: pulumi.Input<string | undefined>;
+    /**
+     * A reference of the PayPal transaction visible to customer which is mapped to PayPal's invoice ID. This must be a globally unique ID if you have configured in your PayPal settings to block multiple payments per invoice ID.
+     */
+    reference?: pulumi.Input<string | undefined>;
+    /**
+     * The risk correlation ID for an on-session payment using a saved PayPal payment method.
+     */
+    riskCorrelationId?: pulumi.Input<string | undefined>;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsPayto {
+    mandateOptions?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsPaytoMandateOptions | undefined>;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsPaytoMandateOptions {
+    /**
+     * Amount that will be collected. It is required when `amountType` is `fixed`.
+     */
+    amount?: pulumi.Input<number | undefined>;
+    /**
+     * The type of amount that will be collected. The amount charged must be exact or up to the value of `amount` param for `fixed` or `maximum` type respectively. Defaults to `maximum`.
+     */
+    amountType?: pulumi.Input<string | undefined>;
+    /**
+     * Date, in YYYY-MM-DD format, after which payments will not be collected. Defaults to no end date.
+     */
+    endDate?: pulumi.Input<string | undefined>;
+    /**
+     * The periodicity at which payments will be collected. Defaults to `adhoc`.
+     */
+    paymentSchedule?: pulumi.Input<string | undefined>;
+    /**
+     * The number of payments that will be made during a payment period. Defaults to 1 except for when `paymentSchedule` is `adhoc`. In that case, it defaults to no limit.
+     */
+    paymentsPerPeriod?: pulumi.Input<number | undefined>;
+    /**
+     * The purpose for which payments are made. Has a default value based on your merchant category code.
+     */
+    purpose?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsPix {
+    /**
+     * Determines if the amount includes the IOF tax.
+     */
+    amountIncludesIof?: pulumi.Input<string | undefined>;
+    /**
+     * The number of seconds (between 10 and 1209600) after which Pix payment will expire.
+     */
+    expiresAfterSeconds?: pulumi.Input<number | undefined>;
+    /**
+     * The timestamp at which the Pix expires.
+     */
+    expiresAt?: pulumi.Input<number | undefined>;
+    mandateOptions?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsPixMandateOptions | undefined>;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsPixMandateOptions {
+    /**
+     * Amount to be charged for future payments.
+     */
+    amount?: pulumi.Input<number | undefined>;
+    /**
+     * Determines if the amount includes the IOF tax.
+     */
+    amountIncludesIof?: pulumi.Input<string | undefined>;
+    /**
+     * Type of amount.
+     */
+    amountType?: pulumi.Input<string | undefined>;
+    /**
+     * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase.
+     */
+    currency?: pulumi.Input<string | undefined>;
+    /**
+     * Date when the mandate expires and no further payments will be charged, in `YYYY-MM-DD`.
+     */
+    endDate?: pulumi.Input<string | undefined>;
+    /**
+     * Schedule at which the future payments will be charged.
+     */
+    paymentSchedule?: pulumi.Input<string | undefined>;
+    /**
+     * Subscription name displayed to buyers in their bank app.
+     */
+    reference?: pulumi.Input<string | undefined>;
+    /**
+     * Start date of the mandate, in `YYYY-MM-DD`.
+     */
+    startDate?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsPromptpay {
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsRevolutPay {
+    /**
+     * Controls when the funds will be captured from the customer's account.
+     */
+    captureMethod?: pulumi.Input<string | undefined>;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsSamsungPay {
+    /**
+     * Controls when the funds will be captured from the customer's account.
+     */
+    captureMethod?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsSatispay {
+    /**
+     * Controls when the funds will be captured from the customer's account.
+     */
+    captureMethod?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsScalapay {
+    /**
+     * Controls when the funds will be captured from the customer's account.
+     */
+    captureMethod?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsSepaDebit {
+    mandateOptions?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsSepaDebitMandateOptions | undefined>;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+    /**
+     * Controls when Stripe will attempt to debit the funds from the customer's account. The date must be a string in YYYY-MM-DD format. The date must be in the future and between 3 and 15 calendar days from now.
+     */
+    targetDate?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsSepaDebitMandateOptions {
+    /**
+     * Prefix used to generate the Mandate reference. Must be at most 12 characters long. Must consist of only uppercase letters, numbers, spaces, or the following special characters: '/', '_', '-', '&', '.'. Cannot begin with 'STRIPE'.
+     */
+    referencePrefix?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsSofort {
+    /**
+     * Preferred language of the SOFORT authorization page that the customer is redirected to.
+     */
+    preferredLanguage?: pulumi.Input<string | undefined>;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsSwish {
+    /**
+     * A reference for this payment to be displayed in the Swish app.
+     */
+    reference?: pulumi.Input<string | undefined>;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsTwint {
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsUpi {
+    /**
+     * Configuration options for setting up an eMandate
+     */
+    mandateOptions?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsUpiMandateOptions | undefined>;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsUpiMandateOptions {
+    /**
+     * Amount to be charged for future payments.
+     */
+    amount?: pulumi.Input<number | undefined>;
+    /**
+     * One of `fixed` or `maximum`. If `fixed`, the `amount` param refers to the exact amount to be charged in future payments. If `maximum`, the amount charged can be up to the value passed for the `amount` param.
+     */
+    amountType?: pulumi.Input<string | undefined>;
+    /**
+     * A description of the mandate or subscription that is meant to be displayed to the customer.
+     */
+    description?: pulumi.Input<string | undefined>;
+    /**
+     * End date of the mandate or subscription.
+     */
+    endDate?: pulumi.Input<number | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsUsBankAccount {
+    financialConnections?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsUsBankAccountFinancialConnections | undefined>;
+    mandateOptions?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsUsBankAccountMandateOptions | undefined>;
+    /**
+     * Additional fields for network related functions
+     */
+    networks?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsUsBankAccountNetworks | undefined>;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+    /**
+     * Controls when Stripe will attempt to debit the funds from the customer's account. The date must be a string in YYYY-MM-DD format. The date must be in the future and between 3 and 15 calendar days from now.
+     */
+    targetDate?: pulumi.Input<string | undefined>;
+    /**
+     * The purpose of the transaction.
+     */
+    transactionPurpose?: pulumi.Input<string | undefined>;
+    /**
+     * Bank account verification method. The default value is `automatic`.
+     */
+    verificationMethod?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsUsBankAccountFinancialConnections {
+    filters?: pulumi.Input<inputs.PaymentIntentPaymentMethodOptionsUsBankAccountFinancialConnectionsFilters | undefined>;
+    /**
+     * The list of permissions to request. The `paymentMethod` permission must be included.
+     */
+    permissions?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * Data features requested to be retrieved upon account creation.
+     */
+    prefetches?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * For webview integrations only. Upon completing OAuth login in the native browser, the user will be redirected to this URL to return to your app.
+     */
+    returnUrl?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsUsBankAccountFinancialConnectionsFilters {
+    /**
+     * The account subcategories to use to filter for possible accounts to link. Valid subcategories are `checking` and `savings`.
+     */
+    accountSubcategories?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsUsBankAccountMandateOptions {
+    /**
+     * Mandate collection method
+     */
+    collectionMethod?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsUsBankAccountNetworks {
+    /**
+     * Triggers validations to run across the selected networks
+     */
+    requesteds?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsWechatPay {
+    /**
+     * The app ID registered with WeChat Pay. Only required when client is ios or android.
+     */
+    appId?: pulumi.Input<string | undefined>;
+    /**
+     * The client type that the end customer will pay from
+     */
+    client?: pulumi.Input<string | undefined>;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPaymentMethodOptionsZip {
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentPresentmentDetails {
+    /**
+     * Amount intended to be collected by this payment, denominated in `presentmentCurrency`.
+     */
+    presentmentAmount?: pulumi.Input<number | undefined>;
+    /**
+     * Currency presented to the customer during payment.
+     */
+    presentmentCurrency?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentProcessing {
+    card?: pulumi.Input<inputs.PaymentIntentProcessingCard | undefined>;
+    /**
+     * Type of the payment method for which payment is in `processing` state, one of `card`.
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentProcessingCard {
+    customerNotification?: pulumi.Input<inputs.PaymentIntentProcessingCardCustomerNotification | undefined>;
+}
+
+export interface PaymentIntentProcessingCardCustomerNotification {
+    /**
+     * Whether customer approval has been requested for this payment. For payments greater than INR 15000 or mandate amount, the customer must provide explicit approval of the payment with their bank.
+     */
+    approvalRequested?: pulumi.Input<boolean | undefined>;
+    /**
+     * If customer approval is required, they need to provide approval before this time.
+     */
+    completesAt?: pulumi.Input<number | undefined>;
+}
+
+export interface PaymentIntentRadarOptions {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * A [Radar Session](https://docs.stripe.com/radar/radar-session) is a snapshot of the browser metadata and device details that help Radar make more accurate predictions on your payments.
+     */
+    session?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentShipping {
+    address: pulumi.Input<inputs.PaymentIntentShippingAddress>;
+    /**
+     * The delivery service that shipped a physical product, such as Fedex, UPS, USPS, etc.
+     */
+    carrier?: pulumi.Input<string | undefined>;
+    /**
+     * Recipient name.
+     */
+    name: pulumi.Input<string>;
+    /**
+     * Recipient phone (including extension).
+     */
+    phone?: pulumi.Input<string | undefined>;
+    /**
+     * The tracking number for a physical product, obtained from the delivery service. If multiple tracking numbers were generated for this purchase, please separate them with commas.
+     */
+    trackingNumber?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentShippingAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode?: pulumi.Input<string | undefined>;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentIntentTransferData {
+    /**
+     * The amount transferred to the destination account. This transfer will occur automatically after the payment succeeds. If no amount is specified, by default the entire payment amount is transferred to the destination account.
+     * The amount must be less than or equal to the [amount](https://docs.stripe.com/api/payment_intents/object#payment_intent_object-amount), and must be a positive integer
+     * representing how much to transfer in the smallest currency unit (e.g., 100 cents to charge $1.00).
+     */
+    amount?: pulumi.Input<number | undefined>;
+    /**
+     * An arbitrary string attached to the transfer. Often useful for displaying to users.
+     */
+    description?: pulumi.Input<string | undefined>;
+    /**
+     * The account (if any) that the payment is attributed to for tax reporting, and where funds from the payment are transferred to after payment success.
+     */
+    destination: pulumi.Input<string>;
+    /**
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+     */
+    metadata?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
+    paymentData?: pulumi.Input<inputs.PaymentIntentTransferDataPaymentData | undefined>;
+}
+
+export interface PaymentIntentTransferDataPaymentData {
+    /**
+     * An arbitrary string attached to the destination payment. Often useful for displaying to users.
+     */
+    description?: pulumi.Input<string | undefined>;
+    /**
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+     */
+    metadata?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
+}
+
+export interface PaymentLinkAfterCompletion {
+    hostedConfirmation?: pulumi.Input<inputs.PaymentLinkAfterCompletionHostedConfirmation | undefined>;
+    redirect?: pulumi.Input<inputs.PaymentLinkAfterCompletionRedirect | undefined>;
+    /**
+     * The specified behavior after the purchase is complete.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface PaymentLinkAfterCompletionHostedConfirmation {
+    /**
+     * The custom message that is displayed to the customer after the purchase is complete.
+     */
+    customMessage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentLinkAfterCompletionRedirect {
+    /**
+     * The URL the customer will be redirected to after the purchase is complete.
+     */
+    url: pulumi.Input<string>;
+}
+
+export interface PaymentLinkAutomaticTax {
+    /**
+     * If `true`, tax will be calculated automatically using the customer's location.
+     */
+    enabled: pulumi.Input<boolean>;
+    /**
+     * The account that's liable for tax. If set, the business address and tax registrations required to perform the tax calculation are loaded from this account. The tax transaction is returned in the report of the connected account.
+     */
+    liability?: pulumi.Input<inputs.PaymentLinkAutomaticTaxLiability | undefined>;
+}
+
+export interface PaymentLinkAutomaticTaxLiability {
+    /**
+     * The connected account being referenced when `type` is `account`.
+     */
+    account?: pulumi.Input<string | undefined>;
+    /**
+     * Type of the account referenced.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface PaymentLinkConsentCollection {
+    /**
+     * Settings related to the payment method reuse text shown in the Checkout UI.
+     */
+    paymentMethodReuseAgreement?: pulumi.Input<inputs.PaymentLinkConsentCollectionPaymentMethodReuseAgreement | undefined>;
+    /**
+     * If set to `auto`, enables the collection of customer consent for promotional communications.
+     */
+    promotions?: pulumi.Input<string | undefined>;
+    /**
+     * If set to `required`, it requires cutomers to accept the terms of service before being able to pay. If set to `none`, customers won't be shown a checkbox to accept the terms of service.
+     */
+    termsOfService?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentLinkConsentCollectionPaymentMethodReuseAgreement {
+    /**
+     * Determines the position and visibility of the payment method reuse agreement in the UI. When set to `auto`, Stripe's defaults will be used.
+     */
+    position: pulumi.Input<string>;
+}
+
+export interface PaymentLinkCustomField {
+    dropdown?: pulumi.Input<inputs.PaymentLinkCustomFieldDropdown | undefined>;
+    /**
+     * String of your choice that your integration can use to reconcile this field. Must be unique to this field, alphanumeric, and up to 200 characters.
+     */
+    key: pulumi.Input<string>;
+    label: pulumi.Input<inputs.PaymentLinkCustomFieldLabel>;
+    numeric?: pulumi.Input<inputs.PaymentLinkCustomFieldNumeric | undefined>;
+    /**
+     * Whether the customer is required to complete the field before completing the Checkout Session. Defaults to `false`.
+     */
+    optional?: pulumi.Input<boolean | undefined>;
+    text?: pulumi.Input<inputs.PaymentLinkCustomFieldText | undefined>;
+    /**
+     * The type of the field.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface PaymentLinkCustomFieldDropdown {
+    /**
+     * The value that pre-fills on the payment page.
+     */
+    defaultValue?: pulumi.Input<string | undefined>;
+    /**
+     * The options available for the customer to select. Up to 200 options allowed.
+     */
+    options: pulumi.Input<pulumi.Input<inputs.PaymentLinkCustomFieldDropdownOption>[]>;
+}
+
+export interface PaymentLinkCustomFieldDropdownOption {
+    /**
+     * The label for the option, displayed to the customer. Up to 100 characters.
+     */
+    label: pulumi.Input<string>;
+    /**
+     * The value for this option, not displayed to the customer, used by your integration to reconcile the option selected by the customer. Must be unique to this option, alphanumeric, and up to 100 characters.
+     */
+    value: pulumi.Input<string>;
+}
+
+export interface PaymentLinkCustomFieldLabel {
+    /**
+     * Custom text for the label, displayed to the customer. Up to 50 characters.
+     */
+    custom: pulumi.Input<string>;
+    /**
+     * The type of the label.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface PaymentLinkCustomFieldNumeric {
+    /**
+     * The value that pre-fills the field on the payment page.
+     */
+    defaultValue?: pulumi.Input<string | undefined>;
+    /**
+     * The maximum character length constraint for the customer's input.
+     */
+    maximumLength?: pulumi.Input<number | undefined>;
+    /**
+     * The minimum character length requirement for the customer's input.
+     */
+    minimumLength?: pulumi.Input<number | undefined>;
+}
+
+export interface PaymentLinkCustomFieldText {
+    /**
+     * The value that pre-fills the field on the payment page.
+     */
+    defaultValue?: pulumi.Input<string | undefined>;
+    /**
+     * The maximum character length constraint for the customer's input.
+     */
+    maximumLength?: pulumi.Input<number | undefined>;
+    /**
+     * The minimum character length requirement for the customer's input.
+     */
+    minimumLength?: pulumi.Input<number | undefined>;
+}
+
+export interface PaymentLinkCustomText {
+    /**
+     * Custom text that should be displayed after the payment confirmation button.
+     */
+    afterSubmit?: pulumi.Input<inputs.PaymentLinkCustomTextAfterSubmit | undefined>;
+    /**
+     * Custom text that should be displayed alongside shipping address collection.
+     */
+    shippingAddress?: pulumi.Input<inputs.PaymentLinkCustomTextShippingAddress | undefined>;
+    /**
+     * Custom text that should be displayed alongside the payment confirmation button.
+     */
+    submit?: pulumi.Input<inputs.PaymentLinkCustomTextSubmit | undefined>;
+    /**
+     * Custom text that should be displayed in place of the default terms of service agreement text.
+     */
+    termsOfServiceAcceptance?: pulumi.Input<inputs.PaymentLinkCustomTextTermsOfServiceAcceptance | undefined>;
+}
+
+export interface PaymentLinkCustomTextAfterSubmit {
+    /**
+     * Text can be up to 1200 characters in length.
+     */
+    message: pulumi.Input<string>;
+}
+
+export interface PaymentLinkCustomTextShippingAddress {
+    /**
+     * Text can be up to 1200 characters in length.
+     */
+    message: pulumi.Input<string>;
+}
+
+export interface PaymentLinkCustomTextSubmit {
+    /**
+     * Text can be up to 1200 characters in length.
+     */
+    message: pulumi.Input<string>;
+}
+
+export interface PaymentLinkCustomTextTermsOfServiceAcceptance {
+    /**
+     * Text can be up to 1200 characters in length.
+     */
+    message: pulumi.Input<string>;
+}
+
+export interface PaymentLinkInvoiceCreation {
+    /**
+     * Enable creating an invoice on successful payment.
+     */
+    enabled: pulumi.Input<boolean>;
+    /**
+     * Configuration for the invoice. Default invoice values will be used if unspecified.
+     */
+    invoiceData?: pulumi.Input<inputs.PaymentLinkInvoiceCreationInvoiceData | undefined>;
+}
+
+export interface PaymentLinkInvoiceCreationInvoiceData {
+    /**
+     * The account tax IDs associated with the invoice.
+     */
+    accountTaxIds?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * A list of up to 4 custom fields to be displayed on the invoice.
+     */
+    customFields?: pulumi.Input<pulumi.Input<inputs.PaymentLinkInvoiceCreationInvoiceDataCustomField>[] | undefined>;
+    /**
+     * An arbitrary string attached to the object. Often useful for displaying to users.
+     */
+    description?: pulumi.Input<string | undefined>;
+    /**
+     * Footer to be displayed on the invoice.
+     */
+    footer?: pulumi.Input<string | undefined>;
+    /**
+     * The connected account that issues the invoice. The invoice is presented with the branding and support information of the specified account.
+     */
+    issuer?: pulumi.Input<inputs.PaymentLinkInvoiceCreationInvoiceDataIssuer | undefined>;
+    /**
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+     */
+    metadata?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
+    /**
+     * Options for invoice PDF rendering.
+     */
+    renderingOptions?: pulumi.Input<inputs.PaymentLinkInvoiceCreationInvoiceDataRenderingOptions | undefined>;
+}
+
+export interface PaymentLinkInvoiceCreationInvoiceDataCustomField {
+    /**
+     * The name of the custom field.
+     */
+    name: pulumi.Input<string>;
+    /**
+     * The value of the custom field.
+     */
+    value: pulumi.Input<string>;
+}
+
+export interface PaymentLinkInvoiceCreationInvoiceDataIssuer {
+    /**
+     * The connected account being referenced when `type` is `account`.
+     */
+    account?: pulumi.Input<string | undefined>;
+    /**
+     * Type of the account referenced.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface PaymentLinkInvoiceCreationInvoiceDataRenderingOptions {
+    /**
+     * How line-item prices and amounts will be displayed with respect to tax on invoice PDFs.
+     */
+    amountTaxDisplay?: pulumi.Input<string | undefined>;
+    /**
+     * ID of the invoice rendering template to be used for the generated invoice.
+     */
+    template?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentLinkLineItem {
+    /**
+     * When set, provides configuration for this item’s quantity to be adjusted by the customer during checkout.
+     */
+    adjustableQuantity?: pulumi.Input<inputs.PaymentLinkLineItemAdjustableQuantity | undefined>;
+    /**
+     * Unique identifier for the object.
+     */
+    id?: pulumi.Input<string | undefined>;
+    /**
+     * The ID of the [Price](https://docs.stripe.com/api/prices) or [Plan](https://docs.stripe.com/api/plans) object. One of `price` or `priceData` is required.
+     */
+    price?: pulumi.Input<string | undefined>;
+    /**
+     * Data used to generate a new [Price](https://docs.stripe.com/api/prices) object inline. One of `price` or `priceData` is required.
+     */
+    priceData?: pulumi.Input<inputs.PaymentLinkLineItemPriceData | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The quantity of the line item being purchased.
+     */
+    quantity: pulumi.Input<number>;
+}
+
+export interface PaymentLinkLineItemAdjustableQuantity {
+    /**
+     * Set to true if the quantity can be adjusted to any non-negative Integer.
+     */
+    enabled: pulumi.Input<boolean>;
+    /**
+     * The maximum quantity the customer can purchase. By default this value is 99. You can specify a value up to 999999.
+     */
+    maximum?: pulumi.Input<number | undefined>;
+    /**
+     * The minimum quantity the customer can purchase. By default this value is 0. If there is only one item in the cart then that item's quantity cannot go down to 0.
+     */
+    minimum?: pulumi.Input<number | undefined>;
+}
+
+export interface PaymentLinkLineItemPriceData {
+    /**
+     * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+     */
+    currency: pulumi.Input<string>;
+    /**
+     * The ID of the [Product](https://docs.stripe.com/api/products) that this [Price](https://docs.stripe.com/api/prices) will belong to. One of `product` or `productData` is required.
+     */
+    product?: pulumi.Input<string | undefined>;
+    /**
+     * Data used to generate a new [Product](https://docs.stripe.com/api/products) object inline. One of `product` or `productData` is required.
+     */
+    productData?: pulumi.Input<inputs.PaymentLinkLineItemPriceDataProductData | undefined>;
+    /**
+     * The recurring components of a price such as `interval` and `intervalCount`.
+     */
+    recurring?: pulumi.Input<inputs.PaymentLinkLineItemPriceDataRecurring | undefined>;
+    /**
+     * Only required if a [default tax behavior](<https://docs.stripe.com/tax/products-prices-tax-categories-tax-behavior#setting-a-default-tax-behavior-(recommended)>) was not provided in the Stripe Tax settings. Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
+     */
+    taxBehavior?: pulumi.Input<string | undefined>;
+    /**
+     * A non-negative integer in cents (or local equivalent) representing how much to charge. One of `unitAmount` or `unitAmountDecimal` is required.
+     */
+    unitAmount?: pulumi.Input<number | undefined>;
+    /**
+     * Same as `unitAmount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unitAmount` and `unitAmountDecimal` can be set.
+     */
+    unitAmountDecimal?: pulumi.Input<number | undefined>;
+}
+
+export interface PaymentLinkLineItemPriceDataProductData {
+    /**
+     * The product's description, meant to be displayable to the customer. Use this field to optionally store a long form explanation of the product being sold for your own rendering purposes.
+     */
+    description?: pulumi.Input<string | undefined>;
+    /**
+     * A list of up to 8 URLs of images for this product, meant to be displayable to the customer.
+     */
+    images?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
+     */
+    metadata?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
+    /**
+     * The product's name, meant to be displayable to the customer.
+     */
+    name: pulumi.Input<string>;
+    /**
+     * A [tax code](https://docs.stripe.com/tax/tax-categories) ID.
+     */
+    taxCode?: pulumi.Input<string | undefined>;
+    /**
+     * A label that represents units of this product. When set, this will be included in customers' receipts, invoices, Checkout, and the customer portal.
+     */
+    unitLabel?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentLinkLineItemPriceDataRecurring {
+    /**
+     * Specifies billing frequency. Either `day`, `week`, `month` or `year`.
+     */
+    interval: pulumi.Input<string>;
+    /**
+     * The number of intervals between subscription billings. For example, `interval=month` and `interval_count=3` bills every 3 months. Maximum of three years interval allowed (3 years, 36 months, or 156 weeks).
+     */
+    intervalCount?: pulumi.Input<number | undefined>;
+}
+
+export interface PaymentLinkManagedPayments {
+    /**
+     * Set to `true` to enable [Managed Payments](https://docs.stripe.com/payments/managed-payments), Stripe's merchant of record solution, for this session.
+     */
+    enabled?: pulumi.Input<boolean | undefined>;
+}
+
+export interface PaymentLinkNameCollection {
+    business?: pulumi.Input<inputs.PaymentLinkNameCollectionBusiness | undefined>;
+    individual?: pulumi.Input<inputs.PaymentLinkNameCollectionIndividual | undefined>;
+}
+
+export interface PaymentLinkNameCollectionBusiness {
+    /**
+     * Indicates whether business name collection is enabled for the payment link.
+     */
+    enabled: pulumi.Input<boolean>;
+    /**
+     * Whether the customer is required to complete the field before checking out. Defaults to `false`.
+     */
+    optional?: pulumi.Input<boolean | undefined>;
+}
+
+export interface PaymentLinkNameCollectionIndividual {
+    /**
+     * Indicates whether individual name collection is enabled for the payment link.
+     */
+    enabled: pulumi.Input<boolean>;
+    /**
+     * Whether the customer is required to complete the field before checking out. Defaults to `false`.
+     */
+    optional?: pulumi.Input<boolean | undefined>;
+}
+
+export interface PaymentLinkOptionalItem {
+    adjustableQuantity?: pulumi.Input<inputs.PaymentLinkOptionalItemAdjustableQuantity | undefined>;
+    price: pulumi.Input<string>;
+    quantity: pulumi.Input<number>;
+}
+
+export interface PaymentLinkOptionalItemAdjustableQuantity {
+    /**
+     * Set to true if the quantity can be adjusted to any non-negative integer.
+     */
+    enabled: pulumi.Input<boolean>;
+    /**
+     * The maximum quantity of this item the customer can purchase. By default this value is 99.
+     */
+    maximum?: pulumi.Input<number | undefined>;
+    /**
+     * The minimum quantity of this item the customer must purchase, if they choose to purchase it. Because this item is optional, the customer will always be able to remove it from their order, even if the `minimum` configured here is greater than 0. By default this value is 0.
+     */
+    minimum?: pulumi.Input<number | undefined>;
+}
+
+export interface PaymentLinkPaymentIntentData {
+    /**
+     * Indicates when the funds will be captured from the customer's account.
+     */
+    captureMethod?: pulumi.Input<string | undefined>;
+    /**
+     * An arbitrary string attached to the object. Often useful for displaying to users.
+     */
+    description?: pulumi.Input<string | undefined>;
+    /**
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that will set metadata on [Payment Intents](https://docs.stripe.com/api/payment_intents) generated from this payment link.
+     */
+    metadata?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
+    /**
+     * Indicates that you intend to make future payments with the payment method collected during checkout.
+     */
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+    /**
+     * For a non-card payment, information about the charge that appears on the customer's statement when this payment succeeds in creating a charge.
+     */
+    statementDescriptor?: pulumi.Input<string | undefined>;
+    /**
+     * For a card payment, information about the charge that appears on the customer's statement when this payment succeeds in creating a charge. Concatenated with the account's statement descriptor prefix to form the complete statement descriptor.
+     */
+    statementDescriptorSuffix?: pulumi.Input<string | undefined>;
+    /**
+     * A string that identifies the resulting payment as part of a group. See the PaymentIntents [use case for connected accounts](https://docs.stripe.com/connect/separate-charges-and-transfers) for details.
+     */
+    transferGroup?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentLinkPaymentMethodOptions {
+    /**
+     * Configuration for `card` payment methods.
+     */
+    card?: pulumi.Input<inputs.PaymentLinkPaymentMethodOptionsCard | undefined>;
+}
+
+export interface PaymentLinkPaymentMethodOptionsCard {
+    /**
+     * Restrictions to apply to the card payment method. For example, you can block specific card brands.
+     */
+    restrictions?: pulumi.Input<inputs.PaymentLinkPaymentMethodOptionsCardRestrictions | undefined>;
+}
+
+export interface PaymentLinkPaymentMethodOptionsCardRestrictions {
+    /**
+     * The card brands to block. If a customer enters or selects a card belonging to a blocked brand, they can't complete the payment.
+     */
+    brandsBlockeds?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+}
+
+export interface PaymentLinkPhoneNumberCollection {
+    /**
+     * If `true`, a phone number will be collected during checkout.
+     */
+    enabled: pulumi.Input<boolean>;
+}
+
+export interface PaymentLinkRestrictions {
+    completedSessions: pulumi.Input<inputs.PaymentLinkRestrictionsCompletedSessions>;
+}
+
+export interface PaymentLinkRestrictionsCompletedSessions {
+    /**
+     * The current number of checkout sessions that have been completed on the payment link which count towards the `completedSessions` restriction to be met.
+     */
+    count?: pulumi.Input<number | undefined>;
+    /**
+     * The maximum number of checkout sessions that can be completed for the `completedSessions` restriction to be met.
+     */
+    limit: pulumi.Input<number>;
+}
+
+export interface PaymentLinkShippingAddressCollection {
+    /**
+     * An array of two-letter ISO country codes representing which countries Checkout should provide as options for shipping locations. Unsupported country codes: `AS, CX, CC, CU, HM, IR, KP, MH, FM, NF, MP, PW, SD, SY, UM, VI`.
+     */
+    allowedCountries: pulumi.Input<pulumi.Input<string>[]>;
+}
+
+export interface PaymentLinkShippingOption {
+    /**
+     * A non-negative integer in cents representing how much to charge.
+     */
+    shippingAmount?: pulumi.Input<number | undefined>;
+    /**
+     * The ID of the Shipping Rate to use for this shipping option.
+     */
+    shippingRate?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentLinkSubscriptionData {
+    /**
+     * The subscription's description, meant to be displayable to the customer. Use this field to optionally store an explanation of the subscription for rendering in Stripe surfaces and certain local payment methods UIs.
+     */
+    description?: pulumi.Input<string | undefined>;
+    invoiceSettings?: pulumi.Input<inputs.PaymentLinkSubscriptionDataInvoiceSettings | undefined>;
+    /**
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that will set metadata on [Subscriptions](https://docs.stripe.com/api/subscriptions) generated from this payment link.
+     */
+    metadata?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
+    /**
+     * Integer representing the number of trial period days before the customer is charged for the first time.
+     */
+    trialPeriodDays?: pulumi.Input<number | undefined>;
+    /**
+     * Settings related to subscription trials.
+     */
+    trialSettings?: pulumi.Input<inputs.PaymentLinkSubscriptionDataTrialSettings | undefined>;
+}
+
+export interface PaymentLinkSubscriptionDataInvoiceSettings {
+    issuer?: pulumi.Input<inputs.PaymentLinkSubscriptionDataInvoiceSettingsIssuer | undefined>;
+}
+
+export interface PaymentLinkSubscriptionDataInvoiceSettingsIssuer {
+    /**
+     * The connected account being referenced when `type` is `account`.
+     */
+    account?: pulumi.Input<string | undefined>;
+    /**
+     * Type of the account referenced.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface PaymentLinkSubscriptionDataTrialSettings {
+    /**
+     * Defines how a subscription behaves when a free trial ends.
+     */
+    endBehavior: pulumi.Input<inputs.PaymentLinkSubscriptionDataTrialSettingsEndBehavior>;
+}
+
+export interface PaymentLinkSubscriptionDataTrialSettingsEndBehavior {
+    /**
+     * Indicates how the subscription should change when the trial ends if the user did not provide a payment method.
+     */
+    missingPaymentMethod: pulumi.Input<string>;
+}
+
+export interface PaymentLinkTaxIdCollection {
+    /**
+     * Indicates whether tax ID collection is enabled for the session.
+     */
+    enabled: pulumi.Input<boolean>;
+    required?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentLinkTransferData {
+    /**
+     * The amount in cents (or local equivalent) that will be transferred to the destination account. By default, the entire amount is transferred to the destination.
+     */
+    amount?: pulumi.Input<number | undefined>;
+    /**
+     * The connected account receiving the transfer.
+     */
+    destination: pulumi.Input<string>;
+}
+
+export interface PaymentMethodAcssDebit {
+    /**
+     * Customer's bank account number.
+     */
+    accountNumber: pulumi.Input<string>;
+    /**
+     * Name of the bank associated with the bank account.
+     */
+    bankName?: pulumi.Input<string | undefined>;
+    /**
+     * Uniquely identifies this particular bank account. You can use this attribute to check whether two bank accounts are the same.
+     */
+    fingerprint?: pulumi.Input<string | undefined>;
+    /**
+     * Institution number of the bank account.
+     */
+    institutionNumber: pulumi.Input<string>;
+    /**
+     * Last four digits of the bank account number.
+     */
+    last4?: pulumi.Input<string | undefined>;
+    /**
+     * Transit number of the bank account.
+     */
+    transitNumber: pulumi.Input<string>;
+}
+
+export interface PaymentMethodAuBecsDebit {
+    /**
+     * The account number for the bank account.
+     */
+    accountNumber: pulumi.Input<string>;
+    /**
+     * Six-digit number identifying bank and branch associated with this bank account.
+     */
+    bsbNumber: pulumi.Input<string>;
+    /**
+     * Uniquely identifies this particular bank account. You can use this attribute to check whether two bank accounts are the same.
+     */
+    fingerprint?: pulumi.Input<string | undefined>;
+    /**
+     * Last four digits of the bank account number.
+     */
+    last4?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodBacsDebit {
+    /**
+     * Account number of the bank account that the funds will be debited from.
+     */
+    accountNumber?: pulumi.Input<string | undefined>;
+    /**
+     * Uniquely identifies this particular bank account. You can use this attribute to check whether two bank accounts are the same.
+     */
+    fingerprint?: pulumi.Input<string | undefined>;
+    /**
+     * Last four digits of the bank account number.
+     */
+    last4?: pulumi.Input<string | undefined>;
+    /**
+     * Sort code of the bank account. (e.g., `10-20-30`)
+     */
+    sortCode?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodBillingDetails {
+    /**
+     * Billing address.
+     */
+    address?: pulumi.Input<inputs.PaymentMethodBillingDetailsAddress | undefined>;
+    /**
+     * Email address.
+     */
+    email?: pulumi.Input<string | undefined>;
+    /**
+     * Full name.
+     */
+    name?: pulumi.Input<string | undefined>;
+    /**
+     * Billing phone number (including extension).
+     */
+    phone?: pulumi.Input<string | undefined>;
+    /**
+     * Taxpayer identification number. Used only for transactions between LATAM buyers and non-LATAM sellers.
+     */
+    taxId?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodBillingDetailsAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode?: pulumi.Input<string | undefined>;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodBoleto {
+    /**
+     * Uniquely identifies the customer tax id (CNPJ or CPF)
+     */
+    taxId: pulumi.Input<string>;
+}
+
+export interface PaymentMethodCard {
+    /**
+     * Card brand. Can be `amex`, `cartesBancaires`, `diners`, `discover`, `eftposAu`, `jcb`, `link`, `mastercard`, `unionpay`, `visa` or `unknown`.
+     */
+    brand?: pulumi.Input<string | undefined>;
+    /**
+     * Checks on Card address and CVC if provided.
+     */
+    checks?: pulumi.Input<inputs.PaymentMethodCardChecks | undefined>;
+    /**
+     * Two-letter ISO code representing the country of the card. You could use this attribute to get a sense of the international breakdown of cards you've collected.
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * The card's CVC. It is highly recommended to always include this value.
+     */
+    cvc?: pulumi.Input<string | undefined>;
+    /**
+     * A high-level description of the type of cards issued in this range. (For internal use only and not typically available in standard API requests.)
+     */
+    description?: pulumi.Input<string | undefined>;
+    /**
+     * The brand to use when displaying the card, this accounts for customer's brand choice on dual-branded cards. Can be `americanExpress`, `cartesBancaires`, `dinersClub`, `discover`, `eftposAustralia`, `interac`, `jcb`, `mastercard`, `unionPay`, `visa`, or `other` and may contain more values in the future.
+     */
+    displayBrand?: pulumi.Input<string | undefined>;
+    /**
+     * Two-digit number representing the card's expiration month.
+     */
+    expMonth?: pulumi.Input<number | undefined>;
+    /**
+     * Four-digit number representing the card's expiration year.
+     */
+    expYear?: pulumi.Input<number | undefined>;
+    /**
+     * Uniquely identifies this particular card number. You can use this attribute to check whether two customers who’ve signed up with you are using the same card number, for example. For payment methods that tokenize card information (Apple Pay, Google Pay), the tokenized number might be provided instead of the underlying card number.
+     */
+    fingerprint?: pulumi.Input<string | undefined>;
+    /**
+     * Card funding type. Can be `credit`, `debit`, `prepaid`, or `unknown`.
+     */
+    funding?: pulumi.Input<string | undefined>;
+    /**
+     * Details of the original PaymentMethod that created this object.
+     */
+    generatedFrom?: pulumi.Input<inputs.PaymentMethodCardGeneratedFrom | undefined>;
+    /**
+     * Issuer identification number of the card. (For internal use only and not typically available in standard API requests.)
+     */
+    iin?: pulumi.Input<string | undefined>;
+    /**
+     * The name of the card's issuing bank. (For internal use only and not typically available in standard API requests.)
+     */
+    issuer?: pulumi.Input<string | undefined>;
+    /**
+     * The last four digits of the card.
+     */
+    last4?: pulumi.Input<string | undefined>;
+    /**
+     * Contains information about card networks that can be used to process the payment.
+     */
+    networks?: pulumi.Input<inputs.PaymentMethodCardNetworks | undefined>;
+    /**
+     * The card number, as a string without any separators.
+     */
+    number?: pulumi.Input<string | undefined>;
+    /**
+     * Status of a card based on the card issuer.
+     */
+    regulatedStatus?: pulumi.Input<string | undefined>;
+    /**
+     * Contains details on how this Card may be used for 3D Secure authentication.
+     */
+    threeDSecureUsage?: pulumi.Input<inputs.PaymentMethodCardThreeDSecureUsage | undefined>;
+    /**
+     * For backwards compatibility, you can alternatively provide a Stripe token (e.g., for Apple Pay, Amex Express Checkout, or legacy Checkout) into the card hash with format card: {token: "tokVisa"}.
+     */
+    token?: pulumi.Input<string | undefined>;
+    /**
+     * If this Card is part of a card wallet, this contains the details of the card wallet.
+     */
+    wallet?: pulumi.Input<inputs.PaymentMethodCardWallet | undefined>;
+}
+
+export interface PaymentMethodCardChecks {
+    /**
+     * If a address line1 was provided, results of the check, one of `pass`, `fail`, `unavailable`, or `unchecked`.
+     */
+    addressLine1Check?: pulumi.Input<string | undefined>;
+    /**
+     * If a address postal code was provided, results of the check, one of `pass`, `fail`, `unavailable`, or `unchecked`.
+     */
+    addressPostalCodeCheck?: pulumi.Input<string | undefined>;
+    /**
+     * If a CVC was provided, results of the check, one of `pass`, `fail`, `unavailable`, or `unchecked`.
+     */
+    cvcCheck?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodCardGeneratedFrom {
+    /**
+     * The charge that created this object.
+     */
+    charge?: pulumi.Input<string | undefined>;
+    /**
+     * Transaction-specific details of the payment method used in the payment.
+     */
+    paymentMethodDetails?: pulumi.Input<inputs.PaymentMethodCardGeneratedFromPaymentMethodDetails | undefined>;
+    /**
+     * The ID of the SetupAttempt that generated this PaymentMethod, if any.
+     */
+    setupAttempt?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodCardGeneratedFromPaymentMethodDetails {
+    cardPresent?: pulumi.Input<inputs.PaymentMethodCardGeneratedFromPaymentMethodDetailsCardPresent | undefined>;
+    /**
+     * The type of payment method transaction-specific details from the transaction that generated this `card` payment method. Always `cardPresent`.
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodCardGeneratedFromPaymentMethodDetailsCardPresent {
+    /**
+     * The authorized amount
+     */
+    amountAuthorized?: pulumi.Input<number | undefined>;
+    /**
+     * Card brand. Can be `amex`, `cartesBancaires`, `diners`, `discover`, `eftposAu`, `jcb`, `link`, `mastercard`, `unionpay`, `visa` or `unknown`.
+     */
+    brand?: pulumi.Input<string | undefined>;
+    /**
+     * The [product code](https://stripe.com/docs/card-product-codes) that identifies the specific program or product associated with a card.
+     */
+    brandProduct?: pulumi.Input<string | undefined>;
+    /**
+     * When using manual capture, a future timestamp after which the charge will be automatically refunded if uncaptured.
+     */
+    captureBefore?: pulumi.Input<number | undefined>;
+    /**
+     * The cardholder name as read from the card, in [ISO 7813](https://en.wikipedia.org/wiki/ISO/IEC_7813) format. May include alphanumeric characters, special characters and first/last name separator (`/`). In some cases, the cardholder name may not be available depending on how the issuer has configured the card. Cardholder name is typically not available on swipe or contactless payments, such as those made with Apple Pay and Google Pay.
+     */
+    cardholderName?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter ISO code representing the country of the card. You could use this attribute to get a sense of the international breakdown of cards you've collected.
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * A high-level description of the type of cards issued in this range. (For internal use only and not typically available in standard API requests.)
+     */
+    description?: pulumi.Input<string | undefined>;
+    /**
+     * Authorization response cryptogram.
+     */
+    emvAuthData?: pulumi.Input<string | undefined>;
+    /**
+     * Two-digit number representing the card's expiration month.
+     */
+    expMonth?: pulumi.Input<number | undefined>;
+    /**
+     * Four-digit number representing the card's expiration year.
+     */
+    expYear?: pulumi.Input<number | undefined>;
+    /**
+     * Uniquely identifies this particular card number. You can use this attribute to check whether two customers who’ve signed up with you are using the same card number, for example. For payment methods that tokenize card information (Apple Pay, Google Pay), the tokenized number might be provided instead of the underlying card number.
+     */
+    fingerprint?: pulumi.Input<string | undefined>;
+    /**
+     * Card funding type. Can be `credit`, `debit`, `prepaid`, or `unknown`.
+     */
+    funding?: pulumi.Input<string | undefined>;
+    /**
+     * ID of a card PaymentMethod generated from the cardPresent PaymentMethod that may be attached to a Customer for future transactions. Only present if it was possible to generate a card PaymentMethod.
+     */
+    generatedCard?: pulumi.Input<string | undefined>;
+    /**
+     * Issuer identification number of the card. (For internal use only and not typically available in standard API requests.)
+     */
+    iin?: pulumi.Input<string | undefined>;
+    /**
+     * Whether this [PaymentIntent](https://docs.stripe.com/api/payment_intents) is eligible for incremental authorizations. Request support using [requestIncrementalAuthorizationSupport](https://docs.stripe.com/api/payment_intents/create#create_payment_intent-payment_method_options-card_present-request_incremental_authorization_support).
+     */
+    incrementalAuthorizationSupported?: pulumi.Input<boolean | undefined>;
+    /**
+     * The name of the card's issuing bank. (For internal use only and not typically available in standard API requests.)
+     */
+    issuer?: pulumi.Input<string | undefined>;
+    /**
+     * The last four digits of the card.
+     */
+    last4?: pulumi.Input<string | undefined>;
+    /**
+     * ID of the [location](https://docs.stripe.com/api/terminal/locations) that this transaction's reader is assigned to.
+     */
+    location?: pulumi.Input<string | undefined>;
+    /**
+     * Identifies which network this charge was processed on. Can be `amex`, `cartesBancaires`, `diners`, `discover`, `eftposAu`, `interac`, `jcb`, `link`, `mastercard`, `unionpay`, `visa`, or `unknown`.
+     */
+    network?: pulumi.Input<string | undefined>;
+    /**
+     * This is used by the financial networks to identify a transaction. Visa calls this the Transaction ID, Mastercard calls this the Trace ID, and American Express calls this the Acquirer Reference Data. This value will be present if it is returned by the financial network in the authorization response, and null otherwise.
+     */
+    networkTransactionId?: pulumi.Input<string | undefined>;
+    /**
+     * Details about payments collected offline.
+     */
+    offline?: pulumi.Input<inputs.PaymentMethodCardGeneratedFromPaymentMethodDetailsCardPresentOffline | undefined>;
+    /**
+     * Defines whether the authorized amount can be over-captured or not
+     */
+    overcaptureSupported?: pulumi.Input<boolean | undefined>;
+    /**
+     * The languages that the issuing bank recommends using for localizing any customer-facing text, as read from the card. Referenced from EMV tag 5F2D, data encoded on the card's chip.
+     */
+    preferredLocales?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * How card details were read in this transaction.
+     */
+    readMethod?: pulumi.Input<string | undefined>;
+    /**
+     * ID of the [reader](https://docs.stripe.com/api/terminal/readers) this transaction was made on.
+     */
+    reader?: pulumi.Input<string | undefined>;
+    /**
+     * A collection of fields required to be displayed on receipts. Only required for EMV transactions.
+     */
+    receipt?: pulumi.Input<inputs.PaymentMethodCardGeneratedFromPaymentMethodDetailsCardPresentReceipt | undefined>;
+    wallet?: pulumi.Input<inputs.PaymentMethodCardGeneratedFromPaymentMethodDetailsCardPresentWallet | undefined>;
+}
+
+export interface PaymentMethodCardGeneratedFromPaymentMethodDetailsCardPresentOffline {
+    /**
+     * Time at which the payment was collected while offline
+     */
+    storedAt?: pulumi.Input<number | undefined>;
+    /**
+     * The method used to process this payment method offline. Only deferred is allowed.
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodCardGeneratedFromPaymentMethodDetailsCardPresentReceipt {
+    /**
+     * The type of account being debited or credited
+     */
+    accountType?: pulumi.Input<string | undefined>;
+    /**
+     * The Application Cryptogram, a unique value generated by the card to authenticate the transaction with issuers.
+     */
+    applicationCryptogram?: pulumi.Input<string | undefined>;
+    /**
+     * The Application Identifier (AID) on the card used to determine which networks are eligible to process the transaction. Referenced from EMV tag 9F12, data encoded on the card's chip.
+     */
+    applicationPreferredName?: pulumi.Input<string | undefined>;
+    /**
+     * Identifier for this transaction.
+     */
+    authorizationCode?: pulumi.Input<string | undefined>;
+    /**
+     * EMV tag 8A. A code returned by the card issuer.
+     */
+    authorizationResponseCode?: pulumi.Input<string | undefined>;
+    /**
+     * Describes the method used by the cardholder to verify ownership of the card. One of the following: `approval`, `failure`, `none`, `offlinePin`, `offlinePinAndSignature`, `onlinePin`, or `signature`.
+     */
+    cardholderVerificationMethod?: pulumi.Input<string | undefined>;
+    /**
+     * Similar to the application*preferred*name, identifying the applications (AIDs) available on the card. Referenced from EMV tag 84.
+     */
+    dedicatedFileName?: pulumi.Input<string | undefined>;
+    /**
+     * A 5-byte string that records the checks and validations that occur between the card and the terminal. These checks determine how the terminal processes the transaction and what risk tolerance is acceptable. Referenced from EMV Tag 95.
+     */
+    terminalVerificationResults?: pulumi.Input<string | undefined>;
+    /**
+     * An indication of which steps were completed during the card read process. Referenced from EMV Tag 9B.
+     */
+    transactionStatusInformation?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodCardGeneratedFromPaymentMethodDetailsCardPresentWallet {
+    /**
+     * The type of mobile wallet, one of `applePay`, `googlePay`, `samsungPay`, or `unknown`.
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodCardNetworks {
+    /**
+     * All networks available for selection via [payment*method*options.card.network](https://docs.stripe.com/api/payment_intents/confirm#confirm_payment_intent-payment_method_options-card-network).
+     */
+    availables?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * The preferred network for co-branded cards. Can be `cartesBancaires`, `mastercard`, `visa` or `invalidPreference` if requested network is not valid for the card.
+     */
+    preferred?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodCardPresent {
+    /**
+     * Card brand. Can be `amex`, `cartesBancaires`, `diners`, `discover`, `eftposAu`, `jcb`, `link`, `mastercard`, `unionpay`, `visa` or `unknown`.
+     */
+    brand?: pulumi.Input<string | undefined>;
+    /**
+     * The [product code](https://stripe.com/docs/card-product-codes) that identifies the specific program or product associated with a card.
+     */
+    brandProduct?: pulumi.Input<string | undefined>;
+    /**
+     * The cardholder name as read from the card, in [ISO 7813](https://en.wikipedia.org/wiki/ISO/IEC_7813) format. May include alphanumeric characters, special characters and first/last name separator (`/`). In some cases, the cardholder name may not be available depending on how the issuer has configured the card. Cardholder name is typically not available on swipe or contactless payments, such as those made with Apple Pay and Google Pay.
+     */
+    cardholderName?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter ISO code representing the country of the card. You could use this attribute to get a sense of the international breakdown of cards you've collected.
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * A high-level description of the type of cards issued in this range. (For internal use only and not typically available in standard API requests.)
+     */
+    description?: pulumi.Input<string | undefined>;
+    /**
+     * Two-digit number representing the card's expiration month.
+     */
+    expMonth?: pulumi.Input<number | undefined>;
+    /**
+     * Four-digit number representing the card's expiration year.
+     */
+    expYear?: pulumi.Input<number | undefined>;
+    /**
+     * Uniquely identifies this particular card number. You can use this attribute to check whether two customers who’ve signed up with you are using the same card number, for example. For payment methods that tokenize card information (Apple Pay, Google Pay), the tokenized number might be provided instead of the underlying card number.
+     */
+    fingerprint?: pulumi.Input<string | undefined>;
+    /**
+     * Card funding type. Can be `credit`, `debit`, `prepaid`, or `unknown`.
+     */
+    funding?: pulumi.Input<string | undefined>;
+    /**
+     * Issuer identification number of the card. (For internal use only and not typically available in standard API requests.)
+     */
+    iin?: pulumi.Input<string | undefined>;
+    /**
+     * The name of the card's issuing bank. (For internal use only and not typically available in standard API requests.)
+     */
+    issuer?: pulumi.Input<string | undefined>;
+    /**
+     * The last four digits of the card.
+     */
+    last4?: pulumi.Input<string | undefined>;
+    /**
+     * Contains information about card networks that can be used to process the payment.
+     */
+    networks?: pulumi.Input<inputs.PaymentMethodCardPresentNetworks | undefined>;
+    /**
+     * Details about payment methods collected offline.
+     */
+    offline?: pulumi.Input<inputs.PaymentMethodCardPresentOffline | undefined>;
+    /**
+     * The languages that the issuing bank recommends using for localizing any customer-facing text, as read from the card. Referenced from EMV tag 5F2D, data encoded on the card's chip.
+     */
+    preferredLocales?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * How card details were read in this transaction.
+     */
+    readMethod?: pulumi.Input<string | undefined>;
+    wallet?: pulumi.Input<inputs.PaymentMethodCardPresentWallet | undefined>;
+}
+
+export interface PaymentMethodCardPresentNetworks {
+    /**
+     * All networks available for selection via [payment*method*options.card.network](https://docs.stripe.com/api/payment_intents/confirm#confirm_payment_intent-payment_method_options-card-network).
+     */
+    availables?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * The preferred network for the card.
+     */
+    preferred?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodCardPresentOffline {
+    /**
+     * Time at which the payment was collected while offline
+     */
+    storedAt?: pulumi.Input<number | undefined>;
+    /**
+     * The method used to process this payment method offline. Only deferred is allowed.
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodCardPresentWallet {
+    /**
+     * The type of mobile wallet, one of `applePay`, `googlePay`, `samsungPay`, or `unknown`.
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodCardThreeDSecureUsage {
+    /**
+     * Whether 3D Secure is supported on this card.
+     */
+    supported?: pulumi.Input<boolean | undefined>;
+}
+
+export interface PaymentMethodCardWallet {
+    /**
+     * (For tokenized numbers only.) The last four digits of the device account number.
+     */
+    dynamicLast4?: pulumi.Input<string | undefined>;
+    masterpass?: pulumi.Input<inputs.PaymentMethodCardWalletMasterpass | undefined>;
+    /**
+     * The type of the card wallet, one of `amexExpressCheckout`, `applePay`, `googlePay`, `masterpass`, `samsungPay`, `visaCheckout`, or `link`. An additional hash is included on the Wallet subhash with a name matching this value. It contains additional information specific to the card wallet type.
+     */
+    type?: pulumi.Input<string | undefined>;
+    visaCheckout?: pulumi.Input<inputs.PaymentMethodCardWalletVisaCheckout | undefined>;
+}
+
+export interface PaymentMethodCardWalletMasterpass {
+    /**
+     * Owner's verified billing address. Values are verified or provided by the wallet directly (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    billingAddress?: pulumi.Input<inputs.PaymentMethodCardWalletMasterpassBillingAddress | undefined>;
+    /**
+     * Owner's verified email. Values are verified or provided by the wallet directly (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    email?: pulumi.Input<string | undefined>;
+    /**
+     * Owner's verified full name. Values are verified or provided by the wallet directly (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    name?: pulumi.Input<string | undefined>;
+    /**
+     * Owner's verified shipping address. Values are verified or provided by the wallet directly (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    shippingAddress?: pulumi.Input<inputs.PaymentMethodCardWalletMasterpassShippingAddress | undefined>;
+}
+
+export interface PaymentMethodCardWalletMasterpassBillingAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode?: pulumi.Input<string | undefined>;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodCardWalletMasterpassShippingAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode?: pulumi.Input<string | undefined>;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodCardWalletVisaCheckout {
+    /**
+     * Owner's verified billing address. Values are verified or provided by the wallet directly (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    billingAddress?: pulumi.Input<inputs.PaymentMethodCardWalletVisaCheckoutBillingAddress | undefined>;
+    /**
+     * Owner's verified email. Values are verified or provided by the wallet directly (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    email?: pulumi.Input<string | undefined>;
+    /**
+     * Owner's verified full name. Values are verified or provided by the wallet directly (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    name?: pulumi.Input<string | undefined>;
+    /**
+     * Owner's verified shipping address. Values are verified or provided by the wallet directly (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    shippingAddress?: pulumi.Input<inputs.PaymentMethodCardWalletVisaCheckoutShippingAddress | undefined>;
+}
+
+export interface PaymentMethodCardWalletVisaCheckoutBillingAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode?: pulumi.Input<string | undefined>;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodCardWalletVisaCheckoutShippingAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode?: pulumi.Input<string | undefined>;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodCashapp {
+    /**
+     * A unique and immutable identifier assigned by Cash App to every buyer.
+     */
+    buyerId?: pulumi.Input<string | undefined>;
+    /**
+     * A public identifier for buyers using Cash App.
+     */
+    cashtag?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationAcssDebit {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationAcssDebitDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationAcssDebitDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationAffirm {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationAffirmDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationAffirmDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationAfterpayClearpay {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationAfterpayClearpayDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationAfterpayClearpayDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationAlipay {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationAlipayDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationAlipayDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationAlma {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationAlmaDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationAlmaDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationAmazonPay {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationAmazonPayDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationAmazonPayDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationApplePay {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationApplePayDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationApplePayDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationApplePayLater {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether or not the payment method should be displayed.
+     */
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationApplePayLaterDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationApplePayLaterDisplayPreference {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The account's preference for whether or not to display this payment method.
+     */
+    preference?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationAuBecsDebit {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationAuBecsDebitDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationAuBecsDebitDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationBacsDebit {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationBacsDebitDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationBacsDebitDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationBancontact {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationBancontactDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationBancontactDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationBillie {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationBillieDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationBillieDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationBizum {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationBizumDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationBizumDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationBlik {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationBlikDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationBlikDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationBoleto {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationBoletoDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationBoletoDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationCard {
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationCardDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationCardDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationCartesBancaires {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationCartesBancairesDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationCartesBancairesDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationCashapp {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationCashappDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationCashappDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationCrypto {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationCryptoDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationCryptoDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationCustomerBalance {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationCustomerBalanceDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationCustomerBalanceDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationEps {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationEpsDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationEpsDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationFpx {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationFpxDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationFpxDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationGiropay {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationGiropayDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationGiropayDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationGooglePay {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationGooglePayDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationGooglePayDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationGrabpay {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationGrabpayDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationGrabpayDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationIdeal {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationIdealDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationIdealDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationJcb {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationJcbDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationJcbDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationKakaoPay {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationKakaoPayDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationKakaoPayDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationKlarna {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationKlarnaDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationKlarnaDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationKonbini {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationKonbiniDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationKonbiniDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationKrCard {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationKrCardDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationKrCardDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationLink {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationLinkDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationLinkDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationMbWay {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationMbWayDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationMbWayDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationMobilepay {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationMobilepayDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationMobilepayDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationMultibanco {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationMultibancoDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationMultibancoDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationNaverPay {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationNaverPayDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationNaverPayDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationNzBankAccount {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationNzBankAccountDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationNzBankAccountDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationOxxo {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationOxxoDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationOxxoDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationP24 {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationP24DisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationP24DisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationPayByBank {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationPayByBankDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationPayByBankDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationPayco {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationPaycoDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationPaycoDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationPaynow {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationPaynowDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationPaynowDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationPaypal {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationPaypalDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationPaypalDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationPayto {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationPaytoDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationPaytoDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationPix {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationPixDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationPixDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationPromptpay {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationPromptpayDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationPromptpayDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationRevolutPay {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationRevolutPayDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationRevolutPayDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationSamsungPay {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationSamsungPayDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationSamsungPayDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationSatispay {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationSatispayDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationSatispayDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationScalapay {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationScalapayDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationScalapayDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationSepaDebit {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationSepaDebitDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationSepaDebitDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationSofort {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationSofortDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationSofortDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationSunbit {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationSunbitDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationSunbitDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationSwish {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationSwishDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationSwishDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationTwint {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationTwintDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationTwintDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationUpi {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationUpiDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationUpiDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationUsBankAccount {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationUsBankAccountDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationUsBankAccountDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationWechatPay {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationWechatPayDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationWechatPayDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodConfigurationZip {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available?: pulumi.Input<boolean | undefined>;
+    displayPreference?: pulumi.Input<inputs.PaymentMethodConfigurationZipDisplayPreference | undefined>;
+}
+
+export interface PaymentMethodConfigurationZipDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The account's display preference.
+     */
+    preference?: pulumi.Input<string | undefined>;
+    /**
+     * The effective display preference value.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodDomainAmazonPay {
+    /**
+     * The status of the payment method on the domain.
+     */
+    status?: pulumi.Input<string | undefined>;
+    /**
+     * Contains additional details about the status of a payment method for a specific payment method domain.
+     */
+    statusDetails?: pulumi.Input<inputs.PaymentMethodDomainAmazonPayStatusDetails | undefined>;
+}
+
+export interface PaymentMethodDomainAmazonPayStatusDetails {
+    /**
+     * The error message associated with the status of the payment method on the domain.
+     */
+    errorMessage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodDomainApplePay {
+    /**
+     * The status of the payment method on the domain.
+     */
+    status?: pulumi.Input<string | undefined>;
+    /**
+     * Contains additional details about the status of a payment method for a specific payment method domain.
+     */
+    statusDetails?: pulumi.Input<inputs.PaymentMethodDomainApplePayStatusDetails | undefined>;
+}
+
+export interface PaymentMethodDomainApplePayStatusDetails {
+    /**
+     * The error message associated with the status of the payment method on the domain.
+     */
+    errorMessage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodDomainGooglePay {
+    /**
+     * The status of the payment method on the domain.
+     */
+    status?: pulumi.Input<string | undefined>;
+    /**
+     * Contains additional details about the status of a payment method for a specific payment method domain.
+     */
+    statusDetails?: pulumi.Input<inputs.PaymentMethodDomainGooglePayStatusDetails | undefined>;
+}
+
+export interface PaymentMethodDomainGooglePayStatusDetails {
+    /**
+     * The error message associated with the status of the payment method on the domain.
+     */
+    errorMessage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodDomainKlarna {
+    /**
+     * The status of the payment method on the domain.
+     */
+    status?: pulumi.Input<string | undefined>;
+    /**
+     * Contains additional details about the status of a payment method for a specific payment method domain.
+     */
+    statusDetails?: pulumi.Input<inputs.PaymentMethodDomainKlarnaStatusDetails | undefined>;
+}
+
+export interface PaymentMethodDomainKlarnaStatusDetails {
+    /**
+     * The error message associated with the status of the payment method on the domain.
+     */
+    errorMessage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodDomainLink {
+    /**
+     * The status of the payment method on the domain.
+     */
+    status?: pulumi.Input<string | undefined>;
+    /**
+     * Contains additional details about the status of a payment method for a specific payment method domain.
+     */
+    statusDetails?: pulumi.Input<inputs.PaymentMethodDomainLinkStatusDetails | undefined>;
+}
+
+export interface PaymentMethodDomainLinkStatusDetails {
+    /**
+     * The error message associated with the status of the payment method on the domain.
+     */
+    errorMessage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodDomainPaypal {
+    /**
+     * The status of the payment method on the domain.
+     */
+    status?: pulumi.Input<string | undefined>;
+    /**
+     * Contains additional details about the status of a payment method for a specific payment method domain.
+     */
+    statusDetails?: pulumi.Input<inputs.PaymentMethodDomainPaypalStatusDetails | undefined>;
+}
+
+export interface PaymentMethodDomainPaypalStatusDetails {
+    /**
+     * The error message associated with the status of the payment method on the domain.
+     */
+    errorMessage?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodEps {
+    /**
+     * The customer's bank. Should be one of `arzteUndApothekerBank`, `austrianAnadiBankAg`, `bankAustria`, `bankhausCarlSpangler`, `bankhausSchelhammerUndSchatteraAg`, `bawagPskAg`, `bksBankAg`, `brullKallmusBankAg`, `btvVierLanderBank`, `capitalBankGraweGruppeAg`, `deutscheBankAg`, `dolomitenbank`, `easybankAg`, `ersteBankUndSparkassen`, `hypoAlpeadriabankInternationalAg`, `hypoNoeLbFurNiederosterreichUWien`, `hypoOberosterreichSalzburgSteiermark`, `hypoTirolBankAg`, `hypoVorarlbergBankAg`, `hypoBankBurgenlandAktiengesellschaft`, `marchfelderBank`, `oberbankAg`, `raiffeisenBankengruppeOsterreich`, `schoellerbankAg`, `spardaBankWien`, `volksbankGruppe`, `volkskreditbankAg`, or `vrBankBraunau`.
+     */
+    bank?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodFpx {
+    /**
+     * Account holder type, if provided. Can be one of `individual` or `company`.
+     */
+    accountHolderType?: pulumi.Input<string | undefined>;
+    /**
+     * The customer's bank, if provided. Can be one of `affinBank`, `agrobank`, `allianceBank`, `ambank`, `bankIslam`, `bankMuamalat`, `bankRakyat`, `bsn`, `cimb`, `hongLeongBank`, `hsbc`, `kfh`, `maybank2u`, `ocbc`, `publicBank`, `rhb`, `standardChartered`, `uob`, `deutscheBank`, `maybank2e`, `pbEnterprise`, or `bankOfChina`.
+     */
+    bank: pulumi.Input<string>;
+}
+
+export interface PaymentMethodIdeal {
+    /**
+     * The customer's bank, if provided. Can be one of `abnAmro`, `adyen`, `asnBank`, `bunq`, `buut`, `finom`, `handelsbanken`, `ing`, `knab`, `mollie`, `moneyou`, `n26`, `nn`, `rabobank`, `regiobank`, `revolut`, `snsBank`, `triodosBank`, `vanLanschot`, or `yoursafe`.
+     */
+    bank?: pulumi.Input<string | undefined>;
+    /**
+     * The Bank Identifier Code of the customer's bank, if the bank was provided.
+     */
+    bic?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodInteracPresent {
+    /**
+     * Card brand. Can be `interac`, `mastercard` or `visa`.
+     */
+    brand?: pulumi.Input<string | undefined>;
+    /**
+     * The cardholder name as read from the card, in [ISO 7813](https://en.wikipedia.org/wiki/ISO/IEC_7813) format. May include alphanumeric characters, special characters and first/last name separator (`/`). In some cases, the cardholder name may not be available depending on how the issuer has configured the card. Cardholder name is typically not available on swipe or contactless payments, such as those made with Apple Pay and Google Pay.
+     */
+    cardholderName?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter ISO code representing the country of the card. You could use this attribute to get a sense of the international breakdown of cards you've collected.
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * A high-level description of the type of cards issued in this range. (For internal use only and not typically available in standard API requests.)
+     */
+    description?: pulumi.Input<string | undefined>;
+    /**
+     * Two-digit number representing the card's expiration month.
+     */
+    expMonth?: pulumi.Input<number | undefined>;
+    /**
+     * Four-digit number representing the card's expiration year.
+     */
+    expYear?: pulumi.Input<number | undefined>;
+    /**
+     * Uniquely identifies this particular card number. You can use this attribute to check whether two customers who’ve signed up with you are using the same card number, for example. For payment methods that tokenize card information (Apple Pay, Google Pay), the tokenized number might be provided instead of the underlying card number.
+     */
+    fingerprint?: pulumi.Input<string | undefined>;
+    /**
+     * Card funding type. Can be `credit`, `debit`, `prepaid`, or `unknown`.
+     */
+    funding?: pulumi.Input<string | undefined>;
+    /**
+     * Issuer identification number of the card. (For internal use only and not typically available in standard API requests.)
+     */
+    iin?: pulumi.Input<string | undefined>;
+    /**
+     * The name of the card's issuing bank. (For internal use only and not typically available in standard API requests.)
+     */
+    issuer?: pulumi.Input<string | undefined>;
+    /**
+     * The last four digits of the card.
+     */
+    last4?: pulumi.Input<string | undefined>;
+    /**
+     * Contains information about card networks that can be used to process the payment.
+     */
+    networks?: pulumi.Input<inputs.PaymentMethodInteracPresentNetworks | undefined>;
+    /**
+     * The languages that the issuing bank recommends using for localizing any customer-facing text, as read from the card. Referenced from EMV tag 5F2D, data encoded on the card's chip.
+     */
+    preferredLocales?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * How card details were read in this transaction.
+     */
+    readMethod?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodInteracPresentNetworks {
+    /**
+     * All networks available for selection via [payment*method*options.card.network](https://docs.stripe.com/api/payment_intents/confirm#confirm_payment_intent-payment_method_options-card-network).
+     */
+    availables?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * The preferred network for the card.
+     */
+    preferred?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodKlarna {
+    /**
+     * The customer's date of birth, if provided.
+     */
+    dob?: pulumi.Input<inputs.PaymentMethodKlarnaDob | undefined>;
+}
+
+export interface PaymentMethodKlarnaDob {
+    /**
+     * The day of birth, between 1 and 31.
+     */
+    day: pulumi.Input<number>;
+    /**
+     * The month of birth, between 1 and 12.
+     */
+    month: pulumi.Input<number>;
+    /**
+     * The four-digit year of birth.
+     */
+    year: pulumi.Input<number>;
+}
+
+export interface PaymentMethodKrCard {
+    /**
+     * The local credit or debit card brand.
+     */
+    brand?: pulumi.Input<string | undefined>;
+    /**
+     * The last four digits of the card. This may not be present for American Express cards.
+     */
+    last4?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodLink {
+    /**
+     * Account owner's email address.
+     */
+    email?: pulumi.Input<string | undefined>;
+    /**
+     * [Deprecated] This is a legacy parameter that no longer has any function.
+     */
+    persistentToken?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodNaverPay {
+    /**
+     * Uniquely identifies this particular Naver Pay account. You can use this attribute to check whether two Naver Pay accounts are the same.
+     */
+    buyerId?: pulumi.Input<string | undefined>;
+    /**
+     * Whether to fund this transaction with Naver Pay points or a card.
+     */
+    funding?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodNzBankAccount {
+    /**
+     * The name on the bank account. Only present if the account holder name is different from the name of the authorized signatory collected in the PaymentMethod’s billing details.
+     */
+    accountHolderName?: pulumi.Input<string | undefined>;
+    /**
+     * The account number for the bank account.
+     */
+    accountNumber: pulumi.Input<string>;
+    /**
+     * The numeric code for the bank account's bank.
+     */
+    bankCode: pulumi.Input<string>;
+    /**
+     * The name of the bank.
+     */
+    bankName?: pulumi.Input<string | undefined>;
+    /**
+     * The numeric code for the bank account's bank branch.
+     */
+    branchCode: pulumi.Input<string>;
+    /**
+     * Last four digits of the bank account number.
+     */
+    last4?: pulumi.Input<string | undefined>;
+    reference?: pulumi.Input<string | undefined>;
+    /**
+     * The suffix of the bank account number.
+     */
+    suffix: pulumi.Input<string>;
+}
+
+export interface PaymentMethodP24 {
+    /**
+     * The customer's bank, if provided.
+     */
+    bank?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodPaypal {
+    /**
+     * Two-letter ISO code representing the buyer's country. Values are provided by PayPal directly (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Owner's email. Values are provided by PayPal directly
+     * (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    payerEmail?: pulumi.Input<string | undefined>;
+    /**
+     * PayPal account PayerID. This identifier uniquely identifies the PayPal customer.
+     */
+    payerId?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodPayto {
+    /**
+     * The account number for the bank account.
+     */
+    accountNumber?: pulumi.Input<string | undefined>;
+    /**
+     * Bank-State-Branch number of the bank account.
+     */
+    bsbNumber?: pulumi.Input<string | undefined>;
+    /**
+     * Last four digits of the bank account number.
+     */
+    last4?: pulumi.Input<string | undefined>;
+    /**
+     * The PayID alias for the bank account.
+     */
+    payId?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodRadarOptions {
+    /**
+     * A [Radar Session](https://docs.stripe.com/radar/radar-session) is a snapshot of the browser metadata and device details that help Radar make more accurate predictions on your payments.
+     */
+    session?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodSepaDebit {
+    /**
+     * Bank code of bank associated with the bank account.
+     */
+    bankCode?: pulumi.Input<string | undefined>;
+    /**
+     * Branch code of bank associated with the bank account.
+     */
+    branchCode?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter ISO code representing the country the bank account is located in.
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Uniquely identifies this particular bank account. You can use this attribute to check whether two bank accounts are the same.
+     */
+    fingerprint?: pulumi.Input<string | undefined>;
+    /**
+     * Information about the object that generated this PaymentMethod.
+     */
+    generatedFrom?: pulumi.Input<inputs.PaymentMethodSepaDebitGeneratedFrom | undefined>;
+    /**
+     * IBAN of the bank account.
+     */
+    iban: pulumi.Input<string>;
+    /**
+     * Last four characters of the IBAN.
+     */
+    last4?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodSepaDebitGeneratedFrom {
+    /**
+     * The ID of the Charge that generated this PaymentMethod, if any.
+     */
+    charge?: pulumi.Input<string | undefined>;
+    /**
+     * The ID of the SetupAttempt that generated this PaymentMethod, if any.
+     */
+    setupAttempt?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodSofort {
+    /**
+     * Two-letter ISO code representing the country the bank account is located in.
+     */
+    country: pulumi.Input<string>;
+}
+
+export interface PaymentMethodUpi {
+    /**
+     * Configuration options for setting up an eMandate
+     */
+    mandateOptions?: pulumi.Input<inputs.PaymentMethodUpiMandateOptions | undefined>;
+    /**
+     * Customer's unique Virtual Payment Address
+     */
+    vpa?: pulumi.Input<string | undefined>;
+}
+
+export interface PaymentMethodUpiMandateOptions {
+    /**
+     * Amount to be charged for future payments.
+     */
+    amount?: pulumi.Input<number | undefined>;
+    /**
+     * One of `fixed` or `maximum`. If `fixed`, the `amount` param refers to the exact amount to be charged in future payments. If `maximum`, the amount charged can be up to the value passed for the `amount` param.
+     */
+    amountType?: pulumi.Input<string | undefined>;
+    /**
+     * A description of the mandate or subscription that is meant to be displayed to the customer.
+     */
+    description?: pulumi.Input<string | undefined>;
+    /**
+     * End date of the mandate or subscription.
+     */
+    endDate?: pulumi.Input<number | undefined>;
+}
+
+export interface PaymentMethodUsBankAccount {
+    /**
+     * Account holder type: individual or company.
+     */
+    accountHolderType?: pulumi.Input<string | undefined>;
+    /**
+     * Account number of the bank account.
+     */
+    accountNumber?: pulumi.Input<string | undefined>;
+    /**
+     * Account type: checkings or savings. Defaults to checking if omitted.
+     */
+    accountType?: pulumi.Input<string | undefined>;
+    /**
+     * The name of the bank.
+     */
+    bankName?: pulumi.Input<string | undefined>;
+    /**
+     * The ID of the Financial Connections Account used to create the payment method.
+     */
+    financialConnectionsAccount?: pulumi.Input<string | undefined>;
+    /**
+     * Uniquely identifies this particular bank account. You can use this attribute to check whether two bank accounts are the same.
+     */
+    fingerprint?: pulumi.Input<string | undefined>;
+    /**
+     * Last four digits of the bank account number.
+     */
+    last4?: pulumi.Input<string | undefined>;
+    /**
+     * Contains information about US bank account networks that can be used.
+     */
+    networks?: pulumi.Input<inputs.PaymentMethodUsBankAccountNetworks | undefined>;
+    /**
+     * Routing number of the bank account.
+     */
+    routingNumber?: pulumi.Input<string | undefined>;
+    /**
+     * Contains information about the future reusability of this PaymentMethod.
+     */
+    statusDetails?: pulumi.Input<inputs.PaymentMethodUsBankAccountStatusDetails | undefined>;
+}
+
+export interface PaymentMethodUsBankAccountNetworks {
+    /**
+     * The preferred network.
+     */
+    preferred?: pulumi.Input<string | undefined>;
+    /**
+     * All supported networks.
+     */
+    supporteds?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+}
+
+export interface PaymentMethodUsBankAccountStatusDetails {
+    blocked?: pulumi.Input<inputs.PaymentMethodUsBankAccountStatusDetailsBlocked | undefined>;
+}
+
+export interface PaymentMethodUsBankAccountStatusDetailsBlocked {
+    /**
+     * The ACH network code that resulted in this block.
+     */
+    networkCode?: pulumi.Input<string | undefined>;
+    /**
+     * The reason why this PaymentMethod's fingerprint has been blocked
+     */
+    reason?: pulumi.Input<string | undefined>;
+}
+
+export interface PersonAdditionalTosAcceptances {
+    /**
+     * Details on the legal guardian's acceptance of the main Stripe service agreement.
+     */
+    account?: pulumi.Input<inputs.PersonAdditionalTosAcceptancesAccount | undefined>;
+}
+
+export interface PersonAdditionalTosAcceptancesAccount {
+    /**
+     * The Unix timestamp marking when the legal guardian accepted the service agreement.
+     */
+    date?: pulumi.Input<number | undefined>;
+    /**
+     * The IP address from which the legal guardian accepted the service agreement.
+     */
+    ip?: pulumi.Input<string | undefined>;
+    /**
+     * The user agent of the browser from which the legal guardian accepted the service agreement.
+     */
+    userAgent?: pulumi.Input<string | undefined>;
+}
+
+export interface PersonAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode?: pulumi.Input<string | undefined>;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: pulumi.Input<string | undefined>;
+}
+
+export interface PersonAddressKana {
+    /**
+     * City/Ward.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Block/Building number.
+     */
+    line1?: pulumi.Input<string | undefined>;
+    /**
+     * Building details.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode?: pulumi.Input<string | undefined>;
+    /**
+     * Prefecture.
+     */
+    state?: pulumi.Input<string | undefined>;
+    /**
+     * Town/cho-me.
+     */
+    town?: pulumi.Input<string | undefined>;
+}
+
+export interface PersonAddressKanji {
+    /**
+     * City/Ward.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Block/Building number.
+     */
+    line1?: pulumi.Input<string | undefined>;
+    /**
+     * Building details.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode?: pulumi.Input<string | undefined>;
+    /**
+     * Prefecture.
+     */
+    state?: pulumi.Input<string | undefined>;
+    /**
+     * Town/cho-me.
+     */
+    town?: pulumi.Input<string | undefined>;
+}
+
+export interface PersonDob {
+    /**
+     * The day of birth, between 1 and 31.
+     */
+    day: pulumi.Input<number>;
+    /**
+     * The month of birth, between 1 and 12.
+     */
+    month: pulumi.Input<number>;
+    /**
+     * The four-digit year of birth.
+     */
+    year: pulumi.Input<number>;
+}
+
+export interface PersonDocuments {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * One or more documents that demonstrate proof that this person is authorized to represent the company.
+     */
+    companyAuthorization?: pulumi.Input<inputs.PersonDocumentsCompanyAuthorization | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * One or more documents showing the person's passport page with photo and personal data.
+     */
+    passport?: pulumi.Input<inputs.PersonDocumentsPassport | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * One or more documents showing the person's visa required for living in the country where they are residing.
+     */
+    visa?: pulumi.Input<inputs.PersonDocumentsVisa | undefined>;
+}
+
+export interface PersonDocumentsCompanyAuthorization {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * One or more document ids returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `accountRequirement`.
+     */
+    files?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+}
+
+export interface PersonDocumentsPassport {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * One or more document ids returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `accountRequirement`.
+     */
+    files?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+}
+
+export interface PersonDocumentsVisa {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * One or more document ids returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `accountRequirement`.
+     */
+    files?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+}
+
+export interface PersonFutureRequirements {
+    /**
+     * Fields that are due and can be resolved by providing the corresponding alternative fields instead. Many alternatives can list the same `originalFieldsDue`, and any of these alternatives can serve as a pathway for attempting to resolve the fields again. Re-providing `originalFieldsDue` also serves as a pathway for attempting to resolve the fields again.
+     */
+    alternatives?: pulumi.Input<pulumi.Input<inputs.PersonFutureRequirementsAlternative>[] | undefined>;
+    /**
+     * Fields that need to be resolved to keep the person's account enabled. If not resolved by the account's `future_requirements[currentDeadline]`, these fields will transition to the main `requirements` hash, and may immediately become `pastDue`, but the account may also be given a grace period depending on the account's enablement state prior to transition.
+     */
+    currentlyDues?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * Details about validation and verification failures for `due` requirements that must be resolved.
+     */
+    errors?: pulumi.Input<pulumi.Input<inputs.PersonFutureRequirementsError>[] | undefined>;
+    /**
+     * Fields you must collect when all thresholds are reached. As they become required, they appear in `currentlyDue` as well, and the account's `future_requirements[currentDeadline]` becomes set.
+     */
+    eventuallyDues?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * Fields that haven't been resolved by the account's `requirements.current_deadline`. These fields need to be resolved to enable the person's account. `future_requirements.past_due` is a subset of `requirements.past_due`.
+     */
+    pastDues?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * Fields that are being reviewed, or might become required depending on the results of a review. If the review fails, these fields can move to `eventuallyDue`, `currentlyDue`, `pastDue` or `alternatives`. Fields might appear in `eventuallyDue`, `currentlyDue`, `pastDue` or `alternatives` and in `pendingVerification` if one verification fails but another is still pending.
+     */
+    pendingVerifications?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+}
+
+export interface PersonFutureRequirementsAlternative {
+    /**
+     * Fields that can be provided to resolve all fields in `originalFieldsDue`.
+     */
+    alternativeFieldsDues?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * Fields that are due and can be resolved by providing all fields in `alternativeFieldsDue`.
+     */
+    originalFieldsDues?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+}
+
+export interface PersonFutureRequirementsError {
+    /**
+     * The code for the type of error.
+     */
+    code?: pulumi.Input<string | undefined>;
+    /**
+     * An informative message that indicates the error type and provides additional details about the error.
+     */
+    reason?: pulumi.Input<string | undefined>;
+    /**
+     * The specific user onboarding requirement field (in the requirements hash) that needs to be resolved.
+     */
+    requirement?: pulumi.Input<string | undefined>;
+}
+
+export interface PersonRegisteredAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode?: pulumi.Input<string | undefined>;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: pulumi.Input<string | undefined>;
+}
+
+export interface PersonRelationship {
+    /**
+     * Whether the person is the authorizer of the account's representative.
+     */
+    authorizer?: pulumi.Input<boolean | undefined>;
+    /**
+     * Whether the person is a director of the account's legal entity. Directors are typically members of the governing board of the company, or responsible for ensuring the company meets its regulatory obligations.
+     */
+    director?: pulumi.Input<boolean | undefined>;
+    /**
+     * Whether the person has significant responsibility to control, manage, or direct the organization.
+     */
+    executive?: pulumi.Input<boolean | undefined>;
+    /**
+     * Whether the person is the legal guardian of the account's representative.
+     */
+    legalGuardian?: pulumi.Input<boolean | undefined>;
+    /**
+     * Whether the person is an owner of the account’s legal entity.
+     */
+    owner?: pulumi.Input<boolean | undefined>;
+    /**
+     * The percent owned by the person of the account's legal entity.
+     */
+    percentOwnership?: pulumi.Input<number | undefined>;
+    /**
+     * Whether the person is authorized as the primary representative of the account. This is the person nominated by the business to provide information about themselves, and general information about the account. There can only be one representative at any given time. At the time the account is created, this person should be set to the person responsible for opening the account.
+     */
+    representative?: pulumi.Input<boolean | undefined>;
+    /**
+     * The person's title (e.g., CEO, Support Engineer).
+     */
+    title?: pulumi.Input<string | undefined>;
+}
+
+export interface PersonRequirements {
+    /**
+     * Fields that are due and can be resolved by providing the corresponding alternative fields instead. Many alternatives can list the same `originalFieldsDue`, and any of these alternatives can serve as a pathway for attempting to resolve the fields again. Re-providing `originalFieldsDue` also serves as a pathway for attempting to resolve the fields again.
+     */
+    alternatives?: pulumi.Input<pulumi.Input<inputs.PersonRequirementsAlternative>[] | undefined>;
+    /**
+     * Fields that need to be resolved to keep the person's account enabled. If not resolved by the account's `currentDeadline`, these fields will appear in `pastDue` as well, and the account is disabled.
+     */
+    currentlyDues?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * Details about validation and verification failures for `due` requirements that must be resolved.
+     */
+    errors?: pulumi.Input<pulumi.Input<inputs.PersonRequirementsError>[] | undefined>;
+    /**
+     * Fields you must collect when all thresholds are reached. As they become required, they appear in `currentlyDue` as well, and the account's `currentDeadline` becomes set.
+     */
+    eventuallyDues?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * Fields that haven't been resolved by `currentDeadline`. These fields need to be resolved to enable the person's account.
+     */
+    pastDues?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * Fields that are being reviewed, or might become required depending on the results of a review. If the review fails, these fields can move to `eventuallyDue`, `currentlyDue`, `pastDue` or `alternatives`. Fields might appear in `eventuallyDue`, `currentlyDue`, `pastDue` or `alternatives` and in `pendingVerification` if one verification fails but another is still pending.
+     */
+    pendingVerifications?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+}
+
+export interface PersonRequirementsAlternative {
+    /**
+     * Fields that can be provided to resolve all fields in `originalFieldsDue`.
+     */
+    alternativeFieldsDues?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * Fields that are due and can be resolved by providing all fields in `alternativeFieldsDue`.
+     */
+    originalFieldsDues?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+}
+
+export interface PersonRequirementsError {
+    /**
+     * The code for the type of error.
+     */
+    code?: pulumi.Input<string | undefined>;
+    /**
+     * An informative message that indicates the error type and provides additional details about the error.
+     */
+    reason?: pulumi.Input<string | undefined>;
+    /**
+     * The specific user onboarding requirement field (in the requirements hash) that needs to be resolved.
+     */
+    requirement?: pulumi.Input<string | undefined>;
+}
+
+export interface PersonUsCfpbData {
+    /**
+     * The persons ethnicity details
+     */
+    ethnicityDetails?: pulumi.Input<inputs.PersonUsCfpbDataEthnicityDetails | undefined>;
+    /**
+     * The persons race details
+     */
+    raceDetails?: pulumi.Input<inputs.PersonUsCfpbDataRaceDetails | undefined>;
+    /**
+     * The persons self-identified gender
+     */
+    selfIdentifiedGender?: pulumi.Input<string | undefined>;
+}
+
+export interface PersonUsCfpbDataEthnicityDetails {
+    /**
+     * The persons ethnicity
+     */
+    ethnicities?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * Please specify your origin, when other is selected.
+     */
+    ethnicityOther?: pulumi.Input<string | undefined>;
+}
+
+export interface PersonUsCfpbDataRaceDetails {
+    /**
+     * Please specify your race, when other is selected.
+     */
+    raceOther?: pulumi.Input<string | undefined>;
+    /**
+     * The persons race.
+     */
+    races?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+}
+
+export interface PersonVerification {
+    /**
+     * A document showing address, either a passport, local ID card, or utility bill from a well-known utility company.
+     */
+    additionalDocument?: pulumi.Input<inputs.PersonVerificationAdditionalDocument | undefined>;
+    /**
+     * A user-displayable string describing the verification state for the person. For example, this may say "Provided identity information could not be verified".
+     */
+    details?: pulumi.Input<string | undefined>;
+    /**
+     * One of `documentAddressMismatch`, `documentDobMismatch`, `documentDuplicateType`, `documentIdNumberMismatch`, `documentNameMismatch`, `documentNationalityMismatch`, `failedKeyedIdentity`, or `failedOther`. A machine-readable code specifying the verification state for the person.
+     */
+    detailsCode?: pulumi.Input<string | undefined>;
+    document?: pulumi.Input<inputs.PersonVerificationDocument | undefined>;
+    /**
+     * The state of verification for the person. Possible values are `unverified`, `pending`, or `verified`. Please refer [guide](https://docs.stripe.com/connect/handling-api-verification) to handle verification updates.
+     */
+    status?: pulumi.Input<string | undefined>;
+}
+
+export interface PersonVerificationAdditionalDocument {
+    /**
+     * The back of an ID returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `identityDocument`.
+     */
+    back?: pulumi.Input<string | undefined>;
+    /**
+     * A user-displayable string describing the verification state of this document. For example, if a document is uploaded and the picture is too fuzzy, this may say "Identity document is too unclear to read".
+     */
+    details?: pulumi.Input<string | undefined>;
+    /**
+     * One of `documentCorrupt`, `documentCountryNotSupported`, `documentExpired`, `documentFailedCopy`, `documentFailedOther`, `documentFailedTestMode`, `documentFraudulent`, `documentFailedGreyscale`, `documentIncomplete`, `documentInvalid`, `documentManipulated`, `documentMissingBack`, `documentMissingFront`, `documentNotReadable`, `documentNotUploaded`, `documentPhotoMismatch`, `documentTooLarge`, or `documentTypeNotSupported`. A machine-readable code specifying the verification state for this document.
+     */
+    detailsCode?: pulumi.Input<string | undefined>;
+    /**
+     * The front of an ID returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `identityDocument`.
+     */
+    front?: pulumi.Input<string | undefined>;
+}
+
+export interface PersonVerificationDocument {
+    /**
+     * The back of an ID returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `identityDocument`.
+     */
+    back?: pulumi.Input<string | undefined>;
+    /**
+     * A user-displayable string describing the verification state of this document. For example, if a document is uploaded and the picture is too fuzzy, this may say "Identity document is too unclear to read".
+     */
+    details?: pulumi.Input<string | undefined>;
+    /**
+     * One of `documentCorrupt`, `documentCountryNotSupported`, `documentExpired`, `documentFailedCopy`, `documentFailedOther`, `documentFailedTestMode`, `documentFraudulent`, `documentFailedGreyscale`, `documentIncomplete`, `documentInvalid`, `documentManipulated`, `documentMissingBack`, `documentMissingFront`, `documentNotReadable`, `documentNotUploaded`, `documentPhotoMismatch`, `documentTooLarge`, or `documentTypeNotSupported`. A machine-readable code specifying the verification state for this document.
+     */
+    detailsCode?: pulumi.Input<string | undefined>;
+    /**
+     * The front of an ID returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `identityDocument`.
+     */
+    front?: pulumi.Input<string | undefined>;
+}
+
+export interface PlanTier {
+    /**
+     * Price for the entire tier.
+     */
+    flatAmount?: pulumi.Input<number | undefined>;
+    /**
+     * Same as `flatAmount`, but contains a decimal value with at most 12 decimal places.
+     */
+    flatAmountDecimal?: pulumi.Input<number | undefined>;
+    /**
+     * Per unit price for units relevant to the tier.
+     */
+    unitAmount?: pulumi.Input<number | undefined>;
+    /**
+     * Same as `unitAmount`, but contains a decimal value with at most 12 decimal places.
+     */
+    unitAmountDecimal?: pulumi.Input<number | undefined>;
+    /**
+     * Up to and including to this quantity will be contained in the tier.
+     */
+    upTo: pulumi.Input<number>;
+}
+
+export interface PlanTransformUsage {
+    /**
+     * Divide usage by this number.
+     */
+    divideBy: pulumi.Input<number>;
+    /**
+     * After division, either round the result `up` or `down`.
+     */
+    round: pulumi.Input<string>;
+}
+
 export interface PriceCurrencyOption {
     /**
      * When set, provides configuration for the amount to be adjusted by the customer during Checkout Sessions and Payment Links.
      */
     customUnitAmount?: pulumi.Input<inputs.PriceCurrencyOptionCustomUnitAmount | undefined>;
+    /**
+     * Key for this entry.
+     */
     key: pulumi.Input<string>;
     /**
-     * Only required if a [default tax behavior](<https://stripe.com/docs/tax/products-prices-tax-categories-tax-behavior#setting-a-default-tax-behavior-(recommended)>) was not provided in the Stripe Tax settings. Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
+     * Only required if a [default tax behavior](<https://docs.stripe.com/tax/products-prices-tax-categories-tax-behavior#setting-a-default-tax-behavior-(recommended)>) was not provided in the Stripe Tax settings. Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
      */
     taxBehavior?: pulumi.Input<string | undefined>;
     /**
      * Each element represents a pricing tier. This parameter requires `billingScheme` to be set to `tiered`. See also the documentation for `billingScheme`.
      */
-    tiers?: pulumi.Input<pulumi.Input<any[]>[] | undefined>;
+    tiers?: pulumi.Input<pulumi.Input<inputs.PriceCurrencyOptionTier>[] | undefined>;
     /**
-     * A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge.
+     * The unit amount in cents (or local equivalent) to be charged, represented as a whole integer if possible. Only set if `billing_scheme=per_unit`.
      */
     unitAmount?: pulumi.Input<number | undefined>;
     /**
-     * Same as `unitAmount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unitAmount` and `unitAmountDecimal` can be set.
+     * The unit amount in cents (or local equivalent) to be charged, represented as a decimal string with at most 12 decimal places. Only set if `billing_scheme=per_unit`.
      */
     unitAmountDecimal?: pulumi.Input<string | undefined>;
 }
@@ -257,7 +10662,34 @@ export interface PriceCurrencyOptionCustomUnitAmount {
     preset?: pulumi.Input<number | undefined>;
 }
 
+export interface PriceCurrencyOptionTier {
+    /**
+     * Price for the entire tier.
+     */
+    flatAmount?: pulumi.Input<number | undefined>;
+    /**
+     * Same as `flatAmount`, but contains a decimal value with at most 12 decimal places.
+     */
+    flatAmountDecimal?: pulumi.Input<string | undefined>;
+    /**
+     * Per unit price for units relevant to the tier.
+     */
+    unitAmount?: pulumi.Input<number | undefined>;
+    /**
+     * Same as `unitAmount`, but contains a decimal value with at most 12 decimal places.
+     */
+    unitAmountDecimal?: pulumi.Input<string | undefined>;
+    /**
+     * Up to and including to this quantity will be contained in the tier.
+     */
+    upTo: pulumi.Input<string>;
+}
+
 export interface PriceCustomUnitAmount {
+    /**
+     * Pass in `true` to enable `customUnitAmount`, otherwise omit `customUnitAmount`.
+     */
+    enabled: pulumi.Input<boolean>;
     /**
      * The maximum unit amount the customer can specify for this item.
      */
@@ -282,7 +10714,7 @@ export interface PriceProductData {
      */
     id?: pulumi.Input<string | undefined>;
     /**
-     * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
      */
     metadata?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
     /**
@@ -290,11 +10722,11 @@ export interface PriceProductData {
      */
     name: pulumi.Input<string>;
     /**
-     * An arbitrary string to be displayed on your customer's credit card or bank statement. While most banks display this information consistently, some may display it incorrectly or not at all. This may be up to 22 characters. The statement description may not include `<`, `>`, `\`, `\"`, `'` characters, and will appear on your customer's statement in capital letters. Non-ASCII characters are automatically stripped.
+     * An arbitrary string to be displayed on your customer's credit card or bank statement. While most banks display this information consistently, some may display it incorrectly or not at all.
      */
     statementDescriptor?: pulumi.Input<string | undefined>;
     /**
-     * A [tax code](https://stripe.com/docs/tax/tax-categories) ID.
+     * A [tax code](https://docs.stripe.com/tax/tax-categories) ID.
      */
     taxCode?: pulumi.Input<string | undefined>;
     /**
@@ -305,11 +10737,11 @@ export interface PriceProductData {
 
 export interface PriceRecurring {
     /**
-     * Specifies billing frequency. Either `day`, `week`, `month` or `year`.
+     * The frequency at which a subscription is billed. One of `day`, `week`, `month` or `year`.
      */
     interval: pulumi.Input<string>;
     /**
-     * The number of intervals between subscription billings. For example, `interval=month` and `interval_count=3` bills every 3 months. Maximum of three years interval allowed (3 years, 36 months, or 156 weeks).
+     * The number of intervals (specified in the `interval` attribute) between subscription billings. For example, `interval=month` and `interval_count=3` bills every 3 months.
      */
     intervalCount?: pulumi.Input<number | undefined>;
     /**
@@ -317,7 +10749,7 @@ export interface PriceRecurring {
      */
     meter?: pulumi.Input<string | undefined>;
     /**
-     * Default number of trial days when subscribing a customer to this price using [`trial_from_plan=true`](https://stripe.com/docs/api#create_subscription-trial_from_plan).
+     * Default number of trial days when subscribing a customer to this price using [`trial_from_plan=true`](https://docs.stripe.com/api#create_subscription-trial_from_plan).
      */
     trialPeriodDays?: pulumi.Input<number | undefined>;
     /**
@@ -328,22 +10760,36 @@ export interface PriceRecurring {
 
 export interface PriceTier {
     /**
-     * The flat billing amount for an entire tier, regardless of the number of units in the tier.
+     * Price for the entire tier.
      */
     flatAmount?: pulumi.Input<number | undefined>;
     /**
-     * Same as `flatAmount`, but accepts a decimal value representing an integer in the minor units of the currency. Only one of `flatAmount` and `flatAmountDecimal` can be set.
+     * Same as `flatAmount`, but contains a decimal value with at most 12 decimal places.
      */
     flatAmountDecimal?: pulumi.Input<string | undefined>;
     /**
-     * The per unit billing amount for each individual unit for which this tier applies.
+     * Per unit price for units relevant to the tier.
      */
     unitAmount?: pulumi.Input<number | undefined>;
     /**
-     * Same as `unitAmount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unitAmount` and `unitAmountDecimal` can be set.
+     * Same as `unitAmount`, but contains a decimal value with at most 12 decimal places.
      */
     unitAmountDecimal?: pulumi.Input<string | undefined>;
+    /**
+     * Up to and including to this quantity will be contained in the tier.
+     */
     upTo: pulumi.Input<string>;
+}
+
+export interface PriceTransformQuantity {
+    /**
+     * Divide usage by this number.
+     */
+    divideBy: pulumi.Input<number>;
+    /**
+     * After division, either round the result `up` or `down`.
+     */
+    round: pulumi.Input<string>;
 }
 
 export interface ProductDefaultPriceData {
@@ -360,7 +10806,7 @@ export interface ProductDefaultPriceData {
      */
     customUnitAmount?: pulumi.Input<inputs.ProductDefaultPriceDataCustomUnitAmount | undefined>;
     /**
-     * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
      */
     metadata?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
     /**
@@ -368,7 +10814,7 @@ export interface ProductDefaultPriceData {
      */
     recurring?: pulumi.Input<inputs.ProductDefaultPriceDataRecurring | undefined>;
     /**
-     * Only required if a [default tax behavior](<https://stripe.com/docs/tax/products-prices-tax-categories-tax-behavior#setting-a-default-tax-behavior-(recommended)>) was not provided in the Stripe Tax settings. Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
+     * Only required if a [default tax behavior](<https://docs.stripe.com/tax/products-prices-tax-categories-tax-behavior#setting-a-default-tax-behavior-(recommended)>) was not provided in the Stripe Tax settings. Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
      */
     taxBehavior?: pulumi.Input<string | undefined>;
     /**
@@ -386,15 +10832,18 @@ export interface ProductDefaultPriceDataCurrencyOption {
      * When set, provides configuration for the amount to be adjusted by the customer during Checkout Sessions and Payment Links.
      */
     customUnitAmount?: pulumi.Input<inputs.ProductDefaultPriceDataCurrencyOptionCustomUnitAmount | undefined>;
+    /**
+     * Key for this entry.
+     */
     key: pulumi.Input<string>;
     /**
-     * Only required if a [default tax behavior](<https://stripe.com/docs/tax/products-prices-tax-categories-tax-behavior#setting-a-default-tax-behavior-(recommended)>) was not provided in the Stripe Tax settings. Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
+     * Only required if a [default tax behavior](<https://docs.stripe.com/tax/products-prices-tax-categories-tax-behavior#setting-a-default-tax-behavior-(recommended)>) was not provided in the Stripe Tax settings. Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
      */
     taxBehavior?: pulumi.Input<string | undefined>;
     /**
      * Each element represents a pricing tier. This parameter requires `billingScheme` to be set to `tiered`. See also the documentation for `billingScheme`.
      */
-    tiers?: pulumi.Input<pulumi.Input<any[]>[] | undefined>;
+    tiers?: pulumi.Input<pulumi.Input<inputs.ProductDefaultPriceDataCurrencyOptionTier>[] | undefined>;
     /**
      * A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge.
      */
@@ -422,6 +10871,29 @@ export interface ProductDefaultPriceDataCurrencyOptionCustomUnitAmount {
      * The starting unit amount which can be updated by the customer.
      */
     preset?: pulumi.Input<number | undefined>;
+}
+
+export interface ProductDefaultPriceDataCurrencyOptionTier {
+    /**
+     * The flat billing amount for an entire tier, regardless of the number of units in the tier.
+     */
+    flatAmount?: pulumi.Input<number | undefined>;
+    /**
+     * Same as `flatAmount`, but accepts a decimal value representing an integer in the minor units of the currency. Only one of `flatAmount` and `flatAmountDecimal` can be set.
+     */
+    flatAmountDecimal?: pulumi.Input<string | undefined>;
+    /**
+     * The per unit billing amount for each individual unit for which this tier applies.
+     */
+    unitAmount?: pulumi.Input<number | undefined>;
+    /**
+     * Same as `unitAmount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unitAmount` and `unitAmountDecimal` can be set.
+     */
+    unitAmountDecimal?: pulumi.Input<string | undefined>;
+    /**
+     * Specifies the upper bound of this tier. The lower bound of a tier is the upper bound of the previous tier adding one. Use `inf` to define a fallback tier.
+     */
+    upTo: pulumi.Input<number>;
 }
 
 export interface ProductDefaultPriceDataCustomUnitAmount {
@@ -463,37 +10935,37 @@ export interface ProductMarketingFeature {
 
 export interface ProductPackageDimensions {
     /**
-     * Height, in inches. Maximum precision is 2 decimal places.
+     * Height, in inches.
      */
     height: pulumi.Input<number>;
     /**
-     * Length, in inches. Maximum precision is 2 decimal places.
+     * Length, in inches.
      */
     length: pulumi.Input<number>;
     /**
-     * Weight, in ounces. Maximum precision is 2 decimal places.
+     * Weight, in ounces.
      */
     weight: pulumi.Input<number>;
     /**
-     * Width, in inches. Maximum precision is 2 decimal places.
+     * Width, in inches.
      */
     width: pulumi.Input<number>;
 }
 
 export interface PromotionCodePromotion {
     /**
-     * If promotion `type` is `coupon`, the coupon for this promotion code.
+     * If promotion `type` is `coupon`, the coupon for this promotion.
      */
     coupon?: pulumi.Input<string | undefined>;
     /**
-     * Specifies the type of promotion.
+     * The type of promotion.
      */
     type: pulumi.Input<string>;
 }
 
 export interface PromotionCodeRestrictions {
     /**
-     * Promotion codes defined in each available currency option. Each key must be a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html) and a [supported currency](https://stripe.com/docs/currencies).
+     * Promotion code restrictions defined in each available currency option. Each key must be a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html) and a [supported currency](https://stripe.com/docs/currencies).
      */
     currencyOptions?: pulumi.Input<pulumi.Input<inputs.PromotionCodeRestrictionsCurrencyOption>[] | undefined>;
     /**
@@ -511,11 +10983,1448 @@ export interface PromotionCodeRestrictions {
 }
 
 export interface PromotionCodeRestrictionsCurrencyOption {
+    /**
+     * Key for this entry.
+     */
     key: pulumi.Input<string>;
     /**
      * Minimum amount required to redeem this Promotion Code into a Coupon (e.g., a purchase must be $100 or more to work).
      */
     minimumAmount?: pulumi.Input<number | undefined>;
+}
+
+export interface QuoteAutomaticTax {
+    /**
+     * Automatically calculate taxes
+     */
+    enabled: pulumi.Input<boolean>;
+    /**
+     * The account that's liable for tax. If set, the business address and tax registrations required to perform the tax calculation are loaded from this account. The tax transaction is returned in the report of the connected account.
+     */
+    liability?: pulumi.Input<inputs.QuoteAutomaticTaxLiability | undefined>;
+    /**
+     * The tax provider powering automatic tax.
+     */
+    provider?: pulumi.Input<string | undefined>;
+    /**
+     * The status of the most recent automated tax calculation for this quote.
+     */
+    status?: pulumi.Input<string | undefined>;
+}
+
+export interface QuoteAutomaticTaxLiability {
+    /**
+     * The connected account being referenced when `type` is `account`.
+     */
+    account?: pulumi.Input<string | undefined>;
+    /**
+     * Type of the account referenced.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface QuoteDiscount {
+    /**
+     * ID of the coupon to create a new discount for.
+     */
+    coupon?: pulumi.Input<string | undefined>;
+    /**
+     * ID of an existing discount on the object (or one of its ancestors) to reuse.
+     */
+    discount?: pulumi.Input<string | undefined>;
+    /**
+     * ID of the promotion code to create a new discount for.
+     */
+    promotionCode?: pulumi.Input<string | undefined>;
+}
+
+export interface QuoteFromQuote {
+    /**
+     * Whether this quote is a revision of a different quote.
+     */
+    isRevision?: pulumi.Input<boolean | undefined>;
+    /**
+     * The quote that was cloned.
+     */
+    quote: pulumi.Input<string>;
+}
+
+export interface QuoteInvoiceSettings {
+    /**
+     * Number of days within which a customer must pay invoices generated by this quote. This value will be `null` for quotes where `collection_method=charge_automatically`.
+     */
+    daysUntilDue?: pulumi.Input<number | undefined>;
+    issuer?: pulumi.Input<inputs.QuoteInvoiceSettingsIssuer | undefined>;
+}
+
+export interface QuoteInvoiceSettingsIssuer {
+    /**
+     * The connected account being referenced when `type` is `account`.
+     */
+    account?: pulumi.Input<string | undefined>;
+    /**
+     * Type of the account referenced.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface QuoteLineItem {
+    /**
+     * The discounts applied to this line item.
+     */
+    discounts?: pulumi.Input<pulumi.Input<inputs.QuoteLineItemDiscount>[] | undefined>;
+    /**
+     * The ID of the price object. One of `price` or `priceData` is required.
+     */
+    price?: pulumi.Input<string | undefined>;
+    /**
+     * Data used to generate a new [Price](https://docs.stripe.com/api/prices) object inline. One of `price` or `priceData` is required.
+     */
+    priceData?: pulumi.Input<inputs.QuoteLineItemPriceData | undefined>;
+    /**
+     * The quantity of the line item.
+     */
+    quantity?: pulumi.Input<number | undefined>;
+    /**
+     * The tax rates which apply to the line item. When set, the `defaultTaxRates` on the quote do not apply to this line item.
+     */
+    taxRates?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+}
+
+export interface QuoteLineItemDiscount {
+    /**
+     * ID of the coupon to create a new discount for.
+     */
+    coupon?: pulumi.Input<string | undefined>;
+    /**
+     * ID of an existing discount on the object (or one of its ancestors) to reuse.
+     */
+    discount?: pulumi.Input<string | undefined>;
+    /**
+     * ID of the promotion code to create a new discount for.
+     */
+    promotionCode?: pulumi.Input<string | undefined>;
+}
+
+export interface QuoteLineItemPriceData {
+    /**
+     * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+     */
+    currency: pulumi.Input<string>;
+    /**
+     * The ID of the [Product](https://docs.stripe.com/api/products) that this [Price](https://docs.stripe.com/api/prices) will belong to.
+     */
+    product: pulumi.Input<string>;
+    /**
+     * The recurring components of a price such as `interval` and `intervalCount`.
+     */
+    recurring?: pulumi.Input<inputs.QuoteLineItemPriceDataRecurring | undefined>;
+    /**
+     * Only required if a [default tax behavior](<https://docs.stripe.com/tax/products-prices-tax-categories-tax-behavior#setting-a-default-tax-behavior-(recommended)>) was not provided in the Stripe Tax settings. Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
+     */
+    taxBehavior?: pulumi.Input<string | undefined>;
+    /**
+     * A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge.
+     */
+    unitAmount?: pulumi.Input<number | undefined>;
+    /**
+     * Same as `unitAmount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unitAmount` and `unitAmountDecimal` can be set.
+     */
+    unitAmountDecimal?: pulumi.Input<number | undefined>;
+}
+
+export interface QuoteLineItemPriceDataRecurring {
+    /**
+     * Specifies billing frequency. Either `day`, `week`, `month` or `year`.
+     */
+    interval: pulumi.Input<string>;
+    /**
+     * The number of intervals between subscription billings. For example, `interval=month` and `interval_count=3` bills every 3 months. Maximum of three years interval allowed (3 years, 36 months, or 156 weeks).
+     */
+    intervalCount?: pulumi.Input<number | undefined>;
+}
+
+export interface QuoteStatusTransitions {
+    /**
+     * The time that the quote was accepted. Measured in seconds since Unix epoch.
+     */
+    acceptedAt?: pulumi.Input<number | undefined>;
+    /**
+     * The time that the quote was canceled. Measured in seconds since Unix epoch.
+     */
+    canceledAt?: pulumi.Input<number | undefined>;
+    /**
+     * The time that the quote was finalized. Measured in seconds since Unix epoch.
+     */
+    finalizedAt?: pulumi.Input<number | undefined>;
+}
+
+export interface QuoteSubscriptionData {
+    /**
+     * The billing mode of the quote.
+     */
+    billingMode?: pulumi.Input<inputs.QuoteSubscriptionDataBillingMode | undefined>;
+    /**
+     * The subscription's description, meant to be displayable to the customer. Use this field to optionally store an explanation of the subscription for rendering in Stripe surfaces and certain local payment methods UIs.
+     */
+    description?: pulumi.Input<string | undefined>;
+    /**
+     * When creating a new subscription, the date of which the subscription schedule will start after the quote is accepted. This date is ignored if it is in the past when the quote is accepted. Measured in seconds since the Unix epoch.
+     */
+    effectiveDate?: pulumi.Input<number | undefined>;
+    /**
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that will set metadata on the subscription or subscription schedule when the quote is accepted. If a recurring price is included in `lineItems`, this field will be passed to the resulting subscription's `metadata` field. If `subscription_data.effective_date` is used, this field will be passed to the resulting subscription schedule's `phases.metadata` field. Unlike object-level metadata, this field is declarative. Updates will clear prior values.
+     */
+    metadata?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
+    /**
+     * Integer representing the number of trial period days before the customer is charged for the first time.
+     */
+    trialPeriodDays?: pulumi.Input<number | undefined>;
+}
+
+export interface QuoteSubscriptionDataBillingMode {
+    flexible?: pulumi.Input<inputs.QuoteSubscriptionDataBillingModeFlexible | undefined>;
+    /**
+     * Controls how prorations and invoices for subscriptions are calculated and orchestrated.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface QuoteSubscriptionDataBillingModeFlexible {
+    /**
+     * Controls how invoices and invoice items display proration amounts and discount amounts.
+     */
+    prorationDiscounts?: pulumi.Input<string | undefined>;
+}
+
+export interface QuoteTotalDetails {
+    /**
+     * This is the sum of all the discounts.
+     */
+    amountDiscount?: pulumi.Input<number | undefined>;
+    /**
+     * This is the sum of all the shipping amounts.
+     */
+    amountShipping?: pulumi.Input<number | undefined>;
+    /**
+     * This is the sum of all the tax amounts.
+     */
+    amountTax?: pulumi.Input<number | undefined>;
+    breakdown?: pulumi.Input<inputs.QuoteTotalDetailsBreakdown | undefined>;
+}
+
+export interface QuoteTotalDetailsBreakdown {
+    /**
+     * The aggregated discounts.
+     */
+    discounts?: pulumi.Input<pulumi.Input<inputs.QuoteTotalDetailsBreakdownDiscount>[] | undefined>;
+    /**
+     * The aggregated tax amounts by rate.
+     */
+    taxes?: pulumi.Input<pulumi.Input<inputs.QuoteTotalDetailsBreakdownTax>[] | undefined>;
+}
+
+export interface QuoteTotalDetailsBreakdownDiscount {
+    /**
+     * The amount discounted.
+     */
+    amount?: pulumi.Input<number | undefined>;
+    /**
+     * A discount represents the actual application of a [coupon](https://api.stripe.com#coupons) or [promotion code](https://api.stripe.com#promotion_codes).
+     * It contains information about when the discount began, when it will end, and what it is applied to.
+     */
+    discount?: pulumi.Input<string | undefined>;
+}
+
+export interface QuoteTotalDetailsBreakdownTax {
+    /**
+     * Amount of tax applied for this rate.
+     */
+    amount?: pulumi.Input<number | undefined>;
+    /**
+     * Tax rates can be applied to [invoices](https://docs.stripe.com/invoicing/taxes/tax-rates), [subscriptions](https://docs.stripe.com/billing/taxes/tax-rates) and [Checkout Sessions](https://docs.stripe.com/payments/checkout/use-manual-tax-rates) to collect tax.
+     */
+    rate?: pulumi.Input<string | undefined>;
+    /**
+     * The reasoning behind this tax, for example, if the product is tax exempt. The possible values for this field may be extended as new tax rules are supported.
+     */
+    taxabilityReason?: pulumi.Input<string | undefined>;
+    /**
+     * The amount on which tax is calculated, in cents (or local equivalent).
+     */
+    taxableAmount?: pulumi.Input<number | undefined>;
+}
+
+export interface QuoteTransferData {
+    /**
+     * The amount in cents (or local equivalent) that will be transferred to the destination account when the invoice is paid. By default, the entire amount is transferred to the destination.
+     */
+    amount?: pulumi.Input<number | undefined>;
+    /**
+     * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice total that will be transferred to the destination account. By default, the entire amount will be transferred to the destination.
+     */
+    amountPercent?: pulumi.Input<number | undefined>;
+    /**
+     * The account where funds from the payment will be transferred to upon payment success.
+     */
+    destination: pulumi.Input<string>;
+}
+
+export interface SetupIntentAutomaticPaymentMethods {
+    /**
+     * Controls whether this SetupIntent will accept redirect-based payment methods.
+     */
+    allowRedirects?: pulumi.Input<string | undefined>;
+    /**
+     * Automatically calculates compatible payment methods
+     */
+    enabled: pulumi.Input<boolean>;
+}
+
+export interface SetupIntentLastSetupError {
+    /**
+     * For card errors resulting from a card issuer decline, a short string indicating [how to proceed with an error](https://docs.stripe.com/declines#retrying-issuer-declines) if they provide one.
+     */
+    adviceCode?: pulumi.Input<string | undefined>;
+    /**
+     * For card errors, the ID of the failed charge.
+     */
+    charge?: pulumi.Input<string | undefined>;
+    /**
+     * For some errors that could be handled programmatically, a short string indicating the [error code](https://docs.stripe.com/error-codes) reported.
+     */
+    code?: pulumi.Input<string | undefined>;
+    /**
+     * For card errors resulting from a card issuer decline, a short string indicating the [card issuer's reason for the decline](https://docs.stripe.com/declines#issuer-declines) if they provide one.
+     */
+    declineCode?: pulumi.Input<string | undefined>;
+    /**
+     * A URL to more information about the [error code](https://docs.stripe.com/error-codes) reported.
+     */
+    docUrl?: pulumi.Input<string | undefined>;
+    /**
+     * A human-readable message providing more details about the error. For card errors, these messages can be shown to your users.
+     */
+    message?: pulumi.Input<string | undefined>;
+    /**
+     * For card errors resulting from a card issuer decline, a 2 digit code which indicates the advice given to merchant by the card network on how to proceed with an error.
+     */
+    networkAdviceCode?: pulumi.Input<string | undefined>;
+    /**
+     * For payments declined by the network, an alphanumeric code which indicates the reason the payment failed.
+     */
+    networkDeclineCode?: pulumi.Input<string | undefined>;
+    /**
+     * If the error is parameter-specific, the parameter related to the error. For example, you can use this to display a message near the correct form field.
+     */
+    param?: pulumi.Input<string | undefined>;
+    /**
+     * A PaymentIntent guides you through the process of collecting a payment from your customer.
+     * We recommend that you create exactly one PaymentIntent for each order or
+     * customer session in your system. You can reference the PaymentIntent later to
+     * see the history of payment attempts for a particular session.
+     */
+    paymentIntent?: pulumi.Input<string | undefined>;
+    /**
+     * PaymentMethod objects represent your customer's payment instruments.
+     * You can use them with [PaymentIntents](https://docs.stripe.com/payments/payment-intents) to collect payments or save them to
+     * Customer objects to store instrument details for future payments.
+     *
+     * Related guides: [Payment Methods](https://docs.stripe.com/payments/payment-methods) and [More Payment Scenarios](https://docs.stripe.com/payments/more-payment-scenarios).
+     */
+    paymentMethod?: pulumi.Input<string | undefined>;
+    /**
+     * If the error is specific to the type of payment method, the payment method type that had a problem. This field is only populated for invoice-related errors.
+     */
+    paymentMethodType?: pulumi.Input<string | undefined>;
+    /**
+     * A URL to the request log entry in your dashboard.
+     */
+    requestLogUrl?: pulumi.Input<string | undefined>;
+    /**
+     * A SetupIntent guides you through the process of setting up and saving a customer's payment credentials for future payments.
+     * For example, you can use a SetupIntent to set up and save your customer's card without immediately collecting a payment.
+     * Later, you can use [PaymentIntents](https://api.stripe.com#payment_intents) to drive the payment flow.
+     *
+     * Create a SetupIntent when you're ready to collect your customer's payment credentials.
+     * Don't maintain long-lived, unconfirmed SetupIntents because they might not be valid.
+     * The SetupIntent transitions through multiple [statuses](https://docs.stripe.com/payments/intents#intent-statuses) as it guides
+     * you through the setup process.
+     *
+     * Successful SetupIntents result in payment credentials that are optimized for future payments.
+     * For example, cardholders in [certain regions](https://stripe.com/guides/strong-customer-authentication) might need to be run through
+     * [Strong Customer Authentication](https://docs.stripe.com/strong-customer-authentication) during payment method collection
+     * to streamline later [off-session payments](https://docs.stripe.com/payments/setup-intents).
+     * If you use the SetupIntent with a [Customer](https://api.stripe.com#setup_intent_object-customer),
+     * it automatically attaches the resulting payment method to that Customer after successful setup.
+     * We recommend using SetupIntents or [setupFutureUsage](https://api.stripe.com#payment_intent_object-setup_future_usage) on
+     * PaymentIntents to save payment methods to prevent saving invalid or unoptimized payment methods.
+     *
+     * By using SetupIntents, you can reduce friction for your customers, even as regulations change over time.
+     *
+     * Related guide: [Setup Intents API](https://docs.stripe.com/payments/setup-intents)
+     */
+    setupIntent?: pulumi.Input<string | undefined>;
+    source?: pulumi.Input<string | undefined>;
+    /**
+     * The type of error returned. One of `apiError`, `cardError`, `idempotencyError`, or `invalidRequestError`
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface SetupIntentManagedPayments {
+    /**
+     * Set to `true` to enable [Managed Payments](https://docs.stripe.com/payments/managed-payments), Stripe's merchant of record solution, for this session.
+     */
+    enabled?: pulumi.Input<boolean | undefined>;
+}
+
+export interface SetupIntentMandateData {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * This hash contains details about the customer acceptance of the Mandate.
+     */
+    customerAcceptance: pulumi.Input<inputs.SetupIntentMandateDataCustomerAcceptance>;
+}
+
+export interface SetupIntentMandateDataCustomerAcceptance {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The time at which the customer accepted the Mandate.
+     */
+    acceptedAt?: pulumi.Input<number | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a Mandate accepted online, this hash contains details about the online acceptance.
+     */
+    online?: pulumi.Input<inputs.SetupIntentMandateDataCustomerAcceptanceOnline | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The type of customer acceptance information included with the Mandate. One of `online` or `offline`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface SetupIntentMandateDataCustomerAcceptanceOnline {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The IP address from which the Mandate was accepted by the customer.
+     */
+    ipAddress: pulumi.Input<string>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The user agent of the browser from which the Mandate was accepted by the customer.
+     */
+    userAgent: pulumi.Input<string>;
+}
+
+export interface SetupIntentNextAction {
+    cashappHandleRedirectOrDisplayQrCode?: pulumi.Input<inputs.SetupIntentNextActionCashappHandleRedirectOrDisplayQrCode | undefined>;
+    pixDisplayQrCode?: pulumi.Input<inputs.SetupIntentNextActionPixDisplayQrCode | undefined>;
+    redirectToUrl?: pulumi.Input<inputs.SetupIntentNextActionRedirectToUrl | undefined>;
+    /**
+     * Type of the next action to perform. Refer to the other child attributes under `nextAction` for available values. Examples include: `redirectToUrl`, `useStripeSdk`, `alipayHandleRedirect`, `oxxoDisplayDetails`, or `verifyWithMicrodeposits`.
+     */
+    type?: pulumi.Input<string | undefined>;
+    upiHandleRedirectOrDisplayQrCode?: pulumi.Input<inputs.SetupIntentNextActionUpiHandleRedirectOrDisplayQrCode | undefined>;
+    /**
+     * When confirming a SetupIntent with Stripe.js, Stripe.js depends on the contents of this dictionary to invoke authentication flows. The shape of the contents is subject to change and is only intended to be used by Stripe.js.
+     */
+    useStripeSdk?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
+    verifyWithMicrodeposits?: pulumi.Input<inputs.SetupIntentNextActionVerifyWithMicrodeposits | undefined>;
+}
+
+export interface SetupIntentNextActionCashappHandleRedirectOrDisplayQrCode {
+    /**
+     * The URL to the hosted Cash App Pay instructions page, which allows customers to view the QR code, and supports QR code refreshing on expiration.
+     */
+    hostedInstructionsUrl?: pulumi.Input<string | undefined>;
+    /**
+     * The url for mobile redirect based auth
+     */
+    mobileAuthUrl?: pulumi.Input<string | undefined>;
+    qrCode?: pulumi.Input<inputs.SetupIntentNextActionCashappHandleRedirectOrDisplayQrCodeQrCode | undefined>;
+}
+
+export interface SetupIntentNextActionCashappHandleRedirectOrDisplayQrCodeQrCode {
+    /**
+     * The date (unix timestamp) when the QR code expires.
+     */
+    expiresAt?: pulumi.Input<number | undefined>;
+    /**
+     * The image*url*png string used to render QR code
+     */
+    imageUrlPng?: pulumi.Input<string | undefined>;
+    /**
+     * The image*url*svg string used to render QR code
+     */
+    imageUrlSvg?: pulumi.Input<string | undefined>;
+}
+
+export interface SetupIntentNextActionPixDisplayQrCode {
+    /**
+     * The raw data string used to generate QR code, it should be used together with QR code library.
+     */
+    data?: pulumi.Input<string | undefined>;
+    /**
+     * The date (unix timestamp) when the PIX expires.
+     */
+    expiresAt?: pulumi.Input<number | undefined>;
+    /**
+     * The URL to the hosted pix instructions page, which allows customers to view the pix QR code.
+     */
+    hostedInstructionsUrl?: pulumi.Input<string | undefined>;
+    /**
+     * The image*url*png string used to render png QR code
+     */
+    imageUrlPng?: pulumi.Input<string | undefined>;
+    /**
+     * The image*url*svg string used to render svg QR code
+     */
+    imageUrlSvg?: pulumi.Input<string | undefined>;
+}
+
+export interface SetupIntentNextActionRedirectToUrl {
+    /**
+     * If the customer does not exit their browser while authenticating, they will be redirected to this specified URL after completion.
+     */
+    returnUrl?: pulumi.Input<string | undefined>;
+    /**
+     * The URL you must redirect your customer to in order to authenticate.
+     */
+    url?: pulumi.Input<string | undefined>;
+}
+
+export interface SetupIntentNextActionUpiHandleRedirectOrDisplayQrCode {
+    /**
+     * The URL to the hosted UPI instructions page, which allows customers to view the QR code.
+     */
+    hostedInstructionsUrl?: pulumi.Input<string | undefined>;
+    qrCode?: pulumi.Input<inputs.SetupIntentNextActionUpiHandleRedirectOrDisplayQrCodeQrCode | undefined>;
+}
+
+export interface SetupIntentNextActionUpiHandleRedirectOrDisplayQrCodeQrCode {
+    /**
+     * The date (unix timestamp) when the QR code expires.
+     */
+    expiresAt?: pulumi.Input<number | undefined>;
+    /**
+     * The image*url*png string used to render QR code
+     */
+    imageUrlPng?: pulumi.Input<string | undefined>;
+    /**
+     * The image*url*svg string used to render QR code
+     */
+    imageUrlSvg?: pulumi.Input<string | undefined>;
+}
+
+export interface SetupIntentNextActionVerifyWithMicrodeposits {
+    /**
+     * The timestamp when the microdeposits are expected to land.
+     */
+    arrivalDate?: pulumi.Input<number | undefined>;
+    /**
+     * The URL for the hosted verification page, which allows customers to verify their bank account.
+     */
+    hostedVerificationUrl?: pulumi.Input<string | undefined>;
+    /**
+     * The type of the microdeposit sent to the customer. Used to distinguish between different verification methods.
+     */
+    microdepositType?: pulumi.Input<string | undefined>;
+}
+
+export interface SetupIntentPaymentMethodConfigurationDetails {
+    /**
+     * ID of the payment method configuration used.
+     */
+    id?: pulumi.Input<string | undefined>;
+    /**
+     * ID of the parent payment method configuration used.
+     */
+    parent?: pulumi.Input<string | undefined>;
+}
+
+export interface SetupIntentPaymentMethodData {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is an `acssDebit` PaymentMethod, this hash contains details about the ACSS Debit payment method.
+     */
+    acssDebit?: pulumi.Input<inputs.SetupIntentPaymentMethodDataAcssDebit | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * This field indicates whether this payment method can be shown again to its customer in a checkout flow. Stripe products such as Checkout and Elements use this field to determine whether a payment method can be shown as a saved payment method in a checkout flow. The field defaults to `unspecified`.
+     */
+    allowRedisplay?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is an `auBecsDebit` PaymentMethod, this hash contains details about the bank account.
+     */
+    auBecsDebit?: pulumi.Input<inputs.SetupIntentPaymentMethodDataAuBecsDebit | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a `bacsDebit` PaymentMethod, this hash contains details about the Bacs Direct Debit bank account.
+     */
+    bacsDebit?: pulumi.Input<inputs.SetupIntentPaymentMethodDataBacsDebit | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Billing information associated with the PaymentMethod that may be used or required by particular types of payment methods.
+     */
+    billingDetails?: pulumi.Input<inputs.SetupIntentPaymentMethodDataBillingDetails | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a `boleto` PaymentMethod, this hash contains details about the Boleto payment method.
+     */
+    boleto?: pulumi.Input<inputs.SetupIntentPaymentMethodDataBoleto | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is an `eps` PaymentMethod, this hash contains details about the EPS payment method.
+     */
+    eps?: pulumi.Input<inputs.SetupIntentPaymentMethodDataEps | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is an `fpx` PaymentMethod, this hash contains details about the FPX payment method.
+     */
+    fpx?: pulumi.Input<inputs.SetupIntentPaymentMethodDataFpx | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is an `ideal` PaymentMethod, this hash contains details about the iDEAL payment method.
+     */
+    ideal?: pulumi.Input<inputs.SetupIntentPaymentMethodDataIdeal | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a `klarna` PaymentMethod, this hash contains details about the Klarna payment method.
+     */
+    klarna?: pulumi.Input<inputs.SetupIntentPaymentMethodDataKlarna | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
+     */
+    metadata?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a `naverPay` PaymentMethod, this hash contains details about the Naver Pay payment method.
+     */
+    naverPay?: pulumi.Input<inputs.SetupIntentPaymentMethodDataNaverPay | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is an nz*bank*account PaymentMethod, this hash contains details about the nz*bank*account payment method.
+     */
+    nzBankAccount?: pulumi.Input<inputs.SetupIntentPaymentMethodDataNzBankAccount | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a `p24` PaymentMethod, this hash contains details about the P24 payment method.
+     */
+    p24?: pulumi.Input<inputs.SetupIntentPaymentMethodDataP24 | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a `payto` PaymentMethod, this hash contains details about the PayTo payment method.
+     */
+    payto?: pulumi.Input<inputs.SetupIntentPaymentMethodDataPayto | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Options to configure Radar. See [Radar Session](https://docs.stripe.com/radar/radar-session) for more information.
+     */
+    radarOptions?: pulumi.Input<inputs.SetupIntentPaymentMethodDataRadarOptions | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a `sepaDebit` PaymentMethod, this hash contains details about the SEPA debit bank account.
+     */
+    sepaDebit?: pulumi.Input<inputs.SetupIntentPaymentMethodDataSepaDebit | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a `sofort` PaymentMethod, this hash contains details about the SOFORT payment method.
+     */
+    sofort?: pulumi.Input<inputs.SetupIntentPaymentMethodDataSofort | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The type of the PaymentMethod. An additional hash is included on the PaymentMethod with a name matching this value. It contains additional information specific to the PaymentMethod type.
+     */
+    type: pulumi.Input<string>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a `upi` PaymentMethod, this hash contains details about the UPI payment method.
+     */
+    upi?: pulumi.Input<inputs.SetupIntentPaymentMethodDataUpi | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is an `usBankAccount` PaymentMethod, this hash contains details about the US bank account payment method.
+     */
+    usBankAccount?: pulumi.Input<inputs.SetupIntentPaymentMethodDataUsBankAccount | undefined>;
+}
+
+export interface SetupIntentPaymentMethodDataAcssDebit {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Customer's bank account number.
+     */
+    accountNumber: pulumi.Input<string>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Institution number of the customer's bank.
+     */
+    institutionNumber: pulumi.Input<string>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Transit number of the customer's bank.
+     */
+    transitNumber: pulumi.Input<string>;
+}
+
+export interface SetupIntentPaymentMethodDataAuBecsDebit {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The account number for the bank account.
+     */
+    accountNumber: pulumi.Input<string>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Bank-State-Branch number of the bank account.
+     */
+    bsbNumber: pulumi.Input<string>;
+}
+
+export interface SetupIntentPaymentMethodDataBacsDebit {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Account number of the bank account that the funds will be debited from.
+     */
+    accountNumber?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Sort code of the bank account. (e.g., `10-20-30`)
+     */
+    sortCode?: pulumi.Input<string | undefined>;
+}
+
+export interface SetupIntentPaymentMethodDataBillingDetails {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Billing address.
+     */
+    address?: pulumi.Input<inputs.SetupIntentPaymentMethodDataBillingDetailsAddress | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Email address.
+     */
+    email?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Full name.
+     */
+    name?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Billing phone number (including extension).
+     */
+    phone?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Taxpayer identification number. Used only for transactions between LATAM buyers and non-LATAM sellers.
+     */
+    taxId?: pulumi.Input<string | undefined>;
+}
+
+export interface SetupIntentPaymentMethodDataBillingDetailsAddress {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * City, district, suburb, town, or village.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * ZIP or postal code.
+     */
+    postalCode?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: pulumi.Input<string | undefined>;
+}
+
+export interface SetupIntentPaymentMethodDataBoleto {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The tax ID of the customer (CPF for individual consumers or CNPJ for businesses consumers)
+     */
+    taxId: pulumi.Input<string>;
+}
+
+export interface SetupIntentPaymentMethodDataEps {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The customer's bank.
+     */
+    bank?: pulumi.Input<string | undefined>;
+}
+
+export interface SetupIntentPaymentMethodDataFpx {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Account holder type for FPX transaction
+     */
+    accountHolderType?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The customer's bank.
+     */
+    bank: pulumi.Input<string>;
+}
+
+export interface SetupIntentPaymentMethodDataIdeal {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The customer's bank. Only use this parameter for existing customers. Don't use it for new customers.
+     */
+    bank?: pulumi.Input<string | undefined>;
+}
+
+export interface SetupIntentPaymentMethodDataKlarna {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Customer's date of birth
+     */
+    dob?: pulumi.Input<inputs.SetupIntentPaymentMethodDataKlarnaDob | undefined>;
+}
+
+export interface SetupIntentPaymentMethodDataKlarnaDob {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The day of birth, between 1 and 31.
+     */
+    day: pulumi.Input<number>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The month of birth, between 1 and 12.
+     */
+    month: pulumi.Input<number>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The four-digit year of birth.
+     */
+    year: pulumi.Input<number>;
+}
+
+export interface SetupIntentPaymentMethodDataNaverPay {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether to use Naver Pay points or a card to fund this transaction. If not provided, this defaults to `card`.
+     */
+    funding?: pulumi.Input<string | undefined>;
+}
+
+export interface SetupIntentPaymentMethodDataNzBankAccount {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The name on the bank account. Only required if the account holder name is different from the name of the authorized signatory collected in the PaymentMethod’s billing details.
+     */
+    accountHolderName?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The account number for the bank account.
+     */
+    accountNumber: pulumi.Input<string>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The numeric code for the bank account's bank.
+     */
+    bankCode: pulumi.Input<string>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The numeric code for the bank account's bank branch.
+     */
+    branchCode: pulumi.Input<string>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     */
+    reference?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The suffix of the bank account number.
+     */
+    suffix: pulumi.Input<string>;
+}
+
+export interface SetupIntentPaymentMethodDataP24 {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The customer's bank.
+     */
+    bank?: pulumi.Input<string | undefined>;
+}
+
+export interface SetupIntentPaymentMethodDataPayto {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The account number for the bank account.
+     */
+    accountNumber?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Bank-State-Branch number of the bank account.
+     */
+    bsbNumber?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The PayID alias for the bank account.
+     */
+    payId?: pulumi.Input<string | undefined>;
+}
+
+export interface SetupIntentPaymentMethodDataRadarOptions {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * A [Radar Session](https://docs.stripe.com/radar/radar-session) is a snapshot of the browser metadata and device details that help Radar make more accurate predictions on your payments.
+     */
+    session?: pulumi.Input<string | undefined>;
+}
+
+export interface SetupIntentPaymentMethodDataSepaDebit {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * IBAN of the bank account.
+     */
+    iban: pulumi.Input<string>;
+}
+
+export interface SetupIntentPaymentMethodDataSofort {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Two-letter ISO code representing the country the bank account is located in.
+     */
+    country: pulumi.Input<string>;
+}
+
+export interface SetupIntentPaymentMethodDataUpi {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Configuration options for setting up an eMandate
+     */
+    mandateOptions?: pulumi.Input<inputs.SetupIntentPaymentMethodDataUpiMandateOptions | undefined>;
+}
+
+export interface SetupIntentPaymentMethodDataUpiMandateOptions {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Amount to be charged for future payments.
+     */
+    amount?: pulumi.Input<number | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * One of `fixed` or `maximum`. If `fixed`, the `amount` param refers to the exact amount to be charged in future payments. If `maximum`, the amount charged can be up to the value passed for the `amount` param.
+     */
+    amountType?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * A description of the mandate or subscription that is meant to be displayed to the customer.
+     */
+    description?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * End date of the mandate or subscription.
+     */
+    endDate?: pulumi.Input<number | undefined>;
+}
+
+export interface SetupIntentPaymentMethodDataUsBankAccount {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Account holder type: individual or company.
+     */
+    accountHolderType?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Account number of the bank account.
+     */
+    accountNumber?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Account type: checkings or savings. Defaults to checking if omitted.
+     */
+    accountType?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The ID of a Financial Connections Account to use as a payment method.
+     */
+    financialConnectionsAccount?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Routing number of the bank account.
+     */
+    routingNumber?: pulumi.Input<string | undefined>;
+}
+
+export interface SetupIntentPaymentMethodOptions {
+    acssDebit?: pulumi.Input<inputs.SetupIntentPaymentMethodOptionsAcssDebit | undefined>;
+    bacsDebit?: pulumi.Input<inputs.SetupIntentPaymentMethodOptionsBacsDebit | undefined>;
+    card?: pulumi.Input<inputs.SetupIntentPaymentMethodOptionsCard | undefined>;
+    klarna?: pulumi.Input<inputs.SetupIntentPaymentMethodOptionsKlarna | undefined>;
+    link?: pulumi.Input<inputs.SetupIntentPaymentMethodOptionsLink | undefined>;
+    paypal?: pulumi.Input<inputs.SetupIntentPaymentMethodOptionsPaypal | undefined>;
+    payto?: pulumi.Input<inputs.SetupIntentPaymentMethodOptionsPayto | undefined>;
+    pix?: pulumi.Input<inputs.SetupIntentPaymentMethodOptionsPix | undefined>;
+    sepaDebit?: pulumi.Input<inputs.SetupIntentPaymentMethodOptionsSepaDebit | undefined>;
+    upi?: pulumi.Input<inputs.SetupIntentPaymentMethodOptionsUpi | undefined>;
+    usBankAccount?: pulumi.Input<inputs.SetupIntentPaymentMethodOptionsUsBankAccount | undefined>;
+}
+
+export interface SetupIntentPaymentMethodOptionsAcssDebit {
+    /**
+     * Currency supported by the bank account
+     */
+    currency?: pulumi.Input<string | undefined>;
+    mandateOptions?: pulumi.Input<inputs.SetupIntentPaymentMethodOptionsAcssDebitMandateOptions | undefined>;
+    /**
+     * Bank account verification method. The default value is `automatic`.
+     */
+    verificationMethod?: pulumi.Input<string | undefined>;
+}
+
+export interface SetupIntentPaymentMethodOptionsAcssDebitMandateOptions {
+    /**
+     * A URL for custom mandate text
+     */
+    customMandateUrl?: pulumi.Input<string | undefined>;
+    /**
+     * List of Stripe products where this mandate can be selected automatically.
+     */
+    defaultFors?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * Description of the interval. Only required if the 'payment_schedule' parameter is 'interval' or 'combined'.
+     */
+    intervalDescription?: pulumi.Input<string | undefined>;
+    /**
+     * Payment schedule for the mandate.
+     */
+    paymentSchedule?: pulumi.Input<string | undefined>;
+    /**
+     * Transaction type of the mandate.
+     */
+    transactionType?: pulumi.Input<string | undefined>;
+}
+
+export interface SetupIntentPaymentMethodOptionsBacsDebit {
+    mandateOptions?: pulumi.Input<inputs.SetupIntentPaymentMethodOptionsBacsDebitMandateOptions | undefined>;
+}
+
+export interface SetupIntentPaymentMethodOptionsBacsDebitMandateOptions {
+    /**
+     * Prefix used to generate the Mandate reference. Must be at most 12 characters long. Must consist of only uppercase letters, numbers, spaces, or the following special characters: '/', '_', '-', '&', '.'. Cannot begin with 'DDIC' or 'STRIPE'.
+     */
+    referencePrefix?: pulumi.Input<string | undefined>;
+}
+
+export interface SetupIntentPaymentMethodOptionsCard {
+    /**
+     * Configuration options for setting up an eMandate for cards issued in India.
+     */
+    mandateOptions?: pulumi.Input<inputs.SetupIntentPaymentMethodOptionsCardMandateOptions | undefined>;
+    /**
+     * When specified, this parameter signals that a card has been collected
+     * as MOTO (Mail Order Telephone Order) and thus out of scope for SCA. This
+     * parameter can only be provided during confirmation.
+     */
+    moto?: pulumi.Input<boolean | undefined>;
+    /**
+     * Selected network to process this SetupIntent on. Depends on the available networks of the card attached to the setup intent. Can be only set confirm-time.
+     */
+    network?: pulumi.Input<string | undefined>;
+    /**
+     * We strongly recommend that you rely on our SCA Engine to automatically prompt your customers for authentication based on risk level and [other requirements](https://docs.stripe.com/strong-customer-authentication). However, if you wish to request 3D Secure based on logic from your own fraud engine, provide this option. If not provided, this value defaults to `automatic`. Read our guide on [manually requesting 3D Secure](https://docs.stripe.com/payments/3d-secure/authentication-flow#manual-three-ds) for more information on how this configuration interacts with Radar and our SCA Engine.
+     */
+    requestThreeDSecure?: pulumi.Input<string | undefined>;
+    /**
+     * If 3D Secure authentication was performed with a third-party provider,
+     * the authentication details to use for this setup.
+     */
+    threeDSecure?: pulumi.Input<inputs.SetupIntentPaymentMethodOptionsCardThreeDSecure | undefined>;
+}
+
+export interface SetupIntentPaymentMethodOptionsCardMandateOptions {
+    /**
+     * Amount to be charged for future payments, specified in the presentment currency.
+     */
+    amount: pulumi.Input<number>;
+    /**
+     * One of `fixed` or `maximum`. If `fixed`, the `amount` param refers to the exact amount to be charged in future payments. If `maximum`, the amount charged can be up to the value passed for the `amount` param.
+     */
+    amountType: pulumi.Input<string>;
+    /**
+     * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+     */
+    currency: pulumi.Input<string>;
+    /**
+     * A description of the mandate or subscription that is meant to be displayed to the customer.
+     */
+    description?: pulumi.Input<string | undefined>;
+    /**
+     * End date of the mandate or subscription. If not provided, the mandate will be active until canceled. If provided, end date should be after start date.
+     */
+    endDate?: pulumi.Input<number | undefined>;
+    /**
+     * Specifies payment frequency. One of `day`, `week`, `month`, `year`, or `sporadic`.
+     */
+    interval: pulumi.Input<string>;
+    /**
+     * The number of intervals between payments. For example, `interval=month` and `interval_count=3` indicates one payment every three months. Maximum of one year interval allowed (1 year, 12 months, or 52 weeks). This parameter is optional when `interval=sporadic`.
+     */
+    intervalCount?: pulumi.Input<number | undefined>;
+    /**
+     * Unique identifier for the mandate or subscription.
+     */
+    reference: pulumi.Input<string>;
+    /**
+     * Start date of the mandate or subscription. Start date should not be lesser than yesterday.
+     */
+    startDate: pulumi.Input<number>;
+    /**
+     * Specifies the type of mandates supported. Possible values are `india`.
+     */
+    supportedTypes?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+}
+
+export interface SetupIntentPaymentMethodOptionsCardThreeDSecure {
+    /**
+     * The `transStatus` returned from the card Issuer’s ACS in the ARes.
+     */
+    aresTransStatus?: pulumi.Input<string | undefined>;
+    /**
+     * The cryptogram, also known as the "authentication value" (AAV, CAVV or
+     * AEVV). This value is 20 bytes, base64-encoded into a 28-character string.
+     * (Most 3D Secure providers will return the base64-encoded version, which
+     * is what you should specify here.)
+     */
+    cryptogram?: pulumi.Input<string | undefined>;
+    /**
+     * The Electronic Commerce Indicator (ECI) is returned by your 3D Secure
+     * provider and indicates what degree of authentication was performed.
+     */
+    electronicCommerceIndicator?: pulumi.Input<string | undefined>;
+    /**
+     * Network specific 3DS fields. Network specific arguments require an
+     * explicit card brand choice. The parameter `payment_method_options.card.network``
+     * must be populated accordingly
+     */
+    networkOptions?: pulumi.Input<inputs.SetupIntentPaymentMethodOptionsCardThreeDSecureNetworkOptions | undefined>;
+    /**
+     * The challenge indicator (`threeDSRequestorChallengeInd`) which was requested in the
+     * AReq sent to the card Issuer's ACS. A string containing 2 digits from 01-99.
+     */
+    requestorChallengeIndicator?: pulumi.Input<string | undefined>;
+    /**
+     * For 3D Secure 1, the XID. For 3D Secure 2, the Directory Server
+     * Transaction ID (dsTransID).
+     */
+    transactionId?: pulumi.Input<string | undefined>;
+    /**
+     * The version of 3D Secure that was performed.
+     */
+    version?: pulumi.Input<string | undefined>;
+}
+
+export interface SetupIntentPaymentMethodOptionsCardThreeDSecureNetworkOptions {
+    /**
+     * Cartes Bancaires-specific 3DS fields.
+     */
+    cartesBancaires?: pulumi.Input<inputs.SetupIntentPaymentMethodOptionsCardThreeDSecureNetworkOptionsCartesBancaires | undefined>;
+}
+
+export interface SetupIntentPaymentMethodOptionsCardThreeDSecureNetworkOptionsCartesBancaires {
+    /**
+     * The cryptogram calculation algorithm used by the card Issuer's ACS
+     * to calculate the Authentication cryptogram. Also known as `cavvAlgorithm`.
+     * messageExtension: CB-AVALGO
+     */
+    cbAvalgo: pulumi.Input<string>;
+    /**
+     * The exemption indicator returned from Cartes Bancaires in the ARes.
+     * message extension: CB-EXEMPTION; string (4 characters)
+     * This is a 3 byte bitmap (low significant byte first and most significant
+     * bit first) that has been Base64 encoded
+     */
+    cbExemption?: pulumi.Input<string | undefined>;
+    /**
+     * The risk score returned from Cartes Bancaires in the ARes.
+     * message extension: CB-SCORE; numeric value 0-99
+     */
+    cbScore?: pulumi.Input<number | undefined>;
+}
+
+export interface SetupIntentPaymentMethodOptionsKlarna {
+    /**
+     * The currency of the setup intent. Three letter ISO currency code.
+     */
+    currency?: pulumi.Input<string | undefined>;
+    /**
+     * On-demand details if setting up a payment method for on-demand payments.
+     */
+    onDemand?: pulumi.Input<inputs.SetupIntentPaymentMethodOptionsKlarnaOnDemand | undefined>;
+    /**
+     * Preferred locale of the Klarna checkout page that the customer is redirected to.
+     */
+    preferredLocale?: pulumi.Input<string | undefined>;
+    /**
+     * Subscription details if setting up or charging a subscription
+     */
+    subscriptions?: pulumi.Input<pulumi.Input<inputs.SetupIntentPaymentMethodOptionsKlarnaSubscription>[] | undefined>;
+}
+
+export interface SetupIntentPaymentMethodOptionsKlarnaOnDemand {
+    /**
+     * Your average amount value. You can use a value across your customer base, or segment based on customer type, country, etc.
+     */
+    averageAmount?: pulumi.Input<number | undefined>;
+    /**
+     * The maximum value you may charge a customer per purchase. You can use a value across your customer base, or segment based on customer type, country, etc.
+     */
+    maximumAmount?: pulumi.Input<number | undefined>;
+    /**
+     * The lowest or minimum value you may charge a customer per purchase. You can use a value across your customer base, or segment based on customer type, country, etc.
+     */
+    minimumAmount?: pulumi.Input<number | undefined>;
+    /**
+     * Interval at which the customer is making purchases
+     */
+    purchaseInterval?: pulumi.Input<string | undefined>;
+    /**
+     * The number of `purchaseInterval` between charges
+     */
+    purchaseIntervalCount?: pulumi.Input<number | undefined>;
+}
+
+export interface SetupIntentPaymentMethodOptionsKlarnaSubscription {
+    /**
+     * Unit of time between subscription charges.
+     */
+    interval: pulumi.Input<string>;
+    /**
+     * The number of intervals (specified in the `interval` attribute) between subscription charges. For example, `interval=month` and `interval_count=3` charges every 3 months.
+     */
+    intervalCount?: pulumi.Input<number | undefined>;
+    /**
+     * Name for subscription.
+     */
+    name?: pulumi.Input<string | undefined>;
+    /**
+     * Describes the upcoming charge for this subscription.
+     */
+    nextBilling: pulumi.Input<inputs.SetupIntentPaymentMethodOptionsKlarnaSubscriptionNextBilling>;
+    /**
+     * A non-customer-facing reference to correlate subscription charges in the Klarna app. Use a value that persists across subscription charges.
+     */
+    reference: pulumi.Input<string>;
+}
+
+export interface SetupIntentPaymentMethodOptionsKlarnaSubscriptionNextBilling {
+    /**
+     * The amount of the next charge for the subscription.
+     */
+    amount: pulumi.Input<number>;
+    /**
+     * The date of the next charge for the subscription in YYYY-MM-DD format.
+     */
+    date: pulumi.Input<string>;
+}
+
+export interface SetupIntentPaymentMethodOptionsLink {
+    /**
+     * [Deprecated] This is a legacy parameter that no longer has any function.
+     */
+    persistentToken?: pulumi.Input<string | undefined>;
+}
+
+export interface SetupIntentPaymentMethodOptionsPaypal {
+    /**
+     * The PayPal Billing Agreement ID (BAID). This is an ID generated by PayPal which represents the mandate between the merchant and the customer.
+     */
+    billingAgreementId?: pulumi.Input<string | undefined>;
+}
+
+export interface SetupIntentPaymentMethodOptionsPayto {
+    mandateOptions?: pulumi.Input<inputs.SetupIntentPaymentMethodOptionsPaytoMandateOptions | undefined>;
+}
+
+export interface SetupIntentPaymentMethodOptionsPaytoMandateOptions {
+    /**
+     * Amount that will be collected. It is required when `amountType` is `fixed`.
+     */
+    amount?: pulumi.Input<number | undefined>;
+    /**
+     * The type of amount that will be collected. The amount charged must be exact or up to the value of `amount` param for `fixed` or `maximum` type respectively. Defaults to `maximum`.
+     */
+    amountType?: pulumi.Input<string | undefined>;
+    /**
+     * Date, in YYYY-MM-DD format, after which payments will not be collected. Defaults to no end date.
+     */
+    endDate?: pulumi.Input<string | undefined>;
+    /**
+     * The periodicity at which payments will be collected. Defaults to `adhoc`.
+     */
+    paymentSchedule?: pulumi.Input<string | undefined>;
+    /**
+     * The number of payments that will be made during a payment period. Defaults to 1 except for when `paymentSchedule` is `adhoc`. In that case, it defaults to no limit.
+     */
+    paymentsPerPeriod?: pulumi.Input<number | undefined>;
+    /**
+     * The purpose for which payments are made. Has a default value based on your merchant category code.
+     */
+    purpose?: pulumi.Input<string | undefined>;
+    /**
+     * Date, in YYYY-MM-DD format, from which payments will be collected. Defaults to confirmation time.
+     */
+    startDate?: pulumi.Input<string | undefined>;
+}
+
+export interface SetupIntentPaymentMethodOptionsPix {
+    mandateOptions?: pulumi.Input<inputs.SetupIntentPaymentMethodOptionsPixMandateOptions | undefined>;
+}
+
+export interface SetupIntentPaymentMethodOptionsPixMandateOptions {
+    /**
+     * Amount to be charged for future payments.
+     */
+    amount?: pulumi.Input<number | undefined>;
+    /**
+     * Determines if the amount includes the IOF tax.
+     */
+    amountIncludesIof?: pulumi.Input<string | undefined>;
+    /**
+     * Type of amount.
+     */
+    amountType?: pulumi.Input<string | undefined>;
+    /**
+     * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase.
+     */
+    currency?: pulumi.Input<string | undefined>;
+    /**
+     * Date when the mandate expires and no further payments will be charged, in `YYYY-MM-DD`.
+     */
+    endDate?: pulumi.Input<string | undefined>;
+    /**
+     * Schedule at which the future payments will be charged.
+     */
+    paymentSchedule?: pulumi.Input<string | undefined>;
+    /**
+     * Subscription name displayed to buyers in their bank app.
+     */
+    reference?: pulumi.Input<string | undefined>;
+    /**
+     * Start date of the mandate, in `YYYY-MM-DD`.
+     */
+    startDate?: pulumi.Input<string | undefined>;
+}
+
+export interface SetupIntentPaymentMethodOptionsSepaDebit {
+    mandateOptions?: pulumi.Input<inputs.SetupIntentPaymentMethodOptionsSepaDebitMandateOptions | undefined>;
+}
+
+export interface SetupIntentPaymentMethodOptionsSepaDebitMandateOptions {
+    /**
+     * Prefix used to generate the Mandate reference. Must be at most 12 characters long. Must consist of only uppercase letters, numbers, spaces, or the following special characters: '/', '_', '-', '&', '.'. Cannot begin with 'STRIPE'.
+     */
+    referencePrefix?: pulumi.Input<string | undefined>;
+}
+
+export interface SetupIntentPaymentMethodOptionsUpi {
+    mandateOptions?: pulumi.Input<inputs.SetupIntentPaymentMethodOptionsUpiMandateOptions | undefined>;
+    setupFutureUsage?: pulumi.Input<string | undefined>;
+}
+
+export interface SetupIntentPaymentMethodOptionsUpiMandateOptions {
+    /**
+     * Amount to be charged for future payments.
+     */
+    amount?: pulumi.Input<number | undefined>;
+    /**
+     * One of `fixed` or `maximum`. If `fixed`, the `amount` param refers to the exact amount to be charged in future payments. If `maximum`, the amount charged can be up to the value passed for the `amount` param.
+     */
+    amountType?: pulumi.Input<string | undefined>;
+    /**
+     * A description of the mandate or subscription that is meant to be displayed to the customer.
+     */
+    description?: pulumi.Input<string | undefined>;
+    /**
+     * End date of the mandate or subscription.
+     */
+    endDate?: pulumi.Input<number | undefined>;
+}
+
+export interface SetupIntentPaymentMethodOptionsUsBankAccount {
+    financialConnections?: pulumi.Input<inputs.SetupIntentPaymentMethodOptionsUsBankAccountFinancialConnections | undefined>;
+    mandateOptions?: pulumi.Input<inputs.SetupIntentPaymentMethodOptionsUsBankAccountMandateOptions | undefined>;
+    /**
+     * Additional fields for network related functions
+     */
+    networks?: pulumi.Input<inputs.SetupIntentPaymentMethodOptionsUsBankAccountNetworks | undefined>;
+    /**
+     * Bank account verification method. The default value is `automatic`.
+     */
+    verificationMethod?: pulumi.Input<string | undefined>;
+}
+
+export interface SetupIntentPaymentMethodOptionsUsBankAccountFinancialConnections {
+    filters?: pulumi.Input<inputs.SetupIntentPaymentMethodOptionsUsBankAccountFinancialConnectionsFilters | undefined>;
+    /**
+     * The list of permissions to request. The `paymentMethod` permission must be included.
+     */
+    permissions?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * Data features requested to be retrieved upon account creation.
+     */
+    prefetches?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * For webview integrations only. Upon completing OAuth login in the native browser, the user will be redirected to this URL to return to your app.
+     */
+    returnUrl?: pulumi.Input<string | undefined>;
+}
+
+export interface SetupIntentPaymentMethodOptionsUsBankAccountFinancialConnectionsFilters {
+    /**
+     * The account subcategories to use to filter for possible accounts to link. Valid subcategories are `checking` and `savings`.
+     */
+    accountSubcategories?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+}
+
+export interface SetupIntentPaymentMethodOptionsUsBankAccountMandateOptions {
+    /**
+     * Mandate collection method
+     */
+    collectionMethod?: pulumi.Input<string | undefined>;
+}
+
+export interface SetupIntentPaymentMethodOptionsUsBankAccountNetworks {
+    /**
+     * Triggers validations to run across the selected networks
+     */
+    requesteds?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+}
+
+export interface SetupIntentSingleUse {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Amount the customer is granting permission to collect later. A positive integer representing how much to charge in the [smallest currency unit](https://docs.stripe.com/currencies#zero-decimal) (e.g., 100 cents to charge $1.00 or 100 to charge ¥100, a zero-decimal currency). The minimum amount is $0.50 US or [equivalent in charge currency](https://docs.stripe.com/currencies#minimum-and-maximum-charge-amounts). The amount value supports up to eight digits (e.g., a value of 99999999 for a USD charge of $999,999.99).
+     */
+    amount: pulumi.Input<number>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+     */
+    currency: pulumi.Input<string>;
 }
 
 export interface ShippingRateDeliveryEstimate {
@@ -571,6 +12480,9 @@ export interface ShippingRateFixedAmountCurrencyOption {
      * A non-negative integer in cents representing how much to charge.
      */
     amount: pulumi.Input<number>;
+    /**
+     * Key for this entry.
+     */
     key: pulumi.Input<string>;
     /**
      * Specifies whether the rate is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`.
@@ -578,171 +12490,4820 @@ export interface ShippingRateFixedAmountCurrencyOption {
     taxBehavior?: pulumi.Input<string | undefined>;
 }
 
-export interface V2BillingLicenseFeeTier {
-    /**
-     * Price for the entire tier, represented as a decimal string in minor currency units with at most 12 decimal places.
-     */
-    flatAmount?: pulumi.Input<string | undefined>;
-    /**
-     * Per-unit price for units included in this tier, represented as a decimal string in minor currency units with at most 12 decimal places.
-     */
-    unitAmount?: pulumi.Input<string | undefined>;
-    /**
-     * Up to and including this quantity will be contained in the tier. Only one of `upToDecimal` and `upToInf` may be set.
-     */
-    upToDecimal?: pulumi.Input<string | undefined>;
-    /**
-     * No upper bound to this tier. Only one of `upToDecimal` and `upToInf` may be set.
-     */
-    upToInf?: pulumi.Input<string | undefined>;
+export interface SourceAchCreditTransfer {
+    accountNumber?: pulumi.Input<string | undefined>;
+    bankName?: pulumi.Input<string | undefined>;
+    fingerprint?: pulumi.Input<string | undefined>;
+    refundAccountHolderName?: pulumi.Input<string | undefined>;
+    refundAccountHolderType?: pulumi.Input<string | undefined>;
+    refundRoutingNumber?: pulumi.Input<string | undefined>;
+    routingNumber?: pulumi.Input<string | undefined>;
+    swiftCode?: pulumi.Input<string | undefined>;
 }
 
-export interface V2BillingMeteredItemMeterSegmentCondition {
-    /**
-     * A Meter dimension.
-     */
-    dimension: pulumi.Input<string>;
-    /**
-     * To count usage towards this metered item, the dimension must have this value.
-     */
-    value: pulumi.Input<string>;
+export interface SourceAchDebit {
+    bankName?: pulumi.Input<string | undefined>;
+    country?: pulumi.Input<string | undefined>;
+    fingerprint?: pulumi.Input<string | undefined>;
+    last4?: pulumi.Input<string | undefined>;
+    routingNumber?: pulumi.Input<string | undefined>;
+    type?: pulumi.Input<string | undefined>;
 }
 
-export interface V2BillingPricingPlanComponentLicenseFee {
-    /**
-     * The ID of the License Fee.
-     */
-    id: pulumi.Input<string>;
-    /**
-     * The version of the LicenseFee. Defaults to 'latest', if not specified.
-     */
-    version?: pulumi.Input<string | undefined>;
-}
-
-export interface V2BillingPricingPlanComponentRateCard {
-    /**
-     * The ID of the Rate Card.
-     */
-    id: pulumi.Input<string>;
-    /**
-     * The version of the RateCard. Defaults to 'latest', if not specified.
-     */
-    version?: pulumi.Input<string | undefined>;
-}
-
-export interface V2BillingPricingPlanComponentServiceAction {
-    /**
-     * The ID of the service action.
-     */
-    id: pulumi.Input<string>;
-}
-
-export interface V2BillingRateCardRateTier {
-    /**
-     * Price for the entire tier, represented as a decimal string in minor currency units with at most 12 decimal places.
-     */
-    flatAmount?: pulumi.Input<string | undefined>;
-    /**
-     * Per-unit price for units included in this tier, represented as a decimal string in minor currency units with at most 12 decimal places.
-     */
-    unitAmount?: pulumi.Input<string | undefined>;
-    /**
-     * Up to and including this quantity will be contained in the tier. Only one of `upToDecimal` and `upToInf` may be set.
-     */
-    upToDecimal?: pulumi.Input<string | undefined>;
-    /**
-     * No upper bound to this tier. Only one of `upToDecimal` and `upToInf` may be set.
-     */
-    upToInf?: pulumi.Input<string | undefined>;
-}
-
-export interface V2BillingServiceActionCreditGrant {
-    /**
-     * The amount of the credit grant.
-     */
-    amount: pulumi.Input<inputs.V2BillingServiceActionCreditGrantAmount>;
-    /**
-     * Defines the scope where the credit grant is applicable.
-     */
-    applicabilityConfig: pulumi.Input<inputs.V2BillingServiceActionCreditGrantApplicabilityConfig>;
-    /**
-     * The category of the credit grant.
-     */
+export interface SourceAcssDebit {
+    bankAddressCity?: pulumi.Input<string | undefined>;
+    bankAddressLine1?: pulumi.Input<string | undefined>;
+    bankAddressLine2?: pulumi.Input<string | undefined>;
+    bankAddressPostalCode?: pulumi.Input<string | undefined>;
+    bankName?: pulumi.Input<string | undefined>;
     category?: pulumi.Input<string | undefined>;
-    /**
-     * The expiry configuration for the credit grant.
-     */
-    expiryConfig: pulumi.Input<inputs.V2BillingServiceActionCreditGrantExpiryConfig>;
-    /**
-     * A descriptive name shown in dashboard.
-     */
-    name: pulumi.Input<string>;
-    /**
-     * The desired priority for applying this credit grant. If not specified, it will be set to the default value of 50. The highest priority is 0 and the lowest is 100.
-     */
-    priority?: pulumi.Input<number | undefined>;
+    country?: pulumi.Input<string | undefined>;
+    fingerprint?: pulumi.Input<string | undefined>;
+    last4?: pulumi.Input<string | undefined>;
+    routingNumber?: pulumi.Input<string | undefined>;
 }
 
-export interface V2BillingServiceActionCreditGrantAmount {
+export interface SourceAlipay {
+    dataString?: pulumi.Input<string | undefined>;
+    nativeUrl?: pulumi.Input<string | undefined>;
+    statementDescriptor?: pulumi.Input<string | undefined>;
+}
+
+export interface SourceAuBecsDebit {
+    bsbNumber?: pulumi.Input<string | undefined>;
+    fingerprint?: pulumi.Input<string | undefined>;
+    last4?: pulumi.Input<string | undefined>;
+}
+
+export interface SourceBancontact {
+    bankCode?: pulumi.Input<string | undefined>;
+    bankName?: pulumi.Input<string | undefined>;
+    bic?: pulumi.Input<string | undefined>;
+    ibanLast4?: pulumi.Input<string | undefined>;
+    preferredLanguage?: pulumi.Input<string | undefined>;
+    statementDescriptor?: pulumi.Input<string | undefined>;
+}
+
+export interface SourceCard {
+    addressLine1Check?: pulumi.Input<string | undefined>;
+    addressZipCheck?: pulumi.Input<string | undefined>;
+    brand?: pulumi.Input<string | undefined>;
+    country?: pulumi.Input<string | undefined>;
+    cvcCheck?: pulumi.Input<string | undefined>;
+    description?: pulumi.Input<string | undefined>;
+    dynamicLast4?: pulumi.Input<string | undefined>;
+    expMonth?: pulumi.Input<number | undefined>;
+    expYear?: pulumi.Input<number | undefined>;
+    fingerprint?: pulumi.Input<string | undefined>;
+    funding?: pulumi.Input<string | undefined>;
+    iin?: pulumi.Input<string | undefined>;
+    issuer?: pulumi.Input<string | undefined>;
+    last4?: pulumi.Input<string | undefined>;
+    name?: pulumi.Input<string | undefined>;
+    threeDSecure?: pulumi.Input<string | undefined>;
+    tokenizationMethod?: pulumi.Input<string | undefined>;
+}
+
+export interface SourceCardPresent {
+    applicationCryptogram?: pulumi.Input<string | undefined>;
+    applicationPreferredName?: pulumi.Input<string | undefined>;
+    authorizationCode?: pulumi.Input<string | undefined>;
+    authorizationResponseCode?: pulumi.Input<string | undefined>;
+    brand?: pulumi.Input<string | undefined>;
+    country?: pulumi.Input<string | undefined>;
+    cvmType?: pulumi.Input<string | undefined>;
+    dataType?: pulumi.Input<string | undefined>;
+    dedicatedFileName?: pulumi.Input<string | undefined>;
+    description?: pulumi.Input<string | undefined>;
+    emvAuthData?: pulumi.Input<string | undefined>;
+    evidenceCustomerSignature?: pulumi.Input<string | undefined>;
+    evidenceTransactionCertificate?: pulumi.Input<string | undefined>;
+    expMonth?: pulumi.Input<number | undefined>;
+    expYear?: pulumi.Input<number | undefined>;
+    fingerprint?: pulumi.Input<string | undefined>;
+    funding?: pulumi.Input<string | undefined>;
+    iin?: pulumi.Input<string | undefined>;
+    issuer?: pulumi.Input<string | undefined>;
+    last4?: pulumi.Input<string | undefined>;
+    posDeviceId?: pulumi.Input<string | undefined>;
+    posEntryMode?: pulumi.Input<string | undefined>;
+    readMethod?: pulumi.Input<string | undefined>;
+    reader?: pulumi.Input<string | undefined>;
+    terminalVerificationResults?: pulumi.Input<string | undefined>;
+    transactionStatusInformation?: pulumi.Input<string | undefined>;
+}
+
+export interface SourceCodeVerification {
     /**
-     * The custom pricing unit amount of the credit grant. Required if `type` is `customPricingUnit`.
+     * The number of attempts remaining to authenticate the source object with a verification code.
      */
-    customPricingUnit?: pulumi.Input<inputs.V2BillingServiceActionCreditGrantAmountCustomPricingUnit | undefined>;
+    attemptsRemaining?: pulumi.Input<number | undefined>;
     /**
-     * The monetary amount of the credit grant. Required if `type` is `monetary`.
+     * The status of the code verification, either `pending` (awaiting verification, `attemptsRemaining` should be greater than 0), `succeeded` (successful verification) or `failed` (failed verification, cannot be verified anymore as `attemptsRemaining` should be 0).
      */
-    monetary?: pulumi.Input<inputs.V2BillingServiceActionCreditGrantAmountMonetary | undefined>;
+    status?: pulumi.Input<string | undefined>;
+}
+
+export interface SourceEps {
+    reference?: pulumi.Input<string | undefined>;
+    statementDescriptor?: pulumi.Input<string | undefined>;
+}
+
+export interface SourceGiropay {
+    bankCode?: pulumi.Input<string | undefined>;
+    bankName?: pulumi.Input<string | undefined>;
+    bic?: pulumi.Input<string | undefined>;
+    statementDescriptor?: pulumi.Input<string | undefined>;
+}
+
+export interface SourceIdeal {
+    bank?: pulumi.Input<string | undefined>;
+    bic?: pulumi.Input<string | undefined>;
+    ibanLast4?: pulumi.Input<string | undefined>;
+    statementDescriptor?: pulumi.Input<string | undefined>;
+}
+
+export interface SourceKlarna {
+    backgroundImageUrl?: pulumi.Input<string | undefined>;
+    clientToken?: pulumi.Input<string | undefined>;
+    firstName?: pulumi.Input<string | undefined>;
+    lastName?: pulumi.Input<string | undefined>;
+    locale?: pulumi.Input<string | undefined>;
+    logoUrl?: pulumi.Input<string | undefined>;
+    pageTitle?: pulumi.Input<string | undefined>;
+    payLaterAssetUrlsDescriptive?: pulumi.Input<string | undefined>;
+    payLaterAssetUrlsStandard?: pulumi.Input<string | undefined>;
+    payLaterName?: pulumi.Input<string | undefined>;
+    payLaterRedirectUrl?: pulumi.Input<string | undefined>;
+    payNowAssetUrlsDescriptive?: pulumi.Input<string | undefined>;
+    payNowAssetUrlsStandard?: pulumi.Input<string | undefined>;
+    payNowName?: pulumi.Input<string | undefined>;
+    payNowRedirectUrl?: pulumi.Input<string | undefined>;
+    payOverTimeAssetUrlsDescriptive?: pulumi.Input<string | undefined>;
+    payOverTimeAssetUrlsStandard?: pulumi.Input<string | undefined>;
+    payOverTimeName?: pulumi.Input<string | undefined>;
+    payOverTimeRedirectUrl?: pulumi.Input<string | undefined>;
+    paymentMethodCategories?: pulumi.Input<string | undefined>;
+    purchaseCountry?: pulumi.Input<string | undefined>;
+    purchaseType?: pulumi.Input<string | undefined>;
+    redirectUrl?: pulumi.Input<string | undefined>;
+    shippingDelay?: pulumi.Input<number | undefined>;
+    shippingFirstName?: pulumi.Input<string | undefined>;
+    shippingLastName?: pulumi.Input<string | undefined>;
+}
+
+export interface SourceMandate {
     /**
-     * The type of the credit grant amount. We currently support `monetary` and `customPricingUnit` billing credits.
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The parameters required to notify Stripe of a mandate acceptance or refusal by the customer.
+     */
+    acceptance?: pulumi.Input<inputs.SourceMandateAcceptance | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The amount specified by the mandate. (Leave null for a mandate covering all amounts)
+     */
+    amount?: pulumi.Input<number | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The currency specified by the mandate. (Must match `currency` of the source)
+     */
+    currency?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The interval of debits permitted by the mandate. Either `oneTime` (just permitting a single debit), `scheduled` (with debits on an agreed schedule or for clearly-defined events), or `variable`(for debits with any frequency)
+     */
+    interval?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The method Stripe should use to notify the customer of upcoming debit instructions and/or mandate confirmation as required by the underlying debit network. Either `email` (an email is sent directly to the customer), `manual` (a `source.mandate_notification` event is sent to your webhooks endpoint and you should handle the notification) or `none` (the underlying debit network does not require any notification).
+     */
+    notificationMethod?: pulumi.Input<string | undefined>;
+}
+
+export interface SourceMandateAcceptance {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The Unix timestamp (in seconds) when the mandate was accepted or refused by the customer.
+     */
+    date?: pulumi.Input<number | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The IP address from which the mandate was accepted or refused by the customer.
+     */
+    ip?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The parameters required to store a mandate accepted offline. Should only be set if `mandate[type]` is `offline`
+     */
+    offline?: pulumi.Input<inputs.SourceMandateAcceptanceOffline | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The parameters required to store a mandate accepted online. Should only be set if `mandate[type]` is `online`
+     */
+    online?: pulumi.Input<inputs.SourceMandateAcceptanceOnline | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The status of the mandate acceptance. Either `accepted` (the mandate was accepted) or `refused` (the mandate was refused).
+     */
+    status: pulumi.Input<string>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The type of acceptance information included with the mandate. Either `online` or `offline`
+     */
+    type?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The user agent of the browser from which the mandate was accepted or refused by the customer.
+     */
+    userAgent?: pulumi.Input<string | undefined>;
+}
+
+export interface SourceMandateAcceptanceOffline {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * An email to contact you with if a copy of the mandate is requested, required if `type` is `offline`.
+     */
+    contactEmail: pulumi.Input<string>;
+}
+
+export interface SourceMandateAcceptanceOnline {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The Unix timestamp (in seconds) when the mandate was accepted or refused by the customer.
+     */
+    date?: pulumi.Input<number | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The IP address from which the mandate was accepted or refused by the customer.
+     */
+    ip?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The user agent of the browser from which the mandate was accepted or refused by the customer.
+     */
+    userAgent?: pulumi.Input<string | undefined>;
+}
+
+export interface SourceMultibanco {
+    entity?: pulumi.Input<string | undefined>;
+    reference?: pulumi.Input<string | undefined>;
+    refundAccountHolderAddressCity?: pulumi.Input<string | undefined>;
+    refundAccountHolderAddressCountry?: pulumi.Input<string | undefined>;
+    refundAccountHolderAddressLine1?: pulumi.Input<string | undefined>;
+    refundAccountHolderAddressLine2?: pulumi.Input<string | undefined>;
+    refundAccountHolderAddressPostalCode?: pulumi.Input<string | undefined>;
+    refundAccountHolderAddressState?: pulumi.Input<string | undefined>;
+    refundAccountHolderName?: pulumi.Input<string | undefined>;
+    refundIban?: pulumi.Input<string | undefined>;
+}
+
+export interface SourceOwner {
+    /**
+     * Owner's address.
+     */
+    address?: pulumi.Input<inputs.SourceOwnerAddress | undefined>;
+    /**
+     * Owner's email address.
+     */
+    email?: pulumi.Input<string | undefined>;
+    /**
+     * Owner's full name.
+     */
+    name?: pulumi.Input<string | undefined>;
+    /**
+     * Owner's phone number (including extension).
+     */
+    phone?: pulumi.Input<string | undefined>;
+    /**
+     * Verified owner's address. Verified values are verified or provided by the payment method directly (and if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    verifiedAddress?: pulumi.Input<inputs.SourceOwnerVerifiedAddress | undefined>;
+    /**
+     * Verified owner's email address. Verified values are verified or provided by the payment method directly (and if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    verifiedEmail?: pulumi.Input<string | undefined>;
+    /**
+     * Verified owner's full name. Verified values are verified or provided by the payment method directly (and if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    verifiedName?: pulumi.Input<string | undefined>;
+    /**
+     * Verified owner's phone number (including extension). Verified values are verified or provided by the payment method directly (and if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    verifiedPhone?: pulumi.Input<string | undefined>;
+}
+
+export interface SourceOwnerAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode?: pulumi.Input<string | undefined>;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: pulumi.Input<string | undefined>;
+}
+
+export interface SourceOwnerVerifiedAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode?: pulumi.Input<string | undefined>;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: pulumi.Input<string | undefined>;
+}
+
+export interface SourceP24 {
+    reference?: pulumi.Input<string | undefined>;
+}
+
+export interface SourceReceiver {
+    /**
+     * The address of the receiver source. This is the value that should be communicated to the customer to send their funds to.
+     */
+    address?: pulumi.Input<string | undefined>;
+    /**
+     * The total amount that was moved to your balance. This is almost always equal to the amount charged. In rare cases when customers deposit excess funds and we are unable to refund those, those funds get moved to your balance and show up in amountCharged as well. The amount charged is expressed in the source's currency.
+     */
+    amountCharged?: pulumi.Input<number | undefined>;
+    /**
+     * The total amount received by the receiver source. `amountReceived = amountReturned + amountCharged` should be true for consumed sources unless customers deposit excess funds. The amount received is expressed in the source's currency.
+     */
+    amountReceived?: pulumi.Input<number | undefined>;
+    /**
+     * The total amount that was returned to the customer. The amount returned is expressed in the source's currency.
+     */
+    amountReturned?: pulumi.Input<number | undefined>;
+    /**
+     * Type of refund attribute method, one of `email`, `manual`, or `none`.
+     */
+    refundAttributesMethod?: pulumi.Input<string | undefined>;
+    /**
+     * Type of refund attribute status, one of `missing`, `requested`, or `available`.
+     */
+    refundAttributesStatus?: pulumi.Input<string | undefined>;
+}
+
+export interface SourceRedirect {
+    /**
+     * The failure reason for the redirect, either `userAbort` (the customer aborted or dropped out of the redirect flow), `declined` (the authentication failed or the transaction was declined), or `processingError` (the redirect failed due to a technical error). Present only if the redirect status is `failed`.
+     */
+    failureReason?: pulumi.Input<string | undefined>;
+    /**
+     * The URL you provide to redirect the customer to after they authenticated their payment.
+     */
+    returnUrl: pulumi.Input<string>;
+    /**
+     * The status of the redirect, either `pending` (ready to be used by your customer to authenticate the transaction), `succeeded` (successful authentication, cannot be reused) or `notRequired` (redirect should not be used) or `failed` (failed authentication, cannot be reused).
+     */
+    status?: pulumi.Input<string | undefined>;
+    /**
+     * The URL provided to you to redirect a customer to as part of a `redirect` authentication flow.
+     */
+    url?: pulumi.Input<string | undefined>;
+}
+
+export interface SourceSepaCreditTransfer {
+    bankName?: pulumi.Input<string | undefined>;
+    bic?: pulumi.Input<string | undefined>;
+    iban?: pulumi.Input<string | undefined>;
+    refundAccountHolderAddressCity?: pulumi.Input<string | undefined>;
+    refundAccountHolderAddressCountry?: pulumi.Input<string | undefined>;
+    refundAccountHolderAddressLine1?: pulumi.Input<string | undefined>;
+    refundAccountHolderAddressLine2?: pulumi.Input<string | undefined>;
+    refundAccountHolderAddressPostalCode?: pulumi.Input<string | undefined>;
+    refundAccountHolderAddressState?: pulumi.Input<string | undefined>;
+    refundAccountHolderName?: pulumi.Input<string | undefined>;
+    refundIban?: pulumi.Input<string | undefined>;
+}
+
+export interface SourceSepaDebit {
+    bankCode?: pulumi.Input<string | undefined>;
+    branchCode?: pulumi.Input<string | undefined>;
+    country?: pulumi.Input<string | undefined>;
+    fingerprint?: pulumi.Input<string | undefined>;
+    last4?: pulumi.Input<string | undefined>;
+    mandateReference?: pulumi.Input<string | undefined>;
+    mandateUrl?: pulumi.Input<string | undefined>;
+}
+
+export interface SourceSofort {
+    bankCode?: pulumi.Input<string | undefined>;
+    bankName?: pulumi.Input<string | undefined>;
+    bic?: pulumi.Input<string | undefined>;
+    country?: pulumi.Input<string | undefined>;
+    ibanLast4?: pulumi.Input<string | undefined>;
+    preferredLanguage?: pulumi.Input<string | undefined>;
+    statementDescriptor?: pulumi.Input<string | undefined>;
+}
+
+export interface SourceSourceOrder {
+    /**
+     * A positive integer in the smallest currency unit (that is, 100 cents for $1.00, or 1 for ¥1, Japanese Yen being a zero-decimal currency) representing the total amount for the order.
+     */
+    amount?: pulumi.Input<number | undefined>;
+    /**
+     * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+     */
+    currency?: pulumi.Input<string | undefined>;
+    /**
+     * The email address of the customer placing the order.
+     */
+    email?: pulumi.Input<string | undefined>;
+    /**
+     * List of items constituting the order.
+     */
+    items?: pulumi.Input<pulumi.Input<inputs.SourceSourceOrderItem>[] | undefined>;
+    shipping?: pulumi.Input<inputs.SourceSourceOrderShipping | undefined>;
+}
+
+export interface SourceSourceOrderItem {
+    /**
+     * The amount (price) for this order item.
+     */
+    amount?: pulumi.Input<number | undefined>;
+    /**
+     * This currency of this order item. Required when `amount` is present.
+     */
+    currency?: pulumi.Input<string | undefined>;
+    /**
+     * Human-readable description for this order item.
+     */
+    description?: pulumi.Input<string | undefined>;
+    /**
+     * The ID of the associated object for this line item. Expandable if not null (e.g., expandable to a SKU).
+     */
+    parent?: pulumi.Input<string | undefined>;
+    /**
+     * The quantity of this order item. When type is `sku`, this is the number of instances of the SKU to be ordered.
+     */
+    quantity?: pulumi.Input<number | undefined>;
+    /**
+     * The type of this order item. Must be `sku`, `tax`, or `shipping`.
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface SourceSourceOrderShipping {
+    address: pulumi.Input<inputs.SourceSourceOrderShippingAddress>;
+    /**
+     * The delivery service that shipped a physical product, such as Fedex, UPS, USPS, etc.
+     */
+    carrier?: pulumi.Input<string | undefined>;
+    /**
+     * Recipient name.
+     */
+    name?: pulumi.Input<string | undefined>;
+    /**
+     * Recipient phone (including extension).
+     */
+    phone?: pulumi.Input<string | undefined>;
+    /**
+     * The tracking number for a physical product, obtained from the delivery service. If multiple tracking numbers were generated for this purchase, please separate them with commas.
+     */
+    trackingNumber?: pulumi.Input<string | undefined>;
+}
+
+export interface SourceSourceOrderShippingAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1: pulumi.Input<string>;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode?: pulumi.Input<string | undefined>;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: pulumi.Input<string | undefined>;
+}
+
+export interface SourceThreeDSecure {
+    addressLine1Check?: pulumi.Input<string | undefined>;
+    addressZipCheck?: pulumi.Input<string | undefined>;
+    authenticated?: pulumi.Input<boolean | undefined>;
+    brand?: pulumi.Input<string | undefined>;
+    card?: pulumi.Input<string | undefined>;
+    country?: pulumi.Input<string | undefined>;
+    customer?: pulumi.Input<string | undefined>;
+    cvcCheck?: pulumi.Input<string | undefined>;
+    description?: pulumi.Input<string | undefined>;
+    dynamicLast4?: pulumi.Input<string | undefined>;
+    expMonth?: pulumi.Input<number | undefined>;
+    expYear?: pulumi.Input<number | undefined>;
+    fingerprint?: pulumi.Input<string | undefined>;
+    funding?: pulumi.Input<string | undefined>;
+    iin?: pulumi.Input<string | undefined>;
+    issuer?: pulumi.Input<string | undefined>;
+    last4?: pulumi.Input<string | undefined>;
+    name?: pulumi.Input<string | undefined>;
+    threeDSecure?: pulumi.Input<string | undefined>;
+    tokenizationMethod?: pulumi.Input<string | undefined>;
+}
+
+export interface SourceWechat {
+    prepayId?: pulumi.Input<string | undefined>;
+    qrCodeUrl?: pulumi.Input<string | undefined>;
+    statementDescriptor?: pulumi.Input<string | undefined>;
+}
+
+export interface SubscriptionAddInvoiceItem {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Controls whether discounts apply to this invoice item. Defaults to true if no value is provided.
+     */
+    discountable?: pulumi.Input<boolean | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The coupons to redeem into discounts for the item.
+     */
+    discounts?: pulumi.Input<pulumi.Input<inputs.SubscriptionAddInvoiceItemDiscount>[] | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
+     */
+    metadata?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The period associated with this invoice item. If not set, `period.start.type` defaults to `maxItemPeriodStart` and `period.end.type` defaults to `minItemPeriodEnd`.
+     */
+    period?: pulumi.Input<inputs.SubscriptionAddInvoiceItemPeriod | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The ID of the price object. One of `price` or `priceData` is required.
+     */
+    price?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Data used to generate a new [Price](https://docs.stripe.com/api/prices) object inline. One of `price` or `priceData` is required.
+     */
+    priceData?: pulumi.Input<inputs.SubscriptionAddInvoiceItemPriceData | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Quantity for this item. Defaults to 1.
+     */
+    quantity?: pulumi.Input<number | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The tax rates which apply to the item. When set, the `defaultTaxRates` do not apply to this item.
+     */
+    taxRates?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+}
+
+export interface SubscriptionAddInvoiceItemDiscount {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * ID of the coupon to create a new discount for.
+     */
+    coupon?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * ID of an existing discount on the object (or one of its ancestors) to reuse.
+     */
+    discount?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * ID of the promotion code to create a new discount for.
+     */
+    promotionCode?: pulumi.Input<string | undefined>;
+}
+
+export interface SubscriptionAddInvoiceItemPeriod {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * End of the invoice item period.
+     */
+    end: pulumi.Input<inputs.SubscriptionAddInvoiceItemPeriodEnd>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Start of the invoice item period.
+     */
+    start: pulumi.Input<inputs.SubscriptionAddInvoiceItemPeriodStart>;
+}
+
+export interface SubscriptionAddInvoiceItemPeriodEnd {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * A precise Unix timestamp for the end of the invoice item period. Must be greater than or equal to `period.start`.
+     */
+    timestamp?: pulumi.Input<number | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Select how to calculate the end of the invoice item period.
      */
     type: pulumi.Input<string>;
 }
 
-export interface V2BillingServiceActionCreditGrantAmountCustomPricingUnit {
+export interface SubscriptionAddInvoiceItemPeriodStart {
     /**
-     * The id of the custom pricing unit.
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * A precise Unix timestamp for the start of the invoice item period. Must be less than or equal to `period.end`.
      */
-    id: pulumi.Input<string>;
+    timestamp?: pulumi.Input<number | undefined>;
     /**
-     * The value of the credit grant, decimal value represented as a string.
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Select how to calculate the start of the invoice item period.
      */
-    value: pulumi.Input<string>;
+    type: pulumi.Input<string>;
 }
 
-export interface V2BillingServiceActionCreditGrantAmountMonetary {
+export interface SubscriptionAddInvoiceItemPriceData {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+     */
+    currency: pulumi.Input<string>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The ID of the [Product](https://docs.stripe.com/api/products) that this [Price](https://docs.stripe.com/api/prices) will belong to.
+     */
+    product: pulumi.Input<string>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Only required if a [default tax behavior](<https://docs.stripe.com/tax/products-prices-tax-categories-tax-behavior#setting-a-default-tax-behavior-(recommended)>) was not provided in the Stripe Tax settings. Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
+     */
+    taxBehavior?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge or a negative integer representing the amount to credit to the customer.
+     */
+    unitAmount?: pulumi.Input<number | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Same as `unitAmount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unitAmount` and `unitAmountDecimal` can be set.
+     */
+    unitAmountDecimal?: pulumi.Input<number | undefined>;
+}
+
+export interface SubscriptionAutomaticTax {
+    /**
+     * If Stripe disabled automatic tax, this enum describes why.
+     */
+    disabledReason?: pulumi.Input<string | undefined>;
+    /**
+     * Whether Stripe automatically computes tax on this subscription.
+     */
+    enabled: pulumi.Input<boolean>;
+    /**
+     * The account that's liable for tax. If set, the business address and tax registrations required to perform the tax calculation are loaded from this account. The tax transaction is returned in the report of the connected account.
+     */
+    liability?: pulumi.Input<inputs.SubscriptionAutomaticTaxLiability | undefined>;
+}
+
+export interface SubscriptionAutomaticTaxLiability {
+    /**
+     * The connected account being referenced when `type` is `account`.
+     */
+    account?: pulumi.Input<string | undefined>;
+    /**
+     * Type of the account referenced.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface SubscriptionBillingCycleAnchorConfig {
+    /**
+     * The day of the month of the billing*cycle*anchor.
+     */
+    dayOfMonth: pulumi.Input<number>;
+    /**
+     * The hour of the day of the billing*cycle*anchor.
+     */
+    hour?: pulumi.Input<number | undefined>;
+    /**
+     * The minute of the hour of the billing*cycle*anchor.
+     */
+    minute?: pulumi.Input<number | undefined>;
+    /**
+     * The month to start full cycle billing periods.
+     */
+    month?: pulumi.Input<number | undefined>;
+    /**
+     * The second of the minute of the billing*cycle*anchor.
+     */
+    second?: pulumi.Input<number | undefined>;
+}
+
+export interface SubscriptionBillingMode {
+    /**
+     * Configure behavior for flexible billing mode
+     */
+    flexible?: pulumi.Input<inputs.SubscriptionBillingModeFlexible | undefined>;
+    /**
+     * Controls how prorations and invoices for subscriptions are calculated and orchestrated.
+     */
+    type: pulumi.Input<string>;
+    /**
+     * Details on when the current billingMode was adopted.
+     */
+    updatedAt?: pulumi.Input<number | undefined>;
+}
+
+export interface SubscriptionBillingModeFlexible {
+    /**
+     * Controls how invoices and invoice items display proration amounts and discount amounts.
+     */
+    prorationDiscounts?: pulumi.Input<string | undefined>;
+}
+
+export interface SubscriptionBillingSchedule {
+    /**
+     * Specifies which subscription items the billing schedule applies to.
+     */
+    appliesTos?: pulumi.Input<pulumi.Input<inputs.SubscriptionBillingScheduleAppliesTo>[] | undefined>;
+    /**
+     * Specifies the end of billing period.
+     */
+    billUntil: pulumi.Input<inputs.SubscriptionBillingScheduleBillUntil>;
+    /**
+     * Unique identifier for the billing schedule.
+     */
+    key?: pulumi.Input<string | undefined>;
+}
+
+export interface SubscriptionBillingScheduleAppliesTo {
+    /**
+     * The billing schedule will apply to the subscription item with the given price ID.
+     */
+    price?: pulumi.Input<string | undefined>;
+    /**
+     * Controls which subscription items the billing schedule applies to.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface SubscriptionBillingScheduleBillUntil {
+    /**
+     * The timestamp the billing schedule will apply until.
+     */
+    computedTimestamp?: pulumi.Input<number | undefined>;
+    /**
+     * Specifies the billing period.
+     */
+    duration?: pulumi.Input<inputs.SubscriptionBillingScheduleBillUntilDuration | undefined>;
+    /**
+     * If specified, the billing schedule will apply until the specified timestamp.
+     */
+    timestamp?: pulumi.Input<number | undefined>;
+    /**
+     * Describes how the billing schedule will determine the end date. Either `duration` or `timestamp`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface SubscriptionBillingScheduleBillUntilDuration {
+    /**
+     * Specifies billing duration. Either `day`, `week`, `month` or `year`.
+     */
+    interval: pulumi.Input<string>;
+    /**
+     * The multiplier applied to the interval.
+     */
+    intervalCount?: pulumi.Input<number | undefined>;
+}
+
+export interface SubscriptionBillingThresholds {
+    /**
+     * Monetary threshold that triggers the subscription to create an invoice
+     */
+    amountGte?: pulumi.Input<number | undefined>;
+    /**
+     * Indicates if the `billingCycleAnchor` should be reset when a threshold is reached. If true, `billingCycleAnchor` will be updated to the date/time the threshold was last reached; otherwise, the value will remain unchanged. This value may not be `true` if the subscription contains items with plans that have `aggregate_usage=last_ever`.
+     */
+    resetBillingCycleAnchor?: pulumi.Input<boolean | undefined>;
+}
+
+export interface SubscriptionCancellationDetails {
+    /**
+     * Additional comments about why the user canceled the subscription, if the subscription was canceled explicitly by the user.
+     */
+    comment?: pulumi.Input<string | undefined>;
+    /**
+     * The customer submitted reason for why they canceled, if the subscription was canceled explicitly by the user.
+     */
+    feedback?: pulumi.Input<string | undefined>;
+    /**
+     * Why this subscription was canceled.
+     */
+    reason?: pulumi.Input<string | undefined>;
+}
+
+export interface SubscriptionDiscount {
+    /**
+     * ID of the coupon to create a new discount for.
+     */
+    coupon?: pulumi.Input<string | undefined>;
+    /**
+     * ID of an existing discount on the object (or one of its ancestors) to reuse.
+     */
+    discount?: pulumi.Input<string | undefined>;
+    /**
+     * ID of the promotion code to create a new discount for.
+     */
+    promotionCode?: pulumi.Input<string | undefined>;
+}
+
+export interface SubscriptionInvoiceSettings {
+    /**
+     * The account tax IDs associated with the subscription. Will be set on invoices generated by the subscription.
+     */
+    accountTaxIds?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    issuer?: pulumi.Input<inputs.SubscriptionInvoiceSettingsIssuer | undefined>;
+}
+
+export interface SubscriptionInvoiceSettingsIssuer {
+    /**
+     * The connected account being referenced when `type` is `account`.
+     */
+    account?: pulumi.Input<string | undefined>;
+    /**
+     * Type of the account referenced.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface SubscriptionItem {
+    /**
+     * Define thresholds at which an invoice will be sent, and the subscription advanced to a new billing period. Pass an empty string to remove previously-defined thresholds.
+     */
+    billingThresholds?: pulumi.Input<inputs.SubscriptionItemBillingThresholds | undefined>;
+    /**
+     * The coupons to redeem into discounts for the subscription item.
+     */
+    discounts?: pulumi.Input<pulumi.Input<inputs.SubscriptionItemDiscount>[] | undefined>;
+    /**
+     * Unique identifier for the object.
+     */
+    id?: pulumi.Input<string | undefined>;
+    /**
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
+     */
+    metadata?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
+    /**
+     * The ID of the price object.
+     */
+    price?: pulumi.Input<string | undefined>;
+    /**
+     * Data used to generate a new [Price](https://docs.stripe.com/api/prices) object inline.
+     */
+    priceData?: pulumi.Input<inputs.SubscriptionItemPriceData | undefined>;
+    /**
+     * Quantity for this item.
+     */
+    quantity?: pulumi.Input<number | undefined>;
+    /**
+     * A list of [Tax Rate](https://docs.stripe.com/api/tax_rates) ids. These Tax Rates will override the [`defaultTaxRates`](https://docs.stripe.com/api/subscriptions/create#create_subscription-default_tax_rates) on the Subscription. When updating, pass an empty string to remove previously-defined tax rates.
+     */
+    taxRates?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+}
+
+export interface SubscriptionItemBillingThresholds {
+    /**
+     * Usage threshold that triggers the subscription to create an invoice
+     */
+    usageGte: pulumi.Input<number>;
+}
+
+export interface SubscriptionItemDiscount {
+    /**
+     * ID of the coupon to create a new discount for.
+     */
+    coupon?: pulumi.Input<string | undefined>;
+    /**
+     * ID of an existing discount on the object (or one of its ancestors) to reuse.
+     */
+    discount?: pulumi.Input<string | undefined>;
+    /**
+     * ID of the promotion code to create a new discount for.
+     */
+    promotionCode?: pulumi.Input<string | undefined>;
+}
+
+export interface SubscriptionItemPriceData {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+     */
+    currency: pulumi.Input<string>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The ID of the [Product](https://docs.stripe.com/api/products) that this [Price](https://docs.stripe.com/api/prices) will belong to.
+     */
+    product: pulumi.Input<string>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The recurring components of a price such as `interval` and `intervalCount`.
+     */
+    recurring: pulumi.Input<inputs.SubscriptionItemPriceDataRecurring>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Only required if a [default tax behavior](<https://docs.stripe.com/tax/products-prices-tax-categories-tax-behavior#setting-a-default-tax-behavior-(recommended)>) was not provided in the Stripe Tax settings. Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
+     */
+    taxBehavior?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge.
+     */
+    unitAmount?: pulumi.Input<number | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Same as `unitAmount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unitAmount` and `unitAmountDecimal` can be set.
+     */
+    unitAmountDecimal?: pulumi.Input<number | undefined>;
+}
+
+export interface SubscriptionItemPriceDataRecurring {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Specifies billing frequency. Either `day`, `week`, `month` or `year`.
+     */
+    interval: pulumi.Input<string>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The number of intervals between subscription billings. For example, `interval=month` and `interval_count=3` bills every 3 months. Maximum of three years interval allowed (3 years, 36 months, or 156 weeks).
+     */
+    intervalCount?: pulumi.Input<number | undefined>;
+}
+
+export interface SubscriptionManagedPayments {
+    /**
+     * Set to `true` to enable [Managed Payments](https://docs.stripe.com/payments/managed-payments), Stripe's merchant of record solution, for this session.
+     */
+    enabled?: pulumi.Input<boolean | undefined>;
+}
+
+export interface SubscriptionPauseCollection {
+    /**
+     * The payment collection behavior for this subscription while paused.
+     */
+    behavior?: pulumi.Input<string | undefined>;
+    /**
+     * The time after which the subscription will resume collecting payments.
+     */
+    resumesAt?: pulumi.Input<number | undefined>;
+}
+
+export interface SubscriptionPaymentSettings {
+    /**
+     * Payment-method-specific configuration to provide to invoices created by the subscription.
+     */
+    paymentMethodOptions?: pulumi.Input<inputs.SubscriptionPaymentSettingsPaymentMethodOptions | undefined>;
+    /**
+     * The list of payment method types to provide to every invoice created by the subscription. If not set, Stripe attempts to automatically determine the types to use by looking at the invoice’s default payment method, the subscription’s default payment method, the customer’s default payment method, and your [invoice template settings](https://dashboard.stripe.com/settings/billing/invoice).
+     */
+    paymentMethodTypes?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * Configure whether Stripe updates `subscription.default_payment_method` when payment succeeds. Defaults to `off`.
+     */
+    saveDefaultPaymentMethod?: pulumi.Input<string | undefined>;
+}
+
+export interface SubscriptionPaymentSettingsPaymentMethodOptions {
+    /**
+     * This sub-hash contains details about the Canadian pre-authorized debit payment method options to pass to invoices created by the subscription.
+     */
+    acssDebit?: pulumi.Input<inputs.SubscriptionPaymentSettingsPaymentMethodOptionsAcssDebit | undefined>;
+    /**
+     * This sub-hash contains details about the Bancontact payment method options to pass to invoices created by the subscription.
+     */
+    bancontact?: pulumi.Input<inputs.SubscriptionPaymentSettingsPaymentMethodOptionsBancontact | undefined>;
+    /**
+     * This sub-hash contains details about the Card payment method options to pass to invoices created by the subscription.
+     */
+    card?: pulumi.Input<inputs.SubscriptionPaymentSettingsPaymentMethodOptionsCard | undefined>;
+    /**
+     * This sub-hash contains details about the Bank transfer payment method options to pass to invoices created by the subscription.
+     */
+    customerBalance?: pulumi.Input<inputs.SubscriptionPaymentSettingsPaymentMethodOptionsCustomerBalance | undefined>;
+    /**
+     * This sub-hash contains details about the PayTo payment method options to pass to invoices created by the subscription.
+     */
+    payto?: pulumi.Input<inputs.SubscriptionPaymentSettingsPaymentMethodOptionsPayto | undefined>;
+    /**
+     * This sub-hash contains details about the Pix payment method options to pass to invoices created by the subscription.
+     */
+    pix?: pulumi.Input<inputs.SubscriptionPaymentSettingsPaymentMethodOptionsPix | undefined>;
+    /**
+     * This sub-hash contains details about the UPI payment method options to pass to invoices created by the subscription.
+     */
+    upi?: pulumi.Input<inputs.SubscriptionPaymentSettingsPaymentMethodOptionsUpi | undefined>;
+    /**
+     * This sub-hash contains details about the ACH direct debit payment method options to pass to invoices created by the subscription.
+     */
+    usBankAccount?: pulumi.Input<inputs.SubscriptionPaymentSettingsPaymentMethodOptionsUsBankAccount | undefined>;
+}
+
+export interface SubscriptionPaymentSettingsPaymentMethodOptionsAcssDebit {
+    mandateOptions?: pulumi.Input<inputs.SubscriptionPaymentSettingsPaymentMethodOptionsAcssDebitMandateOptions | undefined>;
+    /**
+     * Bank account verification method. The default value is `automatic`.
+     */
+    verificationMethod?: pulumi.Input<string | undefined>;
+}
+
+export interface SubscriptionPaymentSettingsPaymentMethodOptionsAcssDebitMandateOptions {
+    /**
+     * Transaction type of the mandate.
+     */
+    transactionType?: pulumi.Input<string | undefined>;
+}
+
+export interface SubscriptionPaymentSettingsPaymentMethodOptionsBancontact {
+    /**
+     * Preferred language of the Bancontact authorization page that the customer is redirected to.
+     */
+    preferredLanguage?: pulumi.Input<string | undefined>;
+}
+
+export interface SubscriptionPaymentSettingsPaymentMethodOptionsCard {
+    mandateOptions?: pulumi.Input<inputs.SubscriptionPaymentSettingsPaymentMethodOptionsCardMandateOptions | undefined>;
+    /**
+     * Selected network to process this Subscription on. Depends on the available networks of the card attached to the Subscription. Can be only set confirm-time.
+     */
+    network?: pulumi.Input<string | undefined>;
+    /**
+     * We strongly recommend that you rely on our SCA Engine to automatically prompt your customers for authentication based on risk level and [other requirements](https://docs.stripe.com/strong-customer-authentication). However, if you wish to request 3D Secure based on logic from your own fraud engine, provide this option. Read our guide on [manually requesting 3D Secure](https://docs.stripe.com/payments/3d-secure/authentication-flow#manual-three-ds) for more information on how this configuration interacts with Radar and our SCA Engine.
+     */
+    requestThreeDSecure?: pulumi.Input<string | undefined>;
+}
+
+export interface SubscriptionPaymentSettingsPaymentMethodOptionsCardMandateOptions {
+    /**
+     * Amount to be charged for future payments, specified in the presentment currency.
+     */
+    amount?: pulumi.Input<number | undefined>;
+    /**
+     * One of `fixed` or `maximum`. If `fixed`, the `amount` param refers to the exact amount to be charged in future payments. If `maximum`, the amount charged can be up to the value passed for the `amount` param.
+     */
+    amountType?: pulumi.Input<string | undefined>;
+    /**
+     * A description of the mandate or subscription that is meant to be displayed to the customer.
+     */
+    description?: pulumi.Input<string | undefined>;
+}
+
+export interface SubscriptionPaymentSettingsPaymentMethodOptionsCustomerBalance {
+    bankTransfer?: pulumi.Input<inputs.SubscriptionPaymentSettingsPaymentMethodOptionsCustomerBalanceBankTransfer | undefined>;
+    /**
+     * The funding method type to be used when there are not enough funds in the customer balance. Permitted values include: `bankTransfer`.
+     */
+    fundingType?: pulumi.Input<string | undefined>;
+}
+
+export interface SubscriptionPaymentSettingsPaymentMethodOptionsCustomerBalanceBankTransfer {
+    euBankTransfer?: pulumi.Input<inputs.SubscriptionPaymentSettingsPaymentMethodOptionsCustomerBalanceBankTransferEuBankTransfer | undefined>;
+    /**
+     * The bank transfer type that can be used for funding. Permitted values include: `euBankTransfer`, `gbBankTransfer`, `jpBankTransfer`, `mxBankTransfer`, or `usBankTransfer`.
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface SubscriptionPaymentSettingsPaymentMethodOptionsCustomerBalanceBankTransferEuBankTransfer {
+    /**
+     * The desired country code of the bank account information. Permitted values include: `DE`, `FR`, `IE`, or `NL`.
+     */
+    country: pulumi.Input<string>;
+}
+
+export interface SubscriptionPaymentSettingsPaymentMethodOptionsPayto {
+    mandateOptions?: pulumi.Input<inputs.SubscriptionPaymentSettingsPaymentMethodOptionsPaytoMandateOptions | undefined>;
+}
+
+export interface SubscriptionPaymentSettingsPaymentMethodOptionsPaytoMandateOptions {
+    /**
+     * The maximum amount that can be collected in a single invoice. If you don't specify a maximum, then there is no limit.
+     */
+    amount?: pulumi.Input<number | undefined>;
+    /**
+     * Only `maximum` is supported.
+     */
+    amountType?: pulumi.Input<string | undefined>;
+    /**
+     * The purpose for which payments are made. Has a default value based on your merchant category code.
+     */
+    purpose?: pulumi.Input<string | undefined>;
+}
+
+export interface SubscriptionPaymentSettingsPaymentMethodOptionsPix {
+    /**
+     * The number of seconds (between 10 and 1209600) after which Pix payment will expire. Defaults to 86400 seconds.
+     */
+    expiresAfterSeconds?: pulumi.Input<number | undefined>;
+    mandateOptions?: pulumi.Input<inputs.SubscriptionPaymentSettingsPaymentMethodOptionsPixMandateOptions | undefined>;
+}
+
+export interface SubscriptionPaymentSettingsPaymentMethodOptionsPixMandateOptions {
+    /**
+     * Amount to be charged for future payments.
+     */
+    amount?: pulumi.Input<number | undefined>;
+    /**
+     * Determines if the amount includes the IOF tax.
+     */
+    amountIncludesIof?: pulumi.Input<string | undefined>;
+    /**
+     * Date when the mandate expires and no further payments will be charged, in `YYYY-MM-DD`.
+     */
+    endDate?: pulumi.Input<string | undefined>;
+    /**
+     * Schedule at which the future payments will be charged.
+     */
+    paymentSchedule?: pulumi.Input<string | undefined>;
+}
+
+export interface SubscriptionPaymentSettingsPaymentMethodOptionsUpi {
+    mandateOptions?: pulumi.Input<inputs.SubscriptionPaymentSettingsPaymentMethodOptionsUpiMandateOptions | undefined>;
+}
+
+export interface SubscriptionPaymentSettingsPaymentMethodOptionsUpiMandateOptions {
+    /**
+     * Amount to be charged for future payments.
+     */
+    amount?: pulumi.Input<number | undefined>;
+    /**
+     * One of `fixed` or `maximum`. If `fixed`, the `amount` param refers to the exact amount to be charged in future payments. If `maximum`, the amount charged can be up to the value passed for the `amount` param.
+     */
+    amountType?: pulumi.Input<string | undefined>;
+    /**
+     * A description of the mandate or subscription that is meant to be displayed to the customer.
+     */
+    description?: pulumi.Input<string | undefined>;
+    /**
+     * End date of the mandate or subscription.
+     */
+    endDate?: pulumi.Input<number | undefined>;
+}
+
+export interface SubscriptionPaymentSettingsPaymentMethodOptionsUsBankAccount {
+    financialConnections?: pulumi.Input<inputs.SubscriptionPaymentSettingsPaymentMethodOptionsUsBankAccountFinancialConnections | undefined>;
+    /**
+     * Bank account verification method. The default value is `automatic`.
+     */
+    verificationMethod?: pulumi.Input<string | undefined>;
+}
+
+export interface SubscriptionPaymentSettingsPaymentMethodOptionsUsBankAccountFinancialConnections {
+    filters?: pulumi.Input<inputs.SubscriptionPaymentSettingsPaymentMethodOptionsUsBankAccountFinancialConnectionsFilters | undefined>;
+    /**
+     * The list of permissions to request. The `paymentMethod` permission must be included.
+     */
+    permissions?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * Data features requested to be retrieved upon account creation.
+     */
+    prefetches?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+}
+
+export interface SubscriptionPaymentSettingsPaymentMethodOptionsUsBankAccountFinancialConnectionsFilters {
+    /**
+     * The account subcategories to use to filter for possible accounts to link. Valid subcategories are `checking` and `savings`.
+     */
+    accountSubcategories?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+}
+
+export interface SubscriptionPendingInvoiceItemInterval {
+    /**
+     * Specifies invoicing frequency. Either `day`, `week`, `month` or `year`.
+     */
+    interval: pulumi.Input<string>;
+    /**
+     * The number of intervals between invoices. For example, `interval=month` and `interval_count=3` bills every 3 months. Maximum of one year interval allowed (1 year, 12 months, or 52 weeks).
+     */
+    intervalCount?: pulumi.Input<number | undefined>;
+}
+
+export interface SubscriptionPendingUpdate {
+    /**
+     * If the update is applied, determines the date of the first full invoice, and, for plans with `month` or `year` intervals, the day of the month for subsequent invoices. The timestamp is in UTC format.
+     */
+    billingCycleAnchor?: pulumi.Input<number | undefined>;
+    /**
+     * The pending subscription-level discount that will be applied when the pending update is applied.
+     */
+    discount?: pulumi.Input<string | undefined>;
+    /**
+     * The point after which the changes reflected by this update will be discarded and no longer applied.
+     */
+    expiresAt?: pulumi.Input<number | undefined>;
+    /**
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+     */
+    metadata?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
+    /**
+     * Unix timestamp representing the end of the trial period the customer will get before being charged for the first time, if the update is applied.
+     */
+    trialEnd?: pulumi.Input<number | undefined>;
+    /**
+     * Indicates if a plan's `trialPeriodDays` should be applied to the subscription. Setting `trialEnd` per subscription is preferred, and this defaults to `false`. Setting this flag to `true` together with `trialEnd` is not allowed. See [Using trial periods on subscriptions](https://docs.stripe.com/billing/subscriptions/trials) to learn more.
+     */
+    trialFromPlan?: pulumi.Input<boolean | undefined>;
+}
+
+export interface SubscriptionPresentmentDetails {
+    /**
+     * Currency used for customer payments.
+     */
+    presentmentCurrency?: pulumi.Input<string | undefined>;
+}
+
+export interface SubscriptionScheduleBillingMode {
+    /**
+     * Configure behavior for flexible billing mode
+     */
+    flexible?: pulumi.Input<inputs.SubscriptionScheduleBillingModeFlexible | undefined>;
+    /**
+     * Controls how prorations and invoices for subscriptions are calculated and orchestrated.
+     */
+    type: pulumi.Input<string>;
+    /**
+     * Details on when the current billingMode was adopted.
+     */
+    updatedAt?: pulumi.Input<number | undefined>;
+}
+
+export interface SubscriptionScheduleBillingModeFlexible {
+    /**
+     * Controls how invoices and invoice items display proration amounts and discount amounts.
+     */
+    prorationDiscounts?: pulumi.Input<string | undefined>;
+}
+
+export interface SubscriptionScheduleCurrentPhase {
+    /**
+     * The end of this phase of the subscription schedule.
+     */
+    endDate?: pulumi.Input<number | undefined>;
+    /**
+     * The start of this phase of the subscription schedule.
+     */
+    startDate?: pulumi.Input<number | undefined>;
+}
+
+export interface SubscriptionScheduleDefaultSettings {
+    /**
+     * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice total that will be transferred to the application owner's Stripe account during this phase of the schedule.
+     */
+    applicationFeePercent?: pulumi.Input<number | undefined>;
+    automaticTax?: pulumi.Input<inputs.SubscriptionScheduleDefaultSettingsAutomaticTax | undefined>;
+    /**
+     * Possible values are `phaseStart` or `automatic`. If `phaseStart` then billing cycle anchor of the subscription is set to the start of the phase when entering the phase. If `automatic` then the billing cycle anchor is automatically modified as needed when entering the phase. For more information, see the billing cycle [documentation](https://docs.stripe.com/billing/subscriptions/billing-cycle).
+     */
+    billingCycleAnchor?: pulumi.Input<string | undefined>;
+    /**
+     * Define thresholds at which an invoice will be sent, and the subscription advanced to a new billing period
+     */
+    billingThresholds?: pulumi.Input<inputs.SubscriptionScheduleDefaultSettingsBillingThresholds | undefined>;
+    /**
+     * Either `chargeAutomatically`, or `sendInvoice`. When charging automatically, Stripe will attempt to pay the underlying subscription at the end of each billing cycle using the default source attached to the customer. When sending an invoice, Stripe will email your customer an invoice with payment instructions and mark the subscription as `active`.
+     */
+    collectionMethod?: pulumi.Input<string | undefined>;
+    /**
+     * ID of the default payment method for the subscription schedule. If not set, invoices will use the default payment method in the customer's invoice settings.
+     */
+    defaultPaymentMethod?: pulumi.Input<string | undefined>;
+    /**
+     * Subscription description, meant to be displayable to the customer. Use this field to optionally store an explanation of the subscription for rendering in Stripe surfaces and certain local payment methods UIs.
+     */
+    description?: pulumi.Input<string | undefined>;
+    invoiceSettings?: pulumi.Input<inputs.SubscriptionScheduleDefaultSettingsInvoiceSettings | undefined>;
+    /**
+     * The account (if any) the charge was made on behalf of for charges associated with the schedule's subscription. See the Connect documentation for details.
+     */
+    onBehalfOf?: pulumi.Input<string | undefined>;
+    /**
+     * The account (if any) the associated subscription's payments will be attributed to for tax reporting, and where funds from each payment will be transferred to for each of the subscription's invoices.
+     */
+    transferData?: pulumi.Input<inputs.SubscriptionScheduleDefaultSettingsTransferData | undefined>;
+}
+
+export interface SubscriptionScheduleDefaultSettingsAutomaticTax {
+    /**
+     * If Stripe disabled automatic tax, this enum describes why.
+     */
+    disabledReason?: pulumi.Input<string | undefined>;
+    /**
+     * Whether Stripe automatically computes tax on invoices created during this phase.
+     */
+    enabled: pulumi.Input<boolean>;
+    /**
+     * The account that's liable for tax. If set, the business address and tax registrations required to perform the tax calculation are loaded from this account. The tax transaction is returned in the report of the connected account.
+     */
+    liability?: pulumi.Input<inputs.SubscriptionScheduleDefaultSettingsAutomaticTaxLiability | undefined>;
+}
+
+export interface SubscriptionScheduleDefaultSettingsAutomaticTaxLiability {
+    /**
+     * The connected account being referenced when `type` is `account`.
+     */
+    account?: pulumi.Input<string | undefined>;
+    /**
+     * Type of the account referenced.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface SubscriptionScheduleDefaultSettingsBillingThresholds {
+    /**
+     * Monetary threshold that triggers the subscription to create an invoice
+     */
+    amountGte?: pulumi.Input<number | undefined>;
+    /**
+     * Indicates if the `billingCycleAnchor` should be reset when a threshold is reached. If true, `billingCycleAnchor` will be updated to the date/time the threshold was last reached; otherwise, the value will remain unchanged. This value may not be `true` if the subscription contains items with plans that have `aggregate_usage=last_ever`.
+     */
+    resetBillingCycleAnchor?: pulumi.Input<boolean | undefined>;
+}
+
+export interface SubscriptionScheduleDefaultSettingsInvoiceSettings {
+    /**
+     * The account tax IDs associated with the subscription schedule. Will be set on invoices generated by the subscription schedule.
+     */
+    accountTaxIds?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * Number of days within which a customer must pay invoices generated by this subscription schedule. This value will be `null` for subscription schedules where `billing=charge_automatically`.
+     */
+    daysUntilDue?: pulumi.Input<number | undefined>;
+    issuer?: pulumi.Input<inputs.SubscriptionScheduleDefaultSettingsInvoiceSettingsIssuer | undefined>;
+}
+
+export interface SubscriptionScheduleDefaultSettingsInvoiceSettingsIssuer {
+    /**
+     * The connected account being referenced when `type` is `account`.
+     */
+    account?: pulumi.Input<string | undefined>;
+    /**
+     * Type of the account referenced.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface SubscriptionScheduleDefaultSettingsTransferData {
+    /**
+     * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice total that will be transferred to the destination account. By default, the entire amount is transferred to the destination.
+     */
+    amountPercent?: pulumi.Input<number | undefined>;
+    /**
+     * The account where funds from the payment will be transferred to upon payment success.
+     */
+    destination: pulumi.Input<string>;
+}
+
+export interface SubscriptionSchedulePhase {
+    /**
+     * A list of prices and quantities that will generate invoice items appended to the next invoice for this phase.
+     */
+    addInvoiceItems?: pulumi.Input<pulumi.Input<inputs.SubscriptionSchedulePhaseAddInvoiceItem>[] | undefined>;
+    /**
+     * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice total that will be transferred to the application owner's Stripe account during this phase of the schedule.
+     */
+    applicationFeePercent?: pulumi.Input<number | undefined>;
+    automaticTax?: pulumi.Input<inputs.SubscriptionSchedulePhaseAutomaticTax | undefined>;
+    /**
+     * Possible values are `phaseStart` or `automatic`. If `phaseStart` then billing cycle anchor of the subscription is set to the start of the phase when entering the phase. If `automatic` then the billing cycle anchor is automatically modified as needed when entering the phase. For more information, see the billing cycle [documentation](https://docs.stripe.com/billing/subscriptions/billing-cycle).
+     */
+    billingCycleAnchor?: pulumi.Input<string | undefined>;
+    /**
+     * Define thresholds at which an invoice will be sent, and the subscription advanced to a new billing period
+     */
+    billingThresholds?: pulumi.Input<inputs.SubscriptionSchedulePhaseBillingThresholds | undefined>;
+    /**
+     * Either `chargeAutomatically`, or `sendInvoice`. When charging automatically, Stripe will attempt to pay the underlying subscription at the end of each billing cycle using the default source attached to the customer. When sending an invoice, Stripe will email your customer an invoice with payment instructions and mark the subscription as `active`.
+     */
+    collectionMethod?: pulumi.Input<string | undefined>;
+    /**
+     * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+     */
+    currency?: pulumi.Input<string | undefined>;
+    /**
+     * ID of the default payment method for the subscription schedule. It must belong to the customer associated with the subscription schedule. If not set, invoices will use the default payment method in the customer's invoice settings.
+     */
+    defaultPaymentMethod?: pulumi.Input<string | undefined>;
+    /**
+     * The default tax rates to apply to the subscription during this phase of the subscription schedule.
+     */
+    defaultTaxRates?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * Subscription description, meant to be displayable to the customer. Use this field to optionally store an explanation of the subscription for rendering in Stripe surfaces and certain local payment methods UIs.
+     */
+    description?: pulumi.Input<string | undefined>;
+    /**
+     * The stackable discounts that will be applied to the subscription on this phase. Subscription item discounts are applied before subscription discounts.
+     */
+    discounts?: pulumi.Input<pulumi.Input<inputs.SubscriptionSchedulePhaseDiscount>[] | undefined>;
+    /**
+     * The number of intervals the phase should last. If set, `endDate` must not be set.
+     */
+    duration?: pulumi.Input<inputs.SubscriptionSchedulePhaseDuration | undefined>;
+    /**
+     * The end of this phase of the subscription schedule.
+     */
+    endDate?: pulumi.Input<number | undefined>;
+    /**
+     * The invoice settings applicable during this phase.
+     */
+    invoiceSettings?: pulumi.Input<inputs.SubscriptionSchedulePhaseInvoiceSettings | undefined>;
+    /**
+     * Subscription items to configure the subscription to during this phase of the subscription schedule.
+     */
+    items: pulumi.Input<pulumi.Input<inputs.SubscriptionSchedulePhaseItem>[]>;
+    /**
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to a phase. Metadata on a schedule's phase will update the underlying subscription's `metadata` when the phase is entered. Updating the underlying subscription's `metadata` directly will not affect the current phase's `metadata`.
+     */
+    metadata?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
+    /**
+     * The account (if any) the charge was made on behalf of for charges associated with the schedule's subscription. See the Connect documentation for details.
+     */
+    onBehalfOf?: pulumi.Input<string | undefined>;
+    /**
+     * When transitioning phases, controls how prorations are handled (if any). Possible values are `createProrations`, `none`, and `alwaysInvoice`.
+     */
+    prorationBehavior?: pulumi.Input<string | undefined>;
+    /**
+     * The start of this phase of the subscription schedule.
+     */
+    startDate?: pulumi.Input<number | undefined>;
+    /**
+     * The account (if any) the associated subscription's payments will be attributed to for tax reporting, and where funds from each payment will be transferred to for each of the subscription's invoices.
+     */
+    transferData?: pulumi.Input<inputs.SubscriptionSchedulePhaseTransferData | undefined>;
+    /**
+     * If set to true the entire phase is counted as a trial and the customer will not be charged for any fees.
+     */
+    trial?: pulumi.Input<boolean | undefined>;
+    /**
+     * When the trial ends within the phase.
+     */
+    trialEnd?: pulumi.Input<number | undefined>;
+}
+
+export interface SubscriptionSchedulePhaseAddInvoiceItem {
+    /**
+     * Controls whether discounts apply to this invoice item. Defaults to true if no value is provided.
+     */
+    discountable?: pulumi.Input<boolean | undefined>;
+    /**
+     * The stackable discounts that will be applied to the item.
+     */
+    discounts?: pulumi.Input<pulumi.Input<inputs.SubscriptionSchedulePhaseAddInvoiceItemDiscount>[] | undefined>;
+    /**
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+     */
+    metadata?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
+    period?: pulumi.Input<inputs.SubscriptionSchedulePhaseAddInvoiceItemPeriod | undefined>;
+    /**
+     * ID of the price used to generate the invoice item.
+     */
+    price?: pulumi.Input<string | undefined>;
+    /**
+     * Data used to generate a new [Price](https://docs.stripe.com/api/prices) object inline. One of `price` or `priceData` is required.
+     */
+    priceData?: pulumi.Input<inputs.SubscriptionSchedulePhaseAddInvoiceItemPriceData | undefined>;
+    /**
+     * The quantity of the invoice item.
+     */
+    quantity?: pulumi.Input<number | undefined>;
+    /**
+     * The tax rates which apply to the item. When set, the `defaultTaxRates` do not apply to this item.
+     */
+    taxRates?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+}
+
+export interface SubscriptionSchedulePhaseAddInvoiceItemDiscount {
+    /**
+     * ID of the coupon to create a new discount for.
+     */
+    coupon?: pulumi.Input<string | undefined>;
+    /**
+     * ID of an existing discount on the object (or one of its ancestors) to reuse.
+     */
+    discount?: pulumi.Input<string | undefined>;
+    /**
+     * ID of the promotion code to create a new discount for.
+     */
+    promotionCode?: pulumi.Input<string | undefined>;
+}
+
+export interface SubscriptionSchedulePhaseAddInvoiceItemPeriod {
+    end: pulumi.Input<inputs.SubscriptionSchedulePhaseAddInvoiceItemPeriodEnd>;
+    start: pulumi.Input<inputs.SubscriptionSchedulePhaseAddInvoiceItemPeriodStart>;
+}
+
+export interface SubscriptionSchedulePhaseAddInvoiceItemPeriodEnd {
+    /**
+     * A precise Unix timestamp for the end of the invoice item period. Must be greater than or equal to `period.start`.
+     */
+    timestamp?: pulumi.Input<number | undefined>;
+    /**
+     * Select how to calculate the end of the invoice item period.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface SubscriptionSchedulePhaseAddInvoiceItemPeriodStart {
+    /**
+     * A precise Unix timestamp for the start of the invoice item period. Must be less than or equal to `period.end`.
+     */
+    timestamp?: pulumi.Input<number | undefined>;
+    /**
+     * Select how to calculate the start of the invoice item period.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface SubscriptionSchedulePhaseAddInvoiceItemPriceData {
     /**
      * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
      */
     currency: pulumi.Input<string>;
     /**
-     * A non-negative integer representing how much to charge in the [smallest currency unit](https://docs.stripe.com/currencies#minor-units).
+     * The ID of the [Product](https://docs.stripe.com/api/products) that this [Price](https://docs.stripe.com/api/prices) will belong to.
      */
-    value: pulumi.Input<number>;
+    product: pulumi.Input<string>;
+    /**
+     * Only required if a [default tax behavior](<https://docs.stripe.com/tax/products-prices-tax-categories-tax-behavior#setting-a-default-tax-behavior-(recommended)>) was not provided in the Stripe Tax settings. Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
+     */
+    taxBehavior?: pulumi.Input<string | undefined>;
+    /**
+     * A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge or a negative integer representing the amount to credit to the customer.
+     */
+    unitAmount?: pulumi.Input<number | undefined>;
+    /**
+     * Same as `unitAmount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unitAmount` and `unitAmountDecimal` can be set.
+     */
+    unitAmountDecimal?: pulumi.Input<number | undefined>;
 }
 
-export interface V2BillingServiceActionCreditGrantApplicabilityConfig {
+export interface SubscriptionSchedulePhaseAutomaticTax {
     /**
-     * The applicability scope of the credit grant.
+     * If Stripe disabled automatic tax, this enum describes why.
      */
-    scope: pulumi.Input<inputs.V2BillingServiceActionCreditGrantApplicabilityConfigScope>;
+    disabledReason?: pulumi.Input<string | undefined>;
+    /**
+     * Whether Stripe automatically computes tax on invoices created during this phase.
+     */
+    enabled: pulumi.Input<boolean>;
+    /**
+     * The account that's liable for tax. If set, the business address and tax registrations required to perform the tax calculation are loaded from this account. The tax transaction is returned in the report of the connected account.
+     */
+    liability?: pulumi.Input<inputs.SubscriptionSchedulePhaseAutomaticTaxLiability | undefined>;
 }
 
-export interface V2BillingServiceActionCreditGrantApplicabilityConfigScope {
+export interface SubscriptionSchedulePhaseAutomaticTaxLiability {
     /**
-     * The billable items to apply the credit grant to.
+     * The connected account being referenced when `type` is `account`.
      */
-    billableItems?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    account?: pulumi.Input<string | undefined>;
     /**
-     * The price type that credit grants can apply to. We currently only support the `metered` price type. This will apply to metered prices and rate cards. Cannot be used in combination with `billableItems`.
-     */
-    priceType?: pulumi.Input<string | undefined>;
-}
-
-export interface V2BillingServiceActionCreditGrantExpiryConfig {
-    /**
-     * The type of the expiry configuration. We currently support `endOfServicePeriod`.
+     * Type of the account referenced.
      */
     type: pulumi.Input<string>;
+}
+
+export interface SubscriptionSchedulePhaseBillingThresholds {
+    /**
+     * Monetary threshold that triggers the subscription to create an invoice
+     */
+    amountGte?: pulumi.Input<number | undefined>;
+    /**
+     * Indicates if the `billingCycleAnchor` should be reset when a threshold is reached. If true, `billingCycleAnchor` will be updated to the date/time the threshold was last reached; otherwise, the value will remain unchanged. This value may not be `true` if the subscription contains items with plans that have `aggregate_usage=last_ever`.
+     */
+    resetBillingCycleAnchor?: pulumi.Input<boolean | undefined>;
+}
+
+export interface SubscriptionSchedulePhaseDiscount {
+    /**
+     * ID of the coupon to create a new discount for.
+     */
+    coupon?: pulumi.Input<string | undefined>;
+    /**
+     * ID of an existing discount on the object (or one of its ancestors) to reuse.
+     */
+    discount?: pulumi.Input<string | undefined>;
+    /**
+     * ID of the promotion code to create a new discount for.
+     */
+    promotionCode?: pulumi.Input<string | undefined>;
+}
+
+export interface SubscriptionSchedulePhaseDuration {
+    /**
+     * Specifies phase duration. Either `day`, `week`, `month` or `year`.
+     */
+    interval: pulumi.Input<string>;
+    /**
+     * The multiplier applied to the interval.
+     */
+    intervalCount?: pulumi.Input<number | undefined>;
+}
+
+export interface SubscriptionSchedulePhaseInvoiceSettings {
+    /**
+     * The account tax IDs associated with this phase of the subscription schedule. Will be set on invoices generated by this phase of the subscription schedule.
+     */
+    accountTaxIds?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * Number of days within which a customer must pay invoices generated by this subscription schedule. This value will be `null` for subscription schedules where `billing=charge_automatically`.
+     */
+    daysUntilDue?: pulumi.Input<number | undefined>;
+    /**
+     * The connected account that issues the invoice. The invoice is presented with the branding and support information of the specified account.
+     */
+    issuer?: pulumi.Input<inputs.SubscriptionSchedulePhaseInvoiceSettingsIssuer | undefined>;
+}
+
+export interface SubscriptionSchedulePhaseInvoiceSettingsIssuer {
+    /**
+     * The connected account being referenced when `type` is `account`.
+     */
+    account?: pulumi.Input<string | undefined>;
+    /**
+     * Type of the account referenced.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface SubscriptionSchedulePhaseItem {
+    /**
+     * Define thresholds at which an invoice will be sent, and the related subscription advanced to a new billing period
+     */
+    billingThresholds?: pulumi.Input<inputs.SubscriptionSchedulePhaseItemBillingThresholds | undefined>;
+    /**
+     * The discounts applied to the subscription item. Subscription item discounts are applied before subscription discounts. Use `expand[]=discounts` to expand each discount.
+     */
+    discounts?: pulumi.Input<pulumi.Input<inputs.SubscriptionSchedulePhaseItemDiscount>[] | undefined>;
+    /**
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an item. Metadata on this item will update the underlying subscription item's `metadata` when the phase is entered.
+     */
+    metadata?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
+    /**
+     * ID of the plan to which the customer should be subscribed.
+     */
+    plan?: pulumi.Input<string | undefined>;
+    /**
+     * ID of the price to which the customer should be subscribed.
+     */
+    price?: pulumi.Input<string | undefined>;
+    /**
+     * Data used to generate a new [Price](https://docs.stripe.com/api/prices) object inline.
+     */
+    priceData?: pulumi.Input<inputs.SubscriptionSchedulePhaseItemPriceData | undefined>;
+    /**
+     * Quantity of the plan to which the customer should be subscribed.
+     */
+    quantity?: pulumi.Input<number | undefined>;
+    /**
+     * The tax rates which apply to this `phaseItem`. When set, the `defaultTaxRates` on the phase do not apply to this `phaseItem`.
+     */
+    taxRates?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+}
+
+export interface SubscriptionSchedulePhaseItemBillingThresholds {
+    /**
+     * Usage threshold that triggers the subscription to create an invoice
+     */
+    usageGte: pulumi.Input<number>;
+}
+
+export interface SubscriptionSchedulePhaseItemDiscount {
+    /**
+     * ID of the coupon to create a new discount for.
+     */
+    coupon?: pulumi.Input<string | undefined>;
+    /**
+     * ID of an existing discount on the object (or one of its ancestors) to reuse.
+     */
+    discount?: pulumi.Input<string | undefined>;
+    /**
+     * ID of the promotion code to create a new discount for.
+     */
+    promotionCode?: pulumi.Input<string | undefined>;
+}
+
+export interface SubscriptionSchedulePhaseItemPriceData {
+    /**
+     * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+     */
+    currency: pulumi.Input<string>;
+    /**
+     * The ID of the [Product](https://docs.stripe.com/api/products) that this [Price](https://docs.stripe.com/api/prices) will belong to.
+     */
+    product: pulumi.Input<string>;
+    /**
+     * The recurring components of a price such as `interval` and `intervalCount`.
+     */
+    recurring: pulumi.Input<inputs.SubscriptionSchedulePhaseItemPriceDataRecurring>;
+    /**
+     * Only required if a [default tax behavior](<https://docs.stripe.com/tax/products-prices-tax-categories-tax-behavior#setting-a-default-tax-behavior-(recommended)>) was not provided in the Stripe Tax settings. Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
+     */
+    taxBehavior?: pulumi.Input<string | undefined>;
+    /**
+     * A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge.
+     */
+    unitAmount?: pulumi.Input<number | undefined>;
+    /**
+     * Same as `unitAmount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unitAmount` and `unitAmountDecimal` can be set.
+     */
+    unitAmountDecimal?: pulumi.Input<number | undefined>;
+}
+
+export interface SubscriptionSchedulePhaseItemPriceDataRecurring {
+    /**
+     * Specifies billing frequency. Either `day`, `week`, `month` or `year`.
+     */
+    interval: pulumi.Input<string>;
+    /**
+     * The number of intervals between subscription billings. For example, `interval=month` and `interval_count=3` bills every 3 months. Maximum of three years interval allowed (3 years, 36 months, or 156 weeks).
+     */
+    intervalCount?: pulumi.Input<number | undefined>;
+}
+
+export interface SubscriptionSchedulePhaseTransferData {
+    /**
+     * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice total that will be transferred to the destination account. By default, the entire amount is transferred to the destination.
+     */
+    amountPercent?: pulumi.Input<number | undefined>;
+    /**
+     * The account where funds from the payment will be transferred to upon payment success.
+     */
+    destination: pulumi.Input<string>;
+}
+
+export interface SubscriptionTransferData {
+    /**
+     * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice total that will be transferred to the destination account. By default, the entire amount is transferred to the destination.
+     */
+    amountPercent?: pulumi.Input<number | undefined>;
+    /**
+     * The account where funds from the payment will be transferred to upon payment success.
+     */
+    destination: pulumi.Input<string>;
+}
+
+export interface SubscriptionTrialSettings {
+    /**
+     * Defines how a subscription behaves when a trial ends.
+     */
+    endBehavior: pulumi.Input<inputs.SubscriptionTrialSettingsEndBehavior>;
+}
+
+export interface SubscriptionTrialSettingsEndBehavior {
+    /**
+     * Indicates how the subscription should change when the trial ends if the user did not provide a payment method.
+     */
+    missingPaymentMethod: pulumi.Input<string>;
+}
+
+export interface TaxIdOwner {
+    /**
+     * The account being referenced when `type` is `account`.
+     */
+    account?: pulumi.Input<string | undefined>;
+    /**
+     * The Connect Application being referenced when `type` is `application`.
+     */
+    application?: pulumi.Input<string | undefined>;
+    /**
+     * The customer being referenced when `type` is `customer`.
+     */
+    customer?: pulumi.Input<string | undefined>;
+    /**
+     * The Account representing the customer being referenced when `type` is `customer`.
+     */
+    customerAccount?: pulumi.Input<string | undefined>;
+    /**
+     * Type of owner referenced.
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface TaxIdVerification {
+    /**
+     * Verification status, one of `pending`, `verified`, `unverified`, or `unavailable`.
+     */
+    status?: pulumi.Input<string | undefined>;
+    /**
+     * Verified address.
+     */
+    verifiedAddress?: pulumi.Input<string | undefined>;
+    /**
+     * Verified name.
+     */
+    verifiedName?: pulumi.Input<string | undefined>;
+}
+
+export interface TaxRateFlatAmount {
+    /**
+     * Amount of the tax when the `rateType` is `flatAmount`. This positive integer represents how much to charge in the smallest currency unit (e.g., 100 cents to charge $1.00 or 100 to charge ¥100, a zero-decimal currency). The amount value supports up to eight digits (e.g., a value of 99999999 for a USD charge of $999,999.99).
+     */
+    amount?: pulumi.Input<number | undefined>;
+    /**
+     * Three-letter ISO currency code, in lowercase.
+     */
+    currency?: pulumi.Input<string | undefined>;
+}
+
+export interface TaxRegistrationCountryOptions {
+    ae?: pulumi.Input<inputs.TaxRegistrationCountryOptionsAe | undefined>;
+    al?: pulumi.Input<inputs.TaxRegistrationCountryOptionsAl | undefined>;
+    am?: pulumi.Input<inputs.TaxRegistrationCountryOptionsAm | undefined>;
+    ao?: pulumi.Input<inputs.TaxRegistrationCountryOptionsAo | undefined>;
+    at?: pulumi.Input<inputs.TaxRegistrationCountryOptionsAt | undefined>;
+    au?: pulumi.Input<inputs.TaxRegistrationCountryOptionsAu | undefined>;
+    aw?: pulumi.Input<inputs.TaxRegistrationCountryOptionsAw | undefined>;
+    az?: pulumi.Input<inputs.TaxRegistrationCountryOptionsAz | undefined>;
+    ba?: pulumi.Input<inputs.TaxRegistrationCountryOptionsBa | undefined>;
+    bb?: pulumi.Input<inputs.TaxRegistrationCountryOptionsBb | undefined>;
+    bd?: pulumi.Input<inputs.TaxRegistrationCountryOptionsBd | undefined>;
+    be?: pulumi.Input<inputs.TaxRegistrationCountryOptionsBe | undefined>;
+    bf?: pulumi.Input<inputs.TaxRegistrationCountryOptionsBf | undefined>;
+    bg?: pulumi.Input<inputs.TaxRegistrationCountryOptionsBg | undefined>;
+    bh?: pulumi.Input<inputs.TaxRegistrationCountryOptionsBh | undefined>;
+    bj?: pulumi.Input<inputs.TaxRegistrationCountryOptionsBj | undefined>;
+    bs?: pulumi.Input<inputs.TaxRegistrationCountryOptionsBs | undefined>;
+    by?: pulumi.Input<inputs.TaxRegistrationCountryOptionsBy | undefined>;
+    ca?: pulumi.Input<inputs.TaxRegistrationCountryOptionsCa | undefined>;
+    cd?: pulumi.Input<inputs.TaxRegistrationCountryOptionsCd | undefined>;
+    ch?: pulumi.Input<inputs.TaxRegistrationCountryOptionsCh | undefined>;
+    cl?: pulumi.Input<inputs.TaxRegistrationCountryOptionsCl | undefined>;
+    cm?: pulumi.Input<inputs.TaxRegistrationCountryOptionsCm | undefined>;
+    co?: pulumi.Input<inputs.TaxRegistrationCountryOptionsCo | undefined>;
+    cr?: pulumi.Input<inputs.TaxRegistrationCountryOptionsCr | undefined>;
+    cv?: pulumi.Input<inputs.TaxRegistrationCountryOptionsCv | undefined>;
+    cy?: pulumi.Input<inputs.TaxRegistrationCountryOptionsCy | undefined>;
+    cz?: pulumi.Input<inputs.TaxRegistrationCountryOptionsCz | undefined>;
+    de?: pulumi.Input<inputs.TaxRegistrationCountryOptionsDe | undefined>;
+    dk?: pulumi.Input<inputs.TaxRegistrationCountryOptionsDk | undefined>;
+    ec?: pulumi.Input<inputs.TaxRegistrationCountryOptionsEc | undefined>;
+    ee?: pulumi.Input<inputs.TaxRegistrationCountryOptionsEe | undefined>;
+    eg?: pulumi.Input<inputs.TaxRegistrationCountryOptionsEg | undefined>;
+    es?: pulumi.Input<inputs.TaxRegistrationCountryOptionsEs | undefined>;
+    et?: pulumi.Input<inputs.TaxRegistrationCountryOptionsEt | undefined>;
+    fi?: pulumi.Input<inputs.TaxRegistrationCountryOptionsFi | undefined>;
+    fr?: pulumi.Input<inputs.TaxRegistrationCountryOptionsFr | undefined>;
+    gb?: pulumi.Input<inputs.TaxRegistrationCountryOptionsGb | undefined>;
+    ge?: pulumi.Input<inputs.TaxRegistrationCountryOptionsGe | undefined>;
+    gn?: pulumi.Input<inputs.TaxRegistrationCountryOptionsGn | undefined>;
+    gr?: pulumi.Input<inputs.TaxRegistrationCountryOptionsGr | undefined>;
+    hr?: pulumi.Input<inputs.TaxRegistrationCountryOptionsHr | undefined>;
+    hu?: pulumi.Input<inputs.TaxRegistrationCountryOptionsHu | undefined>;
+    id?: pulumi.Input<inputs.TaxRegistrationCountryOptionsId | undefined>;
+    ie?: pulumi.Input<inputs.TaxRegistrationCountryOptionsIe | undefined>;
+    in?: pulumi.Input<inputs.TaxRegistrationCountryOptionsIn | undefined>;
+    is?: pulumi.Input<inputs.TaxRegistrationCountryOptionsIs | undefined>;
+    it?: pulumi.Input<inputs.TaxRegistrationCountryOptionsIt | undefined>;
+    jp?: pulumi.Input<inputs.TaxRegistrationCountryOptionsJp | undefined>;
+    ke?: pulumi.Input<inputs.TaxRegistrationCountryOptionsKe | undefined>;
+    kg?: pulumi.Input<inputs.TaxRegistrationCountryOptionsKg | undefined>;
+    kh?: pulumi.Input<inputs.TaxRegistrationCountryOptionsKh | undefined>;
+    kr?: pulumi.Input<inputs.TaxRegistrationCountryOptionsKr | undefined>;
+    kz?: pulumi.Input<inputs.TaxRegistrationCountryOptionsKz | undefined>;
+    la?: pulumi.Input<inputs.TaxRegistrationCountryOptionsLa | undefined>;
+    lk?: pulumi.Input<inputs.TaxRegistrationCountryOptionsLk | undefined>;
+    lt?: pulumi.Input<inputs.TaxRegistrationCountryOptionsLt | undefined>;
+    lu?: pulumi.Input<inputs.TaxRegistrationCountryOptionsLu | undefined>;
+    lv?: pulumi.Input<inputs.TaxRegistrationCountryOptionsLv | undefined>;
+    ma?: pulumi.Input<inputs.TaxRegistrationCountryOptionsMa | undefined>;
+    md?: pulumi.Input<inputs.TaxRegistrationCountryOptionsMd | undefined>;
+    me?: pulumi.Input<inputs.TaxRegistrationCountryOptionsMe | undefined>;
+    mk?: pulumi.Input<inputs.TaxRegistrationCountryOptionsMk | undefined>;
+    mr?: pulumi.Input<inputs.TaxRegistrationCountryOptionsMr | undefined>;
+    mt?: pulumi.Input<inputs.TaxRegistrationCountryOptionsMt | undefined>;
+    mx?: pulumi.Input<inputs.TaxRegistrationCountryOptionsMx | undefined>;
+    my?: pulumi.Input<inputs.TaxRegistrationCountryOptionsMy | undefined>;
+    ng?: pulumi.Input<inputs.TaxRegistrationCountryOptionsNg | undefined>;
+    nl?: pulumi.Input<inputs.TaxRegistrationCountryOptionsNl | undefined>;
+    no?: pulumi.Input<inputs.TaxRegistrationCountryOptionsNo | undefined>;
+    np?: pulumi.Input<inputs.TaxRegistrationCountryOptionsNp | undefined>;
+    nz?: pulumi.Input<inputs.TaxRegistrationCountryOptionsNz | undefined>;
+    om?: pulumi.Input<inputs.TaxRegistrationCountryOptionsOm | undefined>;
+    pe?: pulumi.Input<inputs.TaxRegistrationCountryOptionsPe | undefined>;
+    ph?: pulumi.Input<inputs.TaxRegistrationCountryOptionsPh | undefined>;
+    pl?: pulumi.Input<inputs.TaxRegistrationCountryOptionsPl | undefined>;
+    pt?: pulumi.Input<inputs.TaxRegistrationCountryOptionsPt | undefined>;
+    ro?: pulumi.Input<inputs.TaxRegistrationCountryOptionsRo | undefined>;
+    rs?: pulumi.Input<inputs.TaxRegistrationCountryOptionsRs | undefined>;
+    ru?: pulumi.Input<inputs.TaxRegistrationCountryOptionsRu | undefined>;
+    sa?: pulumi.Input<inputs.TaxRegistrationCountryOptionsSa | undefined>;
+    se?: pulumi.Input<inputs.TaxRegistrationCountryOptionsSe | undefined>;
+    sg?: pulumi.Input<inputs.TaxRegistrationCountryOptionsSg | undefined>;
+    si?: pulumi.Input<inputs.TaxRegistrationCountryOptionsSi | undefined>;
+    sk?: pulumi.Input<inputs.TaxRegistrationCountryOptionsSk | undefined>;
+    sn?: pulumi.Input<inputs.TaxRegistrationCountryOptionsSn | undefined>;
+    sr?: pulumi.Input<inputs.TaxRegistrationCountryOptionsSr | undefined>;
+    th?: pulumi.Input<inputs.TaxRegistrationCountryOptionsTh | undefined>;
+    tj?: pulumi.Input<inputs.TaxRegistrationCountryOptionsTj | undefined>;
+    tr?: pulumi.Input<inputs.TaxRegistrationCountryOptionsTr | undefined>;
+    tw?: pulumi.Input<inputs.TaxRegistrationCountryOptionsTw | undefined>;
+    tz?: pulumi.Input<inputs.TaxRegistrationCountryOptionsTz | undefined>;
+    ua?: pulumi.Input<inputs.TaxRegistrationCountryOptionsUa | undefined>;
+    ug?: pulumi.Input<inputs.TaxRegistrationCountryOptionsUg | undefined>;
+    us?: pulumi.Input<inputs.TaxRegistrationCountryOptionsUs | undefined>;
+    uy?: pulumi.Input<inputs.TaxRegistrationCountryOptionsUy | undefined>;
+    uz?: pulumi.Input<inputs.TaxRegistrationCountryOptionsUz | undefined>;
+    vn?: pulumi.Input<inputs.TaxRegistrationCountryOptionsVn | undefined>;
+    za?: pulumi.Input<inputs.TaxRegistrationCountryOptionsZa | undefined>;
+    zm?: pulumi.Input<inputs.TaxRegistrationCountryOptionsZm | undefined>;
+    zw?: pulumi.Input<inputs.TaxRegistrationCountryOptionsZw | undefined>;
+}
+
+export interface TaxRegistrationCountryOptionsAe {
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsAeStandard | undefined>;
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsAeStandard {
+    /**
+     * Place of supply scheme used in an Default standard registration.
+     */
+    placeOfSupplyScheme?: pulumi.Input<string | undefined>;
+}
+
+export interface TaxRegistrationCountryOptionsAl {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsAlStandard | undefined>;
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsAlStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: pulumi.Input<string | undefined>;
+}
+
+export interface TaxRegistrationCountryOptionsAm {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsAo {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsAoStandard | undefined>;
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsAoStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: pulumi.Input<string | undefined>;
+}
+
+export interface TaxRegistrationCountryOptionsAt {
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsAtStandard | undefined>;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsAtStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsAu {
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsAuStandard | undefined>;
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsAuStandard {
+    /**
+     * Place of supply scheme used in an Default standard registration.
+     */
+    placeOfSupplyScheme?: pulumi.Input<string | undefined>;
+}
+
+export interface TaxRegistrationCountryOptionsAw {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsAwStandard | undefined>;
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsAwStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: pulumi.Input<string | undefined>;
+}
+
+export interface TaxRegistrationCountryOptionsAz {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsBa {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsBaStandard | undefined>;
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsBaStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: pulumi.Input<string | undefined>;
+}
+
+export interface TaxRegistrationCountryOptionsBb {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsBbStandard | undefined>;
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsBbStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: pulumi.Input<string | undefined>;
+}
+
+export interface TaxRegistrationCountryOptionsBd {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsBdStandard | undefined>;
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsBdStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: pulumi.Input<string | undefined>;
+}
+
+export interface TaxRegistrationCountryOptionsBe {
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsBeStandard | undefined>;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsBeStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsBf {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsBfStandard | undefined>;
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsBfStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: pulumi.Input<string | undefined>;
+}
+
+export interface TaxRegistrationCountryOptionsBg {
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsBgStandard | undefined>;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsBgStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsBh {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsBhStandard | undefined>;
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsBhStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: pulumi.Input<string | undefined>;
+}
+
+export interface TaxRegistrationCountryOptionsBj {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsBs {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsBsStandard | undefined>;
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsBsStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: pulumi.Input<string | undefined>;
+}
+
+export interface TaxRegistrationCountryOptionsBy {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsCa {
+    provinceStandard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsCaProvinceStandard | undefined>;
+    /**
+     * Type of registration in Canada.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsCaProvinceStandard {
+    /**
+     * Two-letter CA province code ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    province: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsCd {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsCdStandard | undefined>;
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsCdStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: pulumi.Input<string | undefined>;
+}
+
+export interface TaxRegistrationCountryOptionsCh {
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsChStandard | undefined>;
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsChStandard {
+    /**
+     * Place of supply scheme used in an Default standard registration.
+     */
+    placeOfSupplyScheme?: pulumi.Input<string | undefined>;
+}
+
+export interface TaxRegistrationCountryOptionsCl {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsCm {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsCo {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsCr {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsCv {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsCy {
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsCyStandard | undefined>;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsCyStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsCz {
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsCzStandard | undefined>;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsCzStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsDe {
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsDeStandard | undefined>;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsDeStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsDk {
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsDkStandard | undefined>;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsDkStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsEc {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsEe {
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsEeStandard | undefined>;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsEeStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsEg {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsEs {
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsEsStandard | undefined>;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsEsStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsEt {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsEtStandard | undefined>;
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsEtStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: pulumi.Input<string | undefined>;
+}
+
+export interface TaxRegistrationCountryOptionsFi {
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsFiStandard | undefined>;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsFiStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsFr {
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsFrStandard | undefined>;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsFrStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsGb {
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsGbStandard | undefined>;
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsGbStandard {
+    /**
+     * Place of supply scheme used in an Default standard registration.
+     */
+    placeOfSupplyScheme?: pulumi.Input<string | undefined>;
+}
+
+export interface TaxRegistrationCountryOptionsGe {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsGn {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsGnStandard | undefined>;
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsGnStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: pulumi.Input<string | undefined>;
+}
+
+export interface TaxRegistrationCountryOptionsGr {
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsGrStandard | undefined>;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsGrStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsHr {
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsHrStandard | undefined>;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsHrStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsHu {
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsHuStandard | undefined>;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsHuStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsId {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsIe {
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsIeStandard | undefined>;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsIeStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsIn {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsIs {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsIsStandard | undefined>;
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsIsStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: pulumi.Input<string | undefined>;
+}
+
+export interface TaxRegistrationCountryOptionsIt {
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsItStandard | undefined>;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsItStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsJp {
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsJpStandard | undefined>;
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsJpStandard {
+    /**
+     * Place of supply scheme used in an Default standard registration.
+     */
+    placeOfSupplyScheme?: pulumi.Input<string | undefined>;
+}
+
+export interface TaxRegistrationCountryOptionsKe {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsKg {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsKh {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsKr {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsKz {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsLa {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsLk {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsLt {
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsLtStandard | undefined>;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsLtStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsLu {
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsLuStandard | undefined>;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsLuStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsLv {
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsLvStandard | undefined>;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsLvStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsMa {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsMd {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsMe {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsMeStandard | undefined>;
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsMeStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: pulumi.Input<string | undefined>;
+}
+
+export interface TaxRegistrationCountryOptionsMk {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsMkStandard | undefined>;
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsMkStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: pulumi.Input<string | undefined>;
+}
+
+export interface TaxRegistrationCountryOptionsMr {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsMrStandard | undefined>;
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsMrStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: pulumi.Input<string | undefined>;
+}
+
+export interface TaxRegistrationCountryOptionsMt {
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsMtStandard | undefined>;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsMtStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsMx {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsMy {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsNg {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsNl {
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsNlStandard | undefined>;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsNlStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsNo {
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsNoStandard | undefined>;
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsNoStandard {
+    /**
+     * Place of supply scheme used in an Default standard registration.
+     */
+    placeOfSupplyScheme?: pulumi.Input<string | undefined>;
+}
+
+export interface TaxRegistrationCountryOptionsNp {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsNz {
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsNzStandard | undefined>;
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsNzStandard {
+    /**
+     * Place of supply scheme used in an Default standard registration.
+     */
+    placeOfSupplyScheme?: pulumi.Input<string | undefined>;
+}
+
+export interface TaxRegistrationCountryOptionsOm {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsOmStandard | undefined>;
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsOmStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: pulumi.Input<string | undefined>;
+}
+
+export interface TaxRegistrationCountryOptionsPe {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsPh {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsPl {
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsPlStandard | undefined>;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsPlStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsPt {
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsPtStandard | undefined>;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsPtStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsRo {
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsRoStandard | undefined>;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsRoStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsRs {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsRsStandard | undefined>;
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsRsStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: pulumi.Input<string | undefined>;
+}
+
+export interface TaxRegistrationCountryOptionsRu {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsSa {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsSe {
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsSeStandard | undefined>;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsSeStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsSg {
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsSgStandard | undefined>;
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsSgStandard {
+    /**
+     * Place of supply scheme used in an Default standard registration.
+     */
+    placeOfSupplyScheme?: pulumi.Input<string | undefined>;
+}
+
+export interface TaxRegistrationCountryOptionsSi {
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsSiStandard | undefined>;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsSiStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsSk {
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsSkStandard | undefined>;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsSkStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsSn {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsSr {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsSrStandard | undefined>;
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsSrStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: pulumi.Input<string | undefined>;
+}
+
+export interface TaxRegistrationCountryOptionsTh {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsTj {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsTr {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsTw {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsTz {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsUa {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsUg {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsUs {
+    localAmusementTax?: pulumi.Input<inputs.TaxRegistrationCountryOptionsUsLocalAmusementTax | undefined>;
+    localLeaseTax?: pulumi.Input<inputs.TaxRegistrationCountryOptionsUsLocalLeaseTax | undefined>;
+    /**
+     * Two-letter US state code ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state: pulumi.Input<string>;
+    stateSalesTax?: pulumi.Input<inputs.TaxRegistrationCountryOptionsUsStateSalesTax | undefined>;
+    /**
+     * Type of registration in the US.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsUsLocalAmusementTax {
+    /**
+     * A [FIPS code](https://www.census.gov/library/reference/code-lists/ansi.html) representing the local jurisdiction.
+     */
+    jurisdiction: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsUsLocalLeaseTax {
+    /**
+     * A [FIPS code](https://www.census.gov/library/reference/code-lists/ansi.html) representing the local jurisdiction.
+     */
+    jurisdiction: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsUsStateSalesTax {
+    /**
+     * Elections for the state sales tax registration.
+     */
+    elections: pulumi.Input<pulumi.Input<inputs.TaxRegistrationCountryOptionsUsStateSalesTaxElection>[]>;
+}
+
+export interface TaxRegistrationCountryOptionsUsStateSalesTaxElection {
+    /**
+     * A [FIPS code](https://www.census.gov/library/reference/code-lists/ansi.html) representing the local jurisdiction.
+     */
+    jurisdiction?: pulumi.Input<string | undefined>;
+    /**
+     * The type of the election for the state sales tax registration.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsUy {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsUyStandard | undefined>;
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsUyStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: pulumi.Input<string | undefined>;
+}
+
+export interface TaxRegistrationCountryOptionsUz {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsVn {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsZa {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsZaStandard | undefined>;
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsZaStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: pulumi.Input<string | undefined>;
+}
+
+export interface TaxRegistrationCountryOptionsZm {
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsZw {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: pulumi.Input<inputs.TaxRegistrationCountryOptionsZwStandard | undefined>;
+    /**
+     * Type of registration in `country`.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TaxRegistrationCountryOptionsZwStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: pulumi.Input<string | undefined>;
+}
+
+export interface TerminalConfigurationBbposWisepad3 {
+    /**
+     * A File ID representing an image to display on the reader
+     */
+    splashscreen?: pulumi.Input<string | undefined>;
+}
+
+export interface TerminalConfigurationBbposWiseposE {
+    /**
+     * A File ID representing an image to display on the reader
+     */
+    splashscreen?: pulumi.Input<string | undefined>;
+}
+
+export interface TerminalConfigurationCellular {
+    /**
+     * Whether a cellular-capable reader can connect to the internet over cellular.
+     */
+    enabled: pulumi.Input<boolean>;
+}
+
+export interface TerminalConfigurationOffline {
+    /**
+     * Determines whether to allow transactions to be collected while reader is offline. Defaults to false.
+     */
+    enabled: pulumi.Input<boolean>;
+}
+
+export interface TerminalConfigurationRebootWindow {
+    /**
+     * Integer between 0 to 23 that represents the end hour of the reboot time window. The value must be different than the start_hour.
+     */
+    endHour: pulumi.Input<number>;
+    /**
+     * Integer between 0 to 23 that represents the start hour of the reboot time window.
+     */
+    startHour: pulumi.Input<number>;
+}
+
+export interface TerminalConfigurationStripeS700 {
+    /**
+     * A File ID representing an image to display on the reader
+     */
+    splashscreen?: pulumi.Input<string | undefined>;
+}
+
+export interface TerminalConfigurationStripeS710 {
+    /**
+     * A File ID representing an image to display on the reader
+     */
+    splashscreen?: pulumi.Input<string | undefined>;
+}
+
+export interface TerminalConfigurationTipping {
+    aed?: pulumi.Input<inputs.TerminalConfigurationTippingAed | undefined>;
+    aud?: pulumi.Input<inputs.TerminalConfigurationTippingAud | undefined>;
+    cad?: pulumi.Input<inputs.TerminalConfigurationTippingCad | undefined>;
+    chf?: pulumi.Input<inputs.TerminalConfigurationTippingChf | undefined>;
+    czk?: pulumi.Input<inputs.TerminalConfigurationTippingCzk | undefined>;
+    dkk?: pulumi.Input<inputs.TerminalConfigurationTippingDkk | undefined>;
+    eur?: pulumi.Input<inputs.TerminalConfigurationTippingEur | undefined>;
+    gbp?: pulumi.Input<inputs.TerminalConfigurationTippingGbp | undefined>;
+    gip?: pulumi.Input<inputs.TerminalConfigurationTippingGip | undefined>;
+    hkd?: pulumi.Input<inputs.TerminalConfigurationTippingHkd | undefined>;
+    huf?: pulumi.Input<inputs.TerminalConfigurationTippingHuf | undefined>;
+    jpy?: pulumi.Input<inputs.TerminalConfigurationTippingJpy | undefined>;
+    mxn?: pulumi.Input<inputs.TerminalConfigurationTippingMxn | undefined>;
+    myr?: pulumi.Input<inputs.TerminalConfigurationTippingMyr | undefined>;
+    nok?: pulumi.Input<inputs.TerminalConfigurationTippingNok | undefined>;
+    nzd?: pulumi.Input<inputs.TerminalConfigurationTippingNzd | undefined>;
+    pln?: pulumi.Input<inputs.TerminalConfigurationTippingPln | undefined>;
+    ron?: pulumi.Input<inputs.TerminalConfigurationTippingRon | undefined>;
+    sek?: pulumi.Input<inputs.TerminalConfigurationTippingSek | undefined>;
+    sgd?: pulumi.Input<inputs.TerminalConfigurationTippingSgd | undefined>;
+    usd?: pulumi.Input<inputs.TerminalConfigurationTippingUsd | undefined>;
+}
+
+export interface TerminalConfigurationTippingAed {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold?: pulumi.Input<number | undefined>;
+}
+
+export interface TerminalConfigurationTippingAud {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold?: pulumi.Input<number | undefined>;
+}
+
+export interface TerminalConfigurationTippingCad {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold?: pulumi.Input<number | undefined>;
+}
+
+export interface TerminalConfigurationTippingChf {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold?: pulumi.Input<number | undefined>;
+}
+
+export interface TerminalConfigurationTippingCzk {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold?: pulumi.Input<number | undefined>;
+}
+
+export interface TerminalConfigurationTippingDkk {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold?: pulumi.Input<number | undefined>;
+}
+
+export interface TerminalConfigurationTippingEur {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold?: pulumi.Input<number | undefined>;
+}
+
+export interface TerminalConfigurationTippingGbp {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold?: pulumi.Input<number | undefined>;
+}
+
+export interface TerminalConfigurationTippingGip {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold?: pulumi.Input<number | undefined>;
+}
+
+export interface TerminalConfigurationTippingHkd {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold?: pulumi.Input<number | undefined>;
+}
+
+export interface TerminalConfigurationTippingHuf {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold?: pulumi.Input<number | undefined>;
+}
+
+export interface TerminalConfigurationTippingJpy {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold?: pulumi.Input<number | undefined>;
+}
+
+export interface TerminalConfigurationTippingMxn {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold?: pulumi.Input<number | undefined>;
+}
+
+export interface TerminalConfigurationTippingMyr {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold?: pulumi.Input<number | undefined>;
+}
+
+export interface TerminalConfigurationTippingNok {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold?: pulumi.Input<number | undefined>;
+}
+
+export interface TerminalConfigurationTippingNzd {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold?: pulumi.Input<number | undefined>;
+}
+
+export interface TerminalConfigurationTippingPln {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold?: pulumi.Input<number | undefined>;
+}
+
+export interface TerminalConfigurationTippingRon {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold?: pulumi.Input<number | undefined>;
+}
+
+export interface TerminalConfigurationTippingSek {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold?: pulumi.Input<number | undefined>;
+}
+
+export interface TerminalConfigurationTippingSgd {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold?: pulumi.Input<number | undefined>;
+}
+
+export interface TerminalConfigurationTippingUsd {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages?: pulumi.Input<pulumi.Input<number>[] | undefined>;
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold?: pulumi.Input<number | undefined>;
+}
+
+export interface TerminalConfigurationVerifoneM425 {
+    /**
+     * A File ID representing an image to display on the reader
+     */
+    splashscreen?: pulumi.Input<string | undefined>;
+}
+
+export interface TerminalConfigurationVerifoneP400 {
+    /**
+     * A File ID representing an image to display on the reader
+     */
+    splashscreen?: pulumi.Input<string | undefined>;
+}
+
+export interface TerminalConfigurationVerifoneP630 {
+    /**
+     * A File ID representing an image to display on the reader
+     */
+    splashscreen?: pulumi.Input<string | undefined>;
+}
+
+export interface TerminalConfigurationVerifoneUx700 {
+    /**
+     * A File ID representing an image to display on the reader
+     */
+    splashscreen?: pulumi.Input<string | undefined>;
+}
+
+export interface TerminalConfigurationVerifoneV660p {
+    /**
+     * A File ID representing an image to display on the reader
+     */
+    splashscreen?: pulumi.Input<string | undefined>;
+}
+
+export interface TerminalConfigurationWifi {
+    enterpriseEapPeap?: pulumi.Input<inputs.TerminalConfigurationWifiEnterpriseEapPeap | undefined>;
+    enterpriseEapTls?: pulumi.Input<inputs.TerminalConfigurationWifiEnterpriseEapTls | undefined>;
+    personalPsk?: pulumi.Input<inputs.TerminalConfigurationWifiPersonalPsk | undefined>;
+    /**
+     * Security type of the WiFi network. The hash with the corresponding name contains the credentials for this security type.
+     */
+    type: pulumi.Input<string>;
+}
+
+export interface TerminalConfigurationWifiEnterpriseEapPeap {
+    /**
+     * A File ID representing a PEM file containing the server certificate
+     */
+    caCertificateFile?: pulumi.Input<string | undefined>;
+    /**
+     * Password for connecting to the WiFi network
+     */
+    password: pulumi.Input<string>;
+    /**
+     * Name of the WiFi network
+     */
+    ssid: pulumi.Input<string>;
+    /**
+     * Username for connecting to the WiFi network
+     */
+    username: pulumi.Input<string>;
+}
+
+export interface TerminalConfigurationWifiEnterpriseEapTls {
+    /**
+     * A File ID representing a PEM file containing the server certificate
+     */
+    caCertificateFile?: pulumi.Input<string | undefined>;
+    /**
+     * A File ID representing a PEM file containing the client certificate
+     */
+    clientCertificateFile: pulumi.Input<string>;
+    /**
+     * A File ID representing a PEM file containing the client RSA private key
+     */
+    privateKeyFile: pulumi.Input<string>;
+    /**
+     * Password for the private key file
+     */
+    privateKeyFilePassword?: pulumi.Input<string | undefined>;
+    /**
+     * Name of the WiFi network
+     */
+    ssid: pulumi.Input<string>;
+}
+
+export interface TerminalConfigurationWifiPersonalPsk {
+    /**
+     * Password for connecting to the WiFi network
+     */
+    password: pulumi.Input<string>;
+    /**
+     * Name of the WiFi network
+     */
+    ssid: pulumi.Input<string>;
+}
+
+export interface TerminalLocationAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: pulumi.Input<string>;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1?: pulumi.Input<string | undefined>;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode?: pulumi.Input<string | undefined>;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: pulumi.Input<string | undefined>;
+}
+
+export interface TerminalLocationAddressKana {
+    /**
+     * City/Ward.
+     */
+    city?: pulumi.Input<string | undefined>;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: pulumi.Input<string | undefined>;
+    /**
+     * Block/Building number.
+     */
+    line1?: pulumi.Input<string | undefined>;
+    /**
+     * Building details.
+     */
+    line2?: pulumi.Input<string | undefined>;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode?: pulumi.Input<string | undefined>;
+    /**
+     * Prefecture.
+     */
+    state?: pulumi.Input<string | undefined>;
+    /**
+     * Town/cho-me.
+     */
+    town?: pulumi.Input<string | undefined>;
+}
+
+export interface TerminalReaderAction {
+    /**
+     * The reader action failed due to an [API error](https://docs.stripe.com/api/errors). Only present when `status` is `failed` and the underlying failure was an API error. Avoid parsing the `message` field for programmatic logic; use `type` or `code` instead. The `message` field is for display to humans only and may be updated at anytime. Requires [reader version](https://docs.stripe.com/terminal/readers/stripe-reader-s700-s710#reader-software-version) 2.42 or later. Readers on older versions always return null.
+     */
+    apiError?: pulumi.Input<inputs.TerminalReaderActionApiError | undefined>;
+    /**
+     * Represents a reader action to collect customer inputs
+     */
+    collectInputs?: pulumi.Input<inputs.TerminalReaderActionCollectInputs | undefined>;
+    /**
+     * Represents a reader action to collect a payment method
+     */
+    collectPaymentMethod?: pulumi.Input<inputs.TerminalReaderActionCollectPaymentMethod | undefined>;
+    /**
+     * Represents a reader action to confirm a payment
+     */
+    confirmPaymentIntent?: pulumi.Input<inputs.TerminalReaderActionConfirmPaymentIntent | undefined>;
+    /**
+     * Failure code, only set if status is `failed`.
+     */
+    failureCode?: pulumi.Input<string | undefined>;
+    /**
+     * Detailed failure message, only set if status is `failed`.
+     */
+    failureMessage?: pulumi.Input<string | undefined>;
+    /**
+     * Represents a reader action to print content
+     */
+    printContent?: pulumi.Input<inputs.TerminalReaderActionPrintContent | undefined>;
+    /**
+     * Represents a reader action to process a payment intent
+     */
+    processPaymentIntent?: pulumi.Input<inputs.TerminalReaderActionProcessPaymentIntent | undefined>;
+    /**
+     * Represents a reader action to process a setup intent
+     */
+    processSetupIntent?: pulumi.Input<inputs.TerminalReaderActionProcessSetupIntent | undefined>;
+    /**
+     * Represents a reader action to refund a payment
+     */
+    refundPayment?: pulumi.Input<inputs.TerminalReaderActionRefundPayment | undefined>;
+    /**
+     * Represents a reader action to set the reader display
+     */
+    setReaderDisplay?: pulumi.Input<inputs.TerminalReaderActionSetReaderDisplay | undefined>;
+    /**
+     * Status of the action performed by the reader.
+     */
+    status?: pulumi.Input<string | undefined>;
+    /**
+     * Type of action performed by the reader.
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface TerminalReaderActionApiError {
+    /**
+     * For card errors resulting from a card issuer decline, a short string indicating [how to proceed with an error](https://docs.stripe.com/declines#retrying-issuer-declines) if they provide one.
+     */
+    adviceCode?: pulumi.Input<string | undefined>;
+    /**
+     * For card errors, the ID of the failed charge.
+     */
+    charge?: pulumi.Input<string | undefined>;
+    /**
+     * For some errors that could be handled programmatically, a short string indicating the [error code](https://docs.stripe.com/error-codes) reported.
+     */
+    code?: pulumi.Input<string | undefined>;
+    /**
+     * For card errors resulting from a card issuer decline, a short string indicating the [card issuer's reason for the decline](https://docs.stripe.com/declines#issuer-declines) if they provide one.
+     */
+    declineCode?: pulumi.Input<string | undefined>;
+    /**
+     * A URL to more information about the [error code](https://docs.stripe.com/error-codes) reported.
+     */
+    docUrl?: pulumi.Input<string | undefined>;
+    /**
+     * A human-readable message providing more details about the error. For card errors, these messages can be shown to your users.
+     */
+    message?: pulumi.Input<string | undefined>;
+    /**
+     * For card errors resulting from a card issuer decline, a 2 digit code which indicates the advice given to merchant by the card network on how to proceed with an error.
+     */
+    networkAdviceCode?: pulumi.Input<string | undefined>;
+    /**
+     * For payments declined by the network, an alphanumeric code which indicates the reason the payment failed.
+     */
+    networkDeclineCode?: pulumi.Input<string | undefined>;
+    /**
+     * If the error is parameter-specific, the parameter related to the error. For example, you can use this to display a message near the correct form field.
+     */
+    param?: pulumi.Input<string | undefined>;
+    /**
+     * A PaymentIntent guides you through the process of collecting a payment from your customer.
+     * We recommend that you create exactly one PaymentIntent for each order or
+     * customer session in your system. You can reference the PaymentIntent later to
+     * see the history of payment attempts for a particular session.
+     */
+    paymentIntent?: pulumi.Input<string | undefined>;
+    /**
+     * PaymentMethod objects represent your customer's payment instruments.
+     * You can use them with [PaymentIntents](https://docs.stripe.com/payments/payment-intents) to collect payments or save them to
+     * Customer objects to store instrument details for future payments.
+     *
+     * Related guides: [Payment Methods](https://docs.stripe.com/payments/payment-methods) and [More Payment Scenarios](https://docs.stripe.com/payments/more-payment-scenarios).
+     */
+    paymentMethod?: pulumi.Input<string | undefined>;
+    /**
+     * If the error is specific to the type of payment method, the payment method type that had a problem. This field is only populated for invoice-related errors.
+     */
+    paymentMethodType?: pulumi.Input<string | undefined>;
+    /**
+     * A URL to the request log entry in your dashboard.
+     */
+    requestLogUrl?: pulumi.Input<string | undefined>;
+    /**
+     * A SetupIntent guides you through the process of setting up and saving a customer's payment credentials for future payments.
+     * For example, you can use a SetupIntent to set up and save your customer's card without immediately collecting a payment.
+     * Later, you can use [PaymentIntents](https://api.stripe.com#payment_intents) to drive the payment flow.
+     *
+     * Create a SetupIntent when you're ready to collect your customer's payment credentials.
+     * Don't maintain long-lived, unconfirmed SetupIntents because they might not be valid.
+     * The SetupIntent transitions through multiple [statuses](https://docs.stripe.com/payments/intents#intent-statuses) as it guides
+     * you through the setup process.
+     *
+     * Successful SetupIntents result in payment credentials that are optimized for future payments.
+     * For example, cardholders in [certain regions](https://stripe.com/guides/strong-customer-authentication) might need to be run through
+     * [Strong Customer Authentication](https://docs.stripe.com/strong-customer-authentication) during payment method collection
+     * to streamline later [off-session payments](https://docs.stripe.com/payments/setup-intents).
+     * If you use the SetupIntent with a [Customer](https://api.stripe.com#setup_intent_object-customer),
+     * it automatically attaches the resulting payment method to that Customer after successful setup.
+     * We recommend using SetupIntents or [setupFutureUsage](https://api.stripe.com#payment_intent_object-setup_future_usage) on
+     * PaymentIntents to save payment methods to prevent saving invalid or unoptimized payment methods.
+     *
+     * By using SetupIntents, you can reduce friction for your customers, even as regulations change over time.
+     *
+     * Related guide: [Setup Intents API](https://docs.stripe.com/payments/setup-intents)
+     */
+    setupIntent?: pulumi.Input<string | undefined>;
+    source?: pulumi.Input<string | undefined>;
+    /**
+     * The type of error returned. One of `apiError`, `cardError`, `idempotencyError`, or `invalidRequestError`
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface TerminalReaderActionCollectInputs {
+    /**
+     * List of inputs to be collected.
+     */
+    inputs?: pulumi.Input<pulumi.Input<inputs.TerminalReaderActionCollectInputsInput>[] | undefined>;
+    /**
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+     */
+    metadata?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
+}
+
+export interface TerminalReaderActionCollectInputsInput {
+    /**
+     * Default text of input being collected.
+     */
+    customText?: pulumi.Input<inputs.TerminalReaderActionCollectInputsInputCustomText | undefined>;
+    /**
+     * Information about a email being collected using a reader
+     */
+    email?: pulumi.Input<inputs.TerminalReaderActionCollectInputsInputEmail | undefined>;
+    /**
+     * Information about a number being collected using a reader
+     */
+    numeric?: pulumi.Input<inputs.TerminalReaderActionCollectInputsInputNumeric | undefined>;
+    /**
+     * Information about a phone number being collected using a reader
+     */
+    phone?: pulumi.Input<inputs.TerminalReaderActionCollectInputsInputPhone | undefined>;
+    /**
+     * Indicate that this input is required, disabling the skip button.
+     */
+    required?: pulumi.Input<boolean | undefined>;
+    /**
+     * Information about a selection being collected using a reader
+     */
+    selection?: pulumi.Input<inputs.TerminalReaderActionCollectInputsInputSelection | undefined>;
+    /**
+     * Information about a signature being collected using a reader
+     */
+    signature?: pulumi.Input<inputs.TerminalReaderActionCollectInputsInputSignature | undefined>;
+    /**
+     * Indicate that this input was skipped by the user.
+     */
+    skipped?: pulumi.Input<boolean | undefined>;
+    /**
+     * Information about text being collected using a reader
+     */
+    text?: pulumi.Input<inputs.TerminalReaderActionCollectInputsInputText | undefined>;
+    /**
+     * List of toggles being collected. Values are present if collection is complete.
+     */
+    toggles?: pulumi.Input<pulumi.Input<inputs.TerminalReaderActionCollectInputsInputToggle>[] | undefined>;
+    /**
+     * Type of input being collected.
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface TerminalReaderActionCollectInputsInputCustomText {
+    /**
+     * Customize the default description for this input
+     */
+    description?: pulumi.Input<string | undefined>;
+    /**
+     * Customize the default label for this input's skip button
+     */
+    skipButton?: pulumi.Input<string | undefined>;
+    /**
+     * Customize the default label for this input's submit button
+     */
+    submitButton?: pulumi.Input<string | undefined>;
+    /**
+     * Customize the default title for this input
+     */
+    title?: pulumi.Input<string | undefined>;
+}
+
+export interface TerminalReaderActionCollectInputsInputEmail {
+    /**
+     * The collected email address
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface TerminalReaderActionCollectInputsInputNumeric {
+    /**
+     * The collected number
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface TerminalReaderActionCollectInputsInputPhone {
+    /**
+     * The collected phone number
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface TerminalReaderActionCollectInputsInputSelection {
+    /**
+     * List of possible choices to be selected
+     */
+    choices?: pulumi.Input<pulumi.Input<inputs.TerminalReaderActionCollectInputsInputSelectionChoice>[] | undefined>;
+    /**
+     * The id of the selected choice
+     */
+    id?: pulumi.Input<string | undefined>;
+    /**
+     * The text of the selected choice
+     */
+    text?: pulumi.Input<string | undefined>;
+}
+
+export interface TerminalReaderActionCollectInputsInputSelectionChoice {
+    /**
+     * The identifier for the selected choice. Maximum 50 characters.
+     */
+    id?: pulumi.Input<string | undefined>;
+    /**
+     * The button style for the choice. Can be `primary` or `secondary`.
+     */
+    style?: pulumi.Input<string | undefined>;
+    /**
+     * The text to be selected. Maximum 30 characters.
+     */
+    text?: pulumi.Input<string | undefined>;
+}
+
+export interface TerminalReaderActionCollectInputsInputSignature {
+    /**
+     * The File ID of a collected signature image
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface TerminalReaderActionCollectInputsInputText {
+    /**
+     * The collected text value
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface TerminalReaderActionCollectInputsInputToggle {
+    /**
+     * The toggle's default value. Can be `enabled` or `disabled`.
+     */
+    defaultValue?: pulumi.Input<string | undefined>;
+    /**
+     * The toggle's description text. Maximum 50 characters.
+     */
+    description?: pulumi.Input<string | undefined>;
+    /**
+     * The toggle's title text. Maximum 50 characters.
+     */
+    title?: pulumi.Input<string | undefined>;
+    /**
+     * The toggle's collected value. Can be `enabled` or `disabled`.
+     */
+    value?: pulumi.Input<string | undefined>;
+}
+
+export interface TerminalReaderActionCollectPaymentMethod {
+    /**
+     * Represents a per-transaction override of a reader configuration
+     */
+    collectConfig?: pulumi.Input<inputs.TerminalReaderActionCollectPaymentMethodCollectConfig | undefined>;
+    /**
+     * Most recent PaymentIntent processed by the reader.
+     */
+    paymentIntent?: pulumi.Input<string | undefined>;
+    /**
+     * PaymentMethod objects represent your customer's payment instruments.
+     * You can use them with [PaymentIntents](https://docs.stripe.com/payments/payment-intents) to collect payments or save them to
+     * Customer objects to store instrument details for future payments.
+     */
+    paymentMethod?: pulumi.Input<string | undefined>;
+}
+
+export interface TerminalReaderActionCollectPaymentMethodCollectConfig {
+    /**
+     * Enable customer-initiated cancellation when processing this payment.
+     */
+    enableCustomerCancellation?: pulumi.Input<boolean | undefined>;
+    /**
+     * Override showing a tipping selection screen on this transaction.
+     */
+    skipTipping?: pulumi.Input<boolean | undefined>;
+    /**
+     * Represents a per-transaction tipping configuration
+     */
+    tipping?: pulumi.Input<inputs.TerminalReaderActionCollectPaymentMethodCollectConfigTipping | undefined>;
+}
+
+export interface TerminalReaderActionCollectPaymentMethodCollectConfigTipping {
+    /**
+     * Amount used to calculate tip suggestions on tipping selection screen for this transaction. Must be a positive integer in the smallest currency unit (e.g., 100 cents to represent $1.00 or 100 to represent ¥100, a zero-decimal currency).
+     */
+    amountEligible?: pulumi.Input<number | undefined>;
+}
+
+export interface TerminalReaderActionConfirmPaymentIntent {
+    /**
+     * Represents a per-transaction override of a reader configuration
+     */
+    confirmConfig?: pulumi.Input<inputs.TerminalReaderActionConfirmPaymentIntentConfirmConfig | undefined>;
+    /**
+     * Most recent PaymentIntent processed by the reader.
+     */
+    paymentIntent?: pulumi.Input<string | undefined>;
+}
+
+export interface TerminalReaderActionConfirmPaymentIntentConfirmConfig {
+    /**
+     * If the customer doesn't abandon authenticating the payment, they're redirected to this URL after completion.
+     */
+    returnUrl?: pulumi.Input<string | undefined>;
+}
+
+export interface TerminalReaderActionPrintContent {
+    /**
+     * Metadata of an uploaded file
+     */
+    image?: pulumi.Input<inputs.TerminalReaderActionPrintContentImage | undefined>;
+    /**
+     * The type of content to print. Currently supports `image`.
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface TerminalReaderActionPrintContentImage {
+    /**
+     * Creation time of the object (in seconds since the Unix epoch).
+     */
+    createdAt?: pulumi.Input<number | undefined>;
+    /**
+     * The original name of the uploaded file (e.g. `receipt.png`).
+     */
+    filename?: pulumi.Input<string | undefined>;
+    /**
+     * The size (in bytes) of the uploaded file.
+     */
+    size?: pulumi.Input<number | undefined>;
+    /**
+     * The format of the uploaded file.
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface TerminalReaderActionProcessPaymentIntent {
+    /**
+     * Most recent PaymentIntent processed by the reader.
+     */
+    paymentIntent?: pulumi.Input<string | undefined>;
+    /**
+     * Represents a per-transaction override of a reader configuration
+     */
+    processConfig?: pulumi.Input<inputs.TerminalReaderActionProcessPaymentIntentProcessConfig | undefined>;
+}
+
+export interface TerminalReaderActionProcessPaymentIntentProcessConfig {
+    /**
+     * Enable customer-initiated cancellation when processing this payment.
+     */
+    enableCustomerCancellation?: pulumi.Input<boolean | undefined>;
+    /**
+     * If the customer doesn't abandon authenticating the payment, they're redirected to this URL after completion.
+     */
+    returnUrl?: pulumi.Input<string | undefined>;
+    /**
+     * Override showing a tipping selection screen on this transaction.
+     */
+    skipTipping?: pulumi.Input<boolean | undefined>;
+    /**
+     * Represents a per-transaction tipping configuration
+     */
+    tipping?: pulumi.Input<inputs.TerminalReaderActionProcessPaymentIntentProcessConfigTipping | undefined>;
+}
+
+export interface TerminalReaderActionProcessPaymentIntentProcessConfigTipping {
+    /**
+     * Amount used to calculate tip suggestions on tipping selection screen for this transaction. Must be a positive integer in the smallest currency unit (e.g., 100 cents to represent $1.00 or 100 to represent ¥100, a zero-decimal currency).
+     */
+    amountEligible?: pulumi.Input<number | undefined>;
+}
+
+export interface TerminalReaderActionProcessSetupIntent {
+    /**
+     * ID of a card PaymentMethod generated from the cardPresent PaymentMethod that may be attached to a Customer for future transactions. Only present if it was possible to generate a card PaymentMethod.
+     */
+    generatedCard?: pulumi.Input<string | undefined>;
+    /**
+     * Represents a per-setup override of a reader configuration
+     */
+    processConfig?: pulumi.Input<inputs.TerminalReaderActionProcessSetupIntentProcessConfig | undefined>;
+    /**
+     * Most recent SetupIntent processed by the reader.
+     */
+    setupIntent?: pulumi.Input<string | undefined>;
+}
+
+export interface TerminalReaderActionProcessSetupIntentProcessConfig {
+    /**
+     * Enable customer-initiated cancellation when processing this SetupIntent.
+     */
+    enableCustomerCancellation?: pulumi.Input<boolean | undefined>;
+}
+
+export interface TerminalReaderActionRefundPayment {
+    /**
+     * The amount being refunded.
+     */
+    amount?: pulumi.Input<number | undefined>;
+    /**
+     * Charge that is being refunded.
+     */
+    charge?: pulumi.Input<string | undefined>;
+    /**
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+     */
+    metadata?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
+    /**
+     * Payment intent that is being refunded.
+     */
+    paymentIntent?: pulumi.Input<string | undefined>;
+    /**
+     * The reason for the refund.
+     */
+    reason?: pulumi.Input<string | undefined>;
+    /**
+     * Unique identifier for the refund object.
+     */
+    refund?: pulumi.Input<string | undefined>;
+    /**
+     * Boolean indicating whether the application fee should be refunded when refunding this charge. If a full charge refund is given, the full application fee will be refunded. Otherwise, the application fee will be refunded in an amount proportional to the amount of the charge refunded. An application fee can be refunded only by the application that created the charge.
+     */
+    refundApplicationFee?: pulumi.Input<boolean | undefined>;
+    /**
+     * Represents a per-transaction override of a reader configuration
+     */
+    refundPaymentConfig?: pulumi.Input<inputs.TerminalReaderActionRefundPaymentRefundPaymentConfig | undefined>;
+    /**
+     * Boolean indicating whether the transfer should be reversed when refunding this charge. The transfer will be reversed proportionally to the amount being refunded (either the entire or partial amount). A transfer can be reversed only by the application that created the charge.
+     */
+    reverseTransfer?: pulumi.Input<boolean | undefined>;
+}
+
+export interface TerminalReaderActionRefundPaymentRefundPaymentConfig {
+    /**
+     * Enable customer-initiated cancellation when refunding this payment.
+     */
+    enableCustomerCancellation?: pulumi.Input<boolean | undefined>;
+}
+
+export interface TerminalReaderActionSetReaderDisplay {
+    /**
+     * Cart object to be displayed by the reader, including line items, amounts, and currency.
+     */
+    cart?: pulumi.Input<inputs.TerminalReaderActionSetReaderDisplayCart | undefined>;
+    /**
+     * Type of information to be displayed by the reader. Only `cart` is currently supported.
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface TerminalReaderActionSetReaderDisplayCart {
+    /**
+     * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+     */
+    currency?: pulumi.Input<string | undefined>;
+    /**
+     * List of line items in the cart.
+     */
+    lineItems?: pulumi.Input<pulumi.Input<inputs.TerminalReaderActionSetReaderDisplayCartLineItem>[] | undefined>;
+    /**
+     * Tax amount for the entire cart. A positive integer in the [smallest currency unit](https://docs.stripe.com/currencies#zero-decimal).
+     */
+    tax?: pulumi.Input<number | undefined>;
+    /**
+     * Total amount for the entire cart, including tax. A positive integer in the [smallest currency unit](https://docs.stripe.com/currencies#zero-decimal).
+     */
+    total?: pulumi.Input<number | undefined>;
+}
+
+export interface TerminalReaderActionSetReaderDisplayCartLineItem {
+    /**
+     * The amount of the line item. A positive integer in the [smallest currency unit](https://docs.stripe.com/currencies#zero-decimal).
+     */
+    amount?: pulumi.Input<number | undefined>;
+    /**
+     * Description of the line item.
+     */
+    description?: pulumi.Input<string | undefined>;
+    /**
+     * The quantity of the line item.
+     */
+    quantity?: pulumi.Input<number | undefined>;
+}
+
+export interface TreasuryFinancialAccountBalance {
+    /**
+     * Funds the user can spend right now.
+     */
+    cash?: pulumi.Input<{[key: string]: pulumi.Input<number>} | undefined>;
+    /**
+     * Funds not spendable yet, but will become available at a later time.
+     */
+    inboundPending?: pulumi.Input<{[key: string]: pulumi.Input<number>} | undefined>;
+    /**
+     * Funds in the account, but not spendable because they are being held for pending outbound flows.
+     */
+    outboundPending?: pulumi.Input<{[key: string]: pulumi.Input<number>} | undefined>;
+}
+
+export interface TreasuryFinancialAccountFeatures {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Toggle settings for enabling/disabling a feature
+     */
+    cardIssuing?: pulumi.Input<inputs.TreasuryFinancialAccountFeaturesCardIssuing | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Toggle settings for enabling/disabling a feature
+     */
+    depositInsurance?: pulumi.Input<inputs.TreasuryFinancialAccountFeaturesDepositInsurance | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Settings related to Financial Addresses features on a Financial Account
+     */
+    financialAddresses?: pulumi.Input<inputs.TreasuryFinancialAccountFeaturesFinancialAddresses | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * InboundTransfers contains inbound transfers features for a FinancialAccount.
+     */
+    inboundTransfers?: pulumi.Input<inputs.TreasuryFinancialAccountFeaturesInboundTransfers | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Toggle settings for enabling/disabling a feature
+     */
+    intraStripeFlows?: pulumi.Input<inputs.TreasuryFinancialAccountFeaturesIntraStripeFlows | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * String representing the object's type. Objects of the same type share the same value.
+     */
+    object?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Settings related to Outbound Payments features on a Financial Account
+     */
+    outboundPayments?: pulumi.Input<inputs.TreasuryFinancialAccountFeaturesOutboundPayments | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * OutboundTransfers contains outbound transfers features for a FinancialAccount.
+     */
+    outboundTransfers?: pulumi.Input<inputs.TreasuryFinancialAccountFeaturesOutboundTransfers | undefined>;
+}
+
+export interface TreasuryFinancialAccountFeaturesCardIssuing {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether the FinancialAccount should have the Feature.
+     */
+    requested: pulumi.Input<boolean>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether the Feature is operational.
+     */
+    status?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Additional details; includes at least one entry when the status is not `active`.
+     */
+    statusDetails?: pulumi.Input<pulumi.Input<inputs.TreasuryFinancialAccountFeaturesCardIssuingStatusDetail>[] | undefined>;
+}
+
+export interface TreasuryFinancialAccountFeaturesCardIssuingStatusDetail {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Represents the reason why the status is `pending` or `restricted`.
+     */
+    code?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Represents what the user should do, if anything, to activate the Feature.
+     */
+    resolution?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The `platformRestrictions` that are restricting this Feature.
+     */
+    restriction?: pulumi.Input<string | undefined>;
+}
+
+export interface TreasuryFinancialAccountFeaturesDepositInsurance {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether the FinancialAccount should have the Feature.
+     */
+    requested: pulumi.Input<boolean>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether the Feature is operational.
+     */
+    status?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Additional details; includes at least one entry when the status is not `active`.
+     */
+    statusDetails?: pulumi.Input<pulumi.Input<inputs.TreasuryFinancialAccountFeaturesDepositInsuranceStatusDetail>[] | undefined>;
+}
+
+export interface TreasuryFinancialAccountFeaturesDepositInsuranceStatusDetail {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Represents the reason why the status is `pending` or `restricted`.
+     */
+    code?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Represents what the user should do, if anything, to activate the Feature.
+     */
+    resolution?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The `platformRestrictions` that are restricting this Feature.
+     */
+    restriction?: pulumi.Input<string | undefined>;
+}
+
+export interface TreasuryFinancialAccountFeaturesFinancialAddresses {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Toggle settings for enabling/disabling the ABA address feature
+     */
+    aba?: pulumi.Input<inputs.TreasuryFinancialAccountFeaturesFinancialAddressesAba | undefined>;
+}
+
+export interface TreasuryFinancialAccountFeaturesFinancialAddressesAba {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether the FinancialAccount should have the Feature.
+     */
+    requested: pulumi.Input<boolean>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether the Feature is operational.
+     */
+    status?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Additional details; includes at least one entry when the status is not `active`.
+     */
+    statusDetails?: pulumi.Input<pulumi.Input<inputs.TreasuryFinancialAccountFeaturesFinancialAddressesAbaStatusDetail>[] | undefined>;
+}
+
+export interface TreasuryFinancialAccountFeaturesFinancialAddressesAbaStatusDetail {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Represents the reason why the status is `pending` or `restricted`.
+     */
+    code?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Represents what the user should do, if anything, to activate the Feature.
+     */
+    resolution?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The `platformRestrictions` that are restricting this Feature.
+     */
+    restriction?: pulumi.Input<string | undefined>;
+}
+
+export interface TreasuryFinancialAccountFeaturesInboundTransfers {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Toggle settings for enabling/disabling an inbound ACH specific feature
+     */
+    ach?: pulumi.Input<inputs.TreasuryFinancialAccountFeaturesInboundTransfersAch | undefined>;
+}
+
+export interface TreasuryFinancialAccountFeaturesInboundTransfersAch {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether the FinancialAccount should have the Feature.
+     */
+    requested: pulumi.Input<boolean>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether the Feature is operational.
+     */
+    status?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Additional details; includes at least one entry when the status is not `active`.
+     */
+    statusDetails?: pulumi.Input<pulumi.Input<inputs.TreasuryFinancialAccountFeaturesInboundTransfersAchStatusDetail>[] | undefined>;
+}
+
+export interface TreasuryFinancialAccountFeaturesInboundTransfersAchStatusDetail {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Represents the reason why the status is `pending` or `restricted`.
+     */
+    code?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Represents what the user should do, if anything, to activate the Feature.
+     */
+    resolution?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The `platformRestrictions` that are restricting this Feature.
+     */
+    restriction?: pulumi.Input<string | undefined>;
+}
+
+export interface TreasuryFinancialAccountFeaturesIntraStripeFlows {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether the FinancialAccount should have the Feature.
+     */
+    requested: pulumi.Input<boolean>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether the Feature is operational.
+     */
+    status?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Additional details; includes at least one entry when the status is not `active`.
+     */
+    statusDetails?: pulumi.Input<pulumi.Input<inputs.TreasuryFinancialAccountFeaturesIntraStripeFlowsStatusDetail>[] | undefined>;
+}
+
+export interface TreasuryFinancialAccountFeaturesIntraStripeFlowsStatusDetail {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Represents the reason why the status is `pending` or `restricted`.
+     */
+    code?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Represents what the user should do, if anything, to activate the Feature.
+     */
+    resolution?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The `platformRestrictions` that are restricting this Feature.
+     */
+    restriction?: pulumi.Input<string | undefined>;
+}
+
+export interface TreasuryFinancialAccountFeaturesOutboundPayments {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Toggle settings for enabling/disabling an outbound ACH specific feature
+     */
+    ach?: pulumi.Input<inputs.TreasuryFinancialAccountFeaturesOutboundPaymentsAch | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Toggle settings for enabling/disabling a feature
+     */
+    usDomesticWire?: pulumi.Input<inputs.TreasuryFinancialAccountFeaturesOutboundPaymentsUsDomesticWire | undefined>;
+}
+
+export interface TreasuryFinancialAccountFeaturesOutboundPaymentsAch {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether the FinancialAccount should have the Feature.
+     */
+    requested: pulumi.Input<boolean>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether the Feature is operational.
+     */
+    status?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Additional details; includes at least one entry when the status is not `active`.
+     */
+    statusDetails?: pulumi.Input<pulumi.Input<inputs.TreasuryFinancialAccountFeaturesOutboundPaymentsAchStatusDetail>[] | undefined>;
+}
+
+export interface TreasuryFinancialAccountFeaturesOutboundPaymentsAchStatusDetail {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Represents the reason why the status is `pending` or `restricted`.
+     */
+    code?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Represents what the user should do, if anything, to activate the Feature.
+     */
+    resolution?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The `platformRestrictions` that are restricting this Feature.
+     */
+    restriction?: pulumi.Input<string | undefined>;
+}
+
+export interface TreasuryFinancialAccountFeaturesOutboundPaymentsUsDomesticWire {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether the FinancialAccount should have the Feature.
+     */
+    requested: pulumi.Input<boolean>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether the Feature is operational.
+     */
+    status?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Additional details; includes at least one entry when the status is not `active`.
+     */
+    statusDetails?: pulumi.Input<pulumi.Input<inputs.TreasuryFinancialAccountFeaturesOutboundPaymentsUsDomesticWireStatusDetail>[] | undefined>;
+}
+
+export interface TreasuryFinancialAccountFeaturesOutboundPaymentsUsDomesticWireStatusDetail {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Represents the reason why the status is `pending` or `restricted`.
+     */
+    code?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Represents what the user should do, if anything, to activate the Feature.
+     */
+    resolution?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The `platformRestrictions` that are restricting this Feature.
+     */
+    restriction?: pulumi.Input<string | undefined>;
+}
+
+export interface TreasuryFinancialAccountFeaturesOutboundTransfers {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Toggle settings for enabling/disabling an outbound ACH specific feature
+     */
+    ach?: pulumi.Input<inputs.TreasuryFinancialAccountFeaturesOutboundTransfersAch | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Toggle settings for enabling/disabling a feature
+     */
+    usDomesticWire?: pulumi.Input<inputs.TreasuryFinancialAccountFeaturesOutboundTransfersUsDomesticWire | undefined>;
+}
+
+export interface TreasuryFinancialAccountFeaturesOutboundTransfersAch {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether the FinancialAccount should have the Feature.
+     */
+    requested: pulumi.Input<boolean>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether the Feature is operational.
+     */
+    status?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Additional details; includes at least one entry when the status is not `active`.
+     */
+    statusDetails?: pulumi.Input<pulumi.Input<inputs.TreasuryFinancialAccountFeaturesOutboundTransfersAchStatusDetail>[] | undefined>;
+}
+
+export interface TreasuryFinancialAccountFeaturesOutboundTransfersAchStatusDetail {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Represents the reason why the status is `pending` or `restricted`.
+     */
+    code?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Represents what the user should do, if anything, to activate the Feature.
+     */
+    resolution?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The `platformRestrictions` that are restricting this Feature.
+     */
+    restriction?: pulumi.Input<string | undefined>;
+}
+
+export interface TreasuryFinancialAccountFeaturesOutboundTransfersUsDomesticWire {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether the FinancialAccount should have the Feature.
+     */
+    requested: pulumi.Input<boolean>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether the Feature is operational.
+     */
+    status?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Additional details; includes at least one entry when the status is not `active`.
+     */
+    statusDetails?: pulumi.Input<pulumi.Input<inputs.TreasuryFinancialAccountFeaturesOutboundTransfersUsDomesticWireStatusDetail>[] | undefined>;
+}
+
+export interface TreasuryFinancialAccountFeaturesOutboundTransfersUsDomesticWireStatusDetail {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Represents the reason why the status is `pending` or `restricted`.
+     */
+    code?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Represents what the user should do, if anything, to activate the Feature.
+     */
+    resolution?: pulumi.Input<string | undefined>;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The `platformRestrictions` that are restricting this Feature.
+     */
+    restriction?: pulumi.Input<string | undefined>;
+}
+
+export interface TreasuryFinancialAccountFinancialAddress {
+    /**
+     * ABA Records contain U.S. bank account details per the ABA format.
+     */
+    aba?: pulumi.Input<inputs.TreasuryFinancialAccountFinancialAddressAba | undefined>;
+    /**
+     * The list of networks that the address supports
+     */
+    supportedNetworks?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    /**
+     * The type of financial address
+     */
+    type?: pulumi.Input<string | undefined>;
+}
+
+export interface TreasuryFinancialAccountFinancialAddressAba {
+    /**
+     * The name of the person or business that owns the bank account.
+     */
+    accountHolderName?: pulumi.Input<string | undefined>;
+    /**
+     * The account number.
+     */
+    accountNumber?: pulumi.Input<string | undefined>;
+    /**
+     * The last four characters of the account number.
+     */
+    accountNumberLast4?: pulumi.Input<string | undefined>;
+    /**
+     * Name of the bank.
+     */
+    bankName?: pulumi.Input<string | undefined>;
+    /**
+     * Routing number for the account.
+     */
+    routingNumber?: pulumi.Input<string | undefined>;
+}
+
+export interface TreasuryFinancialAccountPlatformRestrictions {
+    /**
+     * Restricts all inbound money movement.
+     */
+    inboundFlows?: pulumi.Input<string | undefined>;
+    /**
+     * Restricts all outbound money movement.
+     */
+    outboundFlows?: pulumi.Input<string | undefined>;
+}
+
+export interface TreasuryFinancialAccountStatusDetails {
+    /**
+     * Details related to the closure of this FinancialAccount
+     */
+    closed?: pulumi.Input<inputs.TreasuryFinancialAccountStatusDetailsClosed | undefined>;
+}
+
+export interface TreasuryFinancialAccountStatusDetailsClosed {
+    /**
+     * The array that contains reasons for a FinancialAccount closure.
+     */
+    reasons?: pulumi.Input<pulumi.Input<string>[] | undefined>;
 }
 
 export interface V2CoreEventDestinationAmazonEventbridge {
@@ -764,13 +17325,50 @@ export interface V2CoreEventDestinationAmazonEventbridge {
     awsRegion: pulumi.Input<string>;
 }
 
+export interface V2CoreEventDestinationAzureEventGrid {
+    /**
+     * The name of the Azure partner topic.
+     */
+    azurePartnerTopicName?: pulumi.Input<string | undefined>;
+    /**
+     * The status of the Azure partner topic.
+     */
+    azurePartnerTopicStatus?: pulumi.Input<string | undefined>;
+    /**
+     * The Azure region.
+     */
+    azureRegion: pulumi.Input<string>;
+    /**
+     * The name of the Azure resource group.
+     */
+    azureResourceGroupName: pulumi.Input<string>;
+    /**
+     * The Azure subscription ID.
+     */
+    azureSubscriptionId: pulumi.Input<string>;
+}
+
+export interface V2CoreEventDestinationStatusDetails {
+    /**
+     * Details about why the event destination has been disabled.
+     */
+    disabled?: pulumi.Input<inputs.V2CoreEventDestinationStatusDetailsDisabled | undefined>;
+}
+
+export interface V2CoreEventDestinationStatusDetailsDisabled {
+    /**
+     * Reason event destination has been disabled.
+     */
+    reason?: pulumi.Input<string | undefined>;
+}
+
 export interface V2CoreEventDestinationWebhookEndpoint {
     /**
      * The signing secret of the webhook endpoint, only includable on creation.
      */
     signingSecret?: pulumi.Input<string | undefined>;
     /**
-     * The URL of the webhook endpoint.
+     * The URL of the webhook endpoint, includable.
      */
     url: pulumi.Input<string>;
 }
