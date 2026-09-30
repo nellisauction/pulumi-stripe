@@ -1,6 +1,6 @@
 module github.com/stripe/terraform-provider-stripe/shim
 
-go 1.25.9
+go 1.27.1
 
 require (
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.31.0
