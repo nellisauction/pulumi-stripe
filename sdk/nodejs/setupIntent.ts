@@ -272,7 +272,7 @@ export class SetupIntent extends pulumi.CustomResource {
             const args = argsOrState as SetupIntentArgs | undefined;
             resourceInputs["attachToSelf"] = args?.attachToSelf;
             resourceInputs["automaticPaymentMethods"] = args?.automaticPaymentMethods;
-            resourceInputs["confirm"] = args?.confirm ? pulumi.secret(args.confirm) : undefined;
+            resourceInputs["confirm"] = args?.confirm;
             resourceInputs["confirmationToken"] = args?.confirmationToken ? pulumi.secret(args.confirmationToken) : undefined;
             resourceInputs["customer"] = args?.customer;
             resourceInputs["customerAccount"] = args?.customerAccount;
@@ -290,7 +290,7 @@ export class SetupIntent extends pulumi.CustomResource {
             resourceInputs["returnUrl"] = args?.returnUrl ? pulumi.secret(args.returnUrl) : undefined;
             resourceInputs["singleUse"] = args?.singleUse ? pulumi.secret(args.singleUse) : undefined;
             resourceInputs["usage"] = args?.usage;
-            resourceInputs["useStripeSdk"] = args?.useStripeSdk ? pulumi.secret(args.useStripeSdk) : undefined;
+            resourceInputs["useStripeSdk"] = args?.useStripeSdk;
             resourceInputs["application"] = undefined /*out*/;
             resourceInputs["cancellationReason"] = undefined /*out*/;
             resourceInputs["clientSecret"] = undefined /*out*/;
@@ -307,7 +307,7 @@ export class SetupIntent extends pulumi.CustomResource {
             resourceInputs["status"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
-        const secretOpts = { additionalSecretOutputs: ["clientSecret", "confirm", "confirmationToken", "mandateData", "paymentMethodConfiguration", "paymentMethodData", "returnUrl", "singleUse", "useStripeSdk"] };
+        const secretOpts = { additionalSecretOutputs: ["clientSecret", "confirmationToken", "mandateData", "paymentMethodConfiguration", "paymentMethodData", "returnUrl", "singleUse"] };
         opts = pulumi.mergeOptions(opts, secretOpts);
         super(SetupIntent.__pulumiType, name, resourceInputs, opts);
     }

@@ -287,7 +287,7 @@ export class Charge extends pulumi.CustomResource {
             resourceInputs["amount"] = args?.amount;
             resourceInputs["applicationFee"] = args?.applicationFee;
             resourceInputs["applicationFeeAmount"] = args?.applicationFeeAmount;
-            resourceInputs["capture"] = args?.capture ? pulumi.secret(args.capture) : undefined;
+            resourceInputs["capture"] = args?.capture;
             resourceInputs["currency"] = args?.currency;
             resourceInputs["customer"] = args?.customer;
             resourceInputs["description"] = args?.description;
@@ -333,7 +333,7 @@ export class Charge extends pulumi.CustomResource {
             resourceInputs["transfer"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
-        const secretOpts = { additionalSecretOutputs: ["capture", "destination"] };
+        const secretOpts = { additionalSecretOutputs: ["destination"] };
         opts = pulumi.mergeOptions(opts, secretOpts);
         super(Charge.__pulumiType, name, resourceInputs, opts);
     }

@@ -31,7 +31,7 @@ import * as utilities from "./utilities";
  * Stripe applies any customer credit on the account before determining the
  * amount due for the invoice (i.e., the amount that will be actually
  * charged). If the amount due for the invoice is less than Stripe's [minimum allowed charge
- * per currency](https://www.terraform.io/docs/currencies#minimum-and-maximum-charge-amounts), the
+ * per currency](https://docs.stripe.com/docs/currencies#minimum-and-maximum-charge-amounts), the
  * invoice is automatically marked paid, and we add the amount due to the
  * customer's credit balance which is applied to the next invoice.
  *
@@ -291,11 +291,11 @@ export class Invoice extends pulumi.CustomResource {
      */
     declare public readonly pendingInvoiceItemsBehavior: pulumi.Output<string | undefined>;
     /**
-     * The latest timestamp at which invoice items can be associated with this invoice. Use the [line item period](https://www.terraform.io/api/invoices/line_item#invoice_line_item_object-period) to get the service period for each price.
+     * The latest timestamp at which invoice items can be associated with this invoice. Use the [line item period](https://docs.stripe.com/api/invoices/line_item#invoice_line_item_object-period) to get the service period for each price.
      */
     declare public /*out*/ readonly periodEnd: pulumi.Output<number>;
     /**
-     * The earliest timestamp at which invoice items can be associated with this invoice. Use the [line item period](https://www.terraform.io/api/invoices/line_item#invoice_line_item_object-period) to get the service period for each price.
+     * The earliest timestamp at which invoice items can be associated with this invoice. Use the [line item period](https://docs.stripe.com/api/invoices/line_item#invoice_line_item_object-period) to get the service period for each price.
      */
     declare public /*out*/ readonly periodStart: pulumi.Output<number>;
     /**
@@ -474,7 +474,7 @@ export class Invoice extends pulumi.CustomResource {
         } else {
             const args = argsOrState as InvoiceArgs | undefined;
             resourceInputs["accountTaxIds"] = args?.accountTaxIds;
-            resourceInputs["applicationFeeAmount"] = args?.applicationFeeAmount ? pulumi.secret(args.applicationFeeAmount) : undefined;
+            resourceInputs["applicationFeeAmount"] = args?.applicationFeeAmount;
             resourceInputs["autoAdvance"] = args?.autoAdvance;
             resourceInputs["automaticTax"] = args?.automaticTax;
             resourceInputs["automaticallyFinalizesAt"] = args?.automaticallyFinalizesAt;
@@ -483,7 +483,7 @@ export class Invoice extends pulumi.CustomResource {
             resourceInputs["customFields"] = args?.customFields;
             resourceInputs["customer"] = args?.customer;
             resourceInputs["customerAccount"] = args?.customerAccount;
-            resourceInputs["daysUntilDue"] = args?.daysUntilDue ? pulumi.secret(args.daysUntilDue) : undefined;
+            resourceInputs["daysUntilDue"] = args?.daysUntilDue;
             resourceInputs["defaultPaymentMethod"] = args?.defaultPaymentMethod;
             resourceInputs["defaultSource"] = args?.defaultSource;
             resourceInputs["defaultTaxRates"] = args?.defaultTaxRates;
@@ -554,7 +554,7 @@ export class Invoice extends pulumi.CustomResource {
             resourceInputs["webhooksDeliveredAt"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
-        const secretOpts = { additionalSecretOutputs: ["applicationFeeAmount", "daysUntilDue", "pendingInvoiceItemsBehavior", "transferData"] };
+        const secretOpts = { additionalSecretOutputs: ["pendingInvoiceItemsBehavior", "transferData"] };
         opts = pulumi.mergeOptions(opts, secretOpts);
         super(Invoice.__pulumiType, name, resourceInputs, opts);
     }
@@ -787,11 +787,11 @@ export interface InvoiceState {
      */
     pendingInvoiceItemsBehavior?: pulumi.Input<string | undefined>;
     /**
-     * The latest timestamp at which invoice items can be associated with this invoice. Use the [line item period](https://www.terraform.io/api/invoices/line_item#invoice_line_item_object-period) to get the service period for each price.
+     * The latest timestamp at which invoice items can be associated with this invoice. Use the [line item period](https://docs.stripe.com/api/invoices/line_item#invoice_line_item_object-period) to get the service period for each price.
      */
     periodEnd?: pulumi.Input<number | undefined>;
     /**
-     * The earliest timestamp at which invoice items can be associated with this invoice. Use the [line item period](https://www.terraform.io/api/invoices/line_item#invoice_line_item_object-period) to get the service period for each price.
+     * The earliest timestamp at which invoice items can be associated with this invoice. Use the [line item period](https://docs.stripe.com/api/invoices/line_item#invoice_line_item_object-period) to get the service period for each price.
      */
     periodStart?: pulumi.Input<number | undefined>;
     /**

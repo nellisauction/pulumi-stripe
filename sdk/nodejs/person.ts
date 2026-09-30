@@ -9,9 +9,9 @@ import * as utilities from "./utilities";
 /**
  * This is an object representing a person associated with a Stripe account.
  *
- * A platform can only access a subset of data in a person for an account where [account.controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is `stripe`, which includes Standard and Express accounts, after creating an Account Link or Account Session to start Connect onboarding.
+ * A platform can only access a subset of data in a person for an account where [account.controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is `stripe`, which includes Standard and Express accounts, after creating an Account Link or Account Session to start Connect onboarding.
  *
- * See the [Standard onboarding](https://www.terraform.io/connect/standard-accounts) or [Express onboarding](https://www.terraform.io/connect/express-accounts) documentation for information about prefilling information and account onboarding steps. Learn more about [handling identity verification with the API](https://www.terraform.io/connect/handling-api-verification#person-information).
+ * See the [Standard onboarding](https://docs.stripe.com/connect/standard-accounts) or [Express onboarding](https://docs.stripe.com/connect/express-accounts) documentation for information about prefilling information and account onboarding steps. Learn more about [handling identity verification with the API](https://docs.stripe.com/connect/handling-api-verification#person-information).
  */
 export class Person extends pulumi.CustomResource {
     /**
@@ -66,23 +66,23 @@ export class Person extends pulumi.CustomResource {
      */
     declare public readonly documents: pulumi.Output<outputs.PersonDocuments | undefined>;
     /**
-     * The person's email address. Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
+     * The person's email address. Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
      */
     declare public readonly email: pulumi.Output<string>;
     /**
-     * The person's first name. Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
+     * The person's first name. Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
      */
     declare public readonly firstName: pulumi.Output<string>;
     /**
-     * The Kana variation of the person's first name (Japan only). Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
+     * The Kana variation of the person's first name (Japan only). Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
      */
     declare public readonly firstNameKana: pulumi.Output<string>;
     /**
-     * The Kanji variation of the person's first name (Japan only). Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
+     * The Kanji variation of the person's first name (Japan only). Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
      */
     declare public readonly firstNameKanji: pulumi.Output<string>;
     /**
-     * A list of alternate names or aliases that the person is known by. Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
+     * A list of alternate names or aliases that the person is known by. Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
      */
     declare public readonly fullNameAliases: pulumi.Output<string[]>;
     /**
@@ -112,15 +112,15 @@ export class Person extends pulumi.CustomResource {
      */
     declare public /*out*/ readonly idNumberSecondaryProvided: pulumi.Output<boolean>;
     /**
-     * The person's last name. Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
+     * The person's last name. Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
      */
     declare public readonly lastName: pulumi.Output<string>;
     /**
-     * The Kana variation of the person's last name (Japan only). Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
+     * The Kana variation of the person's last name (Japan only). Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
      */
     declare public readonly lastNameKana: pulumi.Output<string>;
     /**
-     * The Kanji variation of the person's last name (Japan only). Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
+     * The Kanji variation of the person's last name (Japan only). Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
      */
     declare public readonly lastNameKanji: pulumi.Output<string>;
     /**
@@ -300,23 +300,23 @@ export interface PersonState {
      */
     documents?: pulumi.Input<inputs.PersonDocuments | undefined>;
     /**
-     * The person's email address. Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
+     * The person's email address. Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
      */
     email?: pulumi.Input<string | undefined>;
     /**
-     * The person's first name. Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
+     * The person's first name. Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
      */
     firstName?: pulumi.Input<string | undefined>;
     /**
-     * The Kana variation of the person's first name (Japan only). Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
+     * The Kana variation of the person's first name (Japan only). Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
      */
     firstNameKana?: pulumi.Input<string | undefined>;
     /**
-     * The Kanji variation of the person's first name (Japan only). Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
+     * The Kanji variation of the person's first name (Japan only). Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
      */
     firstNameKanji?: pulumi.Input<string | undefined>;
     /**
-     * A list of alternate names or aliases that the person is known by. Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
+     * A list of alternate names or aliases that the person is known by. Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
      */
     fullNameAliases?: pulumi.Input<pulumi.Input<string>[] | undefined>;
     /**
@@ -346,15 +346,15 @@ export interface PersonState {
      */
     idNumberSecondaryProvided?: pulumi.Input<boolean | undefined>;
     /**
-     * The person's last name. Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
+     * The person's last name. Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
      */
     lastName?: pulumi.Input<string | undefined>;
     /**
-     * The Kana variation of the person's last name (Japan only). Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
+     * The Kana variation of the person's last name (Japan only). Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
      */
     lastNameKana?: pulumi.Input<string | undefined>;
     /**
-     * The Kanji variation of the person's last name (Japan only). Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
+     * The Kanji variation of the person's last name (Japan only). Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
      */
     lastNameKanji?: pulumi.Input<string | undefined>;
     /**
@@ -433,23 +433,23 @@ export interface PersonArgs {
      */
     documents?: pulumi.Input<inputs.PersonDocuments | undefined>;
     /**
-     * The person's email address. Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
+     * The person's email address. Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
      */
     email?: pulumi.Input<string | undefined>;
     /**
-     * The person's first name. Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
+     * The person's first name. Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
      */
     firstName?: pulumi.Input<string | undefined>;
     /**
-     * The Kana variation of the person's first name (Japan only). Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
+     * The Kana variation of the person's first name (Japan only). Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
      */
     firstNameKana?: pulumi.Input<string | undefined>;
     /**
-     * The Kanji variation of the person's first name (Japan only). Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
+     * The Kanji variation of the person's first name (Japan only). Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
      */
     firstNameKanji?: pulumi.Input<string | undefined>;
     /**
-     * A list of alternate names or aliases that the person is known by. Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
+     * A list of alternate names or aliases that the person is known by. Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
      */
     fullNameAliases?: pulumi.Input<pulumi.Input<string>[] | undefined>;
     /**
@@ -467,15 +467,15 @@ export interface PersonArgs {
      */
     idNumberSecondary?: pulumi.Input<string | undefined>;
     /**
-     * The person's last name. Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
+     * The person's last name. Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
      */
     lastName?: pulumi.Input<string | undefined>;
     /**
-     * The Kana variation of the person's last name (Japan only). Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
+     * The Kana variation of the person's last name (Japan only). Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
      */
     lastNameKana?: pulumi.Input<string | undefined>;
     /**
-     * The Kanji variation of the person's last name (Japan only). Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
+     * The Kanji variation of the person's last name (Japan only). Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.
      */
     lastNameKanji?: pulumi.Input<string | undefined>;
     /**

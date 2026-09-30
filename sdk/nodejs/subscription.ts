@@ -152,7 +152,7 @@ export class Subscription extends pulumi.CustomResource {
      */
     declare public /*out*/ readonly livemode: pulumi.Output<boolean>;
     /**
-     * Settings for Managed Payments for this Subscription and resulting [Invoices](https://www.terraform.io/api/invoices/object) and [PaymentIntents](https://www.terraform.io/api/payment_intents/object).
+     * Settings for Managed Payments for this Subscription and resulting [Invoices](https://docs.stripe.com/api/invoices/object) and [PaymentIntents](https://docs.stripe.com/api/payment_intents/object).
      */
     declare public /*out*/ readonly managedPayments: pulumi.Output<outputs.SubscriptionManagedPayments>;
     /**
@@ -190,7 +190,7 @@ export class Subscription extends pulumi.CustomResource {
      */
     declare public readonly paymentSettings: pulumi.Output<outputs.SubscriptionPaymentSettings>;
     /**
-     * Specifies an interval for how often to bill for any pending invoice items. It is analogous to calling [Create an invoice](https://www.terraform.io/api/invoices/create) for the given subscription at the specified interval.
+     * Specifies an interval for how often to bill for any pending invoice items. It is analogous to calling [Create an invoice](https://docs.stripe.com/api/invoices/create) for the given subscription at the specified interval.
      */
     declare public readonly pendingInvoiceItemInterval: pulumi.Output<outputs.SubscriptionPendingInvoiceItemInterval>;
     /**
@@ -331,7 +331,7 @@ export class Subscription extends pulumi.CustomResource {
             resourceInputs["addInvoiceItems"] = args?.addInvoiceItems ? pulumi.secret(args.addInvoiceItems) : undefined;
             resourceInputs["applicationFeePercent"] = args?.applicationFeePercent;
             resourceInputs["automaticTax"] = args?.automaticTax;
-            resourceInputs["backdateStartDate"] = args?.backdateStartDate ? pulumi.secret(args.backdateStartDate) : undefined;
+            resourceInputs["backdateStartDate"] = args?.backdateStartDate;
             resourceInputs["billingCycleAnchor"] = args?.billingCycleAnchor;
             resourceInputs["billingCycleAnchorConfig"] = args?.billingCycleAnchorConfig;
             resourceInputs["billingMode"] = args?.billingMode;
@@ -353,7 +353,7 @@ export class Subscription extends pulumi.CustomResource {
             resourceInputs["invoiceSettings"] = args?.invoiceSettings;
             resourceInputs["items"] = args?.items;
             resourceInputs["metadata"] = args?.metadata;
-            resourceInputs["offSession"] = args?.offSession ? pulumi.secret(args.offSession) : undefined;
+            resourceInputs["offSession"] = args?.offSession;
             resourceInputs["onBehalfOf"] = args?.onBehalfOf;
             resourceInputs["pauseCollection"] = args?.pauseCollection;
             resourceInputs["paymentBehavior"] = args?.paymentBehavior ? pulumi.secret(args.paymentBehavior) : undefined;
@@ -362,8 +362,8 @@ export class Subscription extends pulumi.CustomResource {
             resourceInputs["prorationBehavior"] = args?.prorationBehavior ? pulumi.secret(args.prorationBehavior) : undefined;
             resourceInputs["transferData"] = args?.transferData;
             resourceInputs["trialEnd"] = args?.trialEnd;
-            resourceInputs["trialFromPlan"] = args?.trialFromPlan ? pulumi.secret(args.trialFromPlan) : undefined;
-            resourceInputs["trialPeriodDays"] = args?.trialPeriodDays ? pulumi.secret(args.trialPeriodDays) : undefined;
+            resourceInputs["trialFromPlan"] = args?.trialFromPlan;
+            resourceInputs["trialPeriodDays"] = args?.trialPeriodDays;
             resourceInputs["trialSettings"] = args?.trialSettings;
             resourceInputs["application"] = undefined /*out*/;
             resourceInputs["canceledAt"] = undefined /*out*/;
@@ -383,7 +383,7 @@ export class Subscription extends pulumi.CustomResource {
             resourceInputs["trialStart"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
-        const secretOpts = { additionalSecretOutputs: ["addInvoiceItems", "backdateStartDate", "offSession", "paymentBehavior", "prorationBehavior", "trialFromPlan", "trialPeriodDays"] };
+        const secretOpts = { additionalSecretOutputs: ["addInvoiceItems", "paymentBehavior", "prorationBehavior"] };
         opts = pulumi.mergeOptions(opts, secretOpts);
         super(Subscription.__pulumiType, name, resourceInputs, opts);
     }
@@ -506,7 +506,7 @@ export interface SubscriptionState {
      */
     livemode?: pulumi.Input<boolean | undefined>;
     /**
-     * Settings for Managed Payments for this Subscription and resulting [Invoices](https://www.terraform.io/api/invoices/object) and [PaymentIntents](https://www.terraform.io/api/payment_intents/object).
+     * Settings for Managed Payments for this Subscription and resulting [Invoices](https://docs.stripe.com/api/invoices/object) and [PaymentIntents](https://docs.stripe.com/api/payment_intents/object).
      */
     managedPayments?: pulumi.Input<inputs.SubscriptionManagedPayments | undefined>;
     /**
@@ -544,7 +544,7 @@ export interface SubscriptionState {
      */
     paymentSettings?: pulumi.Input<inputs.SubscriptionPaymentSettings | undefined>;
     /**
-     * Specifies an interval for how often to bill for any pending invoice items. It is analogous to calling [Create an invoice](https://www.terraform.io/api/invoices/create) for the given subscription at the specified interval.
+     * Specifies an interval for how often to bill for any pending invoice items. It is analogous to calling [Create an invoice](https://docs.stripe.com/api/invoices/create) for the given subscription at the specified interval.
      */
     pendingInvoiceItemInterval?: pulumi.Input<inputs.SubscriptionPendingInvoiceItemInterval | undefined>;
     /**
@@ -738,7 +738,7 @@ export interface SubscriptionArgs {
      */
     paymentSettings?: pulumi.Input<inputs.SubscriptionPaymentSettings | undefined>;
     /**
-     * Specifies an interval for how often to bill for any pending invoice items. It is analogous to calling [Create an invoice](https://www.terraform.io/api/invoices/create) for the given subscription at the specified interval.
+     * Specifies an interval for how often to bill for any pending invoice items. It is analogous to calling [Create an invoice](https://docs.stripe.com/api/invoices/create) for the given subscription at the specified interval.
      */
     pendingInvoiceItemInterval?: pulumi.Input<inputs.SubscriptionPendingInvoiceItemInterval | undefined>;
     /**

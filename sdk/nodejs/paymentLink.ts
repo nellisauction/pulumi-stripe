@@ -101,7 +101,7 @@ export class PaymentLink extends pulumi.CustomResource {
      */
     declare public /*out*/ readonly livemode: pulumi.Output<boolean>;
     /**
-     * Settings for Managed Payments for this Payment Link and resulting [CheckoutSessions](https://www.terraform.io/api/checkout/sessions/object), [PaymentIntents](https://www.terraform.io/api/payment_intents/object), [Invoices](https://www.terraform.io/api/invoices/object), and [Subscriptions](https://www.terraform.io/api/subscriptions/object).
+     * Settings for Managed Payments for this Payment Link and resulting [CheckoutSessions](https://docs.stripe.com/api/checkout/sessions/object), [PaymentIntents](https://docs.stripe.com/api/payment_intents/object), [Invoices](https://docs.stripe.com/api/invoices/object), and [Subscriptions](https://docs.stripe.com/api/subscriptions/object).
      */
     declare public readonly managedPayments: pulumi.Output<outputs.PaymentLinkManagedPayments>;
     /**
@@ -328,7 +328,7 @@ export interface PaymentLinkState {
      */
     livemode?: pulumi.Input<boolean | undefined>;
     /**
-     * Settings for Managed Payments for this Payment Link and resulting [CheckoutSessions](https://www.terraform.io/api/checkout/sessions/object), [PaymentIntents](https://www.terraform.io/api/payment_intents/object), [Invoices](https://www.terraform.io/api/invoices/object), and [Subscriptions](https://www.terraform.io/api/subscriptions/object).
+     * Settings for Managed Payments for this Payment Link and resulting [CheckoutSessions](https://docs.stripe.com/api/checkout/sessions/object), [PaymentIntents](https://docs.stripe.com/api/payment_intents/object), [Invoices](https://docs.stripe.com/api/invoices/object), and [Subscriptions](https://docs.stripe.com/api/subscriptions/object).
      */
     managedPayments?: pulumi.Input<inputs.PaymentLinkManagedPayments | undefined>;
     /**
@@ -452,7 +452,7 @@ export interface PaymentLinkArgs {
      */
     lineItems: pulumi.Input<pulumi.Input<inputs.PaymentLinkLineItem>[]>;
     /**
-     * Settings for Managed Payments for this Payment Link and resulting [CheckoutSessions](https://www.terraform.io/api/checkout/sessions/object), [PaymentIntents](https://www.terraform.io/api/payment_intents/object), [Invoices](https://www.terraform.io/api/invoices/object), and [Subscriptions](https://www.terraform.io/api/subscriptions/object).
+     * Settings for Managed Payments for this Payment Link and resulting [CheckoutSessions](https://docs.stripe.com/api/checkout/sessions/object), [PaymentIntents](https://docs.stripe.com/api/payment_intents/object), [Invoices](https://docs.stripe.com/api/invoices/object), and [Subscriptions](https://docs.stripe.com/api/subscriptions/object).
      */
     managedPayments?: pulumi.Input<inputs.PaymentLinkManagedPayments | undefined>;
     /**

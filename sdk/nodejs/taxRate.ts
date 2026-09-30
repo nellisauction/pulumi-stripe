@@ -7,9 +7,9 @@ import * as outputs from "./types/output";
 import * as utilities from "./utilities";
 
 /**
- * Tax rates can be applied to [invoices](https://www.terraform.io/invoicing/taxes/tax-rates), [subscriptions](https://www.terraform.io/billing/taxes/tax-rates) and [Checkout Sessions](https://www.terraform.io/payments/checkout/use-manual-tax-rates) to collect tax.
+ * Tax rates can be applied to [invoices](https://docs.stripe.com/invoicing/taxes/tax-rates), [subscriptions](https://docs.stripe.com/billing/taxes/tax-rates) and [Checkout Sessions](https://docs.stripe.com/payments/checkout/use-manual-tax-rates) to collect tax.
  *
- * Related guide: [Tax rates](https://www.terraform.io/billing/taxes/tax-rates)
+ * Related guide: [Tax rates](https://docs.stripe.com/billing/taxes/tax-rates)
  */
 export class TaxRate extends pulumi.CustomResource {
     /**

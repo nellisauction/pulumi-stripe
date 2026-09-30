@@ -13,7 +13,7 @@ import * as utilities from "./utilities";
  * see the history of payment attempts for a particular session.
  *
  * A PaymentIntent transitions through
- * [multiple statuses](https://www.terraform.io/payments/paymentintents/lifecycle)
+ * [multiple statuses](https://docs.stripe.com/payments/paymentintents/lifecycle)
  * throughout its lifetime as it interfaces with Stripe.js to perform
  * authentication flows and ultimately creates at most one successful charge.
  *
@@ -177,7 +177,7 @@ export class PaymentIntent extends pulumi.CustomResource {
     declare public /*out*/ readonly object: pulumi.Output<string>;
     /**
      * You can specify the settlement merchant as the
-     * connected account using the `onBehalfOf` attribute on the charge. See the PaymentIntents [use case for connected accounts](https://www.terraform.io/payments/connected-accounts) for details.
+     * connected account using the `onBehalfOf` attribute on the charge. See the PaymentIntents [use case for connected accounts](https://docs.stripe.com/payments/connected-accounts) for details.
      */
     declare public readonly onBehalfOf: pulumi.Output<string>;
     declare public readonly paymentDetails: pulumi.Output<outputs.PaymentIntentPaymentDetails>;
@@ -231,11 +231,11 @@ export class PaymentIntent extends pulumi.CustomResource {
     /**
      * Indicates that you intend to make future payments with this PaymentIntent's payment method.
      *
-     * If you provide a Customer with the PaymentIntent, you can use this parameter to [attach the payment method](https://www.terraform.io/payments/save-during-payment) to the Customer after the PaymentIntent is confirmed and the customer completes any required actions. If you don't provide a Customer, you can still [attach](https://www.terraform.io/api/payment_methods/attach) the payment method to a Customer after the transaction completes.
+     * If you provide a Customer with the PaymentIntent, you can use this parameter to [attach the payment method](https://docs.stripe.com/payments/save-during-payment) to the Customer after the PaymentIntent is confirmed and the customer completes any required actions. If you don't provide a Customer, you can still [attach](https://docs.stripe.com/api/payment_methods/attach) the payment method to a Customer after the transaction completes.
      *
-     * If the payment method is `cardPresent` and isn't a digital wallet, Stripe creates and attaches a [generatedCard](https://www.terraform.io/api/charges/object#charge_object-payment_method_details-card_present-generated_card) payment method representing the card to the Customer instead.
+     * If the payment method is `cardPresent` and isn't a digital wallet, Stripe creates and attaches a [generatedCard](https://docs.stripe.com/api/charges/object#charge_object-payment_method_details-card_present-generated_card) payment method representing the card to the Customer instead.
      *
-     * When processing card payments, Stripe uses `setupFutureUsage` to help you comply with regional legislation and network rules, such as [SCA](https://www.terraform.io/strong-customer-authentication).
+     * When processing card payments, Stripe uses `setupFutureUsage` to help you comply with regional legislation and network rules, such as [SCA](https://docs.stripe.com/strong-customer-authentication).
      */
     declare public readonly setupFutureUsage: pulumi.Output<string>;
     /**
@@ -350,13 +350,13 @@ export class PaymentIntent extends pulumi.CustomResource {
             resourceInputs["applicationFeeAmount"] = args?.applicationFeeAmount;
             resourceInputs["automaticPaymentMethods"] = args?.automaticPaymentMethods;
             resourceInputs["captureMethod"] = args?.captureMethod;
-            resourceInputs["confirm"] = args?.confirm ? pulumi.secret(args.confirm) : undefined;
+            resourceInputs["confirm"] = args?.confirm;
             resourceInputs["confirmationMethod"] = args?.confirmationMethod;
             resourceInputs["confirmationToken"] = args?.confirmationToken ? pulumi.secret(args.confirmationToken) : undefined;
             resourceInputs["currency"] = args?.currency;
             resourceInputs["customer"] = args?.customer;
             resourceInputs["description"] = args?.description;
-            resourceInputs["errorOnRequiresAction"] = args?.errorOnRequiresAction ? pulumi.secret(args.errorOnRequiresAction) : undefined;
+            resourceInputs["errorOnRequiresAction"] = args?.errorOnRequiresAction;
             resourceInputs["excludedPaymentMethodTypes"] = args?.excludedPaymentMethodTypes;
             resourceInputs["hooks"] = args?.hooks;
             resourceInputs["mandate"] = args?.mandate ? pulumi.secret(args.mandate) : undefined;
@@ -377,7 +377,7 @@ export class PaymentIntent extends pulumi.CustomResource {
             resourceInputs["statementDescriptorSuffix"] = args?.statementDescriptorSuffix;
             resourceInputs["transferData"] = args?.transferData;
             resourceInputs["transferGroup"] = args?.transferGroup;
-            resourceInputs["useStripeSdk"] = args?.useStripeSdk ? pulumi.secret(args.useStripeSdk) : undefined;
+            resourceInputs["useStripeSdk"] = args?.useStripeSdk;
             resourceInputs["amountCapturable"] = undefined /*out*/;
             resourceInputs["amountReceived"] = undefined /*out*/;
             resourceInputs["application"] = undefined /*out*/;
@@ -399,7 +399,7 @@ export class PaymentIntent extends pulumi.CustomResource {
             resourceInputs["status"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
-        const secretOpts = { additionalSecretOutputs: ["clientSecret", "confirm", "confirmationToken", "errorOnRequiresAction", "mandate", "mandateData", "paymentMethodConfiguration", "paymentMethodData", "radarOptions", "returnUrl", "useStripeSdk"] };
+        const secretOpts = { additionalSecretOutputs: ["clientSecret", "confirmationToken", "mandate", "mandateData", "paymentMethodConfiguration", "paymentMethodData", "radarOptions", "returnUrl"] };
         opts = pulumi.mergeOptions(opts, secretOpts);
         super(PaymentIntent.__pulumiType, name, resourceInputs, opts);
     }
@@ -539,7 +539,7 @@ export interface PaymentIntentState {
     object?: pulumi.Input<string | undefined>;
     /**
      * You can specify the settlement merchant as the
-     * connected account using the `onBehalfOf` attribute on the charge. See the PaymentIntents [use case for connected accounts](https://www.terraform.io/payments/connected-accounts) for details.
+     * connected account using the `onBehalfOf` attribute on the charge. See the PaymentIntents [use case for connected accounts](https://docs.stripe.com/payments/connected-accounts) for details.
      */
     onBehalfOf?: pulumi.Input<string | undefined>;
     paymentDetails?: pulumi.Input<inputs.PaymentIntentPaymentDetails | undefined>;
@@ -593,11 +593,11 @@ export interface PaymentIntentState {
     /**
      * Indicates that you intend to make future payments with this PaymentIntent's payment method.
      *
-     * If you provide a Customer with the PaymentIntent, you can use this parameter to [attach the payment method](https://www.terraform.io/payments/save-during-payment) to the Customer after the PaymentIntent is confirmed and the customer completes any required actions. If you don't provide a Customer, you can still [attach](https://www.terraform.io/api/payment_methods/attach) the payment method to a Customer after the transaction completes.
+     * If you provide a Customer with the PaymentIntent, you can use this parameter to [attach the payment method](https://docs.stripe.com/payments/save-during-payment) to the Customer after the PaymentIntent is confirmed and the customer completes any required actions. If you don't provide a Customer, you can still [attach](https://docs.stripe.com/api/payment_methods/attach) the payment method to a Customer after the transaction completes.
      *
-     * If the payment method is `cardPresent` and isn't a digital wallet, Stripe creates and attaches a [generatedCard](https://www.terraform.io/api/charges/object#charge_object-payment_method_details-card_present-generated_card) payment method representing the card to the Customer instead.
+     * If the payment method is `cardPresent` and isn't a digital wallet, Stripe creates and attaches a [generatedCard](https://docs.stripe.com/api/charges/object#charge_object-payment_method_details-card_present-generated_card) payment method representing the card to the Customer instead.
      *
-     * When processing card payments, Stripe uses `setupFutureUsage` to help you comply with regional legislation and network rules, such as [SCA](https://www.terraform.io/strong-customer-authentication).
+     * When processing card payments, Stripe uses `setupFutureUsage` to help you comply with regional legislation and network rules, such as [SCA](https://docs.stripe.com/strong-customer-authentication).
      */
     setupFutureUsage?: pulumi.Input<string | undefined>;
     /**
@@ -715,7 +715,7 @@ export interface PaymentIntentArgs {
     metadata?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
     /**
      * You can specify the settlement merchant as the
-     * connected account using the `onBehalfOf` attribute on the charge. See the PaymentIntents [use case for connected accounts](https://www.terraform.io/payments/connected-accounts) for details.
+     * connected account using the `onBehalfOf` attribute on the charge. See the PaymentIntents [use case for connected accounts](https://docs.stripe.com/payments/connected-accounts) for details.
      */
     onBehalfOf?: pulumi.Input<string | undefined>;
     paymentDetails?: pulumi.Input<inputs.PaymentIntentPaymentDetails | undefined>;
@@ -756,11 +756,11 @@ export interface PaymentIntentArgs {
     /**
      * Indicates that you intend to make future payments with this PaymentIntent's payment method.
      *
-     * If you provide a Customer with the PaymentIntent, you can use this parameter to [attach the payment method](https://www.terraform.io/payments/save-during-payment) to the Customer after the PaymentIntent is confirmed and the customer completes any required actions. If you don't provide a Customer, you can still [attach](https://www.terraform.io/api/payment_methods/attach) the payment method to a Customer after the transaction completes.
+     * If you provide a Customer with the PaymentIntent, you can use this parameter to [attach the payment method](https://docs.stripe.com/payments/save-during-payment) to the Customer after the PaymentIntent is confirmed and the customer completes any required actions. If you don't provide a Customer, you can still [attach](https://docs.stripe.com/api/payment_methods/attach) the payment method to a Customer after the transaction completes.
      *
-     * If the payment method is `cardPresent` and isn't a digital wallet, Stripe creates and attaches a [generatedCard](https://www.terraform.io/api/charges/object#charge_object-payment_method_details-card_present-generated_card) payment method representing the card to the Customer instead.
+     * If the payment method is `cardPresent` and isn't a digital wallet, Stripe creates and attaches a [generatedCard](https://docs.stripe.com/api/charges/object#charge_object-payment_method_details-card_present-generated_card) payment method representing the card to the Customer instead.
      *
-     * When processing card payments, Stripe uses `setupFutureUsage` to help you comply with regional legislation and network rules, such as [SCA](https://www.terraform.io/strong-customer-authentication).
+     * When processing card payments, Stripe uses `setupFutureUsage` to help you comply with regional legislation and network rules, such as [SCA](https://docs.stripe.com/strong-customer-authentication).
      */
     setupFutureUsage?: pulumi.Input<string | undefined>;
     /**

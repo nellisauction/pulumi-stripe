@@ -107,7 +107,7 @@ export class SubscriptionItem extends pulumi.CustomResource {
     declare public readonly prorationBehavior: pulumi.Output<string | undefined>;
     /**
      * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
-     * If set, the proration will be calculated as though the subscription was updated at the given time. This can be used to apply the same proration that was previewed with the [upcoming invoice](https://www.terraform.io/api/invoices/create_preview) endpoint.
+     * If set, the proration will be calculated as though the subscription was updated at the given time. This can be used to apply the same proration that was previewed with the [upcoming invoice](https://docs.stripe.com/api/invoices/create_preview) endpoint.
      */
     declare public readonly prorationDate: pulumi.Output<number | undefined>;
     /**
@@ -166,7 +166,7 @@ export class SubscriptionItem extends pulumi.CustomResource {
             resourceInputs["price"] = args?.price;
             resourceInputs["priceData"] = args?.priceData ? pulumi.secret(args.priceData) : undefined;
             resourceInputs["prorationBehavior"] = args?.prorationBehavior ? pulumi.secret(args.prorationBehavior) : undefined;
-            resourceInputs["prorationDate"] = args?.prorationDate ? pulumi.secret(args.prorationDate) : undefined;
+            resourceInputs["prorationDate"] = args?.prorationDate;
             resourceInputs["quantity"] = args?.quantity;
             resourceInputs["subscription"] = args?.subscription;
             resourceInputs["taxRates"] = args?.taxRates;
@@ -177,7 +177,7 @@ export class SubscriptionItem extends pulumi.CustomResource {
             resourceInputs["object"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
-        const secretOpts = { additionalSecretOutputs: ["paymentBehavior", "priceData", "prorationBehavior", "prorationDate"] };
+        const secretOpts = { additionalSecretOutputs: ["paymentBehavior", "priceData", "prorationBehavior"] };
         opts = pulumi.mergeOptions(opts, secretOpts);
         super(SubscriptionItem.__pulumiType, name, resourceInputs, opts);
     }
@@ -256,7 +256,7 @@ export interface SubscriptionItemState {
     prorationBehavior?: pulumi.Input<string | undefined>;
     /**
      * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
-     * If set, the proration will be calculated as though the subscription was updated at the given time. This can be used to apply the same proration that was previewed with the [upcoming invoice](https://www.terraform.io/api/invoices/create_preview) endpoint.
+     * If set, the proration will be calculated as though the subscription was updated at the given time. This can be used to apply the same proration that was previewed with the [upcoming invoice](https://docs.stripe.com/api/invoices/create_preview) endpoint.
      */
     prorationDate?: pulumi.Input<number | undefined>;
     /**
@@ -326,7 +326,7 @@ export interface SubscriptionItemArgs {
     prorationBehavior?: pulumi.Input<string | undefined>;
     /**
      * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
-     * If set, the proration will be calculated as though the subscription was updated at the given time. This can be used to apply the same proration that was previewed with the [upcoming invoice](https://www.terraform.io/api/invoices/create_preview) endpoint.
+     * If set, the proration will be calculated as though the subscription was updated at the given time. This can be used to apply the same proration that was previewed with the [upcoming invoice](https://docs.stripe.com/api/invoices/create_preview) endpoint.
      */
     prorationDate?: pulumi.Input<number | undefined>;
     /**

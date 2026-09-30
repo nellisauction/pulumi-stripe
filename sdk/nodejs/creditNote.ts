@@ -227,7 +227,7 @@ export class CreditNote extends pulumi.CustomResource {
                 throw new Error("Missing required property 'invoice'");
             }
             resourceInputs["amount"] = args?.amount;
-            resourceInputs["creditAmount"] = args?.creditAmount ? pulumi.secret(args.creditAmount) : undefined;
+            resourceInputs["creditAmount"] = args?.creditAmount;
             resourceInputs["effectiveAt"] = args?.effectiveAt;
             resourceInputs["emailType"] = args?.emailType ? pulumi.secret(args.emailType) : undefined;
             resourceInputs["invoice"] = args?.invoice;
@@ -235,7 +235,7 @@ export class CreditNote extends pulumi.CustomResource {
             resourceInputs["metadata"] = args?.metadata;
             resourceInputs["outOfBandAmount"] = args?.outOfBandAmount;
             resourceInputs["reason"] = args?.reason;
-            resourceInputs["refundAmount"] = args?.refundAmount ? pulumi.secret(args.refundAmount) : undefined;
+            resourceInputs["refundAmount"] = args?.refundAmount;
             resourceInputs["refunds"] = args?.refunds;
             resourceInputs["shippingCost"] = args?.shippingCost;
             resourceInputs["amountShipping"] = undefined /*out*/;
@@ -261,7 +261,7 @@ export class CreditNote extends pulumi.CustomResource {
             resourceInputs["voidedAt"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
-        const secretOpts = { additionalSecretOutputs: ["creditAmount", "emailType", "refundAmount"] };
+        const secretOpts = { additionalSecretOutputs: ["emailType"] };
         opts = pulumi.mergeOptions(opts, secretOpts);
         super(CreditNote.__pulumiType, name, resourceInputs, opts);
     }

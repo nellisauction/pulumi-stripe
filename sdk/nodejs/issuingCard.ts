@@ -80,7 +80,7 @@ export class IssuingCard extends pulumi.CustomResource {
      */
     declare public /*out*/ readonly latestFraudWarning: pulumi.Output<outputs.IssuingCardLatestFraudWarning>;
     /**
-     * Rules that control the lifecycle of this card, such as automatic cancellation. Refer to our [documentation](https://www.terraform.io/issuing/controls/lifecycle-controls) for more details.
+     * Rules that control the lifecycle of this card, such as automatic cancellation. Refer to our [documentation](https://docs.stripe.com/issuing/controls/lifecycle-controls) for more details.
      */
     declare public readonly lifecycleControls: pulumi.Output<outputs.IssuingCardLifecycleControls>;
     /**
@@ -264,7 +264,7 @@ export interface IssuingCardState {
      */
     latestFraudWarning?: pulumi.Input<inputs.IssuingCardLatestFraudWarning | undefined>;
     /**
-     * Rules that control the lifecycle of this card, such as automatic cancellation. Refer to our [documentation](https://www.terraform.io/issuing/controls/lifecycle-controls) for more details.
+     * Rules that control the lifecycle of this card, such as automatic cancellation. Refer to our [documentation](https://docs.stripe.com/issuing/controls/lifecycle-controls) for more details.
      */
     lifecycleControls?: pulumi.Input<inputs.IssuingCardLifecycleControls | undefined>;
     /**
@@ -350,7 +350,7 @@ export interface IssuingCardArgs {
      */
     financialAccount?: pulumi.Input<string | undefined>;
     /**
-     * Rules that control the lifecycle of this card, such as automatic cancellation. Refer to our [documentation](https://www.terraform.io/issuing/controls/lifecycle-controls) for more details.
+     * Rules that control the lifecycle of this card, such as automatic cancellation. Refer to our [documentation](https://docs.stripe.com/issuing/controls/lifecycle-controls) for more details.
      */
     lifecycleControls?: pulumi.Input<inputs.IssuingCardLifecycleControls | undefined>;
     /**

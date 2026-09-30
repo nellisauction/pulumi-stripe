@@ -89,7 +89,7 @@
                 },
                 "meter": {
                     "type": "string",
-                    "description": "The [Billing Meter](https://www.terraform.io/api/billing/meter) ID whose usage is monitored.\n"
+                    "description": "The [Billing Meter](https://docs.stripe.com/api/billing/meter) ID whose usage is monitored.\n"
                 },
                 "recurrence": {
                     "type": "string",
@@ -393,7 +393,7 @@
                 },
                 "paymentMethodConfiguration": {
                     "type": "string",
-                    "description": "The [Payment Method Configuration](https://www.terraform.io/api/payment_method_configurations) to use for this portal session. When specified, customers will be able to update their payment method to one of the options specified by the payment method configuration. If not set, the default payment method configuration is used.\n"
+                    "description": "The [Payment Method Configuration](https://docs.stripe.com/api/payment_method_configurations) to use for this portal session. When specified, customers will be able to update their payment method to one of the options specified by the payment method configuration. If not set, the default payment method configuration is used.\n"
                 }
             },
             "type": "object",
@@ -4187,7 +4187,7 @@
                 },
                 "rate": {
                     "type": "string",
-                    "description": "Tax rates can be applied to [invoices](https://www.terraform.io/invoicing/taxes/tax-rates), [subscriptions](https://www.terraform.io/billing/taxes/tax-rates) and [Checkout Sessions](https://www.terraform.io/payments/checkout/use-manual-tax-rates) to collect tax.\n"
+                    "description": "Tax rates can be applied to [invoices](https://docs.stripe.com/invoicing/taxes/tax-rates), [subscriptions](https://docs.stripe.com/billing/taxes/tax-rates) and [Checkout Sessions](https://docs.stripe.com/payments/checkout/use-manual-tax-rates) to collect tax.\n"
                 },
                 "taxabilityReason": {
                     "type": "string",
@@ -4539,7 +4539,7 @@
                 },
                 "provider": {
                     "type": "string",
-                    "description": "The tax calculation provider used for location resolution. Defaults to \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e when not using a [third-party provider](https://www.terraform.io/tax/third-party-apps).\n"
+                    "description": "The tax calculation provider used for location resolution. Defaults to \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e when not using a [third-party provider](https://docs.stripe.com/tax/third-party-apps).\n"
                 },
                 "validateLocation": {
                     "type": "string",
@@ -5975,7 +5975,7 @@
                 },
                 "rate": {
                     "type": "string",
-                    "description": "Tax rates can be applied to [invoices](https://www.terraform.io/invoicing/taxes/tax-rates), [subscriptions](https://www.terraform.io/billing/taxes/tax-rates) and [Checkout Sessions](https://www.terraform.io/payments/checkout/use-manual-tax-rates) to collect tax.\n"
+                    "description": "Tax rates can be applied to [invoices](https://docs.stripe.com/invoicing/taxes/tax-rates), [subscriptions](https://docs.stripe.com/billing/taxes/tax-rates) and [Checkout Sessions](https://docs.stripe.com/payments/checkout/use-manual-tax-rates) to collect tax.\n"
                 },
                 "taxabilityReason": {
                     "type": "string",
@@ -10498,7 +10498,7 @@
                 },
                 "setupFutureUsage": {
                     "type": "string",
-                    "description": "Indicates that you intend to make future payments with this PaymentIntent's payment method.\n\nIf you provide a Customer with the PaymentIntent, you can use this parameter to [attach the payment method](https://www.terraform.io/payments/save-during-payment) to the Customer after the PaymentIntent is confirmed and the customer completes any required actions. If you don't provide a Customer, you can still [attach](https://www.terraform.io/api/payment_methods/attach) the payment method to a Customer after the transaction completes.\n\nIf the payment method is \u003cspan pulumi-lang-nodejs=\"`cardPresent`\" pulumi-lang-dotnet=\"`CardPresent`\" pulumi-lang-go=\"`cardPresent`\" pulumi-lang-python=\"`card_present`\" pulumi-lang-yaml=\"`cardPresent`\" pulumi-lang-java=\"`cardPresent`\" pulumi-lang-hcl=\"`card_present`\"\u003e`cardPresent`\u003c/span\u003e and isn't a digital wallet, Stripe creates and attaches a \u003cspan pulumi-lang-nodejs=\"[generatedCard]\" pulumi-lang-dotnet=\"[GeneratedCard]\" pulumi-lang-go=\"[generatedCard]\" pulumi-lang-python=\"[generated_card]\" pulumi-lang-yaml=\"[generatedCard]\" pulumi-lang-java=\"[generatedCard]\" pulumi-lang-hcl=\"[generated_card]\"\u003e[generatedCard]\u003c/span\u003e(https://www.terraform.io/api/charges/object#charge_object-payment_method_details-card_present-generated_card) payment method representing the card to the Customer instead.\n\nWhen processing card payments, Stripe uses \u003cspan pulumi-lang-nodejs=\"`setupFutureUsage`\" pulumi-lang-dotnet=\"`SetupFutureUsage`\" pulumi-lang-go=\"`setupFutureUsage`\" pulumi-lang-python=\"`setup_future_usage`\" pulumi-lang-yaml=\"`setupFutureUsage`\" pulumi-lang-java=\"`setupFutureUsage`\" pulumi-lang-hcl=\"`setup_future_usage`\"\u003e`setupFutureUsage`\u003c/span\u003e to help you comply with regional legislation and network rules, such as [SCA](https://www.terraform.io/strong-customer-authentication).\n"
+                    "description": "Indicates that you intend to make future payments with this PaymentIntent's payment method.\n\nIf you provide a Customer with the PaymentIntent, you can use this parameter to [attach the payment method](https://docs.stripe.com/payments/save-during-payment) to the Customer after the PaymentIntent is confirmed and the customer completes any required actions. If you don't provide a Customer, you can still [attach](https://docs.stripe.com/api/payment_methods/attach) the payment method to a Customer after the transaction completes.\n\nIf the payment method is \u003cspan pulumi-lang-nodejs=\"`cardPresent`\" pulumi-lang-dotnet=\"`CardPresent`\" pulumi-lang-go=\"`cardPresent`\" pulumi-lang-python=\"`card_present`\" pulumi-lang-yaml=\"`cardPresent`\" pulumi-lang-java=\"`cardPresent`\" pulumi-lang-hcl=\"`card_present`\"\u003e`cardPresent`\u003c/span\u003e and isn't a digital wallet, Stripe creates and attaches a \u003cspan pulumi-lang-nodejs=\"[generatedCard]\" pulumi-lang-dotnet=\"[GeneratedCard]\" pulumi-lang-go=\"[generatedCard]\" pulumi-lang-python=\"[generated_card]\" pulumi-lang-yaml=\"[generatedCard]\" pulumi-lang-java=\"[generatedCard]\" pulumi-lang-hcl=\"[generated_card]\"\u003e[generatedCard]\u003c/span\u003e(https://docs.stripe.com/api/charges/object#charge_object-payment_method_details-card_present-generated_card) payment method representing the card to the Customer instead.\n\nWhen processing card payments, Stripe uses \u003cspan pulumi-lang-nodejs=\"`setupFutureUsage`\" pulumi-lang-dotnet=\"`SetupFutureUsage`\" pulumi-lang-go=\"`setupFutureUsage`\" pulumi-lang-python=\"`setup_future_usage`\" pulumi-lang-yaml=\"`setupFutureUsage`\" pulumi-lang-java=\"`setupFutureUsage`\" pulumi-lang-hcl=\"`setup_future_usage`\"\u003e`setupFutureUsage`\u003c/span\u003e to help you comply with regional legislation and network rules, such as [SCA](https://docs.stripe.com/strong-customer-authentication).\n"
                 },
                 "statementDescriptorSuffixKana": {
                     "type": "string",
@@ -13958,7 +13958,7 @@
                     "items": {
                         "type": "string"
                     },
-                    "description": "All networks available for selection via [payment*method*options.card.network](https://www.terraform.io/api/payment_intents/confirm#confirm_payment_intent-payment_method_options-card-network).\n"
+                    "description": "All networks available for selection via [payment*method*options.card.network](https://docs.stripe.com/api/payment_intents/confirm#confirm_payment_intent-payment_method_options-card-network).\n"
                 },
                 "preferred": {
                     "type": "string",
@@ -14080,7 +14080,7 @@
                     "items": {
                         "type": "string"
                     },
-                    "description": "All networks available for selection via [payment*method*options.card.network](https://www.terraform.io/api/payment_intents/confirm#confirm_payment_intent-payment_method_options-card-network).\n"
+                    "description": "All networks available for selection via [payment*method*options.card.network](https://docs.stripe.com/api/payment_intents/confirm#confirm_payment_intent-payment_method_options-card-network).\n"
                 },
                 "preferred": {
                     "type": "string",
@@ -17478,7 +17478,7 @@
                     "items": {
                         "type": "string"
                     },
-                    "description": "All networks available for selection via [payment*method*options.card.network](https://www.terraform.io/api/payment_intents/confirm#confirm_payment_intent-payment_method_options-card-network).\n"
+                    "description": "All networks available for selection via [payment*method*options.card.network](https://docs.stripe.com/api/payment_intents/confirm#confirm_payment_intent-payment_method_options-card-network).\n"
                 },
                 "preferred": {
                     "type": "string",
@@ -19788,7 +19788,7 @@
                 },
                 "rate": {
                     "type": "string",
-                    "description": "Tax rates can be applied to [invoices](https://www.terraform.io/invoicing/taxes/tax-rates), [subscriptions](https://www.terraform.io/billing/taxes/tax-rates) and [Checkout Sessions](https://www.terraform.io/payments/checkout/use-manual-tax-rates) to collect tax.\n"
+                    "description": "Tax rates can be applied to [invoices](https://docs.stripe.com/invoicing/taxes/tax-rates), [subscriptions](https://docs.stripe.com/billing/taxes/tax-rates) and [Checkout Sessions](https://docs.stripe.com/payments/checkout/use-manual-tax-rates) to collect tax.\n"
                 },
                 "taxabilityReason": {
                     "type": "string",
@@ -31599,7 +31599,7 @@
             }
         },
         "stripe:index/billingPortalConfiguration:BillingPortalConfiguration": {
-            "description": "A portal configuration describes the functionality and behavior you embed in a portal session. Related guide: [Configure the customer portal](https://www.terraform.io/customer-management/configure-portal).\n",
+            "description": "A portal configuration describes the functionality and behavior you embed in a portal session. Related guide: [Configure the customer portal](https://docs.stripe.com/customer-management/configure-portal).\n",
             "properties": {
                 "active": {
                     "type": "boolean",
@@ -31796,8 +31796,7 @@
                 },
                 "capture": {
                     "type": "boolean",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nWhether to immediately capture the charge. Defaults to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e. When \u003cspan pulumi-lang-nodejs=\"`false`\" pulumi-lang-dotnet=\"`False`\" pulumi-lang-go=\"`false`\" pulumi-lang-python=\"`false`\" pulumi-lang-yaml=\"`false`\" pulumi-lang-java=\"`false`\" pulumi-lang-hcl=\"`false`\"\u003e`false`\u003c/span\u003e, the charge issues an authorization (or pre-authorization), and will need to be [captured](https://api.stripe.com#capture_charge) later. Uncaptured charges expire after a set number of days (7 by default). For more information, see the [authorizing charges and settling later](https://docs.stripe.com/charges/placing-a-hold) documentation.",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nWhether to immediately capture the charge. Defaults to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e. When \u003cspan pulumi-lang-nodejs=\"`false`\" pulumi-lang-dotnet=\"`False`\" pulumi-lang-go=\"`false`\" pulumi-lang-python=\"`false`\" pulumi-lang-yaml=\"`false`\" pulumi-lang-java=\"`false`\" pulumi-lang-hcl=\"`false`\"\u003e`false`\u003c/span\u003e, the charge issues an authorization (or pre-authorization), and will need to be [captured](https://api.stripe.com#capture_charge) later. Uncaptured charges expire after a set number of days (7 by default). For more information, see the [authorizing charges and settling later](https://docs.stripe.com/charges/placing-a-hold) documentation."
                 },
                 "captured": {
                     "type": "boolean",
@@ -32008,8 +32007,7 @@
                 },
                 "capture": {
                     "type": "boolean",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nWhether to immediately capture the charge. Defaults to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e. When \u003cspan pulumi-lang-nodejs=\"`false`\" pulumi-lang-dotnet=\"`False`\" pulumi-lang-go=\"`false`\" pulumi-lang-python=\"`false`\" pulumi-lang-yaml=\"`false`\" pulumi-lang-java=\"`false`\" pulumi-lang-hcl=\"`false`\"\u003e`false`\u003c/span\u003e, the charge issues an authorization (or pre-authorization), and will need to be [captured](https://api.stripe.com#capture_charge) later. Uncaptured charges expire after a set number of days (7 by default). For more information, see the [authorizing charges and settling later](https://docs.stripe.com/charges/placing-a-hold) documentation.",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nWhether to immediately capture the charge. Defaults to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e. When \u003cspan pulumi-lang-nodejs=\"`false`\" pulumi-lang-dotnet=\"`False`\" pulumi-lang-go=\"`false`\" pulumi-lang-python=\"`false`\" pulumi-lang-yaml=\"`false`\" pulumi-lang-java=\"`false`\" pulumi-lang-hcl=\"`false`\"\u003e`false`\u003c/span\u003e, the charge issues an authorization (or pre-authorization), and will need to be [captured](https://api.stripe.com#capture_charge) later. Uncaptured charges expire after a set number of days (7 by default). For more information, see the [authorizing charges and settling later](https://docs.stripe.com/charges/placing-a-hold) documentation."
                 },
                 "currency": {
                     "type": "string",
@@ -32120,8 +32118,7 @@
                     },
                     "capture": {
                         "type": "boolean",
-                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nWhether to immediately capture the charge. Defaults to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e. When \u003cspan pulumi-lang-nodejs=\"`false`\" pulumi-lang-dotnet=\"`False`\" pulumi-lang-go=\"`false`\" pulumi-lang-python=\"`false`\" pulumi-lang-yaml=\"`false`\" pulumi-lang-java=\"`false`\" pulumi-lang-hcl=\"`false`\"\u003e`false`\u003c/span\u003e, the charge issues an authorization (or pre-authorization), and will need to be [captured](https://api.stripe.com#capture_charge) later. Uncaptured charges expire after a set number of days (7 by default). For more information, see the [authorizing charges and settling later](https://docs.stripe.com/charges/placing-a-hold) documentation.",
-                        "secret": true
+                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nWhether to immediately capture the charge. Defaults to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e. When \u003cspan pulumi-lang-nodejs=\"`false`\" pulumi-lang-dotnet=\"`False`\" pulumi-lang-go=\"`false`\" pulumi-lang-python=\"`false`\" pulumi-lang-yaml=\"`false`\" pulumi-lang-java=\"`false`\" pulumi-lang-hcl=\"`false`\"\u003e`false`\u003c/span\u003e, the charge issues an authorization (or pre-authorization), and will need to be [captured](https://api.stripe.com#capture_charge) later. Uncaptured charges expire after a set number of days (7 by default). For more information, see the [authorizing charges and settling later](https://docs.stripe.com/charges/placing-a-hold) documentation."
                     },
                     "captured": {
                         "type": "boolean",
@@ -32278,8 +32275,7 @@
             "properties": {
                 "amount": {
                     "type": "integer",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nRequested amount of carbon removal units. Either this or \u003cspan pulumi-lang-nodejs=\"`metricTons`\" pulumi-lang-dotnet=\"`MetricTons`\" pulumi-lang-go=\"`metricTons`\" pulumi-lang-python=\"`metric_tons`\" pulumi-lang-yaml=\"`metricTons`\" pulumi-lang-java=\"`metricTons`\" pulumi-lang-hcl=\"`metric_tons`\"\u003e`metricTons`\u003c/span\u003e must be specified.",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nRequested amount of carbon removal units. Either this or \u003cspan pulumi-lang-nodejs=\"`metricTons`\" pulumi-lang-dotnet=\"`MetricTons`\" pulumi-lang-go=\"`metricTons`\" pulumi-lang-python=\"`metric_tons`\" pulumi-lang-yaml=\"`metricTons`\" pulumi-lang-java=\"`metricTons`\" pulumi-lang-hcl=\"`metric_tons`\"\u003e`metricTons`\u003c/span\u003e must be specified."
                 },
                 "amountFees": {
                     "type": "integer",
@@ -32397,8 +32393,7 @@
             "inputProperties": {
                 "amount": {
                     "type": "integer",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nRequested amount of carbon removal units. Either this or \u003cspan pulumi-lang-nodejs=\"`metricTons`\" pulumi-lang-dotnet=\"`MetricTons`\" pulumi-lang-go=\"`metricTons`\" pulumi-lang-python=\"`metric_tons`\" pulumi-lang-yaml=\"`metricTons`\" pulumi-lang-java=\"`metricTons`\" pulumi-lang-hcl=\"`metric_tons`\"\u003e`metricTons`\u003c/span\u003e must be specified.",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nRequested amount of carbon removal units. Either this or \u003cspan pulumi-lang-nodejs=\"`metricTons`\" pulumi-lang-dotnet=\"`MetricTons`\" pulumi-lang-go=\"`metricTons`\" pulumi-lang-python=\"`metric_tons`\" pulumi-lang-yaml=\"`metricTons`\" pulumi-lang-java=\"`metricTons`\" pulumi-lang-hcl=\"`metric_tons`\"\u003e`metricTons`\u003c/span\u003e must be specified."
                 },
                 "beneficiary": {
                     "$ref": "#/types/stripe:index/ClimateOrderBeneficiary:ClimateOrderBeneficiary"
@@ -32431,8 +32426,7 @@
                 "properties": {
                     "amount": {
                         "type": "integer",
-                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nRequested amount of carbon removal units. Either this or \u003cspan pulumi-lang-nodejs=\"`metricTons`\" pulumi-lang-dotnet=\"`MetricTons`\" pulumi-lang-go=\"`metricTons`\" pulumi-lang-python=\"`metric_tons`\" pulumi-lang-yaml=\"`metricTons`\" pulumi-lang-java=\"`metricTons`\" pulumi-lang-hcl=\"`metric_tons`\"\u003e`metricTons`\u003c/span\u003e must be specified.",
-                        "secret": true
+                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nRequested amount of carbon removal units. Either this or \u003cspan pulumi-lang-nodejs=\"`metricTons`\" pulumi-lang-dotnet=\"`MetricTons`\" pulumi-lang-go=\"`metricTons`\" pulumi-lang-python=\"`metric_tons`\" pulumi-lang-yaml=\"`metricTons`\" pulumi-lang-java=\"`metricTons`\" pulumi-lang-hcl=\"`metric_tons`\"\u003e`metricTons`\u003c/span\u003e must be specified."
                     },
                     "amountFees": {
                         "type": "integer",
@@ -32528,7 +32522,7 @@
             }
         },
         "stripe:index/coupon:Coupon": {
-            "description": "A coupon contains information about a percent-off or amount-off discount you\nmight want to apply to a customer. Coupons may be applied to [subscriptions](https://api.stripe.com#subscriptions), [invoices](https://api.stripe.com#invoices),\n[checkout sessions](https://docs.stripe.com/api/checkout/sessions), [quotes](https://api.stripe.com#quotes), and more. Coupons do not work with conventional one-off [charges](https://www.terraform.io/api/charges/create) or [payment intents](https://docs.stripe.com/api/payment_intents).\n",
+            "description": "A coupon contains information about a percent-off or amount-off discount you\nmight want to apply to a customer. Coupons may be applied to [subscriptions](https://api.stripe.com#subscriptions), [invoices](https://api.stripe.com#invoices),\n[checkout sessions](https://docs.stripe.com/api/checkout/sessions), [quotes](https://api.stripe.com#quotes), and more. Coupons do not work with conventional one-off [charges](https://docs.stripe.com/api/charges/create) or [payment intents](https://docs.stripe.com/api/payment_intents).\n",
             "properties": {
                 "amountOff": {
                     "type": "integer",
@@ -32760,8 +32754,7 @@
                 },
                 "creditAmount": {
                     "type": "integer",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nThe integer amount in cents (or local equivalent) representing the amount to credit the customer's balance, which will be automatically applied to their next invoice.",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nThe integer amount in cents (or local equivalent) representing the amount to credit the customer's balance, which will be automatically applied to their next invoice."
                 },
                 "currency": {
                     "type": "string",
@@ -32847,8 +32840,7 @@
                 },
                 "refundAmount": {
                     "type": "integer",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nThe integer amount in cents (or local equivalent) representing the amount to refund. If set, a refund will be created for the charge associated with the invoice.",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nThe integer amount in cents (or local equivalent) representing the amount to refund. If set, a refund will be created for the charge associated with the invoice."
                 },
                 "refunds": {
                     "type": "array",
@@ -32936,8 +32928,7 @@
                 },
                 "creditAmount": {
                     "type": "integer",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nThe integer amount in cents (or local equivalent) representing the amount to credit the customer's balance, which will be automatically applied to their next invoice.",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nThe integer amount in cents (or local equivalent) representing the amount to credit the customer's balance, which will be automatically applied to their next invoice."
                 },
                 "effectiveAt": {
                     "type": "integer",
@@ -32973,8 +32964,7 @@
                 },
                 "refundAmount": {
                     "type": "integer",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nThe integer amount in cents (or local equivalent) representing the amount to refund. If set, a refund will be created for the charge associated with the invoice.",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nThe integer amount in cents (or local equivalent) representing the amount to refund. If set, a refund will be created for the charge associated with the invoice."
                 },
                 "refunds": {
                     "type": "array",
@@ -33008,8 +32998,7 @@
                     },
                     "creditAmount": {
                         "type": "integer",
-                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nThe integer amount in cents (or local equivalent) representing the amount to credit the customer's balance, which will be automatically applied to their next invoice.",
-                        "secret": true
+                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nThe integer amount in cents (or local equivalent) representing the amount to credit the customer's balance, which will be automatically applied to their next invoice."
                     },
                     "currency": {
                         "type": "string",
@@ -33095,8 +33084,7 @@
                     },
                     "refundAmount": {
                         "type": "integer",
-                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nThe integer amount in cents (or local equivalent) representing the amount to refund. If set, a refund will be created for the charge associated with the invoice.",
-                        "secret": true
+                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nThe integer amount in cents (or local equivalent) representing the amount to refund. If set, a refund will be created for the charge associated with the invoice."
                     },
                     "refunds": {
                         "type": "array",
@@ -33283,8 +33271,7 @@
                 },
                 "validate": {
                     "type": "boolean",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\n",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\n"
                 }
             },
             "required": [
@@ -33409,8 +33396,7 @@
                 },
                 "validate": {
                     "type": "boolean",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\n",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\n"
                 }
             },
             "stateInputs": {
@@ -33548,8 +33534,7 @@
                     },
                     "validate": {
                         "type": "boolean",
-                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\n",
-                        "secret": true
+                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\n"
                     }
                 },
                 "type": "object"
@@ -34061,7 +34046,7 @@
             }
         },
         "stripe:index/invoice:Invoice": {
-            "description": "Invoices are statements of amounts owed by a customer, and are either\ngenerated one-off, or generated periodically from a subscription.\n\nThey contain [invoice items](https://api.stripe.com#invoiceitems), and proration adjustments\nthat may be caused by subscription upgrades/downgrades (if necessary).\n\nIf your invoice is configured to be billed through automatic charges,\nStripe automatically finalizes your invoice and attempts payment. Note\nthat finalizing the invoice,\n[when automatic](https://docs.stripe.com/invoicing/integration/automatic-advancement-collection), does\nnot happen immediately as the invoice is created. Stripe waits\nuntil one hour after the last webhook was successfully sent (or the last\nwebhook timed out after failing). If you (and the platforms you may have\nconnected to) have no webhooks configured, Stripe waits one hour after\ncreation to finalize the invoice.\n\nIf your invoice is configured to be billed by sending an email, then based on your\n[email settings](https://dashboard.stripe.com/account/billing/automatic),\nStripe will email the invoice to your customer and await payment. These\nemails can contain a link to a hosted page to pay the invoice.\n\nStripe applies any customer credit on the account before determining the\namount due for the invoice (i.e., the amount that will be actually\ncharged). If the amount due for the invoice is less than Stripe's [minimum allowed charge\nper currency](https://www.terraform.io/docs/currencies#minimum-and-maximum-charge-amounts), the\ninvoice is automatically marked paid, and we add the amount due to the\ncustomer's credit balance which is applied to the next invoice.\n\nMore details on the customer's credit balance are\n[here](https://docs.stripe.com/billing/customer/balance).\n\nRelated guide: [Send invoices to customers](https://docs.stripe.com/billing/invoices/sending)\n",
+            "description": "Invoices are statements of amounts owed by a customer, and are either\ngenerated one-off, or generated periodically from a subscription.\n\nThey contain [invoice items](https://api.stripe.com#invoiceitems), and proration adjustments\nthat may be caused by subscription upgrades/downgrades (if necessary).\n\nIf your invoice is configured to be billed through automatic charges,\nStripe automatically finalizes your invoice and attempts payment. Note\nthat finalizing the invoice,\n[when automatic](https://docs.stripe.com/invoicing/integration/automatic-advancement-collection), does\nnot happen immediately as the invoice is created. Stripe waits\nuntil one hour after the last webhook was successfully sent (or the last\nwebhook timed out after failing). If you (and the platforms you may have\nconnected to) have no webhooks configured, Stripe waits one hour after\ncreation to finalize the invoice.\n\nIf your invoice is configured to be billed by sending an email, then based on your\n[email settings](https://dashboard.stripe.com/account/billing/automatic),\nStripe will email the invoice to your customer and await payment. These\nemails can contain a link to a hosted page to pay the invoice.\n\nStripe applies any customer credit on the account before determining the\namount due for the invoice (i.e., the amount that will be actually\ncharged). If the amount due for the invoice is less than Stripe's [minimum allowed charge\nper currency](https://docs.stripe.com/docs/currencies#minimum-and-maximum-charge-amounts), the\ninvoice is automatically marked paid, and we add the amount due to the\ncustomer's credit balance which is applied to the next invoice.\n\nMore details on the customer's credit balance are\n[here](https://docs.stripe.com/billing/customer/balance).\n\nRelated guide: [Send invoices to customers](https://docs.stripe.com/billing/invoices/sending)\n",
             "properties": {
                 "accountCountry": {
                     "type": "string",
@@ -34108,8 +34093,7 @@
                 },
                 "applicationFeeAmount": {
                     "type": "integer",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nA fee in cents (or local equivalent) that will be applied to the invoice and transferred to the application owner's Stripe account. The request must be made with an OAuth key or the Stripe-Account header in order to take an application fee. For more information, see the application fees [documentation](https://docs.stripe.com/billing/invoices/connect#collecting-fees).",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nA fee in cents (or local equivalent) that will be applied to the invoice and transferred to the application owner's Stripe account. The request must be made with an OAuth key or the Stripe-Account header in order to take an application fee. For more information, see the application fees [documentation](https://docs.stripe.com/billing/invoices/connect#collecting-fees)."
                 },
                 "attemptCount": {
                     "type": "integer",
@@ -34194,8 +34178,7 @@
                 },
                 "daysUntilDue": {
                     "type": "integer",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nThe number of days from when the invoice is created until it is due. Valid only for invoices where `collection_method=send_invoice`.",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nThe number of days from when the invoice is created until it is due. Valid only for invoices where `collection_method=send_invoice`."
                 },
                 "defaultPaymentMethod": {
                     "type": "string",
@@ -34303,11 +34286,11 @@
                 },
                 "periodEnd": {
                     "type": "integer",
-                    "description": "The latest timestamp at which invoice items can be associated with this invoice. Use the [line item period](https://www.terraform.io/api/invoices/line_item#invoice_line_item_object-period) to get the service period for each price."
+                    "description": "The latest timestamp at which invoice items can be associated with this invoice. Use the [line item period](https://docs.stripe.com/api/invoices/line_item#invoice_line_item_object-period) to get the service period for each price."
                 },
                 "periodStart": {
                     "type": "integer",
-                    "description": "The earliest timestamp at which invoice items can be associated with this invoice. Use the [line item period](https://www.terraform.io/api/invoices/line_item#invoice_line_item_object-period) to get the service period for each price."
+                    "description": "The earliest timestamp at which invoice items can be associated with this invoice. Use the [line item period](https://docs.stripe.com/api/invoices/line_item#invoice_line_item_object-period) to get the service period for each price."
                 },
                 "postPaymentCreditNotesAmount": {
                     "type": "integer",
@@ -34492,8 +34475,7 @@
                 },
                 "applicationFeeAmount": {
                     "type": "integer",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nA fee in cents (or local equivalent) that will be applied to the invoice and transferred to the application owner's Stripe account. The request must be made with an OAuth key or the Stripe-Account header in order to take an application fee. For more information, see the application fees [documentation](https://docs.stripe.com/billing/invoices/connect#collecting-fees).",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nA fee in cents (or local equivalent) that will be applied to the invoice and transferred to the application owner's Stripe account. The request must be made with an OAuth key or the Stripe-Account header in order to take an application fee. For more information, see the application fees [documentation](https://docs.stripe.com/billing/invoices/connect#collecting-fees)."
                 },
                 "autoAdvance": {
                     "type": "boolean",
@@ -34531,8 +34513,7 @@
                 },
                 "daysUntilDue": {
                     "type": "integer",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nThe number of days from when the invoice is created until it is due. Valid only for invoices where `collection_method=send_invoice`.",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nThe number of days from when the invoice is created until it is due. Valid only for invoices where `collection_method=send_invoice`."
                 },
                 "defaultPaymentMethod": {
                     "type": "string",
@@ -34675,8 +34656,7 @@
                     },
                     "applicationFeeAmount": {
                         "type": "integer",
-                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nA fee in cents (or local equivalent) that will be applied to the invoice and transferred to the application owner's Stripe account. The request must be made with an OAuth key or the Stripe-Account header in order to take an application fee. For more information, see the application fees [documentation](https://docs.stripe.com/billing/invoices/connect#collecting-fees).",
-                        "secret": true
+                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nA fee in cents (or local equivalent) that will be applied to the invoice and transferred to the application owner's Stripe account. The request must be made with an OAuth key or the Stripe-Account header in order to take an application fee. For more information, see the application fees [documentation](https://docs.stripe.com/billing/invoices/connect#collecting-fees)."
                     },
                     "attemptCount": {
                         "type": "integer",
@@ -34761,8 +34741,7 @@
                     },
                     "daysUntilDue": {
                         "type": "integer",
-                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nThe number of days from when the invoice is created until it is due. Valid only for invoices where `collection_method=send_invoice`.",
-                        "secret": true
+                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nThe number of days from when the invoice is created until it is due. Valid only for invoices where `collection_method=send_invoice`."
                     },
                     "defaultPaymentMethod": {
                         "type": "string",
@@ -34870,11 +34849,11 @@
                     },
                     "periodEnd": {
                         "type": "integer",
-                        "description": "The latest timestamp at which invoice items can be associated with this invoice. Use the [line item period](https://www.terraform.io/api/invoices/line_item#invoice_line_item_object-period) to get the service period for each price."
+                        "description": "The latest timestamp at which invoice items can be associated with this invoice. Use the [line item period](https://docs.stripe.com/api/invoices/line_item#invoice_line_item_object-period) to get the service period for each price."
                     },
                     "periodStart": {
                         "type": "integer",
-                        "description": "The earliest timestamp at which invoice items can be associated with this invoice. Use the [line item period](https://www.terraform.io/api/invoices/line_item#invoice_line_item_object-period) to get the service period for each price."
+                        "description": "The earliest timestamp at which invoice items can be associated with this invoice. Use the [line item period](https://docs.stripe.com/api/invoices/line_item#invoice_line_item_object-period) to get the service period for each price."
                     },
                     "postPaymentCreditNotesAmount": {
                         "type": "integer",
@@ -34980,8 +34959,7 @@
             "properties": {
                 "amount": {
                     "type": "integer",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nAmount (in the \u003cspan pulumi-lang-nodejs=\"`currency`\" pulumi-lang-dotnet=\"`Currency`\" pulumi-lang-go=\"`currency`\" pulumi-lang-python=\"`currency`\" pulumi-lang-yaml=\"`currency`\" pulumi-lang-java=\"`currency`\" pulumi-lang-hcl=\"`currency`\"\u003e`currency`\u003c/span\u003e specified) of the invoice item. This should always be equal to \u003cspan pulumi-lang-nodejs=\"`unitAmount \" pulumi-lang-dotnet=\"`UnitAmount \" pulumi-lang-go=\"`unitAmount \" pulumi-lang-python=\"`unit_amount \" pulumi-lang-yaml=\"`unitAmount \" pulumi-lang-java=\"`unitAmount \" pulumi-lang-hcl=\"`unit_amount \"\u003e`unitAmount \u003c/span\u003e* quantity`.",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nAmount (in the \u003cspan pulumi-lang-nodejs=\"`currency`\" pulumi-lang-dotnet=\"`Currency`\" pulumi-lang-go=\"`currency`\" pulumi-lang-python=\"`currency`\" pulumi-lang-yaml=\"`currency`\" pulumi-lang-java=\"`currency`\" pulumi-lang-hcl=\"`currency`\"\u003e`currency`\u003c/span\u003e specified) of the invoice item. This should always be equal to \u003cspan pulumi-lang-nodejs=\"`unitAmount \" pulumi-lang-dotnet=\"`UnitAmount \" pulumi-lang-go=\"`unitAmount \" pulumi-lang-python=\"`unit_amount \" pulumi-lang-yaml=\"`unitAmount \" pulumi-lang-java=\"`unitAmount \" pulumi-lang-hcl=\"`unit_amount \"\u003e`unitAmount \u003c/span\u003e* quantity`."
                 },
                 "currency": {
                     "type": "string",
@@ -35059,8 +35037,7 @@
                 },
                 "quantityDecimal": {
                     "type": "number",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nNon-negative decimal with at most 12 decimal places. The quantity of units for the invoice item.",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nNon-negative decimal with at most 12 decimal places. The quantity of units for the invoice item."
                 },
                 "subscription": {
                     "type": "string",
@@ -35090,8 +35067,7 @@
                 },
                 "unitAmountDecimal": {
                     "type": "number",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nThe decimal unit amount in cents (or local equivalent) of the charge to be applied to the upcoming invoice. This \u003cspan pulumi-lang-nodejs=\"`unitAmountDecimal`\" pulumi-lang-dotnet=\"`UnitAmountDecimal`\" pulumi-lang-go=\"`unitAmountDecimal`\" pulumi-lang-python=\"`unit_amount_decimal`\" pulumi-lang-yaml=\"`unitAmountDecimal`\" pulumi-lang-java=\"`unitAmountDecimal`\" pulumi-lang-hcl=\"`unit_amount_decimal`\"\u003e`unitAmountDecimal`\u003c/span\u003e will be multiplied by the quantity to get the full amount. Passing in a negative \u003cspan pulumi-lang-nodejs=\"`unitAmountDecimal`\" pulumi-lang-dotnet=\"`UnitAmountDecimal`\" pulumi-lang-go=\"`unitAmountDecimal`\" pulumi-lang-python=\"`unit_amount_decimal`\" pulumi-lang-yaml=\"`unitAmountDecimal`\" pulumi-lang-java=\"`unitAmountDecimal`\" pulumi-lang-hcl=\"`unit_amount_decimal`\"\u003e`unitAmountDecimal`\u003c/span\u003e will reduce the \u003cspan pulumi-lang-nodejs=\"`amountDue`\" pulumi-lang-dotnet=\"`AmountDue`\" pulumi-lang-go=\"`amountDue`\" pulumi-lang-python=\"`amount_due`\" pulumi-lang-yaml=\"`amountDue`\" pulumi-lang-java=\"`amountDue`\" pulumi-lang-hcl=\"`amount_due`\"\u003e`amountDue`\u003c/span\u003e on the invoice. Accepts at most 12 decimal places.",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nThe decimal unit amount in cents (or local equivalent) of the charge to be applied to the upcoming invoice. This \u003cspan pulumi-lang-nodejs=\"`unitAmountDecimal`\" pulumi-lang-dotnet=\"`UnitAmountDecimal`\" pulumi-lang-go=\"`unitAmountDecimal`\" pulumi-lang-python=\"`unit_amount_decimal`\" pulumi-lang-yaml=\"`unitAmountDecimal`\" pulumi-lang-java=\"`unitAmountDecimal`\" pulumi-lang-hcl=\"`unit_amount_decimal`\"\u003e`unitAmountDecimal`\u003c/span\u003e will be multiplied by the quantity to get the full amount. Passing in a negative \u003cspan pulumi-lang-nodejs=\"`unitAmountDecimal`\" pulumi-lang-dotnet=\"`UnitAmountDecimal`\" pulumi-lang-go=\"`unitAmountDecimal`\" pulumi-lang-python=\"`unit_amount_decimal`\" pulumi-lang-yaml=\"`unitAmountDecimal`\" pulumi-lang-java=\"`unitAmountDecimal`\" pulumi-lang-hcl=\"`unit_amount_decimal`\"\u003e`unitAmountDecimal`\u003c/span\u003e will reduce the \u003cspan pulumi-lang-nodejs=\"`amountDue`\" pulumi-lang-dotnet=\"`AmountDue`\" pulumi-lang-go=\"`amountDue`\" pulumi-lang-python=\"`amount_due`\" pulumi-lang-yaml=\"`amountDue`\" pulumi-lang-java=\"`amountDue`\" pulumi-lang-hcl=\"`amount_due`\"\u003e`amountDue`\u003c/span\u003e on the invoice. Accepts at most 12 decimal places."
                 }
             },
             "required": [
@@ -35116,8 +35092,7 @@
             "inputProperties": {
                 "amount": {
                     "type": "integer",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nAmount (in the \u003cspan pulumi-lang-nodejs=\"`currency`\" pulumi-lang-dotnet=\"`Currency`\" pulumi-lang-go=\"`currency`\" pulumi-lang-python=\"`currency`\" pulumi-lang-yaml=\"`currency`\" pulumi-lang-java=\"`currency`\" pulumi-lang-hcl=\"`currency`\"\u003e`currency`\u003c/span\u003e specified) of the invoice item. This should always be equal to \u003cspan pulumi-lang-nodejs=\"`unitAmount \" pulumi-lang-dotnet=\"`UnitAmount \" pulumi-lang-go=\"`unitAmount \" pulumi-lang-python=\"`unit_amount \" pulumi-lang-yaml=\"`unitAmount \" pulumi-lang-java=\"`unitAmount \" pulumi-lang-hcl=\"`unit_amount \"\u003e`unitAmount \u003c/span\u003e* quantity`.",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nAmount (in the \u003cspan pulumi-lang-nodejs=\"`currency`\" pulumi-lang-dotnet=\"`Currency`\" pulumi-lang-go=\"`currency`\" pulumi-lang-python=\"`currency`\" pulumi-lang-yaml=\"`currency`\" pulumi-lang-java=\"`currency`\" pulumi-lang-hcl=\"`currency`\"\u003e`currency`\u003c/span\u003e specified) of the invoice item. This should always be equal to \u003cspan pulumi-lang-nodejs=\"`unitAmount \" pulumi-lang-dotnet=\"`UnitAmount \" pulumi-lang-go=\"`unitAmount \" pulumi-lang-python=\"`unit_amount \" pulumi-lang-yaml=\"`unitAmount \" pulumi-lang-java=\"`unitAmount \" pulumi-lang-hcl=\"`unit_amount \"\u003e`unitAmount \u003c/span\u003e* quantity`."
                 },
                 "currency": {
                     "type": "string",
@@ -35172,8 +35147,7 @@
                 },
                 "quantityDecimal": {
                     "type": "number",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nNon-negative decimal with at most 12 decimal places. The quantity of units for the invoice item.",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nNon-negative decimal with at most 12 decimal places. The quantity of units for the invoice item."
                 },
                 "subscription": {
                     "type": "string",
@@ -35199,8 +35173,7 @@
                 },
                 "unitAmountDecimal": {
                     "type": "number",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nThe decimal unit amount in cents (or local equivalent) of the charge to be applied to the upcoming invoice. This \u003cspan pulumi-lang-nodejs=\"`unitAmountDecimal`\" pulumi-lang-dotnet=\"`UnitAmountDecimal`\" pulumi-lang-go=\"`unitAmountDecimal`\" pulumi-lang-python=\"`unit_amount_decimal`\" pulumi-lang-yaml=\"`unitAmountDecimal`\" pulumi-lang-java=\"`unitAmountDecimal`\" pulumi-lang-hcl=\"`unit_amount_decimal`\"\u003e`unitAmountDecimal`\u003c/span\u003e will be multiplied by the quantity to get the full amount. Passing in a negative \u003cspan pulumi-lang-nodejs=\"`unitAmountDecimal`\" pulumi-lang-dotnet=\"`UnitAmountDecimal`\" pulumi-lang-go=\"`unitAmountDecimal`\" pulumi-lang-python=\"`unit_amount_decimal`\" pulumi-lang-yaml=\"`unitAmountDecimal`\" pulumi-lang-java=\"`unitAmountDecimal`\" pulumi-lang-hcl=\"`unit_amount_decimal`\"\u003e`unitAmountDecimal`\u003c/span\u003e will reduce the \u003cspan pulumi-lang-nodejs=\"`amountDue`\" pulumi-lang-dotnet=\"`AmountDue`\" pulumi-lang-go=\"`amountDue`\" pulumi-lang-python=\"`amount_due`\" pulumi-lang-yaml=\"`amountDue`\" pulumi-lang-java=\"`amountDue`\" pulumi-lang-hcl=\"`amount_due`\"\u003e`amountDue`\u003c/span\u003e on the invoice. Accepts at most 12 decimal places.",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nThe decimal unit amount in cents (or local equivalent) of the charge to be applied to the upcoming invoice. This \u003cspan pulumi-lang-nodejs=\"`unitAmountDecimal`\" pulumi-lang-dotnet=\"`UnitAmountDecimal`\" pulumi-lang-go=\"`unitAmountDecimal`\" pulumi-lang-python=\"`unit_amount_decimal`\" pulumi-lang-yaml=\"`unitAmountDecimal`\" pulumi-lang-java=\"`unitAmountDecimal`\" pulumi-lang-hcl=\"`unit_amount_decimal`\"\u003e`unitAmountDecimal`\u003c/span\u003e will be multiplied by the quantity to get the full amount. Passing in a negative \u003cspan pulumi-lang-nodejs=\"`unitAmountDecimal`\" pulumi-lang-dotnet=\"`UnitAmountDecimal`\" pulumi-lang-go=\"`unitAmountDecimal`\" pulumi-lang-python=\"`unit_amount_decimal`\" pulumi-lang-yaml=\"`unitAmountDecimal`\" pulumi-lang-java=\"`unitAmountDecimal`\" pulumi-lang-hcl=\"`unit_amount_decimal`\"\u003e`unitAmountDecimal`\u003c/span\u003e will reduce the \u003cspan pulumi-lang-nodejs=\"`amountDue`\" pulumi-lang-dotnet=\"`AmountDue`\" pulumi-lang-go=\"`amountDue`\" pulumi-lang-python=\"`amount_due`\" pulumi-lang-yaml=\"`amountDue`\" pulumi-lang-java=\"`amountDue`\" pulumi-lang-hcl=\"`amount_due`\"\u003e`amountDue`\u003c/span\u003e on the invoice. Accepts at most 12 decimal places."
                 }
             },
             "stateInputs": {
@@ -35208,8 +35181,7 @@
                 "properties": {
                     "amount": {
                         "type": "integer",
-                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nAmount (in the \u003cspan pulumi-lang-nodejs=\"`currency`\" pulumi-lang-dotnet=\"`Currency`\" pulumi-lang-go=\"`currency`\" pulumi-lang-python=\"`currency`\" pulumi-lang-yaml=\"`currency`\" pulumi-lang-java=\"`currency`\" pulumi-lang-hcl=\"`currency`\"\u003e`currency`\u003c/span\u003e specified) of the invoice item. This should always be equal to \u003cspan pulumi-lang-nodejs=\"`unitAmount \" pulumi-lang-dotnet=\"`UnitAmount \" pulumi-lang-go=\"`unitAmount \" pulumi-lang-python=\"`unit_amount \" pulumi-lang-yaml=\"`unitAmount \" pulumi-lang-java=\"`unitAmount \" pulumi-lang-hcl=\"`unit_amount \"\u003e`unitAmount \u003c/span\u003e* quantity`.",
-                        "secret": true
+                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nAmount (in the \u003cspan pulumi-lang-nodejs=\"`currency`\" pulumi-lang-dotnet=\"`Currency`\" pulumi-lang-go=\"`currency`\" pulumi-lang-python=\"`currency`\" pulumi-lang-yaml=\"`currency`\" pulumi-lang-java=\"`currency`\" pulumi-lang-hcl=\"`currency`\"\u003e`currency`\u003c/span\u003e specified) of the invoice item. This should always be equal to \u003cspan pulumi-lang-nodejs=\"`unitAmount \" pulumi-lang-dotnet=\"`UnitAmount \" pulumi-lang-go=\"`unitAmount \" pulumi-lang-python=\"`unit_amount \" pulumi-lang-yaml=\"`unitAmount \" pulumi-lang-java=\"`unitAmount \" pulumi-lang-hcl=\"`unit_amount \"\u003e`unitAmount \u003c/span\u003e* quantity`."
                     },
                     "currency": {
                         "type": "string",
@@ -35287,8 +35259,7 @@
                     },
                     "quantityDecimal": {
                         "type": "number",
-                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nNon-negative decimal with at most 12 decimal places. The quantity of units for the invoice item.",
-                        "secret": true
+                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nNon-negative decimal with at most 12 decimal places. The quantity of units for the invoice item."
                     },
                     "subscription": {
                         "type": "string",
@@ -35318,8 +35289,7 @@
                     },
                     "unitAmountDecimal": {
                         "type": "number",
-                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nThe decimal unit amount in cents (or local equivalent) of the charge to be applied to the upcoming invoice. This \u003cspan pulumi-lang-nodejs=\"`unitAmountDecimal`\" pulumi-lang-dotnet=\"`UnitAmountDecimal`\" pulumi-lang-go=\"`unitAmountDecimal`\" pulumi-lang-python=\"`unit_amount_decimal`\" pulumi-lang-yaml=\"`unitAmountDecimal`\" pulumi-lang-java=\"`unitAmountDecimal`\" pulumi-lang-hcl=\"`unit_amount_decimal`\"\u003e`unitAmountDecimal`\u003c/span\u003e will be multiplied by the quantity to get the full amount. Passing in a negative \u003cspan pulumi-lang-nodejs=\"`unitAmountDecimal`\" pulumi-lang-dotnet=\"`UnitAmountDecimal`\" pulumi-lang-go=\"`unitAmountDecimal`\" pulumi-lang-python=\"`unit_amount_decimal`\" pulumi-lang-yaml=\"`unitAmountDecimal`\" pulumi-lang-java=\"`unitAmountDecimal`\" pulumi-lang-hcl=\"`unit_amount_decimal`\"\u003e`unitAmountDecimal`\u003c/span\u003e will reduce the \u003cspan pulumi-lang-nodejs=\"`amountDue`\" pulumi-lang-dotnet=\"`AmountDue`\" pulumi-lang-go=\"`amountDue`\" pulumi-lang-python=\"`amount_due`\" pulumi-lang-yaml=\"`amountDue`\" pulumi-lang-java=\"`amountDue`\" pulumi-lang-hcl=\"`amount_due`\"\u003e`amountDue`\u003c/span\u003e on the invoice. Accepts at most 12 decimal places.",
-                        "secret": true
+                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nThe decimal unit amount in cents (or local equivalent) of the charge to be applied to the upcoming invoice. This \u003cspan pulumi-lang-nodejs=\"`unitAmountDecimal`\" pulumi-lang-dotnet=\"`UnitAmountDecimal`\" pulumi-lang-go=\"`unitAmountDecimal`\" pulumi-lang-python=\"`unit_amount_decimal`\" pulumi-lang-yaml=\"`unitAmountDecimal`\" pulumi-lang-java=\"`unitAmountDecimal`\" pulumi-lang-hcl=\"`unit_amount_decimal`\"\u003e`unitAmountDecimal`\u003c/span\u003e will be multiplied by the quantity to get the full amount. Passing in a negative \u003cspan pulumi-lang-nodejs=\"`unitAmountDecimal`\" pulumi-lang-dotnet=\"`UnitAmountDecimal`\" pulumi-lang-go=\"`unitAmountDecimal`\" pulumi-lang-python=\"`unit_amount_decimal`\" pulumi-lang-yaml=\"`unitAmountDecimal`\" pulumi-lang-java=\"`unitAmountDecimal`\" pulumi-lang-hcl=\"`unit_amount_decimal`\"\u003e`unitAmountDecimal`\u003c/span\u003e will reduce the \u003cspan pulumi-lang-nodejs=\"`amountDue`\" pulumi-lang-dotnet=\"`AmountDue`\" pulumi-lang-go=\"`amountDue`\" pulumi-lang-python=\"`amount_due`\" pulumi-lang-yaml=\"`amountDue`\" pulumi-lang-java=\"`amountDue`\" pulumi-lang-hcl=\"`amount_due`\"\u003e`amountDue`\u003c/span\u003e on the invoice. Accepts at most 12 decimal places."
                     }
                 },
                 "type": "object"
@@ -35370,7 +35340,7 @@
                 },
                 "lifecycleControls": {
                     "$ref": "#/types/stripe:index/IssuingCardLifecycleControls:IssuingCardLifecycleControls",
-                    "description": "Rules that control the lifecycle of this card, such as automatic cancellation. Refer to our [documentation](https://www.terraform.io/issuing/controls/lifecycle-controls) for more details."
+                    "description": "Rules that control the lifecycle of this card, such as automatic cancellation. Refer to our [documentation](https://docs.stripe.com/issuing/controls/lifecycle-controls) for more details."
                 },
                 "livemode": {
                     "type": "boolean",
@@ -35481,7 +35451,7 @@
                 },
                 "lifecycleControls": {
                     "$ref": "#/types/stripe:index/IssuingCardLifecycleControls:IssuingCardLifecycleControls",
-                    "description": "Rules that control the lifecycle of this card, such as automatic cancellation. Refer to our [documentation](https://www.terraform.io/issuing/controls/lifecycle-controls) for more details."
+                    "description": "Rules that control the lifecycle of this card, such as automatic cancellation. Refer to our [documentation](https://docs.stripe.com/issuing/controls/lifecycle-controls) for more details."
                 },
                 "metadata": {
                     "type": "object",
@@ -35572,7 +35542,7 @@
                     },
                     "lifecycleControls": {
                         "$ref": "#/types/stripe:index/IssuingCardLifecycleControls:IssuingCardLifecycleControls",
-                        "description": "Rules that control the lifecycle of this card, such as automatic cancellation. Refer to our [documentation](https://www.terraform.io/issuing/controls/lifecycle-controls) for more details."
+                        "description": "Rules that control the lifecycle of this card, such as automatic cancellation. Refer to our [documentation](https://docs.stripe.com/issuing/controls/lifecycle-controls) for more details."
                     },
                     "livemode": {
                         "type": "boolean",
@@ -36041,8 +36011,7 @@
                 },
                 "transferLookupKey": {
                     "type": "boolean",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nIf set to true, will atomically remove the lookup key from the existing personalization design, and assign it to this personalization design.",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nIf set to true, will atomically remove the lookup key from the existing personalization design, and assign it to this personalization design."
                 }
             },
             "required": [
@@ -36092,8 +36061,7 @@
                 },
                 "transferLookupKey": {
                     "type": "boolean",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nIf set to true, will atomically remove the lookup key from the existing personalization design, and assign it to this personalization design.",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nIf set to true, will atomically remove the lookup key from the existing personalization design, and assign it to this personalization design."
                 }
             },
             "requiredInputs": [
@@ -36153,15 +36121,14 @@
                     },
                     "transferLookupKey": {
                         "type": "boolean",
-                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nIf set to true, will atomically remove the lookup key from the existing personalization design, and assign it to this personalization design.",
-                        "secret": true
+                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nIf set to true, will atomically remove the lookup key from the existing personalization design, and assign it to this personalization design."
                     }
                 },
                 "type": "object"
             }
         },
         "stripe:index/paymentIntent:PaymentIntent": {
-            "description": "A PaymentIntent guides you through the process of collecting a payment from your customer.\nWe recommend that you create exactly one PaymentIntent for each order or\ncustomer session in your system. You can reference the PaymentIntent later to\nsee the history of payment attempts for a particular session.\n\nA PaymentIntent transitions through\n[multiple statuses](https://www.terraform.io/payments/paymentintents/lifecycle)\nthroughout its lifetime as it interfaces with Stripe.js to perform\nauthentication flows and ultimately creates at most one successful charge.\n\nRelated guide: [Payment Intents API](https://docs.stripe.com/payments/payment-intents)\n",
+            "description": "A PaymentIntent guides you through the process of collecting a payment from your customer.\nWe recommend that you create exactly one PaymentIntent for each order or\ncustomer session in your system. You can reference the PaymentIntent later to\nsee the history of payment attempts for a particular session.\n\nA PaymentIntent transitions through\n[multiple statuses](https://docs.stripe.com/payments/paymentintents/lifecycle)\nthroughout its lifetime as it interfaces with Stripe.js to perform\nauthentication flows and ultimately creates at most one successful charge.\n\nRelated guide: [Payment Intents API](https://docs.stripe.com/payments/payment-intents)\n",
             "properties": {
                 "amount": {
                     "type": "integer",
@@ -36206,8 +36173,7 @@
                 },
                 "confirm": {
                     "type": "boolean",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nSet to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e to attempt to [confirm this PaymentIntent](https://docs.stripe.com/api/payment_intents/confirm) immediately. This parameter defaults to \u003cspan pulumi-lang-nodejs=\"`false`\" pulumi-lang-dotnet=\"`False`\" pulumi-lang-go=\"`false`\" pulumi-lang-python=\"`false`\" pulumi-lang-yaml=\"`false`\" pulumi-lang-java=\"`false`\" pulumi-lang-hcl=\"`false`\"\u003e`false`\u003c/span\u003e. When creating and confirming a PaymentIntent at the same time, you can also provide the parameters available in the [Confirm API](https://docs.stripe.com/api/payment_intents/confirm).",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nSet to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e to attempt to [confirm this PaymentIntent](https://docs.stripe.com/api/payment_intents/confirm) immediately. This parameter defaults to \u003cspan pulumi-lang-nodejs=\"`false`\" pulumi-lang-dotnet=\"`False`\" pulumi-lang-go=\"`false`\" pulumi-lang-python=\"`false`\" pulumi-lang-yaml=\"`false`\" pulumi-lang-java=\"`false`\" pulumi-lang-hcl=\"`false`\"\u003e`false`\u003c/span\u003e. When creating and confirming a PaymentIntent at the same time, you can also provide the parameters available in the [Confirm API](https://docs.stripe.com/api/payment_intents/confirm)."
                 },
                 "confirmationMethod": {
                     "type": "string",
@@ -36236,8 +36202,7 @@
                 },
                 "errorOnRequiresAction": {
                     "type": "boolean",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nSet to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e to fail the payment attempt if the PaymentIntent transitions into \u003cspan pulumi-lang-nodejs=\"`requiresAction`\" pulumi-lang-dotnet=\"`RequiresAction`\" pulumi-lang-go=\"`requiresAction`\" pulumi-lang-python=\"`requires_action`\" pulumi-lang-yaml=\"`requiresAction`\" pulumi-lang-java=\"`requiresAction`\" pulumi-lang-hcl=\"`requires_action`\"\u003e`requiresAction`\u003c/span\u003e. Use this parameter for simpler integrations that don't handle customer actions, such as [saving cards without authentication](https://docs.stripe.com/payments/save-card-without-authentication). This parameter can only be used with [`confirm=true`](https://docs.stripe.com/api/payment_intents/create#create_payment_intent-confirm).",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nSet to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e to fail the payment attempt if the PaymentIntent transitions into \u003cspan pulumi-lang-nodejs=\"`requiresAction`\" pulumi-lang-dotnet=\"`RequiresAction`\" pulumi-lang-go=\"`requiresAction`\" pulumi-lang-python=\"`requires_action`\" pulumi-lang-yaml=\"`requiresAction`\" pulumi-lang-java=\"`requiresAction`\" pulumi-lang-hcl=\"`requires_action`\"\u003e`requiresAction`\u003c/span\u003e. Use this parameter for simpler integrations that don't handle customer actions, such as [saving cards without authentication](https://docs.stripe.com/payments/save-card-without-authentication). This parameter can only be used with [`confirm=true`](https://docs.stripe.com/api/payment_intents/create#create_payment_intent-confirm)."
                 },
                 "excludedPaymentMethodTypes": {
                     "type": "array",
@@ -36292,7 +36257,7 @@
                 },
                 "onBehalfOf": {
                     "type": "string",
-                    "description": "You can specify the settlement merchant as the\nconnected account using the \u003cspan pulumi-lang-nodejs=\"`onBehalfOf`\" pulumi-lang-dotnet=\"`OnBehalfOf`\" pulumi-lang-go=\"`onBehalfOf`\" pulumi-lang-python=\"`on_behalf_of`\" pulumi-lang-yaml=\"`onBehalfOf`\" pulumi-lang-java=\"`onBehalfOf`\" pulumi-lang-hcl=\"`on_behalf_of`\"\u003e`onBehalfOf`\u003c/span\u003e attribute on the charge. See the PaymentIntents [use case for connected accounts](https://www.terraform.io/payments/connected-accounts) for details."
+                    "description": "You can specify the settlement merchant as the\nconnected account using the \u003cspan pulumi-lang-nodejs=\"`onBehalfOf`\" pulumi-lang-dotnet=\"`OnBehalfOf`\" pulumi-lang-go=\"`onBehalfOf`\" pulumi-lang-python=\"`on_behalf_of`\" pulumi-lang-yaml=\"`onBehalfOf`\" pulumi-lang-java=\"`onBehalfOf`\" pulumi-lang-hcl=\"`on_behalf_of`\"\u003e`onBehalfOf`\u003c/span\u003e attribute on the charge. See the PaymentIntents [use case for connected accounts](https://docs.stripe.com/payments/connected-accounts) for details."
                 },
                 "paymentDetails": {
                     "$ref": "#/types/stripe:index/PaymentIntentPaymentDetails:PaymentIntentPaymentDetails"
@@ -36346,7 +36311,7 @@
                 },
                 "setupFutureUsage": {
                     "type": "string",
-                    "description": "Indicates that you intend to make future payments with this PaymentIntent's payment method.\n\nIf you provide a Customer with the PaymentIntent, you can use this parameter to [attach the payment method](https://www.terraform.io/payments/save-during-payment) to the Customer after the PaymentIntent is confirmed and the customer completes any required actions. If you don't provide a Customer, you can still [attach](https://www.terraform.io/api/payment_methods/attach) the payment method to a Customer after the transaction completes.\n\nIf the payment method is \u003cspan pulumi-lang-nodejs=\"`cardPresent`\" pulumi-lang-dotnet=\"`CardPresent`\" pulumi-lang-go=\"`cardPresent`\" pulumi-lang-python=\"`card_present`\" pulumi-lang-yaml=\"`cardPresent`\" pulumi-lang-java=\"`cardPresent`\" pulumi-lang-hcl=\"`card_present`\"\u003e`cardPresent`\u003c/span\u003e and isn't a digital wallet, Stripe creates and attaches a \u003cspan pulumi-lang-nodejs=\"[generatedCard]\" pulumi-lang-dotnet=\"[GeneratedCard]\" pulumi-lang-go=\"[generatedCard]\" pulumi-lang-python=\"[generated_card]\" pulumi-lang-yaml=\"[generatedCard]\" pulumi-lang-java=\"[generatedCard]\" pulumi-lang-hcl=\"[generated_card]\"\u003e[generatedCard]\u003c/span\u003e(https://www.terraform.io/api/charges/object#charge_object-payment_method_details-card_present-generated_card) payment method representing the card to the Customer instead.\n\nWhen processing card payments, Stripe uses \u003cspan pulumi-lang-nodejs=\"`setupFutureUsage`\" pulumi-lang-dotnet=\"`SetupFutureUsage`\" pulumi-lang-go=\"`setupFutureUsage`\" pulumi-lang-python=\"`setup_future_usage`\" pulumi-lang-yaml=\"`setupFutureUsage`\" pulumi-lang-java=\"`setupFutureUsage`\" pulumi-lang-hcl=\"`setup_future_usage`\"\u003e`setupFutureUsage`\u003c/span\u003e to help you comply with regional legislation and network rules, such as [SCA](https://www.terraform.io/strong-customer-authentication)."
+                    "description": "Indicates that you intend to make future payments with this PaymentIntent's payment method.\n\nIf you provide a Customer with the PaymentIntent, you can use this parameter to [attach the payment method](https://docs.stripe.com/payments/save-during-payment) to the Customer after the PaymentIntent is confirmed and the customer completes any required actions. If you don't provide a Customer, you can still [attach](https://docs.stripe.com/api/payment_methods/attach) the payment method to a Customer after the transaction completes.\n\nIf the payment method is \u003cspan pulumi-lang-nodejs=\"`cardPresent`\" pulumi-lang-dotnet=\"`CardPresent`\" pulumi-lang-go=\"`cardPresent`\" pulumi-lang-python=\"`card_present`\" pulumi-lang-yaml=\"`cardPresent`\" pulumi-lang-java=\"`cardPresent`\" pulumi-lang-hcl=\"`card_present`\"\u003e`cardPresent`\u003c/span\u003e and isn't a digital wallet, Stripe creates and attaches a \u003cspan pulumi-lang-nodejs=\"[generatedCard]\" pulumi-lang-dotnet=\"[GeneratedCard]\" pulumi-lang-go=\"[generatedCard]\" pulumi-lang-python=\"[generated_card]\" pulumi-lang-yaml=\"[generatedCard]\" pulumi-lang-java=\"[generatedCard]\" pulumi-lang-hcl=\"[generated_card]\"\u003e[generatedCard]\u003c/span\u003e(https://docs.stripe.com/api/charges/object#charge_object-payment_method_details-card_present-generated_card) payment method representing the card to the Customer instead.\n\nWhen processing card payments, Stripe uses \u003cspan pulumi-lang-nodejs=\"`setupFutureUsage`\" pulumi-lang-dotnet=\"`SetupFutureUsage`\" pulumi-lang-go=\"`setupFutureUsage`\" pulumi-lang-python=\"`setup_future_usage`\" pulumi-lang-yaml=\"`setupFutureUsage`\" pulumi-lang-java=\"`setupFutureUsage`\" pulumi-lang-hcl=\"`setup_future_usage`\"\u003e`setupFutureUsage`\u003c/span\u003e to help you comply with regional legislation and network rules, such as [SCA](https://docs.stripe.com/strong-customer-authentication)."
                 },
                 "shipping": {
                     "$ref": "#/types/stripe:index/PaymentIntentShipping:PaymentIntentShipping",
@@ -36378,8 +36343,7 @@
                 },
                 "useStripeSdk": {
                     "type": "boolean",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nSet to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e when confirming server-side and using Stripe.js, iOS, or Android client-side SDKs to handle the next actions.",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nSet to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e when confirming server-side and using Stripe.js, iOS, or Android client-side SDKs to handle the next actions."
                 }
             },
             "required": [
@@ -36444,8 +36408,7 @@
                 },
                 "confirm": {
                     "type": "boolean",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nSet to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e to attempt to [confirm this PaymentIntent](https://docs.stripe.com/api/payment_intents/confirm) immediately. This parameter defaults to \u003cspan pulumi-lang-nodejs=\"`false`\" pulumi-lang-dotnet=\"`False`\" pulumi-lang-go=\"`false`\" pulumi-lang-python=\"`false`\" pulumi-lang-yaml=\"`false`\" pulumi-lang-java=\"`false`\" pulumi-lang-hcl=\"`false`\"\u003e`false`\u003c/span\u003e. When creating and confirming a PaymentIntent at the same time, you can also provide the parameters available in the [Confirm API](https://docs.stripe.com/api/payment_intents/confirm).",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nSet to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e to attempt to [confirm this PaymentIntent](https://docs.stripe.com/api/payment_intents/confirm) immediately. This parameter defaults to \u003cspan pulumi-lang-nodejs=\"`false`\" pulumi-lang-dotnet=\"`False`\" pulumi-lang-go=\"`false`\" pulumi-lang-python=\"`false`\" pulumi-lang-yaml=\"`false`\" pulumi-lang-java=\"`false`\" pulumi-lang-hcl=\"`false`\"\u003e`false`\u003c/span\u003e. When creating and confirming a PaymentIntent at the same time, you can also provide the parameters available in the [Confirm API](https://docs.stripe.com/api/payment_intents/confirm)."
                 },
                 "confirmationMethod": {
                     "type": "string",
@@ -36470,8 +36433,7 @@
                 },
                 "errorOnRequiresAction": {
                     "type": "boolean",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nSet to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e to fail the payment attempt if the PaymentIntent transitions into \u003cspan pulumi-lang-nodejs=\"`requiresAction`\" pulumi-lang-dotnet=\"`RequiresAction`\" pulumi-lang-go=\"`requiresAction`\" pulumi-lang-python=\"`requires_action`\" pulumi-lang-yaml=\"`requiresAction`\" pulumi-lang-java=\"`requiresAction`\" pulumi-lang-hcl=\"`requires_action`\"\u003e`requiresAction`\u003c/span\u003e. Use this parameter for simpler integrations that don't handle customer actions, such as [saving cards without authentication](https://docs.stripe.com/payments/save-card-without-authentication). This parameter can only be used with [`confirm=true`](https://docs.stripe.com/api/payment_intents/create#create_payment_intent-confirm).",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nSet to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e to fail the payment attempt if the PaymentIntent transitions into \u003cspan pulumi-lang-nodejs=\"`requiresAction`\" pulumi-lang-dotnet=\"`RequiresAction`\" pulumi-lang-go=\"`requiresAction`\" pulumi-lang-python=\"`requires_action`\" pulumi-lang-yaml=\"`requiresAction`\" pulumi-lang-java=\"`requiresAction`\" pulumi-lang-hcl=\"`requires_action`\"\u003e`requiresAction`\u003c/span\u003e. Use this parameter for simpler integrations that don't handle customer actions, such as [saving cards without authentication](https://docs.stripe.com/payments/save-card-without-authentication). This parameter can only be used with [`confirm=true`](https://docs.stripe.com/api/payment_intents/create#create_payment_intent-confirm)."
                 },
                 "excludedPaymentMethodTypes": {
                     "type": "array",
@@ -36502,7 +36464,7 @@
                 },
                 "onBehalfOf": {
                     "type": "string",
-                    "description": "You can specify the settlement merchant as the\nconnected account using the \u003cspan pulumi-lang-nodejs=\"`onBehalfOf`\" pulumi-lang-dotnet=\"`OnBehalfOf`\" pulumi-lang-go=\"`onBehalfOf`\" pulumi-lang-python=\"`on_behalf_of`\" pulumi-lang-yaml=\"`onBehalfOf`\" pulumi-lang-java=\"`onBehalfOf`\" pulumi-lang-hcl=\"`on_behalf_of`\"\u003e`onBehalfOf`\u003c/span\u003e attribute on the charge. See the PaymentIntents [use case for connected accounts](https://www.terraform.io/payments/connected-accounts) for details."
+                    "description": "You can specify the settlement merchant as the\nconnected account using the \u003cspan pulumi-lang-nodejs=\"`onBehalfOf`\" pulumi-lang-dotnet=\"`OnBehalfOf`\" pulumi-lang-go=\"`onBehalfOf`\" pulumi-lang-python=\"`on_behalf_of`\" pulumi-lang-yaml=\"`onBehalfOf`\" pulumi-lang-java=\"`onBehalfOf`\" pulumi-lang-hcl=\"`on_behalf_of`\"\u003e`onBehalfOf`\u003c/span\u003e attribute on the charge. See the PaymentIntents [use case for connected accounts](https://docs.stripe.com/payments/connected-accounts) for details."
                 },
                 "paymentDetails": {
                     "$ref": "#/types/stripe:index/PaymentIntentPaymentDetails:PaymentIntentPaymentDetails"
@@ -36541,7 +36503,7 @@
                 },
                 "setupFutureUsage": {
                     "type": "string",
-                    "description": "Indicates that you intend to make future payments with this PaymentIntent's payment method.\n\nIf you provide a Customer with the PaymentIntent, you can use this parameter to [attach the payment method](https://www.terraform.io/payments/save-during-payment) to the Customer after the PaymentIntent is confirmed and the customer completes any required actions. If you don't provide a Customer, you can still [attach](https://www.terraform.io/api/payment_methods/attach) the payment method to a Customer after the transaction completes.\n\nIf the payment method is \u003cspan pulumi-lang-nodejs=\"`cardPresent`\" pulumi-lang-dotnet=\"`CardPresent`\" pulumi-lang-go=\"`cardPresent`\" pulumi-lang-python=\"`card_present`\" pulumi-lang-yaml=\"`cardPresent`\" pulumi-lang-java=\"`cardPresent`\" pulumi-lang-hcl=\"`card_present`\"\u003e`cardPresent`\u003c/span\u003e and isn't a digital wallet, Stripe creates and attaches a \u003cspan pulumi-lang-nodejs=\"[generatedCard]\" pulumi-lang-dotnet=\"[GeneratedCard]\" pulumi-lang-go=\"[generatedCard]\" pulumi-lang-python=\"[generated_card]\" pulumi-lang-yaml=\"[generatedCard]\" pulumi-lang-java=\"[generatedCard]\" pulumi-lang-hcl=\"[generated_card]\"\u003e[generatedCard]\u003c/span\u003e(https://www.terraform.io/api/charges/object#charge_object-payment_method_details-card_present-generated_card) payment method representing the card to the Customer instead.\n\nWhen processing card payments, Stripe uses \u003cspan pulumi-lang-nodejs=\"`setupFutureUsage`\" pulumi-lang-dotnet=\"`SetupFutureUsage`\" pulumi-lang-go=\"`setupFutureUsage`\" pulumi-lang-python=\"`setup_future_usage`\" pulumi-lang-yaml=\"`setupFutureUsage`\" pulumi-lang-java=\"`setupFutureUsage`\" pulumi-lang-hcl=\"`setup_future_usage`\"\u003e`setupFutureUsage`\u003c/span\u003e to help you comply with regional legislation and network rules, such as [SCA](https://www.terraform.io/strong-customer-authentication)."
+                    "description": "Indicates that you intend to make future payments with this PaymentIntent's payment method.\n\nIf you provide a Customer with the PaymentIntent, you can use this parameter to [attach the payment method](https://docs.stripe.com/payments/save-during-payment) to the Customer after the PaymentIntent is confirmed and the customer completes any required actions. If you don't provide a Customer, you can still [attach](https://docs.stripe.com/api/payment_methods/attach) the payment method to a Customer after the transaction completes.\n\nIf the payment method is \u003cspan pulumi-lang-nodejs=\"`cardPresent`\" pulumi-lang-dotnet=\"`CardPresent`\" pulumi-lang-go=\"`cardPresent`\" pulumi-lang-python=\"`card_present`\" pulumi-lang-yaml=\"`cardPresent`\" pulumi-lang-java=\"`cardPresent`\" pulumi-lang-hcl=\"`card_present`\"\u003e`cardPresent`\u003c/span\u003e and isn't a digital wallet, Stripe creates and attaches a \u003cspan pulumi-lang-nodejs=\"[generatedCard]\" pulumi-lang-dotnet=\"[GeneratedCard]\" pulumi-lang-go=\"[generatedCard]\" pulumi-lang-python=\"[generated_card]\" pulumi-lang-yaml=\"[generatedCard]\" pulumi-lang-java=\"[generatedCard]\" pulumi-lang-hcl=\"[generated_card]\"\u003e[generatedCard]\u003c/span\u003e(https://docs.stripe.com/api/charges/object#charge_object-payment_method_details-card_present-generated_card) payment method representing the card to the Customer instead.\n\nWhen processing card payments, Stripe uses \u003cspan pulumi-lang-nodejs=\"`setupFutureUsage`\" pulumi-lang-dotnet=\"`SetupFutureUsage`\" pulumi-lang-go=\"`setupFutureUsage`\" pulumi-lang-python=\"`setup_future_usage`\" pulumi-lang-yaml=\"`setupFutureUsage`\" pulumi-lang-java=\"`setupFutureUsage`\" pulumi-lang-hcl=\"`setup_future_usage`\"\u003e`setupFutureUsage`\u003c/span\u003e to help you comply with regional legislation and network rules, such as [SCA](https://docs.stripe.com/strong-customer-authentication)."
                 },
                 "shipping": {
                     "$ref": "#/types/stripe:index/PaymentIntentShipping:PaymentIntentShipping",
@@ -36565,8 +36527,7 @@
                 },
                 "useStripeSdk": {
                     "type": "boolean",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nSet to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e when confirming server-side and using Stripe.js, iOS, or Android client-side SDKs to handle the next actions.",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nSet to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e when confirming server-side and using Stripe.js, iOS, or Android client-side SDKs to handle the next actions."
                 }
             },
             "requiredInputs": [
@@ -36619,8 +36580,7 @@
                     },
                     "confirm": {
                         "type": "boolean",
-                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nSet to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e to attempt to [confirm this PaymentIntent](https://docs.stripe.com/api/payment_intents/confirm) immediately. This parameter defaults to \u003cspan pulumi-lang-nodejs=\"`false`\" pulumi-lang-dotnet=\"`False`\" pulumi-lang-go=\"`false`\" pulumi-lang-python=\"`false`\" pulumi-lang-yaml=\"`false`\" pulumi-lang-java=\"`false`\" pulumi-lang-hcl=\"`false`\"\u003e`false`\u003c/span\u003e. When creating and confirming a PaymentIntent at the same time, you can also provide the parameters available in the [Confirm API](https://docs.stripe.com/api/payment_intents/confirm).",
-                        "secret": true
+                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nSet to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e to attempt to [confirm this PaymentIntent](https://docs.stripe.com/api/payment_intents/confirm) immediately. This parameter defaults to \u003cspan pulumi-lang-nodejs=\"`false`\" pulumi-lang-dotnet=\"`False`\" pulumi-lang-go=\"`false`\" pulumi-lang-python=\"`false`\" pulumi-lang-yaml=\"`false`\" pulumi-lang-java=\"`false`\" pulumi-lang-hcl=\"`false`\"\u003e`false`\u003c/span\u003e. When creating and confirming a PaymentIntent at the same time, you can also provide the parameters available in the [Confirm API](https://docs.stripe.com/api/payment_intents/confirm)."
                     },
                     "confirmationMethod": {
                         "type": "string",
@@ -36649,8 +36609,7 @@
                     },
                     "errorOnRequiresAction": {
                         "type": "boolean",
-                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nSet to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e to fail the payment attempt if the PaymentIntent transitions into \u003cspan pulumi-lang-nodejs=\"`requiresAction`\" pulumi-lang-dotnet=\"`RequiresAction`\" pulumi-lang-go=\"`requiresAction`\" pulumi-lang-python=\"`requires_action`\" pulumi-lang-yaml=\"`requiresAction`\" pulumi-lang-java=\"`requiresAction`\" pulumi-lang-hcl=\"`requires_action`\"\u003e`requiresAction`\u003c/span\u003e. Use this parameter for simpler integrations that don't handle customer actions, such as [saving cards without authentication](https://docs.stripe.com/payments/save-card-without-authentication). This parameter can only be used with [`confirm=true`](https://docs.stripe.com/api/payment_intents/create#create_payment_intent-confirm).",
-                        "secret": true
+                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nSet to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e to fail the payment attempt if the PaymentIntent transitions into \u003cspan pulumi-lang-nodejs=\"`requiresAction`\" pulumi-lang-dotnet=\"`RequiresAction`\" pulumi-lang-go=\"`requiresAction`\" pulumi-lang-python=\"`requires_action`\" pulumi-lang-yaml=\"`requiresAction`\" pulumi-lang-java=\"`requiresAction`\" pulumi-lang-hcl=\"`requires_action`\"\u003e`requiresAction`\u003c/span\u003e. Use this parameter for simpler integrations that don't handle customer actions, such as [saving cards without authentication](https://docs.stripe.com/payments/save-card-without-authentication). This parameter can only be used with [`confirm=true`](https://docs.stripe.com/api/payment_intents/create#create_payment_intent-confirm)."
                     },
                     "excludedPaymentMethodTypes": {
                         "type": "array",
@@ -36705,7 +36664,7 @@
                     },
                     "onBehalfOf": {
                         "type": "string",
-                        "description": "You can specify the settlement merchant as the\nconnected account using the \u003cspan pulumi-lang-nodejs=\"`onBehalfOf`\" pulumi-lang-dotnet=\"`OnBehalfOf`\" pulumi-lang-go=\"`onBehalfOf`\" pulumi-lang-python=\"`on_behalf_of`\" pulumi-lang-yaml=\"`onBehalfOf`\" pulumi-lang-java=\"`onBehalfOf`\" pulumi-lang-hcl=\"`on_behalf_of`\"\u003e`onBehalfOf`\u003c/span\u003e attribute on the charge. See the PaymentIntents [use case for connected accounts](https://www.terraform.io/payments/connected-accounts) for details."
+                        "description": "You can specify the settlement merchant as the\nconnected account using the \u003cspan pulumi-lang-nodejs=\"`onBehalfOf`\" pulumi-lang-dotnet=\"`OnBehalfOf`\" pulumi-lang-go=\"`onBehalfOf`\" pulumi-lang-python=\"`on_behalf_of`\" pulumi-lang-yaml=\"`onBehalfOf`\" pulumi-lang-java=\"`onBehalfOf`\" pulumi-lang-hcl=\"`on_behalf_of`\"\u003e`onBehalfOf`\u003c/span\u003e attribute on the charge. See the PaymentIntents [use case for connected accounts](https://docs.stripe.com/payments/connected-accounts) for details."
                     },
                     "paymentDetails": {
                         "$ref": "#/types/stripe:index/PaymentIntentPaymentDetails:PaymentIntentPaymentDetails"
@@ -36759,7 +36718,7 @@
                     },
                     "setupFutureUsage": {
                         "type": "string",
-                        "description": "Indicates that you intend to make future payments with this PaymentIntent's payment method.\n\nIf you provide a Customer with the PaymentIntent, you can use this parameter to [attach the payment method](https://www.terraform.io/payments/save-during-payment) to the Customer after the PaymentIntent is confirmed and the customer completes any required actions. If you don't provide a Customer, you can still [attach](https://www.terraform.io/api/payment_methods/attach) the payment method to a Customer after the transaction completes.\n\nIf the payment method is \u003cspan pulumi-lang-nodejs=\"`cardPresent`\" pulumi-lang-dotnet=\"`CardPresent`\" pulumi-lang-go=\"`cardPresent`\" pulumi-lang-python=\"`card_present`\" pulumi-lang-yaml=\"`cardPresent`\" pulumi-lang-java=\"`cardPresent`\" pulumi-lang-hcl=\"`card_present`\"\u003e`cardPresent`\u003c/span\u003e and isn't a digital wallet, Stripe creates and attaches a \u003cspan pulumi-lang-nodejs=\"[generatedCard]\" pulumi-lang-dotnet=\"[GeneratedCard]\" pulumi-lang-go=\"[generatedCard]\" pulumi-lang-python=\"[generated_card]\" pulumi-lang-yaml=\"[generatedCard]\" pulumi-lang-java=\"[generatedCard]\" pulumi-lang-hcl=\"[generated_card]\"\u003e[generatedCard]\u003c/span\u003e(https://www.terraform.io/api/charges/object#charge_object-payment_method_details-card_present-generated_card) payment method representing the card to the Customer instead.\n\nWhen processing card payments, Stripe uses \u003cspan pulumi-lang-nodejs=\"`setupFutureUsage`\" pulumi-lang-dotnet=\"`SetupFutureUsage`\" pulumi-lang-go=\"`setupFutureUsage`\" pulumi-lang-python=\"`setup_future_usage`\" pulumi-lang-yaml=\"`setupFutureUsage`\" pulumi-lang-java=\"`setupFutureUsage`\" pulumi-lang-hcl=\"`setup_future_usage`\"\u003e`setupFutureUsage`\u003c/span\u003e to help you comply with regional legislation and network rules, such as [SCA](https://www.terraform.io/strong-customer-authentication)."
+                        "description": "Indicates that you intend to make future payments with this PaymentIntent's payment method.\n\nIf you provide a Customer with the PaymentIntent, you can use this parameter to [attach the payment method](https://docs.stripe.com/payments/save-during-payment) to the Customer after the PaymentIntent is confirmed and the customer completes any required actions. If you don't provide a Customer, you can still [attach](https://docs.stripe.com/api/payment_methods/attach) the payment method to a Customer after the transaction completes.\n\nIf the payment method is \u003cspan pulumi-lang-nodejs=\"`cardPresent`\" pulumi-lang-dotnet=\"`CardPresent`\" pulumi-lang-go=\"`cardPresent`\" pulumi-lang-python=\"`card_present`\" pulumi-lang-yaml=\"`cardPresent`\" pulumi-lang-java=\"`cardPresent`\" pulumi-lang-hcl=\"`card_present`\"\u003e`cardPresent`\u003c/span\u003e and isn't a digital wallet, Stripe creates and attaches a \u003cspan pulumi-lang-nodejs=\"[generatedCard]\" pulumi-lang-dotnet=\"[GeneratedCard]\" pulumi-lang-go=\"[generatedCard]\" pulumi-lang-python=\"[generated_card]\" pulumi-lang-yaml=\"[generatedCard]\" pulumi-lang-java=\"[generatedCard]\" pulumi-lang-hcl=\"[generated_card]\"\u003e[generatedCard]\u003c/span\u003e(https://docs.stripe.com/api/charges/object#charge_object-payment_method_details-card_present-generated_card) payment method representing the card to the Customer instead.\n\nWhen processing card payments, Stripe uses \u003cspan pulumi-lang-nodejs=\"`setupFutureUsage`\" pulumi-lang-dotnet=\"`SetupFutureUsage`\" pulumi-lang-go=\"`setupFutureUsage`\" pulumi-lang-python=\"`setup_future_usage`\" pulumi-lang-yaml=\"`setupFutureUsage`\" pulumi-lang-java=\"`setupFutureUsage`\" pulumi-lang-hcl=\"`setup_future_usage`\"\u003e`setupFutureUsage`\u003c/span\u003e to help you comply with regional legislation and network rules, such as [SCA](https://docs.stripe.com/strong-customer-authentication)."
                     },
                     "shipping": {
                         "$ref": "#/types/stripe:index/PaymentIntentShipping:PaymentIntentShipping",
@@ -36791,8 +36750,7 @@
                     },
                     "useStripeSdk": {
                         "type": "boolean",
-                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nSet to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e when confirming server-side and using Stripe.js, iOS, or Android client-side SDKs to handle the next actions.",
-                        "secret": true
+                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nSet to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e when confirming server-side and using Stripe.js, iOS, or Android client-side SDKs to handle the next actions."
                     }
                 },
                 "type": "object"
@@ -36874,7 +36832,7 @@
                 },
                 "managedPayments": {
                     "$ref": "#/types/stripe:index/PaymentLinkManagedPayments:PaymentLinkManagedPayments",
-                    "description": "Settings for Managed Payments for this Payment Link and resulting [CheckoutSessions](https://www.terraform.io/api/checkout/sessions/object), [PaymentIntents](https://www.terraform.io/api/payment_intents/object), [Invoices](https://www.terraform.io/api/invoices/object), and [Subscriptions](https://www.terraform.io/api/subscriptions/object).\n"
+                    "description": "Settings for Managed Payments for this Payment Link and resulting [CheckoutSessions](https://docs.stripe.com/api/checkout/sessions/object), [PaymentIntents](https://docs.stripe.com/api/payment_intents/object), [Invoices](https://docs.stripe.com/api/invoices/object), and [Subscriptions](https://docs.stripe.com/api/subscriptions/object).\n"
                 },
                 "metadata": {
                     "type": "object",
@@ -37062,7 +37020,7 @@
                 },
                 "managedPayments": {
                     "$ref": "#/types/stripe:index/PaymentLinkManagedPayments:PaymentLinkManagedPayments",
-                    "description": "Settings for Managed Payments for this Payment Link and resulting [CheckoutSessions](https://www.terraform.io/api/checkout/sessions/object), [PaymentIntents](https://www.terraform.io/api/payment_intents/object), [Invoices](https://www.terraform.io/api/invoices/object), and [Subscriptions](https://www.terraform.io/api/subscriptions/object).\n"
+                    "description": "Settings for Managed Payments for this Payment Link and resulting [CheckoutSessions](https://docs.stripe.com/api/checkout/sessions/object), [PaymentIntents](https://docs.stripe.com/api/payment_intents/object), [Invoices](https://docs.stripe.com/api/invoices/object), and [Subscriptions](https://docs.stripe.com/api/subscriptions/object).\n"
                 },
                 "metadata": {
                     "type": "object",
@@ -37217,7 +37175,7 @@
                     },
                     "managedPayments": {
                         "$ref": "#/types/stripe:index/PaymentLinkManagedPayments:PaymentLinkManagedPayments",
-                        "description": "Settings for Managed Payments for this Payment Link and resulting [CheckoutSessions](https://www.terraform.io/api/checkout/sessions/object), [PaymentIntents](https://www.terraform.io/api/payment_intents/object), [Invoices](https://www.terraform.io/api/invoices/object), and [Subscriptions](https://www.terraform.io/api/subscriptions/object).\n"
+                        "description": "Settings for Managed Payments for this Payment Link and resulting [CheckoutSessions](https://docs.stripe.com/api/checkout/sessions/object), [PaymentIntents](https://docs.stripe.com/api/payment_intents/object), [Invoices](https://docs.stripe.com/api/invoices/object), and [Subscriptions](https://docs.stripe.com/api/subscriptions/object).\n"
                     },
                     "metadata": {
                         "type": "object",
@@ -38483,7 +38441,7 @@
             }
         },
         "stripe:index/person:Person": {
-            "description": "This is an object representing a person associated with a Stripe account.\n\nA platform can only access a subset of data in a person for an account where [account.controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e, which includes Standard and Express accounts, after creating an Account Link or Account Session to start Connect onboarding.\n\nSee the [Standard onboarding](https://www.terraform.io/connect/standard-accounts) or [Express onboarding](https://www.terraform.io/connect/express-accounts) documentation for information about prefilling information and account onboarding steps. Learn more about [handling identity verification with the API](https://www.terraform.io/connect/handling-api-verification#person-information).\n",
+            "description": "This is an object representing a person associated with a Stripe account.\n\nA platform can only access a subset of data in a person for an account where [account.controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e, which includes Standard and Express accounts, after creating an Account Link or Account Session to start Connect onboarding.\n\nSee the [Standard onboarding](https://docs.stripe.com/connect/standard-accounts) or [Express onboarding](https://docs.stripe.com/connect/express-accounts) documentation for information about prefilling information and account onboarding steps. Learn more about [handling identity verification with the API](https://docs.stripe.com/connect/handling-api-verification#person-information).\n",
             "properties": {
                 "account": {
                     "type": "string",
@@ -38517,26 +38475,26 @@
                 },
                 "email": {
                     "type": "string",
-                    "description": "The person's email address. Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
+                    "description": "The person's email address. Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
                 },
                 "firstName": {
                     "type": "string",
-                    "description": "The person's first name. Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
+                    "description": "The person's first name. Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
                 },
                 "firstNameKana": {
                     "type": "string",
-                    "description": "The Kana variation of the person's first name (Japan only). Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
+                    "description": "The Kana variation of the person's first name (Japan only). Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
                 },
                 "firstNameKanji": {
                     "type": "string",
-                    "description": "The Kanji variation of the person's first name (Japan only). Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
+                    "description": "The Kanji variation of the person's first name (Japan only). Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
                 },
                 "fullNameAliases": {
                     "type": "array",
                     "items": {
                         "type": "string"
                     },
-                    "description": "A list of alternate names or aliases that the person is known by. Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
+                    "description": "A list of alternate names or aliases that the person is known by. Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
                 },
                 "futureRequirements": {
                     "$ref": "#/types/stripe:index/PersonFutureRequirements:PersonFutureRequirements",
@@ -38566,15 +38524,15 @@
                 },
                 "lastName": {
                     "type": "string",
-                    "description": "The person's last name. Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
+                    "description": "The person's last name. Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
                 },
                 "lastNameKana": {
                     "type": "string",
-                    "description": "The Kana variation of the person's last name (Japan only). Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
+                    "description": "The Kana variation of the person's last name (Japan only). Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
                 },
                 "lastNameKanji": {
                     "type": "string",
-                    "description": "The Kanji variation of the person's last name (Japan only). Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
+                    "description": "The Kanji variation of the person's last name (Japan only). Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
                 },
                 "maidenName": {
                     "type": "string",
@@ -38697,26 +38655,26 @@
                 },
                 "email": {
                     "type": "string",
-                    "description": "The person's email address. Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
+                    "description": "The person's email address. Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
                 },
                 "firstName": {
                     "type": "string",
-                    "description": "The person's first name. Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
+                    "description": "The person's first name. Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
                 },
                 "firstNameKana": {
                     "type": "string",
-                    "description": "The Kana variation of the person's first name (Japan only). Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
+                    "description": "The Kana variation of the person's first name (Japan only). Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
                 },
                 "firstNameKanji": {
                     "type": "string",
-                    "description": "The Kanji variation of the person's first name (Japan only). Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
+                    "description": "The Kanji variation of the person's first name (Japan only). Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
                 },
                 "fullNameAliases": {
                     "type": "array",
                     "items": {
                         "type": "string"
                     },
-                    "description": "A list of alternate names or aliases that the person is known by. Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
+                    "description": "A list of alternate names or aliases that the person is known by. Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
                 },
                 "gender": {
                     "type": "string",
@@ -38734,15 +38692,15 @@
                 },
                 "lastName": {
                     "type": "string",
-                    "description": "The person's last name. Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
+                    "description": "The person's last name. Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
                 },
                 "lastNameKana": {
                     "type": "string",
-                    "description": "The Kana variation of the person's last name (Japan only). Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
+                    "description": "The Kana variation of the person's last name (Japan only). Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
                 },
                 "lastNameKanji": {
                     "type": "string",
-                    "description": "The Kanji variation of the person's last name (Japan only). Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
+                    "description": "The Kanji variation of the person's last name (Japan only). Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
                 },
                 "maidenName": {
                     "type": "string",
@@ -38829,26 +38787,26 @@
                     },
                     "email": {
                         "type": "string",
-                        "description": "The person's email address. Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
+                        "description": "The person's email address. Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
                     },
                     "firstName": {
                         "type": "string",
-                        "description": "The person's first name. Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
+                        "description": "The person's first name. Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
                     },
                     "firstNameKana": {
                         "type": "string",
-                        "description": "The Kana variation of the person's first name (Japan only). Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
+                        "description": "The Kana variation of the person's first name (Japan only). Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
                     },
                     "firstNameKanji": {
                         "type": "string",
-                        "description": "The Kanji variation of the person's first name (Japan only). Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
+                        "description": "The Kanji variation of the person's first name (Japan only). Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
                     },
                     "fullNameAliases": {
                         "type": "array",
                         "items": {
                             "type": "string"
                         },
-                        "description": "A list of alternate names or aliases that the person is known by. Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
+                        "description": "A list of alternate names or aliases that the person is known by. Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
                     },
                     "futureRequirements": {
                         "$ref": "#/types/stripe:index/PersonFutureRequirements:PersonFutureRequirements",
@@ -38878,15 +38836,15 @@
                     },
                     "lastName": {
                         "type": "string",
-                        "description": "The person's last name. Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
+                        "description": "The person's last name. Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
                     },
                     "lastNameKana": {
                         "type": "string",
-                        "description": "The Kana variation of the person's last name (Japan only). Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
+                        "description": "The Kana variation of the person's last name (Japan only). Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
                     },
                     "lastNameKanji": {
                         "type": "string",
-                        "description": "The Kanji variation of the person's last name (Japan only). Also available for accounts where [controller.requirement_collection](https://www.terraform.io/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
+                        "description": "The Kanji variation of the person's last name (Japan only). Also available for accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is \u003cspan pulumi-lang-nodejs=\"`stripe`\" pulumi-lang-dotnet=\"`Stripe`\" pulumi-lang-go=\"`stripe`\" pulumi-lang-python=\"`stripe`\" pulumi-lang-yaml=\"`stripe`\" pulumi-lang-java=\"`stripe`\" pulumi-lang-hcl=\"`stripe`\"\u003e`stripe`\u003c/span\u003e."
                     },
                     "maidenName": {
                         "type": "string",
@@ -39304,8 +39262,7 @@
                 },
                 "transferLookupKey": {
                     "type": "boolean",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nIf set to true, will atomically remove the lookup key from the existing price, and assign it to this price.",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nIf set to true, will atomically remove the lookup key from the existing price, and assign it to this price."
                 },
                 "transformQuantity": {
                     "$ref": "#/types/stripe:index/PriceTransformQuantity:PriceTransformQuantity",
@@ -39410,8 +39367,7 @@
                 },
                 "transferLookupKey": {
                     "type": "boolean",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nIf set to true, will atomically remove the lookup key from the existing price, and assign it to this price.",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nIf set to true, will atomically remove the lookup key from the existing price, and assign it to this price."
                 },
                 "transformQuantity": {
                     "$ref": "#/types/stripe:index/PriceTransformQuantity:PriceTransformQuantity",
@@ -39511,8 +39467,7 @@
                     },
                     "transferLookupKey": {
                         "type": "boolean",
-                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nIf set to true, will atomically remove the lookup key from the existing price, and assign it to this price.",
-                        "secret": true
+                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nIf set to true, will atomically remove the lookup key from the existing price, and assign it to this price."
                     },
                     "transformQuantity": {
                         "$ref": "#/types/stripe:index/PriceTransformQuantity:PriceTransformQuantity",
@@ -40656,8 +40611,7 @@
                 },
                 "confirm": {
                     "type": "boolean",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nSet to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e to attempt to confirm this SetupIntent immediately. This parameter defaults to \u003cspan pulumi-lang-nodejs=\"`false`\" pulumi-lang-dotnet=\"`False`\" pulumi-lang-go=\"`false`\" pulumi-lang-python=\"`false`\" pulumi-lang-yaml=\"`false`\" pulumi-lang-java=\"`false`\" pulumi-lang-hcl=\"`false`\"\u003e`false`\u003c/span\u003e. If a card is the attached payment method, you can provide a \u003cspan pulumi-lang-nodejs=\"`returnUrl`\" pulumi-lang-dotnet=\"`ReturnUrl`\" pulumi-lang-go=\"`returnUrl`\" pulumi-lang-python=\"`return_url`\" pulumi-lang-yaml=\"`returnUrl`\" pulumi-lang-java=\"`returnUrl`\" pulumi-lang-hcl=\"`return_url`\"\u003e`returnUrl`\u003c/span\u003e in case further authentication is necessary.",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nSet to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e to attempt to confirm this SetupIntent immediately. This parameter defaults to \u003cspan pulumi-lang-nodejs=\"`false`\" pulumi-lang-dotnet=\"`False`\" pulumi-lang-go=\"`false`\" pulumi-lang-python=\"`false`\" pulumi-lang-yaml=\"`false`\" pulumi-lang-java=\"`false`\" pulumi-lang-hcl=\"`false`\"\u003e`false`\u003c/span\u003e. If a card is the attached payment method, you can provide a \u003cspan pulumi-lang-nodejs=\"`returnUrl`\" pulumi-lang-dotnet=\"`ReturnUrl`\" pulumi-lang-go=\"`returnUrl`\" pulumi-lang-python=\"`return_url`\" pulumi-lang-yaml=\"`returnUrl`\" pulumi-lang-java=\"`returnUrl`\" pulumi-lang-hcl=\"`return_url`\"\u003e`returnUrl`\u003c/span\u003e in case further authentication is necessary."
                 },
                 "confirmationToken": {
                     "type": "string",
@@ -40790,8 +40744,7 @@
                 },
                 "useStripeSdk": {
                     "type": "boolean",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nSet to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e when confirming server-side and using Stripe.js, iOS, or Android client-side SDKs to handle the next actions.",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nSet to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e when confirming server-side and using Stripe.js, iOS, or Android client-side SDKs to handle the next actions."
                 }
             },
             "required": [
@@ -40834,8 +40787,7 @@
                 },
                 "confirm": {
                     "type": "boolean",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nSet to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e to attempt to confirm this SetupIntent immediately. This parameter defaults to \u003cspan pulumi-lang-nodejs=\"`false`\" pulumi-lang-dotnet=\"`False`\" pulumi-lang-go=\"`false`\" pulumi-lang-python=\"`false`\" pulumi-lang-yaml=\"`false`\" pulumi-lang-java=\"`false`\" pulumi-lang-hcl=\"`false`\"\u003e`false`\u003c/span\u003e. If a card is the attached payment method, you can provide a \u003cspan pulumi-lang-nodejs=\"`returnUrl`\" pulumi-lang-dotnet=\"`ReturnUrl`\" pulumi-lang-go=\"`returnUrl`\" pulumi-lang-python=\"`return_url`\" pulumi-lang-yaml=\"`returnUrl`\" pulumi-lang-java=\"`returnUrl`\" pulumi-lang-hcl=\"`return_url`\"\u003e`returnUrl`\u003c/span\u003e in case further authentication is necessary.",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nSet to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e to attempt to confirm this SetupIntent immediately. This parameter defaults to \u003cspan pulumi-lang-nodejs=\"`false`\" pulumi-lang-dotnet=\"`False`\" pulumi-lang-go=\"`false`\" pulumi-lang-python=\"`false`\" pulumi-lang-yaml=\"`false`\" pulumi-lang-java=\"`false`\" pulumi-lang-hcl=\"`false`\"\u003e`false`\u003c/span\u003e. If a card is the attached payment method, you can provide a \u003cspan pulumi-lang-nodejs=\"`returnUrl`\" pulumi-lang-dotnet=\"`ReturnUrl`\" pulumi-lang-go=\"`returnUrl`\" pulumi-lang-python=\"`return_url`\" pulumi-lang-yaml=\"`returnUrl`\" pulumi-lang-java=\"`returnUrl`\" pulumi-lang-hcl=\"`return_url`\"\u003e`returnUrl`\u003c/span\u003e in case further authentication is necessary."
                 },
                 "confirmationToken": {
                     "type": "string",
@@ -40925,8 +40877,7 @@
                 },
                 "useStripeSdk": {
                     "type": "boolean",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nSet to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e when confirming server-side and using Stripe.js, iOS, or Android client-side SDKs to handle the next actions.",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nSet to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e when confirming server-side and using Stripe.js, iOS, or Android client-side SDKs to handle the next actions."
                 }
             },
             "stateInputs": {
@@ -40955,8 +40906,7 @@
                     },
                     "confirm": {
                         "type": "boolean",
-                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nSet to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e to attempt to confirm this SetupIntent immediately. This parameter defaults to \u003cspan pulumi-lang-nodejs=\"`false`\" pulumi-lang-dotnet=\"`False`\" pulumi-lang-go=\"`false`\" pulumi-lang-python=\"`false`\" pulumi-lang-yaml=\"`false`\" pulumi-lang-java=\"`false`\" pulumi-lang-hcl=\"`false`\"\u003e`false`\u003c/span\u003e. If a card is the attached payment method, you can provide a \u003cspan pulumi-lang-nodejs=\"`returnUrl`\" pulumi-lang-dotnet=\"`ReturnUrl`\" pulumi-lang-go=\"`returnUrl`\" pulumi-lang-python=\"`return_url`\" pulumi-lang-yaml=\"`returnUrl`\" pulumi-lang-java=\"`returnUrl`\" pulumi-lang-hcl=\"`return_url`\"\u003e`returnUrl`\u003c/span\u003e in case further authentication is necessary.",
-                        "secret": true
+                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nSet to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e to attempt to confirm this SetupIntent immediately. This parameter defaults to \u003cspan pulumi-lang-nodejs=\"`false`\" pulumi-lang-dotnet=\"`False`\" pulumi-lang-go=\"`false`\" pulumi-lang-python=\"`false`\" pulumi-lang-yaml=\"`false`\" pulumi-lang-java=\"`false`\" pulumi-lang-hcl=\"`false`\"\u003e`false`\u003c/span\u003e. If a card is the attached payment method, you can provide a \u003cspan pulumi-lang-nodejs=\"`returnUrl`\" pulumi-lang-dotnet=\"`ReturnUrl`\" pulumi-lang-go=\"`returnUrl`\" pulumi-lang-python=\"`return_url`\" pulumi-lang-yaml=\"`returnUrl`\" pulumi-lang-java=\"`returnUrl`\" pulumi-lang-hcl=\"`return_url`\"\u003e`returnUrl`\u003c/span\u003e in case further authentication is necessary."
                     },
                     "confirmationToken": {
                         "type": "string",
@@ -41089,8 +41039,7 @@
                     },
                     "useStripeSdk": {
                         "type": "boolean",
-                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nSet to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e when confirming server-side and using Stripe.js, iOS, or Android client-side SDKs to handle the next actions.",
-                        "secret": true
+                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nSet to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e when confirming server-side and using Stripe.js, iOS, or Android client-side SDKs to handle the next actions."
                     }
                 },
                 "type": "object"
@@ -41685,8 +41634,7 @@
                 },
                 "backdateStartDate": {
                     "type": "integer",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nA past timestamp to backdate the subscription's start date to. If set, the first invoice will contain line items for the timespan between the start date and the current time. Can be combined with trials and the billing cycle anchor.",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nA past timestamp to backdate the subscription's start date to. If set, the first invoice will contain line items for the timespan between the start date and the current time. Can be combined with trials and the billing cycle anchor."
                 },
                 "billingCycleAnchor": {
                     "type": "integer",
@@ -41797,7 +41745,7 @@
                 },
                 "managedPayments": {
                     "$ref": "#/types/stripe:index/SubscriptionManagedPayments:SubscriptionManagedPayments",
-                    "description": "Settings for Managed Payments for this Subscription and resulting [Invoices](https://www.terraform.io/api/invoices/object) and [PaymentIntents](https://www.terraform.io/api/payment_intents/object)."
+                    "description": "Settings for Managed Payments for this Subscription and resulting [Invoices](https://docs.stripe.com/api/invoices/object) and [PaymentIntents](https://docs.stripe.com/api/payment_intents/object)."
                 },
                 "metadata": {
                     "type": "object",
@@ -41816,8 +41764,7 @@
                 },
                 "offSession": {
                     "type": "boolean",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nIndicates if a customer is on or off-session while an invoice payment is attempted. Defaults to \u003cspan pulumi-lang-nodejs=\"`false`\" pulumi-lang-dotnet=\"`False`\" pulumi-lang-go=\"`false`\" pulumi-lang-python=\"`false`\" pulumi-lang-yaml=\"`false`\" pulumi-lang-java=\"`false`\" pulumi-lang-hcl=\"`false`\"\u003e`false`\u003c/span\u003e (on-session).",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nIndicates if a customer is on or off-session while an invoice payment is attempted. Defaults to \u003cspan pulumi-lang-nodejs=\"`false`\" pulumi-lang-dotnet=\"`False`\" pulumi-lang-go=\"`false`\" pulumi-lang-python=\"`false`\" pulumi-lang-yaml=\"`false`\" pulumi-lang-java=\"`false`\" pulumi-lang-hcl=\"`false`\"\u003e`false`\u003c/span\u003e (on-session)."
                 },
                 "onBehalfOf": {
                     "type": "string",
@@ -41838,7 +41785,7 @@
                 },
                 "pendingInvoiceItemInterval": {
                     "$ref": "#/types/stripe:index/SubscriptionPendingInvoiceItemInterval:SubscriptionPendingInvoiceItemInterval",
-                    "description": "Specifies an interval for how often to bill for any pending invoice items. It is analogous to calling [Create an invoice](https://www.terraform.io/api/invoices/create) for the given subscription at the specified interval."
+                    "description": "Specifies an interval for how often to bill for any pending invoice items. It is analogous to calling [Create an invoice](https://docs.stripe.com/api/invoices/create) for the given subscription at the specified interval."
                 },
                 "pendingSetupIntent": {
                     "type": "string",
@@ -41882,13 +41829,11 @@
                 },
                 "trialFromPlan": {
                     "type": "boolean",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nIndicates if a plan's \u003cspan pulumi-lang-nodejs=\"`trialPeriodDays`\" pulumi-lang-dotnet=\"`TrialPeriodDays`\" pulumi-lang-go=\"`trialPeriodDays`\" pulumi-lang-python=\"`trial_period_days`\" pulumi-lang-yaml=\"`trialPeriodDays`\" pulumi-lang-java=\"`trialPeriodDays`\" pulumi-lang-hcl=\"`trial_period_days`\"\u003e`trialPeriodDays`\u003c/span\u003e should be applied to the subscription. Setting \u003cspan pulumi-lang-nodejs=\"`trialEnd`\" pulumi-lang-dotnet=\"`TrialEnd`\" pulumi-lang-go=\"`trialEnd`\" pulumi-lang-python=\"`trial_end`\" pulumi-lang-yaml=\"`trialEnd`\" pulumi-lang-java=\"`trialEnd`\" pulumi-lang-hcl=\"`trial_end`\"\u003e`trialEnd`\u003c/span\u003e per subscription is preferred, and this defaults to \u003cspan pulumi-lang-nodejs=\"`false`\" pulumi-lang-dotnet=\"`False`\" pulumi-lang-go=\"`false`\" pulumi-lang-python=\"`false`\" pulumi-lang-yaml=\"`false`\" pulumi-lang-java=\"`false`\" pulumi-lang-hcl=\"`false`\"\u003e`false`\u003c/span\u003e. Setting this flag to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e together with \u003cspan pulumi-lang-nodejs=\"`trialEnd`\" pulumi-lang-dotnet=\"`TrialEnd`\" pulumi-lang-go=\"`trialEnd`\" pulumi-lang-python=\"`trial_end`\" pulumi-lang-yaml=\"`trialEnd`\" pulumi-lang-java=\"`trialEnd`\" pulumi-lang-hcl=\"`trial_end`\"\u003e`trialEnd`\u003c/span\u003e is not allowed. See [Using trial periods on subscriptions](https://docs.stripe.com/billing/subscriptions/trials) to learn more.",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nIndicates if a plan's \u003cspan pulumi-lang-nodejs=\"`trialPeriodDays`\" pulumi-lang-dotnet=\"`TrialPeriodDays`\" pulumi-lang-go=\"`trialPeriodDays`\" pulumi-lang-python=\"`trial_period_days`\" pulumi-lang-yaml=\"`trialPeriodDays`\" pulumi-lang-java=\"`trialPeriodDays`\" pulumi-lang-hcl=\"`trial_period_days`\"\u003e`trialPeriodDays`\u003c/span\u003e should be applied to the subscription. Setting \u003cspan pulumi-lang-nodejs=\"`trialEnd`\" pulumi-lang-dotnet=\"`TrialEnd`\" pulumi-lang-go=\"`trialEnd`\" pulumi-lang-python=\"`trial_end`\" pulumi-lang-yaml=\"`trialEnd`\" pulumi-lang-java=\"`trialEnd`\" pulumi-lang-hcl=\"`trial_end`\"\u003e`trialEnd`\u003c/span\u003e per subscription is preferred, and this defaults to \u003cspan pulumi-lang-nodejs=\"`false`\" pulumi-lang-dotnet=\"`False`\" pulumi-lang-go=\"`false`\" pulumi-lang-python=\"`false`\" pulumi-lang-yaml=\"`false`\" pulumi-lang-java=\"`false`\" pulumi-lang-hcl=\"`false`\"\u003e`false`\u003c/span\u003e. Setting this flag to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e together with \u003cspan pulumi-lang-nodejs=\"`trialEnd`\" pulumi-lang-dotnet=\"`TrialEnd`\" pulumi-lang-go=\"`trialEnd`\" pulumi-lang-python=\"`trial_end`\" pulumi-lang-yaml=\"`trialEnd`\" pulumi-lang-java=\"`trialEnd`\" pulumi-lang-hcl=\"`trial_end`\"\u003e`trialEnd`\u003c/span\u003e is not allowed. See [Using trial periods on subscriptions](https://docs.stripe.com/billing/subscriptions/trials) to learn more."
                 },
                 "trialPeriodDays": {
                     "type": "integer",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nInteger representing the number of trial period days before the customer is charged for the first time. This will always overwrite any trials that might apply via a subscribed plan. See [Using trial periods on subscriptions](https://docs.stripe.com/billing/subscriptions/trials) to learn more.",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nInteger representing the number of trial period days before the customer is charged for the first time. This will always overwrite any trials that might apply via a subscribed plan. See [Using trial periods on subscriptions](https://docs.stripe.com/billing/subscriptions/trials) to learn more."
                 },
                 "trialSettings": {
                     "$ref": "#/types/stripe:index/SubscriptionTrialSettings:SubscriptionTrialSettings",
@@ -41965,8 +41910,7 @@
                 },
                 "backdateStartDate": {
                     "type": "integer",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nA past timestamp to backdate the subscription's start date to. If set, the first invoice will contain line items for the timespan between the start date and the current time. Can be combined with trials and the billing cycle anchor.",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nA past timestamp to backdate the subscription's start date to. If set, the first invoice will contain line items for the timespan between the start date and the current time. Can be combined with trials and the billing cycle anchor."
                 },
                 "billingCycleAnchor": {
                     "type": "integer",
@@ -42068,8 +42012,7 @@
                 },
                 "offSession": {
                     "type": "boolean",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nIndicates if a customer is on or off-session while an invoice payment is attempted. Defaults to \u003cspan pulumi-lang-nodejs=\"`false`\" pulumi-lang-dotnet=\"`False`\" pulumi-lang-go=\"`false`\" pulumi-lang-python=\"`false`\" pulumi-lang-yaml=\"`false`\" pulumi-lang-java=\"`false`\" pulumi-lang-hcl=\"`false`\"\u003e`false`\u003c/span\u003e (on-session).",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nIndicates if a customer is on or off-session while an invoice payment is attempted. Defaults to \u003cspan pulumi-lang-nodejs=\"`false`\" pulumi-lang-dotnet=\"`False`\" pulumi-lang-go=\"`false`\" pulumi-lang-python=\"`false`\" pulumi-lang-yaml=\"`false`\" pulumi-lang-java=\"`false`\" pulumi-lang-hcl=\"`false`\"\u003e`false`\u003c/span\u003e (on-session)."
                 },
                 "onBehalfOf": {
                     "type": "string",
@@ -42090,7 +42033,7 @@
                 },
                 "pendingInvoiceItemInterval": {
                     "$ref": "#/types/stripe:index/SubscriptionPendingInvoiceItemInterval:SubscriptionPendingInvoiceItemInterval",
-                    "description": "Specifies an interval for how often to bill for any pending invoice items. It is analogous to calling [Create an invoice](https://www.terraform.io/api/invoices/create) for the given subscription at the specified interval."
+                    "description": "Specifies an interval for how often to bill for any pending invoice items. It is analogous to calling [Create an invoice](https://docs.stripe.com/api/invoices/create) for the given subscription at the specified interval."
                 },
                 "prorationBehavior": {
                     "type": "string",
@@ -42107,13 +42050,11 @@
                 },
                 "trialFromPlan": {
                     "type": "boolean",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nIndicates if a plan's \u003cspan pulumi-lang-nodejs=\"`trialPeriodDays`\" pulumi-lang-dotnet=\"`TrialPeriodDays`\" pulumi-lang-go=\"`trialPeriodDays`\" pulumi-lang-python=\"`trial_period_days`\" pulumi-lang-yaml=\"`trialPeriodDays`\" pulumi-lang-java=\"`trialPeriodDays`\" pulumi-lang-hcl=\"`trial_period_days`\"\u003e`trialPeriodDays`\u003c/span\u003e should be applied to the subscription. Setting \u003cspan pulumi-lang-nodejs=\"`trialEnd`\" pulumi-lang-dotnet=\"`TrialEnd`\" pulumi-lang-go=\"`trialEnd`\" pulumi-lang-python=\"`trial_end`\" pulumi-lang-yaml=\"`trialEnd`\" pulumi-lang-java=\"`trialEnd`\" pulumi-lang-hcl=\"`trial_end`\"\u003e`trialEnd`\u003c/span\u003e per subscription is preferred, and this defaults to \u003cspan pulumi-lang-nodejs=\"`false`\" pulumi-lang-dotnet=\"`False`\" pulumi-lang-go=\"`false`\" pulumi-lang-python=\"`false`\" pulumi-lang-yaml=\"`false`\" pulumi-lang-java=\"`false`\" pulumi-lang-hcl=\"`false`\"\u003e`false`\u003c/span\u003e. Setting this flag to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e together with \u003cspan pulumi-lang-nodejs=\"`trialEnd`\" pulumi-lang-dotnet=\"`TrialEnd`\" pulumi-lang-go=\"`trialEnd`\" pulumi-lang-python=\"`trial_end`\" pulumi-lang-yaml=\"`trialEnd`\" pulumi-lang-java=\"`trialEnd`\" pulumi-lang-hcl=\"`trial_end`\"\u003e`trialEnd`\u003c/span\u003e is not allowed. See [Using trial periods on subscriptions](https://docs.stripe.com/billing/subscriptions/trials) to learn more.",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nIndicates if a plan's \u003cspan pulumi-lang-nodejs=\"`trialPeriodDays`\" pulumi-lang-dotnet=\"`TrialPeriodDays`\" pulumi-lang-go=\"`trialPeriodDays`\" pulumi-lang-python=\"`trial_period_days`\" pulumi-lang-yaml=\"`trialPeriodDays`\" pulumi-lang-java=\"`trialPeriodDays`\" pulumi-lang-hcl=\"`trial_period_days`\"\u003e`trialPeriodDays`\u003c/span\u003e should be applied to the subscription. Setting \u003cspan pulumi-lang-nodejs=\"`trialEnd`\" pulumi-lang-dotnet=\"`TrialEnd`\" pulumi-lang-go=\"`trialEnd`\" pulumi-lang-python=\"`trial_end`\" pulumi-lang-yaml=\"`trialEnd`\" pulumi-lang-java=\"`trialEnd`\" pulumi-lang-hcl=\"`trial_end`\"\u003e`trialEnd`\u003c/span\u003e per subscription is preferred, and this defaults to \u003cspan pulumi-lang-nodejs=\"`false`\" pulumi-lang-dotnet=\"`False`\" pulumi-lang-go=\"`false`\" pulumi-lang-python=\"`false`\" pulumi-lang-yaml=\"`false`\" pulumi-lang-java=\"`false`\" pulumi-lang-hcl=\"`false`\"\u003e`false`\u003c/span\u003e. Setting this flag to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e together with \u003cspan pulumi-lang-nodejs=\"`trialEnd`\" pulumi-lang-dotnet=\"`TrialEnd`\" pulumi-lang-go=\"`trialEnd`\" pulumi-lang-python=\"`trial_end`\" pulumi-lang-yaml=\"`trialEnd`\" pulumi-lang-java=\"`trialEnd`\" pulumi-lang-hcl=\"`trial_end`\"\u003e`trialEnd`\u003c/span\u003e is not allowed. See [Using trial periods on subscriptions](https://docs.stripe.com/billing/subscriptions/trials) to learn more."
                 },
                 "trialPeriodDays": {
                     "type": "integer",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nInteger representing the number of trial period days before the customer is charged for the first time. This will always overwrite any trials that might apply via a subscribed plan. See [Using trial periods on subscriptions](https://docs.stripe.com/billing/subscriptions/trials) to learn more.",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nInteger representing the number of trial period days before the customer is charged for the first time. This will always overwrite any trials that might apply via a subscribed plan. See [Using trial periods on subscriptions](https://docs.stripe.com/billing/subscriptions/trials) to learn more."
                 },
                 "trialSettings": {
                     "$ref": "#/types/stripe:index/SubscriptionTrialSettings:SubscriptionTrialSettings",
@@ -42144,8 +42085,7 @@
                     },
                     "backdateStartDate": {
                         "type": "integer",
-                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nA past timestamp to backdate the subscription's start date to. If set, the first invoice will contain line items for the timespan between the start date and the current time. Can be combined with trials and the billing cycle anchor.",
-                        "secret": true
+                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nA past timestamp to backdate the subscription's start date to. If set, the first invoice will contain line items for the timespan between the start date and the current time. Can be combined with trials and the billing cycle anchor."
                     },
                     "billingCycleAnchor": {
                         "type": "integer",
@@ -42256,7 +42196,7 @@
                     },
                     "managedPayments": {
                         "$ref": "#/types/stripe:index/SubscriptionManagedPayments:SubscriptionManagedPayments",
-                        "description": "Settings for Managed Payments for this Subscription and resulting [Invoices](https://www.terraform.io/api/invoices/object) and [PaymentIntents](https://www.terraform.io/api/payment_intents/object)."
+                        "description": "Settings for Managed Payments for this Subscription and resulting [Invoices](https://docs.stripe.com/api/invoices/object) and [PaymentIntents](https://docs.stripe.com/api/payment_intents/object)."
                     },
                     "metadata": {
                         "type": "object",
@@ -42275,8 +42215,7 @@
                     },
                     "offSession": {
                         "type": "boolean",
-                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nIndicates if a customer is on or off-session while an invoice payment is attempted. Defaults to \u003cspan pulumi-lang-nodejs=\"`false`\" pulumi-lang-dotnet=\"`False`\" pulumi-lang-go=\"`false`\" pulumi-lang-python=\"`false`\" pulumi-lang-yaml=\"`false`\" pulumi-lang-java=\"`false`\" pulumi-lang-hcl=\"`false`\"\u003e`false`\u003c/span\u003e (on-session).",
-                        "secret": true
+                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nIndicates if a customer is on or off-session while an invoice payment is attempted. Defaults to \u003cspan pulumi-lang-nodejs=\"`false`\" pulumi-lang-dotnet=\"`False`\" pulumi-lang-go=\"`false`\" pulumi-lang-python=\"`false`\" pulumi-lang-yaml=\"`false`\" pulumi-lang-java=\"`false`\" pulumi-lang-hcl=\"`false`\"\u003e`false`\u003c/span\u003e (on-session)."
                     },
                     "onBehalfOf": {
                         "type": "string",
@@ -42297,7 +42236,7 @@
                     },
                     "pendingInvoiceItemInterval": {
                         "$ref": "#/types/stripe:index/SubscriptionPendingInvoiceItemInterval:SubscriptionPendingInvoiceItemInterval",
-                        "description": "Specifies an interval for how often to bill for any pending invoice items. It is analogous to calling [Create an invoice](https://www.terraform.io/api/invoices/create) for the given subscription at the specified interval."
+                        "description": "Specifies an interval for how often to bill for any pending invoice items. It is analogous to calling [Create an invoice](https://docs.stripe.com/api/invoices/create) for the given subscription at the specified interval."
                     },
                     "pendingSetupIntent": {
                         "type": "string",
@@ -42341,13 +42280,11 @@
                     },
                     "trialFromPlan": {
                         "type": "boolean",
-                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nIndicates if a plan's \u003cspan pulumi-lang-nodejs=\"`trialPeriodDays`\" pulumi-lang-dotnet=\"`TrialPeriodDays`\" pulumi-lang-go=\"`trialPeriodDays`\" pulumi-lang-python=\"`trial_period_days`\" pulumi-lang-yaml=\"`trialPeriodDays`\" pulumi-lang-java=\"`trialPeriodDays`\" pulumi-lang-hcl=\"`trial_period_days`\"\u003e`trialPeriodDays`\u003c/span\u003e should be applied to the subscription. Setting \u003cspan pulumi-lang-nodejs=\"`trialEnd`\" pulumi-lang-dotnet=\"`TrialEnd`\" pulumi-lang-go=\"`trialEnd`\" pulumi-lang-python=\"`trial_end`\" pulumi-lang-yaml=\"`trialEnd`\" pulumi-lang-java=\"`trialEnd`\" pulumi-lang-hcl=\"`trial_end`\"\u003e`trialEnd`\u003c/span\u003e per subscription is preferred, and this defaults to \u003cspan pulumi-lang-nodejs=\"`false`\" pulumi-lang-dotnet=\"`False`\" pulumi-lang-go=\"`false`\" pulumi-lang-python=\"`false`\" pulumi-lang-yaml=\"`false`\" pulumi-lang-java=\"`false`\" pulumi-lang-hcl=\"`false`\"\u003e`false`\u003c/span\u003e. Setting this flag to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e together with \u003cspan pulumi-lang-nodejs=\"`trialEnd`\" pulumi-lang-dotnet=\"`TrialEnd`\" pulumi-lang-go=\"`trialEnd`\" pulumi-lang-python=\"`trial_end`\" pulumi-lang-yaml=\"`trialEnd`\" pulumi-lang-java=\"`trialEnd`\" pulumi-lang-hcl=\"`trial_end`\"\u003e`trialEnd`\u003c/span\u003e is not allowed. See [Using trial periods on subscriptions](https://docs.stripe.com/billing/subscriptions/trials) to learn more.",
-                        "secret": true
+                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nIndicates if a plan's \u003cspan pulumi-lang-nodejs=\"`trialPeriodDays`\" pulumi-lang-dotnet=\"`TrialPeriodDays`\" pulumi-lang-go=\"`trialPeriodDays`\" pulumi-lang-python=\"`trial_period_days`\" pulumi-lang-yaml=\"`trialPeriodDays`\" pulumi-lang-java=\"`trialPeriodDays`\" pulumi-lang-hcl=\"`trial_period_days`\"\u003e`trialPeriodDays`\u003c/span\u003e should be applied to the subscription. Setting \u003cspan pulumi-lang-nodejs=\"`trialEnd`\" pulumi-lang-dotnet=\"`TrialEnd`\" pulumi-lang-go=\"`trialEnd`\" pulumi-lang-python=\"`trial_end`\" pulumi-lang-yaml=\"`trialEnd`\" pulumi-lang-java=\"`trialEnd`\" pulumi-lang-hcl=\"`trial_end`\"\u003e`trialEnd`\u003c/span\u003e per subscription is preferred, and this defaults to \u003cspan pulumi-lang-nodejs=\"`false`\" pulumi-lang-dotnet=\"`False`\" pulumi-lang-go=\"`false`\" pulumi-lang-python=\"`false`\" pulumi-lang-yaml=\"`false`\" pulumi-lang-java=\"`false`\" pulumi-lang-hcl=\"`false`\"\u003e`false`\u003c/span\u003e. Setting this flag to \u003cspan pulumi-lang-nodejs=\"`true`\" pulumi-lang-dotnet=\"`True`\" pulumi-lang-go=\"`true`\" pulumi-lang-python=\"`true`\" pulumi-lang-yaml=\"`true`\" pulumi-lang-java=\"`true`\" pulumi-lang-hcl=\"`true`\"\u003e`true`\u003c/span\u003e together with \u003cspan pulumi-lang-nodejs=\"`trialEnd`\" pulumi-lang-dotnet=\"`TrialEnd`\" pulumi-lang-go=\"`trialEnd`\" pulumi-lang-python=\"`trial_end`\" pulumi-lang-yaml=\"`trialEnd`\" pulumi-lang-java=\"`trialEnd`\" pulumi-lang-hcl=\"`trial_end`\"\u003e`trialEnd`\u003c/span\u003e is not allowed. See [Using trial periods on subscriptions](https://docs.stripe.com/billing/subscriptions/trials) to learn more."
                     },
                     "trialPeriodDays": {
                         "type": "integer",
-                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nInteger representing the number of trial period days before the customer is charged for the first time. This will always overwrite any trials that might apply via a subscribed plan. See [Using trial periods on subscriptions](https://docs.stripe.com/billing/subscriptions/trials) to learn more.",
-                        "secret": true
+                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nInteger representing the number of trial period days before the customer is charged for the first time. This will always overwrite any trials that might apply via a subscribed plan. See [Using trial periods on subscriptions](https://docs.stripe.com/billing/subscriptions/trials) to learn more."
                     },
                     "trialSettings": {
                         "$ref": "#/types/stripe:index/SubscriptionTrialSettings:SubscriptionTrialSettings",
@@ -42427,8 +42364,7 @@
                 },
                 "prorationDate": {
                     "type": "integer",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nIf set, the proration will be calculated as though the subscription was updated at the given time. This can be used to apply the same proration that was previewed with the [upcoming invoice](https://www.terraform.io/api/invoices/create_preview) endpoint.",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nIf set, the proration will be calculated as though the subscription was updated at the given time. This can be used to apply the same proration that was previewed with the [upcoming invoice](https://docs.stripe.com/api/invoices/create_preview) endpoint."
                 },
                 "quantity": {
                     "type": "integer",
@@ -42505,8 +42441,7 @@
                 },
                 "prorationDate": {
                     "type": "integer",
-                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nIf set, the proration will be calculated as though the subscription was updated at the given time. This can be used to apply the same proration that was previewed with the [upcoming invoice](https://www.terraform.io/api/invoices/create_preview) endpoint.",
-                    "secret": true
+                    "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nIf set, the proration will be calculated as though the subscription was updated at the given time. This can be used to apply the same proration that was previewed with the [upcoming invoice](https://docs.stripe.com/api/invoices/create_preview) endpoint."
                 },
                 "quantity": {
                     "type": "integer",
@@ -42593,8 +42528,7 @@
                     },
                     "prorationDate": {
                         "type": "integer",
-                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nIf set, the proration will be calculated as though the subscription was updated at the given time. This can be used to apply the same proration that was previewed with the [upcoming invoice](https://www.terraform.io/api/invoices/create_preview) endpoint.",
-                        "secret": true
+                        "description": "**NOTE:** This field is write-only and its value will not be updated in state as part of read operations.\nIf set, the proration will be calculated as though the subscription was updated at the given time. This can be used to apply the same proration that was previewed with the [upcoming invoice](https://docs.stripe.com/api/invoices/create_preview) endpoint."
                     },
                     "quantity": {
                         "type": "integer",
@@ -42994,7 +42928,7 @@
             }
         },
         "stripe:index/taxRate:TaxRate": {
-            "description": "Tax rates can be applied to [invoices](https://www.terraform.io/invoicing/taxes/tax-rates), [subscriptions](https://www.terraform.io/billing/taxes/tax-rates) and [Checkout Sessions](https://www.terraform.io/payments/checkout/use-manual-tax-rates) to collect tax.\n\nRelated guide: [Tax rates](https://www.terraform.io/billing/taxes/tax-rates)\n",
+            "description": "Tax rates can be applied to [invoices](https://docs.stripe.com/invoicing/taxes/tax-rates), [subscriptions](https://docs.stripe.com/billing/taxes/tax-rates) and [Checkout Sessions](https://docs.stripe.com/payments/checkout/use-manual-tax-rates) to collect tax.\n\nRelated guide: [Tax rates](https://docs.stripe.com/billing/taxes/tax-rates)\n",
             "properties": {
                 "active": {
                     "type": "boolean",

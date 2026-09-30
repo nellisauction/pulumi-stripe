@@ -7,7 +7,7 @@ import * as outputs from "./types/output";
 import * as utilities from "./utilities";
 
 /**
- * A portal configuration describes the functionality and behavior you embed in a portal session. Related guide: [Configure the customer portal](https://www.terraform.io/customer-management/configure-portal).
+ * A portal configuration describes the functionality and behavior you embed in a portal session. Related guide: [Configure the customer portal](https://docs.stripe.com/customer-management/configure-portal).
  */
 export class BillingPortalConfiguration extends pulumi.CustomResource {
     /**

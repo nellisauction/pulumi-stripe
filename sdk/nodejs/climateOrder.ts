@@ -165,7 +165,7 @@ export class ClimateOrder extends pulumi.CustomResource {
             if (args?.product === undefined && !opts.urn) {
                 throw new Error("Missing required property 'product'");
             }
-            resourceInputs["amount"] = args?.amount ? pulumi.secret(args.amount) : undefined;
+            resourceInputs["amount"] = args?.amount;
             resourceInputs["beneficiary"] = args?.beneficiary;
             resourceInputs["currency"] = args?.currency;
             resourceInputs["metadata"] = args?.metadata;
@@ -189,8 +189,6 @@ export class ClimateOrder extends pulumi.CustomResource {
             resourceInputs["status"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
-        const secretOpts = { additionalSecretOutputs: ["amount"] };
-        opts = pulumi.mergeOptions(opts, secretOpts);
         super(ClimateOrder.__pulumiType, name, resourceInputs, opts);
     }
 }

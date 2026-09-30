@@ -15,7 +15,7 @@ export interface BillingAlertUsageThreshold {
      */
     gte: pulumi.Input<number>;
     /**
-     * The [Billing Meter](https://www.terraform.io/api/billing/meter) ID whose usage is monitored.
+     * The [Billing Meter](https://docs.stripe.com/api/billing/meter) ID whose usage is monitored.
      */
     meter: pulumi.Input<string>;
     /**
@@ -155,7 +155,7 @@ export interface BillingPortalConfigurationFeaturesPaymentMethodUpdate {
      */
     enabled: pulumi.Input<boolean>;
     /**
-     * The [Payment Method Configuration](https://www.terraform.io/api/payment_method_configurations) to use for this portal session. When specified, customers will be able to update their payment method to one of the options specified by the payment method configuration. If not set, the default payment method configuration is used.
+     * The [Payment Method Configuration](https://docs.stripe.com/api/payment_method_configurations) to use for this portal session. When specified, customers will be able to update their payment method to one of the options specified by the payment method configuration. If not set, the default payment method configuration is used.
      */
     paymentMethodConfiguration?: pulumi.Input<string | undefined>;
 }
@@ -2329,7 +2329,7 @@ export interface CreditNoteShippingCostTax {
      */
     amount?: pulumi.Input<number | undefined>;
     /**
-     * Tax rates can be applied to [invoices](https://www.terraform.io/invoicing/taxes/tax-rates), [subscriptions](https://www.terraform.io/billing/taxes/tax-rates) and [Checkout Sessions](https://www.terraform.io/payments/checkout/use-manual-tax-rates) to collect tax.
+     * Tax rates can be applied to [invoices](https://docs.stripe.com/invoicing/taxes/tax-rates), [subscriptions](https://docs.stripe.com/billing/taxes/tax-rates) and [Checkout Sessions](https://docs.stripe.com/payments/checkout/use-manual-tax-rates) to collect tax.
      */
     rate?: pulumi.Input<string | undefined>;
     /**
@@ -2540,7 +2540,7 @@ export interface CustomerTax {
      */
     locations?: pulumi.Input<pulumi.Input<inputs.CustomerTaxLocation>[] | undefined>;
     /**
-     * The tax calculation provider used for location resolution. Defaults to `stripe` when not using a [third-party provider](https://www.terraform.io/tax/third-party-apps).
+     * The tax calculation provider used for location resolution. Defaults to `stripe` when not using a [third-party provider](https://docs.stripe.com/tax/third-party-apps).
      */
     provider?: pulumi.Input<string | undefined>;
     /**
@@ -3415,7 +3415,7 @@ export interface InvoiceShippingCostTax {
      */
     amount?: pulumi.Input<number | undefined>;
     /**
-     * Tax rates can be applied to [invoices](https://www.terraform.io/invoicing/taxes/tax-rates), [subscriptions](https://www.terraform.io/billing/taxes/tax-rates) and [Checkout Sessions](https://www.terraform.io/payments/checkout/use-manual-tax-rates) to collect tax.
+     * Tax rates can be applied to [invoices](https://docs.stripe.com/invoicing/taxes/tax-rates), [subscriptions](https://docs.stripe.com/billing/taxes/tax-rates) and [Checkout Sessions](https://docs.stripe.com/payments/checkout/use-manual-tax-rates) to collect tax.
      */
     rate?: pulumi.Input<string | undefined>;
     /**
@@ -6101,11 +6101,11 @@ export interface PaymentIntentPaymentMethodOptionsCard {
     /**
      * Indicates that you intend to make future payments with this PaymentIntent's payment method.
      *
-     * If you provide a Customer with the PaymentIntent, you can use this parameter to [attach the payment method](https://www.terraform.io/payments/save-during-payment) to the Customer after the PaymentIntent is confirmed and the customer completes any required actions. If you don't provide a Customer, you can still [attach](https://www.terraform.io/api/payment_methods/attach) the payment method to a Customer after the transaction completes.
+     * If you provide a Customer with the PaymentIntent, you can use this parameter to [attach the payment method](https://docs.stripe.com/payments/save-during-payment) to the Customer after the PaymentIntent is confirmed and the customer completes any required actions. If you don't provide a Customer, you can still [attach](https://docs.stripe.com/api/payment_methods/attach) the payment method to a Customer after the transaction completes.
      *
-     * If the payment method is `cardPresent` and isn't a digital wallet, Stripe creates and attaches a [generatedCard](https://www.terraform.io/api/charges/object#charge_object-payment_method_details-card_present-generated_card) payment method representing the card to the Customer instead.
+     * If the payment method is `cardPresent` and isn't a digital wallet, Stripe creates and attaches a [generatedCard](https://docs.stripe.com/api/charges/object#charge_object-payment_method_details-card_present-generated_card) payment method representing the card to the Customer instead.
      *
-     * When processing card payments, Stripe uses `setupFutureUsage` to help you comply with regional legislation and network rules, such as [SCA](https://www.terraform.io/strong-customer-authentication).
+     * When processing card payments, Stripe uses `setupFutureUsage` to help you comply with regional legislation and network rules, such as [SCA](https://docs.stripe.com/strong-customer-authentication).
      */
     setupFutureUsage?: pulumi.Input<string | undefined>;
     /**
@@ -8035,7 +8035,7 @@ export interface PaymentMethodCardGeneratedFromPaymentMethodDetailsCardPresentWa
 
 export interface PaymentMethodCardNetworks {
     /**
-     * All networks available for selection via [payment*method*options.card.network](https://www.terraform.io/api/payment_intents/confirm#confirm_payment_intent-payment_method_options-card-network).
+     * All networks available for selection via [payment*method*options.card.network](https://docs.stripe.com/api/payment_intents/confirm#confirm_payment_intent-payment_method_options-card-network).
      */
     availables?: pulumi.Input<pulumi.Input<string>[] | undefined>;
     /**
@@ -8114,7 +8114,7 @@ export interface PaymentMethodCardPresent {
 
 export interface PaymentMethodCardPresentNetworks {
     /**
-     * All networks available for selection via [payment*method*options.card.network](https://www.terraform.io/api/payment_intents/confirm#confirm_payment_intent-payment_method_options-card-network).
+     * All networks available for selection via [payment*method*options.card.network](https://docs.stripe.com/api/payment_intents/confirm#confirm_payment_intent-payment_method_options-card-network).
      */
     availables?: pulumi.Input<pulumi.Input<string>[] | undefined>;
     /**
@@ -9858,7 +9858,7 @@ export interface PaymentMethodInteracPresent {
 
 export interface PaymentMethodInteracPresentNetworks {
     /**
-     * All networks available for selection via [payment*method*options.card.network](https://www.terraform.io/api/payment_intents/confirm#confirm_payment_intent-payment_method_options-card-network).
+     * All networks available for selection via [payment*method*options.card.network](https://docs.stripe.com/api/payment_intents/confirm#confirm_payment_intent-payment_method_options-card-network).
      */
     availables?: pulumi.Input<pulumi.Input<string>[] | undefined>;
     /**
@@ -11242,7 +11242,7 @@ export interface QuoteTotalDetailsBreakdownTax {
      */
     amount?: pulumi.Input<number | undefined>;
     /**
-     * Tax rates can be applied to [invoices](https://www.terraform.io/invoicing/taxes/tax-rates), [subscriptions](https://www.terraform.io/billing/taxes/tax-rates) and [Checkout Sessions](https://www.terraform.io/payments/checkout/use-manual-tax-rates) to collect tax.
+     * Tax rates can be applied to [invoices](https://docs.stripe.com/invoicing/taxes/tax-rates), [subscriptions](https://docs.stripe.com/billing/taxes/tax-rates) and [Checkout Sessions](https://docs.stripe.com/payments/checkout/use-manual-tax-rates) to collect tax.
      */
     rate?: pulumi.Input<string | undefined>;
     /**

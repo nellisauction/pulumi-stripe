@@ -186,7 +186,7 @@ export class Price extends pulumi.CustomResource {
             resourceInputs["taxBehavior"] = args?.taxBehavior;
             resourceInputs["tiers"] = args?.tiers;
             resourceInputs["tiersMode"] = args?.tiersMode;
-            resourceInputs["transferLookupKey"] = args?.transferLookupKey ? pulumi.secret(args.transferLookupKey) : undefined;
+            resourceInputs["transferLookupKey"] = args?.transferLookupKey;
             resourceInputs["transformQuantity"] = args?.transformQuantity;
             resourceInputs["unitAmount"] = args?.unitAmount;
             resourceInputs["unitAmountDecimal"] = args?.unitAmountDecimal;
@@ -196,8 +196,6 @@ export class Price extends pulumi.CustomResource {
             resourceInputs["type"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
-        const secretOpts = { additionalSecretOutputs: ["transferLookupKey"] };
-        opts = pulumi.mergeOptions(opts, secretOpts);
         super(Price.__pulumiType, name, resourceInputs, opts);
     }
 }

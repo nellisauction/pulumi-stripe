@@ -123,7 +123,7 @@ export class IssuingPersonalizationDesign extends pulumi.CustomResource {
             resourceInputs["name"] = args?.name;
             resourceInputs["physicalBundle"] = args?.physicalBundle;
             resourceInputs["preferences"] = args?.preferences;
-            resourceInputs["transferLookupKey"] = args?.transferLookupKey ? pulumi.secret(args.transferLookupKey) : undefined;
+            resourceInputs["transferLookupKey"] = args?.transferLookupKey;
             resourceInputs["created"] = undefined /*out*/;
             resourceInputs["livemode"] = undefined /*out*/;
             resourceInputs["object"] = undefined /*out*/;
@@ -131,8 +131,6 @@ export class IssuingPersonalizationDesign extends pulumi.CustomResource {
             resourceInputs["status"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
-        const secretOpts = { additionalSecretOutputs: ["transferLookupKey"] };
-        opts = pulumi.mergeOptions(opts, secretOpts);
         super(IssuingPersonalizationDesign.__pulumiType, name, resourceInputs, opts);
     }
 }

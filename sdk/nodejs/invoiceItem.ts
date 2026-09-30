@@ -187,7 +187,7 @@ export class InvoiceItem extends pulumi.CustomResource {
             resourceInputs["unitAmountDecimal"] = state?.unitAmountDecimal;
         } else {
             const args = argsOrState as InvoiceItemArgs | undefined;
-            resourceInputs["amount"] = args?.amount ? pulumi.secret(args.amount) : undefined;
+            resourceInputs["amount"] = args?.amount;
             resourceInputs["currency"] = args?.currency;
             resourceInputs["customer"] = args?.customer;
             resourceInputs["description"] = args?.description;
@@ -199,12 +199,12 @@ export class InvoiceItem extends pulumi.CustomResource {
             resourceInputs["priceData"] = args?.priceData ? pulumi.secret(args.priceData) : undefined;
             resourceInputs["pricing"] = args?.pricing ? pulumi.secret(args.pricing) : undefined;
             resourceInputs["quantity"] = args?.quantity;
-            resourceInputs["quantityDecimal"] = args?.quantityDecimal ? pulumi.secret(args.quantityDecimal) : undefined;
+            resourceInputs["quantityDecimal"] = args?.quantityDecimal;
             resourceInputs["subscription"] = args?.subscription ? pulumi.secret(args.subscription) : undefined;
             resourceInputs["taxBehavior"] = args?.taxBehavior ? pulumi.secret(args.taxBehavior) : undefined;
             resourceInputs["taxCode"] = args?.taxCode ? pulumi.secret(args.taxCode) : undefined;
             resourceInputs["taxRates"] = args?.taxRates;
-            resourceInputs["unitAmountDecimal"] = args?.unitAmountDecimal ? pulumi.secret(args.unitAmountDecimal) : undefined;
+            resourceInputs["unitAmountDecimal"] = args?.unitAmountDecimal;
             resourceInputs["date"] = undefined /*out*/;
             resourceInputs["livemode"] = undefined /*out*/;
             resourceInputs["object"] = undefined /*out*/;
@@ -214,7 +214,7 @@ export class InvoiceItem extends pulumi.CustomResource {
             resourceInputs["testClock"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
-        const secretOpts = { additionalSecretOutputs: ["amount", "priceData", "pricing", "quantityDecimal", "subscription", "taxBehavior", "taxCode", "unitAmountDecimal"] };
+        const secretOpts = { additionalSecretOutputs: ["priceData", "pricing", "subscription", "taxBehavior", "taxCode"] };
         opts = pulumi.mergeOptions(opts, secretOpts);
         super(InvoiceItem.__pulumiType, name, resourceInputs, opts);
     }

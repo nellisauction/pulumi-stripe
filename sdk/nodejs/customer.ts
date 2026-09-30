@@ -228,7 +228,7 @@ export class Customer extends pulumi.CustomResource {
             resourceInputs["taxExempt"] = args?.taxExempt;
             resourceInputs["taxIdDatas"] = args?.taxIdDatas;
             resourceInputs["testClock"] = args?.testClock;
-            resourceInputs["validate"] = args?.validate ? pulumi.secret(args.validate) : undefined;
+            resourceInputs["validate"] = args?.validate;
             resourceInputs["created"] = undefined /*out*/;
             resourceInputs["currency"] = undefined /*out*/;
             resourceInputs["customerAccount"] = undefined /*out*/;
@@ -239,7 +239,7 @@ export class Customer extends pulumi.CustomResource {
             resourceInputs["object"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
-        const secretOpts = { additionalSecretOutputs: ["source", "validate"] };
+        const secretOpts = { additionalSecretOutputs: ["source"] };
         opts = pulumi.mergeOptions(opts, secretOpts);
         super(Customer.__pulumiType, name, resourceInputs, opts);
     }
