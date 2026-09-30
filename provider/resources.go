@@ -7,11 +7,10 @@ import (
 	// Allow embedding bridge-metadata.json in the provider.
 	_ "embed"
 
-	stripeshim "github.com/stripe/terraform-provider-stripe/shim"
-
+	pf "github.com/pulumi/pulumi-terraform-bridge/v3/pkg/pf/tfbridge"
 	"github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfbridge"
 	tfbridgetokens "github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfbridge/tokens"
-	shimv2 "github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfshim/sdk-v2"
+	stripeshim "github.com/stripe/terraform-provider-stripe/shim"
 
 	"github.com/nellisauction/pulumi-stripe/provider/pkg/version"
 )
@@ -25,10 +24,8 @@ const (
 var metadata []byte
 
 func Provider() tfbridge.ProviderInfo {
-	p := shimv2.NewProvider(stripeshim.NewProvider())
-
 	prov := tfbridge.ProviderInfo{
-		P:                 p,
+		P:                 pf.ShimProvider(stripeshim.NewProvider()),
 		Name:              "stripe",
 		Version:           version.Version,
 		DisplayName:       "Stripe",
@@ -40,10 +37,16 @@ func Provider() tfbridge.ProviderInfo {
 		Homepage:          "https://github.com/nellisauction/pulumi-stripe",
 		Repository:        "https://github.com/nellisauction/pulumi-stripe",
 		GitHubOrg:         "stripe",
+		UpstreamRepoPath:  "./upstream",
 		Config: map[string]*tfbridge.SchemaInfo{
 			"api_key": {
 				Default: &tfbridge.DefaultInfo{
 					EnvVars: []string{"STRIPE_API_KEY"},
+				},
+			},
+			"stripe_account": {
+				Default: &tfbridge.DefaultInfo{
+					EnvVars: []string{"STRIPE_ACCOUNT"},
 				},
 			},
 		},

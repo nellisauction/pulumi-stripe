@@ -7,7 +7,11 @@ import * as outputs from "./types/output";
 import * as utilities from "./utilities";
 
 /**
- * A Promotion Code represents a customer-redeemable code for an underlying promotion. You can create multiple codes for a single promotion. If you enable promotion codes in your [customer portal configuration](https://stripe.com/docs/customer-management/configure-portal), then customers can redeem a code themselves when updating a subscription in the portal. Customers can also view the currently active promotion codes and coupons on each of their subscriptions in the portal.
+ * A Promotion Code represents a customer-redeemable code for an underlying promotion.
+ * You can create multiple codes for a single promotion.
+ *
+ * If you enable promotion codes in your [customer portal configuration](https://docs.stripe.com/customer-management/configure-portal), then customers can redeem a code themselves when updating a subscription in the portal.
+ * Customers can also view the currently active promotion codes and coupons on each of their subscriptions in the portal.
  */
 export class PromotionCode extends pulumi.CustomResource {
     /**
@@ -38,40 +42,46 @@ export class PromotionCode extends pulumi.CustomResource {
     }
 
     /**
-     * Whether the promotion code is currently active.
+     * Whether the promotion code is currently active. A promotion code is only active if the coupon is also valid.
      */
     declare public readonly active: pulumi.Output<boolean>;
     /**
-     * The customer-facing code. Regardless of case, this code must be unique across all active promotion codes for a specific customer. Valid characters are lower case letters (a-z), upper case letters (A-Z), and digits (0-9). If left blank, we will generate one automatically.
+     * The customer-facing code. Regardless of case, this code must be unique across all active promotion codes for each customer. Valid characters are lower case letters (a-z), upper case letters (A-Z), digits (0-9), and dashes (-).
      */
     declare public readonly code: pulumi.Output<string>;
     /**
-     * The customer that this promotion code can be used by. If not set, the promotion code can be used by all customers.
+     * Time at which the object was created. Measured in seconds since the Unix epoch.
+     */
+    declare public /*out*/ readonly created: pulumi.Output<number>;
+    /**
+     * The customer who can use this promotion code.
      */
     declare public readonly customer: pulumi.Output<string>;
     /**
-     * The account that this promotion code can be used by. If not set, the promotion code can be used by all accounts.
+     * The account representing the customer who can use this promotion code.
      */
     declare public readonly customerAccount: pulumi.Output<string>;
     /**
-     * The timestamp at which this promotion code will expire. If the coupon has specified a `redeemsBy`, then this value cannot be after the coupon's `redeemsBy`.
+     * Date at which the promotion code can no longer be redeemed.
      */
     declare public readonly expiresAt: pulumi.Output<number>;
     /**
-     * A positive integer specifying the number of times the promotion code can be redeemed. If the coupon has specified a `maxRedemptions`, then this value cannot be greater than the coupon's `maxRedemptions`.
+     * If the object exists in live mode, the value is `true`. If the object exists in test mode, the value is `false`.
+     */
+    declare public /*out*/ readonly livemode: pulumi.Output<boolean>;
+    /**
+     * Maximum number of times this promotion code can be redeemed.
      */
     declare public readonly maxRedemptions: pulumi.Output<number>;
     /**
-     * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
      */
     declare public readonly metadata: pulumi.Output<{[key: string]: string}>;
     /**
-     * The promotion referenced by this promotion code.
+     * String representing the object's type. Objects of the same type share the same value.
      */
-    declare public readonly promotion: pulumi.Output<outputs.PromotionCodePromotion>;
-    /**
-     * Settings that restrict the redemption of the promotion code.
-     */
+    declare public /*out*/ readonly object: pulumi.Output<string>;
+    declare public readonly promotion: pulumi.Output<outputs.PromotionCodePromotion | undefined>;
     declare public readonly restrictions: pulumi.Output<outputs.PromotionCodeRestrictions | undefined>;
     /**
      * Number of times this promotion code has been used.
@@ -85,7 +95,7 @@ export class PromotionCode extends pulumi.CustomResource {
      * @param args The arguments to use to populate this resource's properties.
      * @param opts A bag of options that control this resource's behavior.
      */
-    constructor(name: string, args: PromotionCodeArgs, opts?: pulumi.CustomResourceOptions)
+    constructor(name: string, args?: PromotionCodeArgs, opts?: pulumi.CustomResourceOptions)
     constructor(name: string, argsOrState?: PromotionCodeArgs | PromotionCodeState, opts?: pulumi.CustomResourceOptions) {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
@@ -93,19 +103,19 @@ export class PromotionCode extends pulumi.CustomResource {
             const state = argsOrState as PromotionCodeState | undefined;
             resourceInputs["active"] = state?.active;
             resourceInputs["code"] = state?.code;
+            resourceInputs["created"] = state?.created;
             resourceInputs["customer"] = state?.customer;
             resourceInputs["customerAccount"] = state?.customerAccount;
             resourceInputs["expiresAt"] = state?.expiresAt;
+            resourceInputs["livemode"] = state?.livemode;
             resourceInputs["maxRedemptions"] = state?.maxRedemptions;
             resourceInputs["metadata"] = state?.metadata;
+            resourceInputs["object"] = state?.object;
             resourceInputs["promotion"] = state?.promotion;
             resourceInputs["restrictions"] = state?.restrictions;
             resourceInputs["timesRedeemed"] = state?.timesRedeemed;
         } else {
             const args = argsOrState as PromotionCodeArgs | undefined;
-            if (args?.promotion === undefined && !opts.urn) {
-                throw new Error("Missing required property 'promotion'");
-            }
             resourceInputs["active"] = args?.active;
             resourceInputs["code"] = args?.code;
             resourceInputs["customer"] = args?.customer;
@@ -115,6 +125,9 @@ export class PromotionCode extends pulumi.CustomResource {
             resourceInputs["metadata"] = args?.metadata;
             resourceInputs["promotion"] = args?.promotion;
             resourceInputs["restrictions"] = args?.restrictions;
+            resourceInputs["created"] = undefined /*out*/;
+            resourceInputs["livemode"] = undefined /*out*/;
+            resourceInputs["object"] = undefined /*out*/;
             resourceInputs["timesRedeemed"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
@@ -127,40 +140,46 @@ export class PromotionCode extends pulumi.CustomResource {
  */
 export interface PromotionCodeState {
     /**
-     * Whether the promotion code is currently active.
+     * Whether the promotion code is currently active. A promotion code is only active if the coupon is also valid.
      */
     active?: pulumi.Input<boolean | undefined>;
     /**
-     * The customer-facing code. Regardless of case, this code must be unique across all active promotion codes for a specific customer. Valid characters are lower case letters (a-z), upper case letters (A-Z), and digits (0-9). If left blank, we will generate one automatically.
+     * The customer-facing code. Regardless of case, this code must be unique across all active promotion codes for each customer. Valid characters are lower case letters (a-z), upper case letters (A-Z), digits (0-9), and dashes (-).
      */
     code?: pulumi.Input<string | undefined>;
     /**
-     * The customer that this promotion code can be used by. If not set, the promotion code can be used by all customers.
+     * Time at which the object was created. Measured in seconds since the Unix epoch.
+     */
+    created?: pulumi.Input<number | undefined>;
+    /**
+     * The customer who can use this promotion code.
      */
     customer?: pulumi.Input<string | undefined>;
     /**
-     * The account that this promotion code can be used by. If not set, the promotion code can be used by all accounts.
+     * The account representing the customer who can use this promotion code.
      */
     customerAccount?: pulumi.Input<string | undefined>;
     /**
-     * The timestamp at which this promotion code will expire. If the coupon has specified a `redeemsBy`, then this value cannot be after the coupon's `redeemsBy`.
+     * Date at which the promotion code can no longer be redeemed.
      */
     expiresAt?: pulumi.Input<number | undefined>;
     /**
-     * A positive integer specifying the number of times the promotion code can be redeemed. If the coupon has specified a `maxRedemptions`, then this value cannot be greater than the coupon's `maxRedemptions`.
+     * If the object exists in live mode, the value is `true`. If the object exists in test mode, the value is `false`.
+     */
+    livemode?: pulumi.Input<boolean | undefined>;
+    /**
+     * Maximum number of times this promotion code can be redeemed.
      */
     maxRedemptions?: pulumi.Input<number | undefined>;
     /**
-     * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
      */
     metadata?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
     /**
-     * The promotion referenced by this promotion code.
+     * String representing the object's type. Objects of the same type share the same value.
      */
+    object?: pulumi.Input<string | undefined>;
     promotion?: pulumi.Input<inputs.PromotionCodePromotion | undefined>;
-    /**
-     * Settings that restrict the redemption of the promotion code.
-     */
     restrictions?: pulumi.Input<inputs.PromotionCodeRestrictions | undefined>;
     /**
      * Number of times this promotion code has been used.
@@ -173,39 +192,33 @@ export interface PromotionCodeState {
  */
 export interface PromotionCodeArgs {
     /**
-     * Whether the promotion code is currently active.
+     * Whether the promotion code is currently active. A promotion code is only active if the coupon is also valid.
      */
     active?: pulumi.Input<boolean | undefined>;
     /**
-     * The customer-facing code. Regardless of case, this code must be unique across all active promotion codes for a specific customer. Valid characters are lower case letters (a-z), upper case letters (A-Z), and digits (0-9). If left blank, we will generate one automatically.
+     * The customer-facing code. Regardless of case, this code must be unique across all active promotion codes for each customer. Valid characters are lower case letters (a-z), upper case letters (A-Z), digits (0-9), and dashes (-).
      */
     code?: pulumi.Input<string | undefined>;
     /**
-     * The customer that this promotion code can be used by. If not set, the promotion code can be used by all customers.
+     * The customer who can use this promotion code.
      */
     customer?: pulumi.Input<string | undefined>;
     /**
-     * The account that this promotion code can be used by. If not set, the promotion code can be used by all accounts.
+     * The account representing the customer who can use this promotion code.
      */
     customerAccount?: pulumi.Input<string | undefined>;
     /**
-     * The timestamp at which this promotion code will expire. If the coupon has specified a `redeemsBy`, then this value cannot be after the coupon's `redeemsBy`.
+     * Date at which the promotion code can no longer be redeemed.
      */
     expiresAt?: pulumi.Input<number | undefined>;
     /**
-     * A positive integer specifying the number of times the promotion code can be redeemed. If the coupon has specified a `maxRedemptions`, then this value cannot be greater than the coupon's `maxRedemptions`.
+     * Maximum number of times this promotion code can be redeemed.
      */
     maxRedemptions?: pulumi.Input<number | undefined>;
     /**
-     * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
      */
     metadata?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
-    /**
-     * The promotion referenced by this promotion code.
-     */
-    promotion: pulumi.Input<inputs.PromotionCodePromotion>;
-    /**
-     * Settings that restrict the redemption of the promotion code.
-     */
+    promotion?: pulumi.Input<inputs.PromotionCodePromotion | undefined>;
     restrictions?: pulumi.Input<inputs.PromotionCodeRestrictions | undefined>;
 }

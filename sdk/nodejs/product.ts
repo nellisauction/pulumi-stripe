@@ -7,7 +7,14 @@ import * as outputs from "./types/output";
 import * as utilities from "./utilities";
 
 /**
- * Products describe the specific goods or services you offer to your customers. For example, you might offer a Standard and Premium version of your goods or service; each version would be a separate Product. They can be used in conjunction with [Prices](https://stripe.com/docs/api#prices) to configure pricing in Payment Links, Checkout, and Subscriptions. Related guides: [Set up a subscription](https://stripe.com/docs/billing/subscriptions/set-up-subscription), [share a Payment Link](https://stripe.com/docs/payment-links), [accept payments with Checkout](https://stripe.com/docs/payments/accept-a-payment#create-product-prices-upfront), and more about [Products and Prices](https://stripe.com/docs/products-prices/overview)
+ * Products describe the specific goods or services you offer to your customers.
+ * For example, you might offer a Standard and Premium version of your goods or service; each version would be a separate Product.
+ * They can be used in conjunction with [Prices](https://api.stripe.com#prices) to configure pricing in Payment Links, Checkout, and Subscriptions.
+ *
+ * Related guides: [Set up a subscription](https://docs.stripe.com/billing/subscriptions/set-up-subscription),
+ * [share a Payment Link](https://docs.stripe.com/payment-links),
+ * [accept payments with Checkout](https://docs.stripe.com/payments/accept-a-payment#create-product-prices-upfront),
+ * and more about [Products and Prices](https://docs.stripe.com/products-prices/overview)
  */
 export class Product extends pulumi.CustomResource {
     /**
@@ -38,11 +45,19 @@ export class Product extends pulumi.CustomResource {
     }
 
     /**
-     * Whether the product is currently available for purchase. Defaults to `true`.
+     * Whether the product is currently available for purchase.
      */
-    declare public readonly active: pulumi.Output<boolean | undefined>;
+    declare public readonly active: pulumi.Output<boolean>;
     /**
-     * Data used to generate a new [Price](https://stripe.com/docs/api/prices) object. This Price will be set as the default price for this product.
+     * Time at which the object was created. Measured in seconds since the Unix epoch.
+     */
+    declare public /*out*/ readonly created: pulumi.Output<number>;
+    /**
+     * The ID of the [Price](https://docs.stripe.com/api/prices) object that is the default price for this product.
+     */
+    declare public /*out*/ readonly defaultPrice: pulumi.Output<string>;
+    /**
+     * Data used to generate a new [Price](https://docs.stripe.com/api/prices) object. This Price will be set as the default price for this product.
      */
     declare public readonly defaultPriceData: pulumi.Output<outputs.ProductDefaultPriceData | undefined>;
     /**
@@ -54,17 +69,25 @@ export class Product extends pulumi.CustomResource {
      */
     declare public readonly images: pulumi.Output<string[] | undefined>;
     /**
-     * A list of up to 15 marketing features for this product. These are displayed in [pricing tables](https://stripe.com/docs/payments/checkout/pricing-table).
+     * If the object exists in live mode, the value is `true`. If the object exists in test mode, the value is `false`.
+     */
+    declare public /*out*/ readonly livemode: pulumi.Output<boolean>;
+    /**
+     * A list of up to 15 marketing features for this product. These are displayed in [pricing tables](https://docs.stripe.com/payments/checkout/pricing-table).
      */
     declare public readonly marketingFeatures: pulumi.Output<outputs.ProductMarketingFeature[] | undefined>;
     /**
-     * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
      */
     declare public readonly metadata: pulumi.Output<{[key: string]: string}>;
     /**
      * The product's name, meant to be displayable to the customer.
      */
     declare public readonly name: pulumi.Output<string>;
+    /**
+     * String representing the object's type. Objects of the same type share the same value.
+     */
+    declare public /*out*/ readonly object: pulumi.Output<string>;
     /**
      * The dimensions of this product for shipping purposes.
      */
@@ -74,21 +97,25 @@ export class Product extends pulumi.CustomResource {
      */
     declare public readonly shippable: pulumi.Output<boolean>;
     /**
-     * An arbitrary string to be displayed on your customer's credit card or bank statement. While most banks display this information consistently, some may display it incorrectly or not at all. This may be up to 22 characters. The statement description may not include `<`, `>`, `\`, `\"`, `'` characters, and will appear on your customer's statement in capital letters. Non-ASCII characters are automatically stripped. It must contain at least one letter. Only used for subscription payments.
+     * Extra information about a product which will appear on your customer's credit card statement. In the case that multiple products are billed at once, the first statement descriptor will be used. Only used for subscription payments.
      */
     declare public readonly statementDescriptor: pulumi.Output<string>;
     /**
-     * A [tax code](https://stripe.com/docs/tax/tax-categories) ID.
+     * A [tax code](https://docs.stripe.com/tax/tax-categories) ID.
      */
     declare public readonly taxCode: pulumi.Output<string>;
     /**
-     * The type of the product. Defaults to `service` if not explicitly specified, enabling use of this product with Subscriptions and Plans. Set this parameter to `good` to use this product with Orders and SKUs. On API versions before `2018-02-05`, this field defaults to `good` for compatibility reasons.
+     * The type of the product. The product is either of type `good`, which is eligible for use with Orders and SKUs, or `service`, which is eligible for use with Subscriptions and Plans.
      */
     declare public readonly type: pulumi.Output<string>;
     /**
      * A label that represents units of this product. When set, this will be included in customers' receipts, invoices, Checkout, and the customer portal.
      */
     declare public readonly unitLabel: pulumi.Output<string>;
+    /**
+     * Time at which the object was last updated. Measured in seconds since the Unix epoch.
+     */
+    declare public /*out*/ readonly updated: pulumi.Output<number>;
     /**
      * A URL of a publicly-accessible webpage for this product.
      */
@@ -108,18 +135,23 @@ export class Product extends pulumi.CustomResource {
         if (opts.id) {
             const state = argsOrState as ProductState | undefined;
             resourceInputs["active"] = state?.active;
+            resourceInputs["created"] = state?.created;
+            resourceInputs["defaultPrice"] = state?.defaultPrice;
             resourceInputs["defaultPriceData"] = state?.defaultPriceData;
             resourceInputs["description"] = state?.description;
             resourceInputs["images"] = state?.images;
+            resourceInputs["livemode"] = state?.livemode;
             resourceInputs["marketingFeatures"] = state?.marketingFeatures;
             resourceInputs["metadata"] = state?.metadata;
             resourceInputs["name"] = state?.name;
+            resourceInputs["object"] = state?.object;
             resourceInputs["packageDimensions"] = state?.packageDimensions;
             resourceInputs["shippable"] = state?.shippable;
             resourceInputs["statementDescriptor"] = state?.statementDescriptor;
             resourceInputs["taxCode"] = state?.taxCode;
             resourceInputs["type"] = state?.type;
             resourceInputs["unitLabel"] = state?.unitLabel;
+            resourceInputs["updated"] = state?.updated;
             resourceInputs["url"] = state?.url;
         } else {
             const args = argsOrState as ProductArgs | undefined;
@@ -137,6 +169,11 @@ export class Product extends pulumi.CustomResource {
             resourceInputs["type"] = args?.type;
             resourceInputs["unitLabel"] = args?.unitLabel;
             resourceInputs["url"] = args?.url;
+            resourceInputs["created"] = undefined /*out*/;
+            resourceInputs["defaultPrice"] = undefined /*out*/;
+            resourceInputs["livemode"] = undefined /*out*/;
+            resourceInputs["object"] = undefined /*out*/;
+            resourceInputs["updated"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
         super(Product.__pulumiType, name, resourceInputs, opts);
@@ -148,11 +185,19 @@ export class Product extends pulumi.CustomResource {
  */
 export interface ProductState {
     /**
-     * Whether the product is currently available for purchase. Defaults to `true`.
+     * Whether the product is currently available for purchase.
      */
     active?: pulumi.Input<boolean | undefined>;
     /**
-     * Data used to generate a new [Price](https://stripe.com/docs/api/prices) object. This Price will be set as the default price for this product.
+     * Time at which the object was created. Measured in seconds since the Unix epoch.
+     */
+    created?: pulumi.Input<number | undefined>;
+    /**
+     * The ID of the [Price](https://docs.stripe.com/api/prices) object that is the default price for this product.
+     */
+    defaultPrice?: pulumi.Input<string | undefined>;
+    /**
+     * Data used to generate a new [Price](https://docs.stripe.com/api/prices) object. This Price will be set as the default price for this product.
      */
     defaultPriceData?: pulumi.Input<inputs.ProductDefaultPriceData | undefined>;
     /**
@@ -164,17 +209,25 @@ export interface ProductState {
      */
     images?: pulumi.Input<pulumi.Input<string>[] | undefined>;
     /**
-     * A list of up to 15 marketing features for this product. These are displayed in [pricing tables](https://stripe.com/docs/payments/checkout/pricing-table).
+     * If the object exists in live mode, the value is `true`. If the object exists in test mode, the value is `false`.
+     */
+    livemode?: pulumi.Input<boolean | undefined>;
+    /**
+     * A list of up to 15 marketing features for this product. These are displayed in [pricing tables](https://docs.stripe.com/payments/checkout/pricing-table).
      */
     marketingFeatures?: pulumi.Input<pulumi.Input<inputs.ProductMarketingFeature>[] | undefined>;
     /**
-     * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
      */
     metadata?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
     /**
      * The product's name, meant to be displayable to the customer.
      */
     name?: pulumi.Input<string | undefined>;
+    /**
+     * String representing the object's type. Objects of the same type share the same value.
+     */
+    object?: pulumi.Input<string | undefined>;
     /**
      * The dimensions of this product for shipping purposes.
      */
@@ -184,21 +237,25 @@ export interface ProductState {
      */
     shippable?: pulumi.Input<boolean | undefined>;
     /**
-     * An arbitrary string to be displayed on your customer's credit card or bank statement. While most banks display this information consistently, some may display it incorrectly or not at all. This may be up to 22 characters. The statement description may not include `<`, `>`, `\`, `\"`, `'` characters, and will appear on your customer's statement in capital letters. Non-ASCII characters are automatically stripped. It must contain at least one letter. Only used for subscription payments.
+     * Extra information about a product which will appear on your customer's credit card statement. In the case that multiple products are billed at once, the first statement descriptor will be used. Only used for subscription payments.
      */
     statementDescriptor?: pulumi.Input<string | undefined>;
     /**
-     * A [tax code](https://stripe.com/docs/tax/tax-categories) ID.
+     * A [tax code](https://docs.stripe.com/tax/tax-categories) ID.
      */
     taxCode?: pulumi.Input<string | undefined>;
     /**
-     * The type of the product. Defaults to `service` if not explicitly specified, enabling use of this product with Subscriptions and Plans. Set this parameter to `good` to use this product with Orders and SKUs. On API versions before `2018-02-05`, this field defaults to `good` for compatibility reasons.
+     * The type of the product. The product is either of type `good`, which is eligible for use with Orders and SKUs, or `service`, which is eligible for use with Subscriptions and Plans.
      */
     type?: pulumi.Input<string | undefined>;
     /**
      * A label that represents units of this product. When set, this will be included in customers' receipts, invoices, Checkout, and the customer portal.
      */
     unitLabel?: pulumi.Input<string | undefined>;
+    /**
+     * Time at which the object was last updated. Measured in seconds since the Unix epoch.
+     */
+    updated?: pulumi.Input<number | undefined>;
     /**
      * A URL of a publicly-accessible webpage for this product.
      */
@@ -210,11 +267,11 @@ export interface ProductState {
  */
 export interface ProductArgs {
     /**
-     * Whether the product is currently available for purchase. Defaults to `true`.
+     * Whether the product is currently available for purchase.
      */
     active?: pulumi.Input<boolean | undefined>;
     /**
-     * Data used to generate a new [Price](https://stripe.com/docs/api/prices) object. This Price will be set as the default price for this product.
+     * Data used to generate a new [Price](https://docs.stripe.com/api/prices) object. This Price will be set as the default price for this product.
      */
     defaultPriceData?: pulumi.Input<inputs.ProductDefaultPriceData | undefined>;
     /**
@@ -226,11 +283,11 @@ export interface ProductArgs {
      */
     images?: pulumi.Input<pulumi.Input<string>[] | undefined>;
     /**
-     * A list of up to 15 marketing features for this product. These are displayed in [pricing tables](https://stripe.com/docs/payments/checkout/pricing-table).
+     * A list of up to 15 marketing features for this product. These are displayed in [pricing tables](https://docs.stripe.com/payments/checkout/pricing-table).
      */
     marketingFeatures?: pulumi.Input<pulumi.Input<inputs.ProductMarketingFeature>[] | undefined>;
     /**
-     * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
      */
     metadata?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
     /**
@@ -246,15 +303,15 @@ export interface ProductArgs {
      */
     shippable?: pulumi.Input<boolean | undefined>;
     /**
-     * An arbitrary string to be displayed on your customer's credit card or bank statement. While most banks display this information consistently, some may display it incorrectly or not at all. This may be up to 22 characters. The statement description may not include `<`, `>`, `\`, `\"`, `'` characters, and will appear on your customer's statement in capital letters. Non-ASCII characters are automatically stripped. It must contain at least one letter. Only used for subscription payments.
+     * Extra information about a product which will appear on your customer's credit card statement. In the case that multiple products are billed at once, the first statement descriptor will be used. Only used for subscription payments.
      */
     statementDescriptor?: pulumi.Input<string | undefined>;
     /**
-     * A [tax code](https://stripe.com/docs/tax/tax-categories) ID.
+     * A [tax code](https://docs.stripe.com/tax/tax-categories) ID.
      */
     taxCode?: pulumi.Input<string | undefined>;
     /**
-     * The type of the product. Defaults to `service` if not explicitly specified, enabling use of this product with Subscriptions and Plans. Set this parameter to `good` to use this product with Orders and SKUs. On API versions before `2018-02-05`, this field defaults to `good` for compatibility reasons.
+     * The type of the product. The product is either of type `good`, which is eligible for use with Orders and SKUs, or `service`, which is eligible for use with Subscriptions and Plans.
      */
     type?: pulumi.Input<string | undefined>;
     /**

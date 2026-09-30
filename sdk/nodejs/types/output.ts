@@ -5,155 +5,2494 @@ import * as pulumi from "@pulumi/pulumi";
 import * as inputs from "../types/input";
 import * as outputs from "../types/output";
 
+export interface BillingAlertUsageThreshold {
+    /**
+     * The filters allow limiting the scope of this usage alert. You can only specify up to one filter at this time.
+     */
+    filters: outputs.BillingAlertUsageThresholdFilter[];
+    /**
+     * The value at which this alert will trigger.
+     */
+    gte: number;
+    /**
+     * The [Billing Meter](https://www.terraform.io/api/billing/meter) ID whose usage is monitored.
+     */
+    meter: string;
+    /**
+     * Defines how the alert will behave.
+     */
+    recurrence: string;
+}
+
+export interface BillingAlertUsageThresholdFilter {
+    /**
+     * Limit the scope of the alert to this customer ID
+     */
+    customer: string;
+    type: string;
+}
+
+export interface BillingCreditGrantAmount {
+    /**
+     * The monetary amount.
+     */
+    monetary: outputs.BillingCreditGrantAmountMonetary;
+    /**
+     * The type of this amount. We currently only support `monetary` billing credits.
+     */
+    type: string;
+}
+
+export interface BillingCreditGrantAmountMonetary {
+    /**
+     * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+     */
+    currency: string;
+    /**
+     * A positive integer representing the amount.
+     */
+    value: number;
+}
+
+export interface BillingCreditGrantApplicabilityConfig {
+    scope: outputs.BillingCreditGrantApplicabilityConfigScope;
+}
+
+export interface BillingCreditGrantApplicabilityConfigScope {
+    /**
+     * The price type that credit grants can apply to. We currently only support the `metered` price type. This refers to prices that have a [Billing Meter](https://docs.stripe.com/api/billing/meter) attached to them. Cannot be used in combination with `prices`.
+     */
+    priceType: string;
+    /**
+     * The prices that credit grants can apply to. We currently only support `metered` prices. This refers to prices that have a [Billing Meter](https://docs.stripe.com/api/billing/meter) attached to them. Cannot be used in combination with `priceType`.
+     */
+    prices: outputs.BillingCreditGrantApplicabilityConfigScopePrice[];
+}
+
+export interface BillingCreditGrantApplicabilityConfigScopePrice {
+    /**
+     * Unique identifier for the object.
+     */
+    id: string;
+}
+
 export interface BillingMeterCustomerMapping {
     /**
      * The key in the meter event payload to use for mapping the event to a customer.
      */
     eventPayloadKey: string;
     /**
-     * The method for mapping a meter event to a customer. Must be `byId`.
+     * The method for mapping a meter event to a customer.
      */
     type: string;
 }
 
 export interface BillingMeterDefaultAggregation {
     /**
-     * Specifies how events are aggregated. Allowed values are `count` to count the number of events, `sum` to sum each event's value and `last` to take the last event's value in the window.
+     * Specifies how events are aggregated.
      */
     formula: string;
 }
 
+export interface BillingMeterStatusTransitions {
+    /**
+     * The time the meter was deactivated, if any. Measured in seconds since Unix epoch.
+     */
+    deactivatedAt: number;
+}
+
 export interface BillingMeterValueSettings {
     /**
-     * The key in the usage event payload to use as the value for this meter. For example, if the event payload contains usage on a `bytesUsed` field, then set the event*payload*key to \"bytes_used\".
+     * The key in the meter event payload to use as the value for this meter.
      */
     eventPayloadKey: string;
 }
 
+export interface BillingPortalConfigurationBusinessProfile {
+    /**
+     * The messaging shown to customers in the portal.
+     */
+    headline: string;
+    /**
+     * A link to the business’s publicly available privacy policy.
+     */
+    privacyPolicyUrl: string;
+    /**
+     * A link to the business’s publicly available terms of service.
+     */
+    termsOfServiceUrl: string;
+}
+
+export interface BillingPortalConfigurationFeatures {
+    customerUpdate: outputs.BillingPortalConfigurationFeaturesCustomerUpdate;
+    invoiceHistory: outputs.BillingPortalConfigurationFeaturesInvoiceHistory;
+    paymentMethodUpdate: outputs.BillingPortalConfigurationFeaturesPaymentMethodUpdate;
+    subscriptionCancel: outputs.BillingPortalConfigurationFeaturesSubscriptionCancel;
+    subscriptionUpdate: outputs.BillingPortalConfigurationFeaturesSubscriptionUpdate;
+}
+
+export interface BillingPortalConfigurationFeaturesCustomerUpdate {
+    /**
+     * The types of customer updates that are supported. When empty, customers are not updateable.
+     */
+    allowedUpdates: string[];
+    /**
+     * Whether the feature is enabled.
+     */
+    enabled: boolean;
+}
+
+export interface BillingPortalConfigurationFeaturesInvoiceHistory {
+    /**
+     * Whether the feature is enabled.
+     */
+    enabled: boolean;
+}
+
+export interface BillingPortalConfigurationFeaturesPaymentMethodUpdate {
+    /**
+     * Whether the feature is enabled.
+     */
+    enabled: boolean;
+    /**
+     * The [Payment Method Configuration](https://www.terraform.io/api/payment_method_configurations) to use for this portal session. When specified, customers will be able to update their payment method to one of the options specified by the payment method configuration. If not set, the default payment method configuration is used.
+     */
+    paymentMethodConfiguration: string;
+}
+
+export interface BillingPortalConfigurationFeaturesSubscriptionCancel {
+    cancellationReason: outputs.BillingPortalConfigurationFeaturesSubscriptionCancelCancellationReason;
+    /**
+     * Whether the feature is enabled.
+     */
+    enabled: boolean;
+    /**
+     * Whether to cancel subscriptions immediately or at the end of the billing period.
+     */
+    mode: string;
+    /**
+     * Whether to create prorations when canceling subscriptions. Possible values are `none` and `createProrations`.
+     */
+    prorationBehavior: string;
+}
+
+export interface BillingPortalConfigurationFeaturesSubscriptionCancelCancellationReason {
+    /**
+     * Whether the feature is enabled.
+     */
+    enabled: boolean;
+    /**
+     * Which cancellation reasons will be given as options to the customer.
+     */
+    options: string[];
+}
+
+export interface BillingPortalConfigurationFeaturesSubscriptionUpdate {
+    /**
+     * Determines the value to use for the billing cycle anchor on subscription updates. Valid values are `now` or `unchanged`, and the default value is `unchanged`. Setting the value to `now` resets the subscription's billing cycle anchor to the current time (in UTC). For more information, see the billing cycle [documentation](https://docs.stripe.com/billing/subscriptions/billing-cycle).
+     */
+    billingCycleAnchor: string;
+    /**
+     * The types of subscription updates that are supported for items listed in the `products` attribute. When empty, subscriptions are not updateable.
+     */
+    defaultAllowedUpdates: string[];
+    /**
+     * Whether the feature is enabled.
+     */
+    enabled: boolean;
+    /**
+     * The list of up to 10 products that support subscription updates.
+     */
+    products: outputs.BillingPortalConfigurationFeaturesSubscriptionUpdateProduct[];
+    /**
+     * Determines how to handle prorations resulting from subscription updates. Valid values are `none`, `createProrations`, and `alwaysInvoice`. Defaults to a value of `none` if you don't set it during creation.
+     */
+    prorationBehavior: string;
+    scheduleAtPeriodEnd: outputs.BillingPortalConfigurationFeaturesSubscriptionUpdateScheduleAtPeriodEnd;
+    /**
+     * Determines how handle updates to trialing subscriptions. Valid values are `endTrial` and `continueTrial`. Defaults to a value of `endTrial` if you don't set it during creation.
+     */
+    trialUpdateBehavior: string;
+}
+
+export interface BillingPortalConfigurationFeaturesSubscriptionUpdateProduct {
+    adjustableQuantity: outputs.BillingPortalConfigurationFeaturesSubscriptionUpdateProductAdjustableQuantity;
+    /**
+     * The list of price IDs which, when subscribed to, a subscription can be updated.
+     */
+    prices: string[];
+    /**
+     * The product ID.
+     */
+    product: string;
+}
+
+export interface BillingPortalConfigurationFeaturesSubscriptionUpdateProductAdjustableQuantity {
+    /**
+     * If true, the quantity can be adjusted to any non-negative integer.
+     */
+    enabled: boolean;
+    /**
+     * The maximum quantity that can be set for the product.
+     */
+    maximum: number;
+    /**
+     * The minimum quantity that can be set for the product.
+     */
+    minimum: number;
+}
+
+export interface BillingPortalConfigurationFeaturesSubscriptionUpdateScheduleAtPeriodEnd {
+    /**
+     * List of conditions. When any condition is true, an update will be scheduled at the end of the current period.
+     */
+    conditions: outputs.BillingPortalConfigurationFeaturesSubscriptionUpdateScheduleAtPeriodEndCondition[];
+}
+
+export interface BillingPortalConfigurationFeaturesSubscriptionUpdateScheduleAtPeriodEndCondition {
+    /**
+     * The type of condition.
+     */
+    type: string;
+}
+
+export interface BillingPortalConfigurationLoginPage {
+    /**
+     * If `true`, a shareable `url` will be generated that will take your customers to a hosted login page for the customer portal.
+     */
+    enabled: boolean;
+    /**
+     * A shareable URL to the hosted portal login page. Your customers will be able to log in with their [email](https://docs.stripe.com/api/customers/object#customer_object-email) and receive a link to their customer portal.
+     */
+    url: string;
+}
+
+export interface ChargeBillingDetails {
+    /**
+     * Billing address.
+     */
+    address: outputs.ChargeBillingDetailsAddress;
+    /**
+     * Email address.
+     */
+    email: string;
+    /**
+     * Full name.
+     */
+    name: string;
+    /**
+     * Billing phone number (including extension).
+     */
+    phone: string;
+    /**
+     * Taxpayer identification number. Used only for transactions between LATAM buyers and non-LATAM sellers.
+     */
+    taxId: string;
+}
+
+export interface ChargeBillingDetailsAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1: string;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2: string;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: string;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state: string;
+}
+
+export interface ChargeDestination {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * ID of an existing, connected Stripe account.
+     */
+    account: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The amount to transfer to the destination account without creating an `Application Fee` object. Cannot be combined with the `applicationFee` parameter. Must be less than or equal to the charge amount.
+     */
+    amount?: number;
+}
+
+export interface ChargeFraudDetails {
+    /**
+     * Assessments from Stripe. If set, the value is `fraudulent`.
+     */
+    stripeReport: string;
+    /**
+     * Assessments reported by you. If set, possible values of are `safe` and `fraudulent`.
+     */
+    userReport: string;
+}
+
+export interface ChargeLevel3 {
+    customerReference: string;
+    lineItems: outputs.ChargeLevel3LineItem[];
+    merchantReference: string;
+    shippingAddressZip: string;
+    shippingAmount: number;
+    shippingFromZip: string;
+}
+
+export interface ChargeLevel3LineItem {
+    discountAmount: number;
+    productCode: string;
+    productDescription: string;
+    quantity: number;
+    taxAmount: number;
+    unitCost: number;
+}
+
+export interface ChargeOutcome {
+    /**
+     * An enumerated value providing a more detailed explanation on [how to proceed with an error](https://docs.stripe.com/declines#retrying-issuer-declines).
+     */
+    adviceCode: string;
+    /**
+     * For charges declined by the network, a 2 digit code which indicates the advice returned by the network on how to proceed with an error.
+     */
+    networkAdviceCode: string;
+    /**
+     * For charges declined by the network, an alphanumeric code which indicates the reason the charge failed.
+     */
+    networkDeclineCode: string;
+    /**
+     * Possible values are `approvedByNetwork`, `declinedByNetwork`, `notSentToNetwork`, and `reversedAfterApproval`. The value `reversedAfterApproval` indicates the payment was [blocked by Stripe](https://docs.stripe.com/declines#blocked-payments) after bank authorization, and may temporarily appear as "pending" on a cardholder's statement.
+     */
+    networkStatus: string;
+    /**
+     * An enumerated value providing a more detailed explanation of the outcome's `type`. Charges blocked by Radar's default block rule have the value `highestRiskLevel`. Charges placed in review by Radar's default review rule have the value `elevatedRiskLevel`. Charges blocked because the payment is unlikely to be authorized have the value `lowProbabilityOfAuthorization`. Charges authorized, blocked, or placed in review by custom rules have the value `rule`. See [understanding declines](https://docs.stripe.com/declines) for more details.
+     */
+    reason: string;
+    /**
+     * Stripe Radar's evaluation of the riskiness of the payment. Possible values for evaluated payments are `normal`, `elevated`, `highest`. For non-card payments, and card-based payments predating the public assignment of risk levels, this field will have the value `notAssessed`. In the event of an error in the evaluation, this field will have the value `unknown`. This field is only available with Radar.
+     */
+    riskLevel: string;
+    /**
+     * Stripe Radar's evaluation of the riskiness of the payment. Possible values for evaluated payments are between 0 and 100. For non-card payments, card-based payments predating the public assignment of risk scores, or in the event of an error during evaluation, this field will not be present. This field is only available with Radar for Fraud Teams.
+     */
+    riskScore: number;
+    /**
+     * The ID of the Radar rule that matched the payment, if applicable.
+     */
+    rule: string;
+    /**
+     * A human-readable description of the outcome type and reason, designed for you (the recipient of the payment), not your customer.
+     */
+    sellerMessage: string;
+    /**
+     * Possible values are `authorized`, `manualReview`, `issuerDeclined`, `blocked`, and `invalid`. See [understanding declines](https://docs.stripe.com/declines) and [Radar reviews](https://docs.stripe.com/radar/reviews) for details.
+     */
+    type: string;
+}
+
+export interface ChargePaymentMethodDetails {
+    achCreditTransfer: outputs.ChargePaymentMethodDetailsAchCreditTransfer;
+    achDebit: outputs.ChargePaymentMethodDetailsAchDebit;
+    acssDebit: outputs.ChargePaymentMethodDetailsAcssDebit;
+    affirm: outputs.ChargePaymentMethodDetailsAffirm;
+    afterpayClearpay: outputs.ChargePaymentMethodDetailsAfterpayClearpay;
+    alipay: outputs.ChargePaymentMethodDetailsAlipay;
+    alma: outputs.ChargePaymentMethodDetailsAlma;
+    amazonPay: outputs.ChargePaymentMethodDetailsAmazonPay;
+    auBecsDebit: outputs.ChargePaymentMethodDetailsAuBecsDebit;
+    bacsDebit: outputs.ChargePaymentMethodDetailsBacsDebit;
+    bancontact: outputs.ChargePaymentMethodDetailsBancontact;
+    billie: outputs.ChargePaymentMethodDetailsBillie;
+    bizum: outputs.ChargePaymentMethodDetailsBizum;
+    blik: outputs.ChargePaymentMethodDetailsBlik;
+    boleto: outputs.ChargePaymentMethodDetailsBoleto;
+    card: outputs.ChargePaymentMethodDetailsCard;
+    cardPresent: outputs.ChargePaymentMethodDetailsCardPresent;
+    cashapp: outputs.ChargePaymentMethodDetailsCashapp;
+    crypto: outputs.ChargePaymentMethodDetailsCrypto;
+    eps: outputs.ChargePaymentMethodDetailsEps;
+    fpx: outputs.ChargePaymentMethodDetailsFpx;
+    giropay: outputs.ChargePaymentMethodDetailsGiropay;
+    grabpay: outputs.ChargePaymentMethodDetailsGrabpay;
+    ideal: outputs.ChargePaymentMethodDetailsIdeal;
+    interacPresent: outputs.ChargePaymentMethodDetailsInteracPresent;
+    kakaoPay: outputs.ChargePaymentMethodDetailsKakaoPay;
+    klarna: outputs.ChargePaymentMethodDetailsKlarna;
+    konbini: outputs.ChargePaymentMethodDetailsKonbini;
+    krCard: outputs.ChargePaymentMethodDetailsKrCard;
+    link: outputs.ChargePaymentMethodDetailsLink;
+    mobilepay: outputs.ChargePaymentMethodDetailsMobilepay;
+    multibanco: outputs.ChargePaymentMethodDetailsMultibanco;
+    naverPay: outputs.ChargePaymentMethodDetailsNaverPay;
+    nzBankAccount: outputs.ChargePaymentMethodDetailsNzBankAccount;
+    oxxo: outputs.ChargePaymentMethodDetailsOxxo;
+    p24: outputs.ChargePaymentMethodDetailsP24;
+    payco: outputs.ChargePaymentMethodDetailsPayco;
+    paynow: outputs.ChargePaymentMethodDetailsPaynow;
+    paypal: outputs.ChargePaymentMethodDetailsPaypal;
+    payto: outputs.ChargePaymentMethodDetailsPayto;
+    pix: outputs.ChargePaymentMethodDetailsPix;
+    promptpay: outputs.ChargePaymentMethodDetailsPromptpay;
+    revolutPay: outputs.ChargePaymentMethodDetailsRevolutPay;
+    samsungPay: outputs.ChargePaymentMethodDetailsSamsungPay;
+    satispay: outputs.ChargePaymentMethodDetailsSatispay;
+    scalapay: outputs.ChargePaymentMethodDetailsScalapay;
+    sepaCreditTransfer: outputs.ChargePaymentMethodDetailsSepaCreditTransfer;
+    sepaDebit: outputs.ChargePaymentMethodDetailsSepaDebit;
+    sofort: outputs.ChargePaymentMethodDetailsSofort;
+    sunbit: outputs.ChargePaymentMethodDetailsSunbit;
+    swish: outputs.ChargePaymentMethodDetailsSwish;
+    twint: outputs.ChargePaymentMethodDetailsTwint;
+    /**
+     * The type of transaction-specific details of the payment method used in the payment. See [PaymentMethod.type](https://docs.stripe.com/api/payment_methods/object#payment_method_object-type) for the full list of possible types.
+     * An additional hash is included on `paymentMethodDetails` with a name matching this value.
+     * It contains information specific to the payment method.
+     */
+    type: string;
+    upi: outputs.ChargePaymentMethodDetailsUpi;
+    usBankAccount: outputs.ChargePaymentMethodDetailsUsBankAccount;
+    wechatPay: outputs.ChargePaymentMethodDetailsWechatPay;
+}
+
+export interface ChargePaymentMethodDetailsAchCreditTransfer {
+    /**
+     * Account number to transfer funds to.
+     */
+    accountNumber: string;
+    /**
+     * Name of the bank associated with the routing number.
+     */
+    bankName: string;
+    /**
+     * Routing transit number for the bank account to transfer funds to.
+     */
+    routingNumber: string;
+    /**
+     * SWIFT code of the bank associated with the routing number.
+     */
+    swiftCode: string;
+}
+
+export interface ChargePaymentMethodDetailsAchDebit {
+    /**
+     * Type of entity that holds the account. This can be either `individual` or `company`.
+     */
+    accountHolderType: string;
+    /**
+     * Name of the bank associated with the bank account.
+     */
+    bankName: string;
+    /**
+     * Two-letter ISO code representing the country the bank account is located in.
+     */
+    country: string;
+    /**
+     * Uniquely identifies this particular bank account. You can use this attribute to check whether two bank accounts are the same.
+     */
+    fingerprint: string;
+    /**
+     * Last four digits of the bank account number.
+     */
+    last4: string;
+    /**
+     * Routing transit number of the bank account.
+     */
+    routingNumber: string;
+}
+
+export interface ChargePaymentMethodDetailsAcssDebit {
+    /**
+     * Name of the bank associated with the bank account.
+     */
+    bankName: string;
+    /**
+     * Estimated date to debit the customer's bank account. A date string in YYYY-MM-DD format.
+     */
+    expectedDebitDate: string;
+    /**
+     * Uniquely identifies this particular bank account. You can use this attribute to check whether two bank accounts are the same.
+     */
+    fingerprint: string;
+    /**
+     * Institution number of the bank account
+     */
+    institutionNumber: string;
+    /**
+     * Last four digits of the bank account number.
+     */
+    last4: string;
+    /**
+     * ID of the mandate used to make this payment.
+     */
+    mandate: string;
+    /**
+     * Transit number of the bank account.
+     */
+    transitNumber: string;
+}
+
+export interface ChargePaymentMethodDetailsAffirm {
+    /**
+     * ID of the location that this reader is assigned to.
+     */
+    location: string;
+    /**
+     * ID of the reader this transaction was made on.
+     */
+    reader: string;
+    /**
+     * The Affirm transaction ID associated with this payment.
+     */
+    transactionId: string;
+}
+
+export interface ChargePaymentMethodDetailsAfterpayClearpay {
+    /**
+     * The Afterpay order ID associated with this payment intent.
+     */
+    orderId: string;
+    /**
+     * Order identifier shown to the merchant in Afterpay's online portal.
+     */
+    reference: string;
+}
+
+export interface ChargePaymentMethodDetailsAlipay {
+    /**
+     * Uniquely identifies this particular Alipay account. You can use this attribute to check whether two Alipay accounts are the same.
+     */
+    buyerId: string;
+    /**
+     * Uniquely identifies this particular Alipay account. You can use this attribute to check whether two Alipay accounts are the same.
+     */
+    fingerprint: string;
+    /**
+     * Transaction ID of this particular Alipay transaction.
+     */
+    transactionId: string;
+}
+
+export interface ChargePaymentMethodDetailsAlma {
+    installments: outputs.ChargePaymentMethodDetailsAlmaInstallments;
+    /**
+     * The Alma transaction ID associated with this payment.
+     */
+    transactionId: string;
+}
+
+export interface ChargePaymentMethodDetailsAlmaInstallments {
+    /**
+     * The number of installments.
+     */
+    count: number;
+}
+
+export interface ChargePaymentMethodDetailsAmazonPay {
+    funding: outputs.ChargePaymentMethodDetailsAmazonPayFunding;
+    /**
+     * The Amazon Pay transaction ID associated with this payment.
+     */
+    transactionId: string;
+}
+
+export interface ChargePaymentMethodDetailsAmazonPayFunding {
+    card: outputs.ChargePaymentMethodDetailsAmazonPayFundingCard;
+    /**
+     * funding type of the underlying payment method.
+     */
+    type: string;
+}
+
+export interface ChargePaymentMethodDetailsAmazonPayFundingCard {
+    /**
+     * Card brand. Can be `amex`, `cartesBancaires`, `diners`, `discover`, `eftposAu`, `jcb`, `link`, `mastercard`, `unionpay`, `visa` or `unknown`.
+     */
+    brand: string;
+    /**
+     * Two-letter ISO code representing the country of the card. You could use this attribute to get a sense of the international breakdown of cards you've collected.
+     */
+    country: string;
+    /**
+     * Two-digit number representing the card's expiration month.
+     */
+    expMonth: number;
+    /**
+     * Four-digit number representing the card's expiration year.
+     */
+    expYear: number;
+    /**
+     * Card funding type. Can be `credit`, `debit`, `prepaid`, or `unknown`.
+     */
+    funding: string;
+    /**
+     * The last four digits of the card.
+     */
+    last4: string;
+}
+
+export interface ChargePaymentMethodDetailsAuBecsDebit {
+    /**
+     * Bank-State-Branch number of the bank account.
+     */
+    bsbNumber: string;
+    /**
+     * Estimated date to debit the customer's bank account. A date string in YYYY-MM-DD format.
+     */
+    expectedDebitDate: string;
+    /**
+     * Uniquely identifies this particular bank account. You can use this attribute to check whether two bank accounts are the same.
+     */
+    fingerprint: string;
+    /**
+     * Last four digits of the bank account number.
+     */
+    last4: string;
+    /**
+     * ID of the mandate used to make this payment.
+     */
+    mandate: string;
+}
+
+export interface ChargePaymentMethodDetailsBacsDebit {
+    /**
+     * Estimated date to debit the customer's bank account. A date string in YYYY-MM-DD format.
+     */
+    expectedDebitDate: string;
+    /**
+     * Uniquely identifies this particular bank account. You can use this attribute to check whether two bank accounts are the same.
+     */
+    fingerprint: string;
+    /**
+     * Last four digits of the bank account number.
+     */
+    last4: string;
+    /**
+     * ID of the mandate used to make this payment.
+     */
+    mandate: string;
+    /**
+     * Sort code of the bank account. (e.g., `10-20-30`)
+     */
+    sortCode: string;
+}
+
+export interface ChargePaymentMethodDetailsBancontact {
+    /**
+     * Bank code of bank associated with the bank account.
+     */
+    bankCode: string;
+    /**
+     * Name of the bank associated with the bank account.
+     */
+    bankName: string;
+    /**
+     * Bank Identifier Code of the bank associated with the bank account.
+     */
+    bic: string;
+    /**
+     * The ID of the SEPA Direct Debit PaymentMethod which was generated by this Charge.
+     */
+    generatedSepaDebit: string;
+    /**
+     * The mandate for the SEPA Direct Debit PaymentMethod which was generated by this Charge.
+     */
+    generatedSepaDebitMandate: string;
+    /**
+     * Last four characters of the IBAN.
+     */
+    ibanLast4: string;
+    /**
+     * Preferred language of the Bancontact authorization page that the customer is redirected to.
+     * Can be one of `en`, `de`, `fr`, or `nl`
+     */
+    preferredLanguage: string;
+    /**
+     * Owner's verified full name. Values are verified or provided by Bancontact directly
+     * (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    verifiedName: string;
+}
+
+export interface ChargePaymentMethodDetailsBillie {
+    /**
+     * The Billie transaction ID associated with this payment.
+     */
+    transactionId: string;
+}
+
+export interface ChargePaymentMethodDetailsBizum {
+    /**
+     * The Bizum transaction ID associated with this payment.
+     */
+    transactionId: string;
+}
+
+export interface ChargePaymentMethodDetailsBlik {
+    /**
+     * A unique and immutable identifier assigned by BLIK to every buyer.
+     */
+    buyerId: string;
+}
+
+export interface ChargePaymentMethodDetailsBoleto {
+    /**
+     * The tax ID of the customer (CPF for individuals consumers or CNPJ for businesses consumers)
+     */
+    taxId: string;
+}
+
+export interface ChargePaymentMethodDetailsCard {
+    /**
+     * The authorized amount.
+     */
+    amountAuthorized: number;
+    /**
+     * Authorization code on the charge.
+     */
+    authorizationCode: string;
+    /**
+     * Card brand. Can be `amex`, `cartesBancaires`, `diners`, `discover`, `eftposAu`, `jcb`, `link`, `mastercard`, `unionpay`, `visa` or `unknown`.
+     */
+    brand: string;
+    /**
+     * When using manual capture, a future timestamp at which the charge will be automatically refunded if uncaptured.
+     */
+    captureBefore: number;
+    /**
+     * Check results by Card networks on Card address and CVC at time of payment.
+     */
+    checks: outputs.ChargePaymentMethodDetailsCardChecks;
+    /**
+     * Two-letter ISO code representing the country of the card. You could use this attribute to get a sense of the international breakdown of cards you've collected.
+     */
+    country: string;
+    /**
+     * A high-level description of the type of cards issued in this range. (For internal use only and not typically available in standard API requests.)
+     */
+    description: string;
+    /**
+     * Two-digit number representing the card's expiration month.
+     */
+    expMonth: number;
+    /**
+     * Four-digit number representing the card's expiration year.
+     */
+    expYear: number;
+    extendedAuthorization: outputs.ChargePaymentMethodDetailsCardExtendedAuthorization;
+    /**
+     * Uniquely identifies this particular card number. You can use this attribute to check whether two customers who’ve signed up with you are using the same card number, for example. For payment methods that tokenize card information (Apple Pay, Google Pay), the tokenized number might be provided instead of the underlying card number.
+     */
+    fingerprint: string;
+    /**
+     * Card funding type. Can be `credit`, `debit`, `prepaid`, or `unknown`.
+     */
+    funding: string;
+    /**
+     * Issuer identification number of the card. (For internal use only and not typically available in standard API requests.)
+     */
+    iin: string;
+    incrementalAuthorization: outputs.ChargePaymentMethodDetailsCardIncrementalAuthorization;
+    /**
+     * Installment details for this payment.
+     *
+     * For more information, see the [installments integration guide](https://docs.stripe.com/payments/installments).
+     */
+    installments: outputs.ChargePaymentMethodDetailsCardInstallments;
+    /**
+     * The name of the card's issuing bank. (For internal use only and not typically available in standard API requests.)
+     */
+    issuer: string;
+    /**
+     * The last four digits of the card.
+     */
+    last4: string;
+    /**
+     * ID of the mandate used to make this payment or created by it.
+     */
+    mandate: string;
+    /**
+     * True if this payment was marked as MOTO and out of scope for SCA.
+     */
+    moto: boolean;
+    multicapture: outputs.ChargePaymentMethodDetailsCardMulticapture;
+    /**
+     * Identifies which network this charge was processed on. Can be `amex`, `cartesBancaires`, `diners`, `discover`, `eftposAu`, `interac`, `jcb`, `link`, `mastercard`, `unionpay`, `visa`, or `unknown`.
+     */
+    network: string;
+    /**
+     * If this card has network token credentials, this contains the details of the network token credentials.
+     */
+    networkToken: outputs.ChargePaymentMethodDetailsCardNetworkToken;
+    /**
+     * This is used by the financial networks to identify a transaction. Visa calls this the Transaction ID, Mastercard calls this the Trace ID, and American Express calls this the Acquirer Reference Data. This value will be present if it is returned by the financial network in the authorization response, and null otherwise.
+     */
+    networkTransactionId: string;
+    overcapture: outputs.ChargePaymentMethodDetailsCardOvercapture;
+    /**
+     * Status of a card based on the card issuer.
+     */
+    regulatedStatus: string;
+    /**
+     * Populated if this transaction used 3D Secure authentication.
+     */
+    threeDSecure: outputs.ChargePaymentMethodDetailsCardThreeDSecure;
+    /**
+     * If this Card is part of a card wallet, this contains the details of the card wallet.
+     */
+    wallet: outputs.ChargePaymentMethodDetailsCardWallet;
+}
+
+export interface ChargePaymentMethodDetailsCardChecks {
+    /**
+     * If a address line1 was provided, results of the check, one of `pass`, `fail`, `unavailable`, or `unchecked`.
+     */
+    addressLine1Check: string;
+    /**
+     * If a address postal code was provided, results of the check, one of `pass`, `fail`, `unavailable`, or `unchecked`.
+     */
+    addressPostalCodeCheck: string;
+    /**
+     * If a CVC was provided, results of the check, one of `pass`, `fail`, `unavailable`, or `unchecked`.
+     */
+    cvcCheck: string;
+}
+
+export interface ChargePaymentMethodDetailsCardExtendedAuthorization {
+    /**
+     * Indicates whether or not the capture window is extended beyond the standard authorization.
+     */
+    status: string;
+}
+
+export interface ChargePaymentMethodDetailsCardIncrementalAuthorization {
+    /**
+     * Indicates whether or not the incremental authorization feature is supported.
+     */
+    status: string;
+}
+
+export interface ChargePaymentMethodDetailsCardInstallments {
+    /**
+     * Installment plan selected for the payment.
+     */
+    plan: outputs.ChargePaymentMethodDetailsCardInstallmentsPlan;
+}
+
+export interface ChargePaymentMethodDetailsCardInstallmentsPlan {
+    /**
+     * For `fixedCount` installment plans, this is the number of installment payments your customer will make to their credit card.
+     */
+    count: number;
+    /**
+     * For `fixedCount` installment plans, this is the interval between installment payments your customer will make to their credit card.
+     * One of `month`.
+     */
+    interval: string;
+    /**
+     * Type of installment plan, one of `fixedCount`, `bonus`, or `revolving`.
+     */
+    type: string;
+}
+
+export interface ChargePaymentMethodDetailsCardMulticapture {
+    /**
+     * Indicates whether or not multiple captures are supported.
+     */
+    status: string;
+}
+
+export interface ChargePaymentMethodDetailsCardNetworkToken {
+    /**
+     * Indicates if Stripe used a network token, either user provided or Stripe managed when processing the transaction.
+     */
+    used: boolean;
+}
+
+export interface ChargePaymentMethodDetailsCardOvercapture {
+    /**
+     * The maximum amount that can be captured.
+     */
+    maximumAmountCapturable: number;
+    /**
+     * Indicates whether or not the authorized amount can be over-captured.
+     */
+    status: string;
+}
+
+export interface ChargePaymentMethodDetailsCardPresent {
+    /**
+     * The authorized amount
+     */
+    amountAuthorized: number;
+    /**
+     * Card brand. Can be `amex`, `cartesBancaires`, `diners`, `discover`, `eftposAu`, `jcb`, `link`, `mastercard`, `unionpay`, `visa` or `unknown`.
+     */
+    brand: string;
+    /**
+     * The [product code](https://stripe.com/docs/card-product-codes) that identifies the specific program or product associated with a card.
+     */
+    brandProduct: string;
+    /**
+     * When using manual capture, a future timestamp after which the charge will be automatically refunded if uncaptured.
+     */
+    captureBefore: number;
+    /**
+     * The cardholder name as read from the card, in [ISO 7813](https://en.wikipedia.org/wiki/ISO/IEC_7813) format. May include alphanumeric characters, special characters and first/last name separator (`/`). In some cases, the cardholder name may not be available depending on how the issuer has configured the card. Cardholder name is typically not available on swipe or contactless payments, such as those made with Apple Pay and Google Pay.
+     */
+    cardholderName: string;
+    /**
+     * Two-letter ISO code representing the country of the card. You could use this attribute to get a sense of the international breakdown of cards you've collected.
+     */
+    country: string;
+    /**
+     * A high-level description of the type of cards issued in this range. (For internal use only and not typically available in standard API requests.)
+     */
+    description: string;
+    /**
+     * Authorization response cryptogram.
+     */
+    emvAuthData: string;
+    /**
+     * Two-digit number representing the card's expiration month.
+     */
+    expMonth: number;
+    /**
+     * Four-digit number representing the card's expiration year.
+     */
+    expYear: number;
+    /**
+     * Uniquely identifies this particular card number. You can use this attribute to check whether two customers who’ve signed up with you are using the same card number, for example. For payment methods that tokenize card information (Apple Pay, Google Pay), the tokenized number might be provided instead of the underlying card number.
+     */
+    fingerprint: string;
+    /**
+     * Card funding type. Can be `credit`, `debit`, `prepaid`, or `unknown`.
+     */
+    funding: string;
+    /**
+     * ID of a card PaymentMethod generated from the cardPresent PaymentMethod that may be attached to a Customer for future transactions. Only present if it was possible to generate a card PaymentMethod.
+     */
+    generatedCard: string;
+    /**
+     * Issuer identification number of the card. (For internal use only and not typically available in standard API requests.)
+     */
+    iin: string;
+    /**
+     * Whether this [PaymentIntent](https://docs.stripe.com/api/payment_intents) is eligible for incremental authorizations. Request support using [requestIncrementalAuthorizationSupport](https://docs.stripe.com/api/payment_intents/create#create_payment_intent-payment_method_options-card_present-request_incremental_authorization_support).
+     */
+    incrementalAuthorizationSupported: boolean;
+    /**
+     * The name of the card's issuing bank. (For internal use only and not typically available in standard API requests.)
+     */
+    issuer: string;
+    /**
+     * The last four digits of the card.
+     */
+    last4: string;
+    /**
+     * ID of the [location](https://docs.stripe.com/api/terminal/locations) that this transaction's reader is assigned to.
+     */
+    location: string;
+    /**
+     * Identifies which network this charge was processed on. Can be `amex`, `cartesBancaires`, `diners`, `discover`, `eftposAu`, `interac`, `jcb`, `link`, `mastercard`, `unionpay`, `visa`, or `unknown`.
+     */
+    network: string;
+    /**
+     * This is used by the financial networks to identify a transaction. Visa calls this the Transaction ID, Mastercard calls this the Trace ID, and American Express calls this the Acquirer Reference Data. This value will be present if it is returned by the financial network in the authorization response, and null otherwise.
+     */
+    networkTransactionId: string;
+    /**
+     * Details about payments collected offline.
+     */
+    offline: outputs.ChargePaymentMethodDetailsCardPresentOffline;
+    /**
+     * Defines whether the authorized amount can be over-captured or not
+     */
+    overcaptureSupported: boolean;
+    /**
+     * The languages that the issuing bank recommends using for localizing any customer-facing text, as read from the card. Referenced from EMV tag 5F2D, data encoded on the card's chip.
+     */
+    preferredLocales: string[];
+    /**
+     * How card details were read in this transaction.
+     */
+    readMethod: string;
+    /**
+     * ID of the [reader](https://docs.stripe.com/api/terminal/readers) this transaction was made on.
+     */
+    reader: string;
+    /**
+     * A collection of fields required to be displayed on receipts. Only required for EMV transactions.
+     */
+    receipt: outputs.ChargePaymentMethodDetailsCardPresentReceipt;
+    wallet: outputs.ChargePaymentMethodDetailsCardPresentWallet;
+}
+
+export interface ChargePaymentMethodDetailsCardPresentOffline {
+    /**
+     * Time at which the payment was collected while offline
+     */
+    storedAt: number;
+    /**
+     * The method used to process this payment method offline. Only deferred is allowed.
+     */
+    type: string;
+}
+
+export interface ChargePaymentMethodDetailsCardPresentReceipt {
+    /**
+     * The type of account being debited or credited
+     */
+    accountType: string;
+    /**
+     * The Application Cryptogram, a unique value generated by the card to authenticate the transaction with issuers.
+     */
+    applicationCryptogram: string;
+    /**
+     * The Application Identifier (AID) on the card used to determine which networks are eligible to process the transaction. Referenced from EMV tag 9F12, data encoded on the card's chip.
+     */
+    applicationPreferredName: string;
+    /**
+     * Identifier for this transaction.
+     */
+    authorizationCode: string;
+    /**
+     * EMV tag 8A. A code returned by the card issuer.
+     */
+    authorizationResponseCode: string;
+    /**
+     * Describes the method used by the cardholder to verify ownership of the card. One of the following: `approval`, `failure`, `none`, `offlinePin`, `offlinePinAndSignature`, `onlinePin`, or `signature`.
+     */
+    cardholderVerificationMethod: string;
+    /**
+     * Similar to the application*preferred*name, identifying the applications (AIDs) available on the card. Referenced from EMV tag 84.
+     */
+    dedicatedFileName: string;
+    /**
+     * A 5-byte string that records the checks and validations that occur between the card and the terminal. These checks determine how the terminal processes the transaction and what risk tolerance is acceptable. Referenced from EMV Tag 95.
+     */
+    terminalVerificationResults: string;
+    /**
+     * An indication of which steps were completed during the card read process. Referenced from EMV Tag 9B.
+     */
+    transactionStatusInformation: string;
+}
+
+export interface ChargePaymentMethodDetailsCardPresentWallet {
+    /**
+     * The type of mobile wallet, one of `applePay`, `googlePay`, `samsungPay`, or `unknown`.
+     */
+    type: string;
+}
+
+export interface ChargePaymentMethodDetailsCardThreeDSecure {
+    /**
+     * For authenticated transactions: how the customer was authenticated by
+     * the issuing bank.
+     */
+    authenticationFlow: string;
+    /**
+     * The Electronic Commerce Indicator (ECI). A protocol-level field
+     * indicating what degree of authentication was performed.
+     */
+    electronicCommerceIndicator: string;
+    /**
+     * The exemption requested via 3DS and accepted by the issuer at authentication time.
+     */
+    exemptionIndicator: string;
+    /**
+     * Whether Stripe requested the value of `exemptionIndicator` in the transaction. This will depend on
+     * the outcome of Stripe's internal risk assessment.
+     */
+    exemptionIndicatorApplied: boolean;
+    /**
+     * Indicates the outcome of 3D Secure authentication.
+     */
+    result: string;
+    /**
+     * Additional information about why 3D Secure succeeded or failed based
+     * on the `result`.
+     */
+    resultReason: string;
+    /**
+     * The 3D Secure 1 XID or 3D Secure 2 Directory Server Transaction ID
+     * (dsTransId) for this payment.
+     */
+    transactionId: string;
+    /**
+     * The version of 3D Secure that was used.
+     */
+    version: string;
+}
+
+export interface ChargePaymentMethodDetailsCardWallet {
+    /**
+     * (For tokenized numbers only.) The last four digits of the device account number.
+     */
+    dynamicLast4: string;
+    masterpass: outputs.ChargePaymentMethodDetailsCardWalletMasterpass;
+    /**
+     * The type of the card wallet, one of `amexExpressCheckout`, `applePay`, `googlePay`, `masterpass`, `samsungPay`, `visaCheckout`, or `link`. An additional hash is included on the Wallet subhash with a name matching this value. It contains additional information specific to the card wallet type.
+     */
+    type: string;
+    visaCheckout: outputs.ChargePaymentMethodDetailsCardWalletVisaCheckout;
+}
+
+export interface ChargePaymentMethodDetailsCardWalletMasterpass {
+    /**
+     * Owner's verified billing address. Values are verified or provided by the wallet directly (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    billingAddress: outputs.ChargePaymentMethodDetailsCardWalletMasterpassBillingAddress;
+    /**
+     * Owner's verified email. Values are verified or provided by the wallet directly (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    email: string;
+    /**
+     * Owner's verified full name. Values are verified or provided by the wallet directly (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    name: string;
+    /**
+     * Owner's verified shipping address. Values are verified or provided by the wallet directly (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    shippingAddress: outputs.ChargePaymentMethodDetailsCardWalletMasterpassShippingAddress;
+}
+
+export interface ChargePaymentMethodDetailsCardWalletMasterpassBillingAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1: string;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2: string;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: string;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state: string;
+}
+
+export interface ChargePaymentMethodDetailsCardWalletMasterpassShippingAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1: string;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2: string;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: string;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state: string;
+}
+
+export interface ChargePaymentMethodDetailsCardWalletVisaCheckout {
+    /**
+     * Owner's verified billing address. Values are verified or provided by the wallet directly (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    billingAddress: outputs.ChargePaymentMethodDetailsCardWalletVisaCheckoutBillingAddress;
+    /**
+     * Owner's verified email. Values are verified or provided by the wallet directly (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    email: string;
+    /**
+     * Owner's verified full name. Values are verified or provided by the wallet directly (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    name: string;
+    /**
+     * Owner's verified shipping address. Values are verified or provided by the wallet directly (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    shippingAddress: outputs.ChargePaymentMethodDetailsCardWalletVisaCheckoutShippingAddress;
+}
+
+export interface ChargePaymentMethodDetailsCardWalletVisaCheckoutBillingAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1: string;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2: string;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: string;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state: string;
+}
+
+export interface ChargePaymentMethodDetailsCardWalletVisaCheckoutShippingAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1: string;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2: string;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: string;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state: string;
+}
+
+export interface ChargePaymentMethodDetailsCashapp {
+    /**
+     * A unique and immutable identifier assigned by Cash App to every buyer.
+     */
+    buyerId: string;
+    /**
+     * A public identifier for buyers using Cash App.
+     */
+    cashtag: string;
+    /**
+     * A unique and immutable identifier of payments assigned by Cash App
+     */
+    transactionId: string;
+}
+
+export interface ChargePaymentMethodDetailsCrypto {
+    /**
+     * The wallet address of the customer.
+     */
+    buyerAddress: string;
+    /**
+     * The blockchain network that the transaction was sent on.
+     */
+    network: string;
+    /**
+     * The token currency that the transaction was sent with.
+     */
+    tokenCurrency: string;
+    /**
+     * The blockchain transaction hash of the crypto payment.
+     */
+    transactionHash: string;
+}
+
+export interface ChargePaymentMethodDetailsEps {
+    /**
+     * The customer's bank. Should be one of `arzteUndApothekerBank`, `austrianAnadiBankAg`, `bankAustria`, `bankhausCarlSpangler`, `bankhausSchelhammerUndSchatteraAg`, `bawagPskAg`, `bksBankAg`, `brullKallmusBankAg`, `btvVierLanderBank`, `capitalBankGraweGruppeAg`, `deutscheBankAg`, `dolomitenbank`, `easybankAg`, `ersteBankUndSparkassen`, `hypoAlpeadriabankInternationalAg`, `hypoNoeLbFurNiederosterreichUWien`, `hypoOberosterreichSalzburgSteiermark`, `hypoTirolBankAg`, `hypoVorarlbergBankAg`, `hypoBankBurgenlandAktiengesellschaft`, `marchfelderBank`, `oberbankAg`, `raiffeisenBankengruppeOsterreich`, `schoellerbankAg`, `spardaBankWien`, `volksbankGruppe`, `volkskreditbankAg`, or `vrBankBraunau`.
+     */
+    bank: string;
+    /**
+     * Owner's verified full name. Values are verified or provided by EPS directly
+     * (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     * EPS rarely provides this information so the attribute is usually empty.
+     */
+    verifiedName: string;
+}
+
+export interface ChargePaymentMethodDetailsFpx {
+    /**
+     * Account holder type, if provided. Can be one of `individual` or `company`.
+     */
+    accountHolderType: string;
+    /**
+     * The customer's bank. Can be one of `affinBank`, `agrobank`, `allianceBank`, `ambank`, `bankIslam`, `bankMuamalat`, `bankRakyat`, `bsn`, `cimb`, `hongLeongBank`, `hsbc`, `kfh`, `maybank2u`, `ocbc`, `publicBank`, `rhb`, `standardChartered`, `uob`, `deutscheBank`, `maybank2e`, `pbEnterprise`, or `bankOfChina`.
+     */
+    bank: string;
+    /**
+     * Unique transaction id generated by FPX for every request from the merchant
+     */
+    transactionId: string;
+}
+
+export interface ChargePaymentMethodDetailsGiropay {
+    /**
+     * Bank code of bank associated with the bank account.
+     */
+    bankCode: string;
+    /**
+     * Name of the bank associated with the bank account.
+     */
+    bankName: string;
+    /**
+     * Bank Identifier Code of the bank associated with the bank account.
+     */
+    bic: string;
+    /**
+     * Owner's verified full name. Values are verified or provided by Giropay directly
+     * (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     * Giropay rarely provides this information so the attribute is usually empty.
+     */
+    verifiedName: string;
+}
+
+export interface ChargePaymentMethodDetailsGrabpay {
+    /**
+     * Unique transaction id generated by GrabPay
+     */
+    transactionId: string;
+}
+
+export interface ChargePaymentMethodDetailsIdeal {
+    /**
+     * The customer's bank. Can be one of `abnAmro`, `adyen`, `asnBank`, `bunq`, `buut`, `finom`, `handelsbanken`, `ing`, `knab`, `mollie`, `moneyou`, `n26`, `nn`, `rabobank`, `regiobank`, `revolut`, `snsBank`, `triodosBank`, `vanLanschot`, or `yoursafe`.
+     */
+    bank: string;
+    /**
+     * The Bank Identifier Code of the customer's bank.
+     */
+    bic: string;
+    /**
+     * The ID of the SEPA Direct Debit PaymentMethod which was generated by this Charge.
+     */
+    generatedSepaDebit: string;
+    /**
+     * The mandate for the SEPA Direct Debit PaymentMethod which was generated by this Charge.
+     */
+    generatedSepaDebitMandate: string;
+    /**
+     * Last four characters of the IBAN.
+     */
+    ibanLast4: string;
+    /**
+     * Unique transaction ID generated by iDEAL.
+     */
+    transactionId: string;
+    /**
+     * Owner's verified full name. Values are verified or provided by iDEAL directly
+     * (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    verifiedName: string;
+}
+
+export interface ChargePaymentMethodDetailsInteracPresent {
+    /**
+     * Card brand. Can be `interac`, `mastercard` or `visa`.
+     */
+    brand: string;
+    /**
+     * The cardholder name as read from the card, in [ISO 7813](https://en.wikipedia.org/wiki/ISO/IEC_7813) format. May include alphanumeric characters, special characters and first/last name separator (`/`). In some cases, the cardholder name may not be available depending on how the issuer has configured the card. Cardholder name is typically not available on swipe or contactless payments, such as those made with Apple Pay and Google Pay.
+     */
+    cardholderName: string;
+    /**
+     * Two-letter ISO code representing the country of the card. You could use this attribute to get a sense of the international breakdown of cards you've collected.
+     */
+    country: string;
+    /**
+     * A high-level description of the type of cards issued in this range. (For internal use only and not typically available in standard API requests.)
+     */
+    description: string;
+    /**
+     * Authorization response cryptogram.
+     */
+    emvAuthData: string;
+    /**
+     * Two-digit number representing the card's expiration month.
+     */
+    expMonth: number;
+    /**
+     * Four-digit number representing the card's expiration year.
+     */
+    expYear: number;
+    /**
+     * Uniquely identifies this particular card number. You can use this attribute to check whether two customers who’ve signed up with you are using the same card number, for example. For payment methods that tokenize card information (Apple Pay, Google Pay), the tokenized number might be provided instead of the underlying card number.
+     */
+    fingerprint: string;
+    /**
+     * Card funding type. Can be `credit`, `debit`, `prepaid`, or `unknown`.
+     */
+    funding: string;
+    /**
+     * ID of a card PaymentMethod generated from the cardPresent PaymentMethod that may be attached to a Customer for future transactions. Only present if it was possible to generate a card PaymentMethod.
+     */
+    generatedCard: string;
+    /**
+     * Issuer identification number of the card. (For internal use only and not typically available in standard API requests.)
+     */
+    iin: string;
+    /**
+     * The name of the card's issuing bank. (For internal use only and not typically available in standard API requests.)
+     */
+    issuer: string;
+    /**
+     * The last four digits of the card.
+     */
+    last4: string;
+    /**
+     * ID of the [location](https://docs.stripe.com/api/terminal/locations) that this transaction's reader is assigned to.
+     */
+    location: string;
+    /**
+     * Identifies which network this charge was processed on. Can be `amex`, `cartesBancaires`, `diners`, `discover`, `eftposAu`, `interac`, `jcb`, `link`, `mastercard`, `unionpay`, `visa`, or `unknown`.
+     */
+    network: string;
+    /**
+     * This is used by the financial networks to identify a transaction. Visa calls this the Transaction ID, Mastercard calls this the Trace ID, and American Express calls this the Acquirer Reference Data. This value will be present if it is returned by the financial network in the authorization response, and null otherwise.
+     */
+    networkTransactionId: string;
+    /**
+     * The languages that the issuing bank recommends using for localizing any customer-facing text, as read from the card. Referenced from EMV tag 5F2D, data encoded on the card's chip.
+     */
+    preferredLocales: string[];
+    /**
+     * How card details were read in this transaction.
+     */
+    readMethod: string;
+    /**
+     * ID of the [reader](https://docs.stripe.com/api/terminal/readers) this transaction was made on.
+     */
+    reader: string;
+    /**
+     * A collection of fields required to be displayed on receipts. Only required for EMV transactions.
+     */
+    receipt: outputs.ChargePaymentMethodDetailsInteracPresentReceipt;
+}
+
+export interface ChargePaymentMethodDetailsInteracPresentReceipt {
+    /**
+     * The type of account being debited or credited
+     */
+    accountType: string;
+    /**
+     * The Application Cryptogram, a unique value generated by the card to authenticate the transaction with issuers.
+     */
+    applicationCryptogram: string;
+    /**
+     * The Application Identifier (AID) on the card used to determine which networks are eligible to process the transaction. Referenced from EMV tag 9F12, data encoded on the card's chip.
+     */
+    applicationPreferredName: string;
+    /**
+     * Identifier for this transaction.
+     */
+    authorizationCode: string;
+    /**
+     * EMV tag 8A. A code returned by the card issuer.
+     */
+    authorizationResponseCode: string;
+    /**
+     * Describes the method used by the cardholder to verify ownership of the card. One of the following: `approval`, `failure`, `none`, `offlinePin`, `offlinePinAndSignature`, `onlinePin`, or `signature`.
+     */
+    cardholderVerificationMethod: string;
+    /**
+     * Similar to the application*preferred*name, identifying the applications (AIDs) available on the card. Referenced from EMV tag 84.
+     */
+    dedicatedFileName: string;
+    /**
+     * A 5-byte string that records the checks and validations that occur between the card and the terminal. These checks determine how the terminal processes the transaction and what risk tolerance is acceptable. Referenced from EMV Tag 95.
+     */
+    terminalVerificationResults: string;
+    /**
+     * An indication of which steps were completed during the card read process. Referenced from EMV Tag 9B.
+     */
+    transactionStatusInformation: string;
+}
+
+export interface ChargePaymentMethodDetailsKakaoPay {
+    /**
+     * A unique identifier for the buyer as determined by the local payment processor.
+     */
+    buyerId: string;
+    /**
+     * The Kakao Pay transaction ID associated with this payment.
+     */
+    transactionId: string;
+}
+
+export interface ChargePaymentMethodDetailsKlarna {
+    /**
+     * ID of the [location](https://docs.stripe.com/api/terminal/locations) that this transaction's reader is assigned to.
+     */
+    location: string;
+    /**
+     * The payer details for this transaction.
+     */
+    payerDetails: outputs.ChargePaymentMethodDetailsKlarnaPayerDetails;
+    /**
+     * The Klarna payment method used for this transaction.
+     * Can be one of `payLater`, `payNow`, `payWithFinancing`, or `payInInstallments`
+     */
+    paymentMethodCategory: string;
+    /**
+     * Preferred language of the Klarna authorization page that the customer is redirected to.
+     * Can be one of `de-AT`, `en-AT`, `nl-BE`, `fr-BE`, `en-BE`, `de-DE`, `en-DE`, `da-DK`, `en-DK`, `es-ES`, `en-ES`, `fi-FI`, `sv-FI`, `en-FI`, `en-GB`, `en-IE`, `it-IT`, `en-IT`, `nl-NL`, `en-NL`, `nb-NO`, `en-NO`, `sv-SE`, `en-SE`, `en-US`, `es-US`, `fr-FR`, `en-FR`, `cs-CZ`, `en-CZ`, `ro-RO`, `en-RO`, `el-GR`, `en-GR`, `en-AU`, `en-NZ`, `en-CA`, `fr-CA`, `pl-PL`, `en-PL`, `pt-PT`, `en-PT`, `de-CH`, `fr-CH`, `it-CH`, or `en-CH`
+     */
+    preferredLocale: string;
+    /**
+     * ID of the [reader](https://docs.stripe.com/api/terminal/readers) this transaction was made on.
+     */
+    reader: string;
+}
+
+export interface ChargePaymentMethodDetailsKlarnaPayerDetails {
+    /**
+     * The payer's address
+     */
+    address: outputs.ChargePaymentMethodDetailsKlarnaPayerDetailsAddress;
+}
+
+export interface ChargePaymentMethodDetailsKlarnaPayerDetailsAddress {
+    /**
+     * The payer address country
+     */
+    country: string;
+}
+
+export interface ChargePaymentMethodDetailsKonbini {
+    /**
+     * If the payment succeeded, this contains the details of the convenience store where the payment was completed.
+     */
+    store: outputs.ChargePaymentMethodDetailsKonbiniStore;
+}
+
+export interface ChargePaymentMethodDetailsKonbiniStore {
+    /**
+     * The name of the convenience store chain where the payment was completed.
+     */
+    chain: string;
+}
+
+export interface ChargePaymentMethodDetailsKrCard {
+    /**
+     * The local credit or debit card brand.
+     */
+    brand: string;
+    /**
+     * A unique identifier for the buyer as determined by the local payment processor.
+     */
+    buyerId: string;
+    /**
+     * The last four digits of the card. This may not be present for American Express cards.
+     */
+    last4: string;
+    /**
+     * The Korean Card transaction ID associated with this payment.
+     */
+    transactionId: string;
+}
+
+export interface ChargePaymentMethodDetailsLink {
+    /**
+     * Two-letter ISO code representing the funding source country beneath the Link payment.
+     * You could use this attribute to get a sense of international fees.
+     */
+    country: string;
+}
+
+export interface ChargePaymentMethodDetailsMobilepay {
+    /**
+     * Internal card details
+     */
+    card: outputs.ChargePaymentMethodDetailsMobilepayCard;
+}
+
+export interface ChargePaymentMethodDetailsMobilepayCard {
+    /**
+     * Brand of the card used in the transaction
+     */
+    brand: string;
+    /**
+     * Two-letter ISO code representing the country of the card
+     */
+    country: string;
+    /**
+     * Two digit number representing the card's expiration month
+     */
+    expMonth: number;
+    /**
+     * Two digit number representing the card's expiration year
+     */
+    expYear: number;
+    /**
+     * The last 4 digits of the card
+     */
+    last4: string;
+}
+
+export interface ChargePaymentMethodDetailsMultibanco {
+    /**
+     * Entity number associated with this Multibanco payment.
+     */
+    entity: string;
+    /**
+     * Reference number associated with this Multibanco payment.
+     */
+    reference: string;
+}
+
+export interface ChargePaymentMethodDetailsNaverPay {
+    /**
+     * A unique identifier for the buyer as determined by the local payment processor.
+     */
+    buyerId: string;
+    /**
+     * The Naver Pay transaction ID associated with this payment.
+     */
+    transactionId: string;
+}
+
+export interface ChargePaymentMethodDetailsNzBankAccount {
+    /**
+     * The name on the bank account. Only present if the account holder name is different from the name of the authorized signatory collected in the PaymentMethod’s billing details.
+     */
+    accountHolderName: string;
+    /**
+     * The numeric code for the bank account's bank.
+     */
+    bankCode: string;
+    /**
+     * The name of the bank.
+     */
+    bankName: string;
+    /**
+     * The numeric code for the bank account's bank branch.
+     */
+    branchCode: string;
+    /**
+     * Estimated date to debit the customer's bank account. A date string in YYYY-MM-DD format.
+     */
+    expectedDebitDate: string;
+    /**
+     * Last four digits of the bank account number.
+     */
+    last4: string;
+    /**
+     * The suffix of the bank account number.
+     */
+    suffix: string;
+}
+
+export interface ChargePaymentMethodDetailsOxxo {
+    /**
+     * OXXO reference number
+     */
+    number: string;
+}
+
+export interface ChargePaymentMethodDetailsP24 {
+    /**
+     * The customer's bank. Can be one of `ing`, `citiHandlowy`, `tmobileUsbugiBankowe`, `plusBank`, `etransferPocztowy24`, `bankiSpbdzielcze`, `bankNowyBfgSa`, `getinBank`, `velobank`, `blik`, `noblePay`, `ideabank`, `envelobank`, `santanderPrzelew24`, `nestPrzelew`, `mbankMtransfer`, `inteligo`, `pbacZIpko`, `bnpParibas`, `creditAgricole`, `toyotaBank`, `bankPekaoSa`, `volkswagenBank`, `bankMillennium`, `aliorBank`, or `boz`.
+     */
+    bank: string;
+    /**
+     * Unique reference for this Przelewy24 payment.
+     */
+    reference: string;
+    /**
+     * Owner's verified full name. Values are verified or provided by Przelewy24 directly
+     * (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     * Przelewy24 rarely provides this information so the attribute is usually empty.
+     */
+    verifiedName: string;
+}
+
+export interface ChargePaymentMethodDetailsPayco {
+    /**
+     * A unique identifier for the buyer as determined by the local payment processor.
+     */
+    buyerId: string;
+    /**
+     * The Payco transaction ID associated with this payment.
+     */
+    transactionId: string;
+}
+
+export interface ChargePaymentMethodDetailsPaynow {
+    /**
+     * ID of the [location](https://docs.stripe.com/api/terminal/locations) that this transaction's reader is assigned to.
+     */
+    location: string;
+    /**
+     * ID of the [reader](https://docs.stripe.com/api/terminal/readers) this transaction was made on.
+     */
+    reader: string;
+    /**
+     * Reference number associated with this PayNow payment
+     */
+    reference: string;
+}
+
+export interface ChargePaymentMethodDetailsPaypal {
+    /**
+     * Two-letter ISO code representing the buyer's country. Values are provided by PayPal directly (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    country: string;
+    /**
+     * Owner's email. Values are provided by PayPal directly
+     * (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    payerEmail: string;
+    /**
+     * PayPal account PayerID. This identifier uniquely identifies the PayPal customer.
+     */
+    payerId: string;
+    /**
+     * Owner's full name. Values provided by PayPal directly
+     * (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    payerName: string;
+    /**
+     * The level of protection offered as defined by PayPal Seller Protection for Merchants, for this transaction.
+     */
+    sellerProtection: outputs.ChargePaymentMethodDetailsPaypalSellerProtection;
+    /**
+     * A unique ID generated by PayPal for this transaction.
+     */
+    transactionId: string;
+}
+
+export interface ChargePaymentMethodDetailsPaypalSellerProtection {
+    /**
+     * An array of conditions that are covered for the transaction, if applicable.
+     */
+    disputeCategories: string[];
+    /**
+     * Indicates whether the transaction is eligible for PayPal's seller protection.
+     */
+    status: string;
+}
+
+export interface ChargePaymentMethodDetailsPayto {
+    /**
+     * Bank-State-Branch number of the bank account.
+     */
+    bsbNumber: string;
+    /**
+     * Last four digits of the bank account number.
+     */
+    last4: string;
+    /**
+     * ID of the mandate used to make this payment.
+     */
+    mandate: string;
+    /**
+     * The PayID alias for the bank account.
+     */
+    payId: string;
+}
+
+export interface ChargePaymentMethodDetailsPix {
+    /**
+     * Unique transaction id generated by BCB
+     */
+    bankTransactionId: string;
+    /**
+     * ID of the multi use Mandate generated by the PaymentIntent
+     */
+    mandate: string;
+}
+
+export interface ChargePaymentMethodDetailsPromptpay {
+    /**
+     * Bill reference generated by PromptPay
+     */
+    reference: string;
+}
+
+export interface ChargePaymentMethodDetailsRevolutPay {
+    funding: outputs.ChargePaymentMethodDetailsRevolutPayFunding;
+    /**
+     * The Revolut Pay transaction ID associated with this payment.
+     */
+    transactionId: string;
+}
+
+export interface ChargePaymentMethodDetailsRevolutPayFunding {
+    card: outputs.ChargePaymentMethodDetailsRevolutPayFundingCard;
+    /**
+     * funding type of the underlying payment method.
+     */
+    type: string;
+}
+
+export interface ChargePaymentMethodDetailsRevolutPayFundingCard {
+    /**
+     * Card brand. Can be `amex`, `cartesBancaires`, `diners`, `discover`, `eftposAu`, `jcb`, `link`, `mastercard`, `unionpay`, `visa` or `unknown`.
+     */
+    brand: string;
+    /**
+     * Two-letter ISO code representing the country of the card. You could use this attribute to get a sense of the international breakdown of cards you've collected.
+     */
+    country: string;
+    /**
+     * Two-digit number representing the card's expiration month.
+     */
+    expMonth: number;
+    /**
+     * Four-digit number representing the card's expiration year.
+     */
+    expYear: number;
+    /**
+     * Card funding type. Can be `credit`, `debit`, `prepaid`, or `unknown`.
+     */
+    funding: string;
+    /**
+     * The last four digits of the card.
+     */
+    last4: string;
+}
+
+export interface ChargePaymentMethodDetailsSamsungPay {
+    /**
+     * A unique identifier for the buyer as determined by the local payment processor.
+     */
+    buyerId: string;
+    /**
+     * The Samsung Pay transaction ID associated with this payment.
+     */
+    transactionId: string;
+}
+
+export interface ChargePaymentMethodDetailsSatispay {
+    /**
+     * The Satispay transaction ID associated with this payment.
+     */
+    transactionId: string;
+}
+
+export interface ChargePaymentMethodDetailsScalapay {
+    /**
+     * The Scalapay transaction ID associated with this payment.
+     */
+    transactionId: string;
+}
+
+export interface ChargePaymentMethodDetailsSepaCreditTransfer {
+    /**
+     * Name of the bank associated with the bank account.
+     */
+    bankName: string;
+    /**
+     * Bank Identifier Code of the bank associated with the bank account.
+     */
+    bic: string;
+    /**
+     * IBAN of the bank account to transfer funds to.
+     */
+    iban: string;
+}
+
+export interface ChargePaymentMethodDetailsSepaDebit {
+    /**
+     * Bank code of bank associated with the bank account.
+     */
+    bankCode: string;
+    /**
+     * Branch code of bank associated with the bank account.
+     */
+    branchCode: string;
+    /**
+     * Two-letter ISO code representing the country the bank account is located in.
+     */
+    country: string;
+    /**
+     * Estimated date to debit the customer's bank account. A date string in YYYY-MM-DD format.
+     */
+    expectedDebitDate: string;
+    /**
+     * Uniquely identifies this particular bank account. You can use this attribute to check whether two bank accounts are the same.
+     */
+    fingerprint: string;
+    /**
+     * Last four characters of the IBAN.
+     */
+    last4: string;
+    /**
+     * Find the ID of the mandate used for this payment under the [payment*method*details.sepa_debit.mandate](https://docs.stripe.com/api/charges/object#charge_object-payment_method_details-sepa_debit-mandate) property on the Charge. Use this mandate ID to [retrieve the Mandate](https://docs.stripe.com/api/mandates/retrieve).
+     */
+    mandate: string;
+}
+
+export interface ChargePaymentMethodDetailsSofort {
+    /**
+     * Bank code of bank associated with the bank account.
+     */
+    bankCode: string;
+    /**
+     * Name of the bank associated with the bank account.
+     */
+    bankName: string;
+    /**
+     * Bank Identifier Code of the bank associated with the bank account.
+     */
+    bic: string;
+    /**
+     * Two-letter ISO code representing the country the bank account is located in.
+     */
+    country: string;
+    /**
+     * The ID of the SEPA Direct Debit PaymentMethod which was generated by this Charge.
+     */
+    generatedSepaDebit: string;
+    /**
+     * The mandate for the SEPA Direct Debit PaymentMethod which was generated by this Charge.
+     */
+    generatedSepaDebitMandate: string;
+    /**
+     * Last four characters of the IBAN.
+     */
+    ibanLast4: string;
+    /**
+     * Preferred language of the SOFORT authorization page that the customer is redirected to.
+     * Can be one of `de`, `en`, `es`, `fr`, `it`, `nl`, or `pl`
+     */
+    preferredLanguage: string;
+    /**
+     * Owner's verified full name. Values are verified or provided by SOFORT directly
+     * (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    verifiedName: string;
+}
+
+export interface ChargePaymentMethodDetailsSunbit {
+    /**
+     * The Sunbit transaction ID associated with this payment.
+     */
+    transactionId: string;
+}
+
+export interface ChargePaymentMethodDetailsSwish {
+    /**
+     * Uniquely identifies the payer's Swish account. You can use this attribute to check whether two Swish transactions were paid for by the same payer
+     */
+    fingerprint: string;
+    /**
+     * Payer bank reference number for the payment
+     */
+    paymentReference: string;
+    /**
+     * The last four digits of the Swish account phone number
+     */
+    verifiedPhoneLast4: string;
+}
+
+export interface ChargePaymentMethodDetailsTwint {
+    /**
+     * ID of the multi use Mandate generated by the PaymentIntent
+     */
+    mandate: string;
+}
+
+export interface ChargePaymentMethodDetailsUpi {
+    /**
+     * Customer's unique Virtual Payment Address.
+     */
+    vpa: string;
+}
+
+export interface ChargePaymentMethodDetailsUsBankAccount {
+    /**
+     * Account holder type: individual or company.
+     */
+    accountHolderType: string;
+    /**
+     * Account type: checkings or savings. Defaults to checking if omitted.
+     */
+    accountType: string;
+    /**
+     * Name of the bank associated with the bank account.
+     */
+    bankName: string;
+    /**
+     * Estimated date to debit the customer's bank account. A date string in YYYY-MM-DD format.
+     */
+    expectedDebitDate: string;
+    /**
+     * Uniquely identifies this particular bank account. You can use this attribute to check whether two bank accounts are the same.
+     */
+    fingerprint: string;
+    /**
+     * Last four digits of the bank account number.
+     */
+    last4: string;
+    /**
+     * ID of the mandate used to make this payment.
+     */
+    mandate: string;
+    /**
+     * Reference number to locate ACH payments with customer's bank.
+     */
+    paymentReference: string;
+    /**
+     * Routing number of the bank account.
+     */
+    routingNumber: string;
+}
+
+export interface ChargePaymentMethodDetailsWechatPay {
+    /**
+     * Uniquely identifies this particular WeChat Pay account. You can use this attribute to check whether two WeChat accounts are the same.
+     */
+    fingerprint: string;
+    /**
+     * ID of the [location](https://docs.stripe.com/api/terminal/locations) that this transaction's reader is assigned to.
+     */
+    location: string;
+    /**
+     * ID of the [reader](https://docs.stripe.com/api/terminal/readers) this transaction was made on.
+     */
+    reader: string;
+    /**
+     * Transaction ID of this particular WeChat Pay transaction.
+     */
+    transactionId: string;
+}
+
+export interface ChargePresentmentDetails {
+    /**
+     * Amount intended to be collected by this payment, denominated in `presentmentCurrency`.
+     */
+    presentmentAmount: number;
+    /**
+     * Currency presented to the customer during payment.
+     */
+    presentmentCurrency: string;
+}
+
+export interface ChargeRadarOptions {
+    /**
+     * A [Radar Session](https://docs.stripe.com/radar/radar-session) is a snapshot of the browser metadata and device details that help Radar make more accurate predictions on your payments.
+     */
+    session: string;
+}
+
+export interface ChargeShipping {
+    address: outputs.ChargeShippingAddress;
+    /**
+     * The delivery service that shipped a physical product, such as Fedex, UPS, USPS, etc.
+     */
+    carrier: string;
+    /**
+     * Recipient name.
+     */
+    name: string;
+    /**
+     * Recipient phone (including extension).
+     */
+    phone: string;
+    /**
+     * The tracking number for a physical product, obtained from the delivery service. If multiple tracking numbers were generated for this purchase, please separate them with commas.
+     */
+    trackingNumber: string;
+}
+
+export interface ChargeShippingAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1: string;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2: string;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: string;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state: string;
+}
+
+export interface ChargeTransferData {
+    /**
+     * The amount transferred to the destination account, if specified. By default, the entire charge amount is transferred to the destination account.
+     */
+    amount: number;
+    /**
+     * An arbitrary string attached to the transfer. Often useful for displaying to users.
+     */
+    description?: string;
+    /**
+     * ID of an existing, connected Stripe account to transfer funds to if `transferData` was specified in the charge request.
+     */
+    destination: string;
+}
+
+export interface ClimateOrderBeneficiary {
+    /**
+     * Publicly displayable name for the end beneficiary of carbon removal.
+     */
+    publicName: string;
+}
+
+export interface ClimateOrderDeliveryDetail {
+    /**
+     * Time at which the delivery occurred. Measured in seconds since the Unix epoch.
+     */
+    deliveredAt: number;
+    /**
+     * Specific location of this delivery.
+     */
+    location: outputs.ClimateOrderDeliveryDetailLocation;
+    /**
+     * Quantity of carbon removal supplied by this delivery.
+     */
+    metricTons: string;
+    /**
+     * Once retired, a URL to the registry entry for the tons from this delivery.
+     */
+    registryUrl: string;
+    /**
+     * A supplier of carbon removal.
+     */
+    supplier: string;
+}
+
+export interface ClimateOrderDeliveryDetailLocation {
+    /**
+     * The city where the supplier is located.
+     */
+    city: string;
+    /**
+     * Two-letter ISO code representing the country where the supplier is located.
+     */
+    country: string;
+    /**
+     * The geographic latitude where the supplier is located.
+     */
+    latitude: number;
+    /**
+     * The geographic longitude where the supplier is located.
+     */
+    longitude: number;
+    /**
+     * The state/county/province/region where the supplier is located.
+     */
+    region: string;
+}
+
 export interface CouponAppliesTo {
     /**
-     * An array of Product IDs that this Coupon will apply to.
+     * A list of product IDs this coupon applies to
      */
     products: string[];
 }
 
 export interface CouponCurrencyOption {
     /**
-     * A positive integer representing the amount to subtract from an invoice total.
+     * Amount (in the `currency` specified) that will be taken off the subtotal of any invoices for this customer.
      */
     amountOff: number;
+    /**
+     * Key for this entry.
+     */
     key: string;
 }
 
-export interface CouponScript {
+export interface CreditNoteDiscountAmount {
     /**
-     * The configuration values of the script. The keys and values are specific to the script implementation.
+     * The amount, in cents (or local equivalent), of the discount.
      */
-    configuration: {[key: string]: string};
+    amount: number;
     /**
-     * The name of the script used to calculate the discount.
+     * The discount that was applied to get this discount amount.
      */
-    displayName: string;
+    discount: string;
+}
+
+export interface CreditNotePretaxCreditAmount {
     /**
-     * The script implementation ID for this coupon.
+     * The amount, in cents (or local equivalent), of the pretax credit amount.
      */
-    id: string;
+    amount: number;
+    /**
+     * The credit balance transaction that was applied to get this pretax credit amount.
+     */
+    creditBalanceTransaction: string;
+    /**
+     * The discount that was applied to get this pretax credit amount.
+     */
+    discount: string;
+    /**
+     * Type of the pretax credit amount referenced.
+     */
+    type: string;
+}
+
+export interface CreditNoteRefund {
+    /**
+     * Amount of the refund that applies to this credit note, in cents (or local equivalent).
+     */
+    amountRefunded: number;
+    /**
+     * The PaymentRecord refund details associated with this credit note refund.
+     */
+    paymentRecordRefund: outputs.CreditNoteRefundPaymentRecordRefund;
+    /**
+     * ID of the refund.
+     */
+    refund: string;
+    /**
+     * Type of the refund, one of `refund` or `paymentRecordRefund`.
+     */
+    type: string;
+}
+
+export interface CreditNoteRefundPaymentRecordRefund {
+    /**
+     * ID of the payment record.
+     */
+    paymentRecord: string;
+    /**
+     * ID of the refund group.
+     */
+    refundGroup: string;
+}
+
+export interface CreditNoteShippingCost {
+    /**
+     * Total shipping cost before any taxes are applied.
+     */
+    amountSubtotal: number;
+    /**
+     * Total tax amount applied due to shipping costs. If no tax was applied, defaults to 0.
+     */
+    amountTax: number;
+    /**
+     * Total shipping cost after taxes are applied.
+     */
+    amountTotal: number;
+    /**
+     * The ID of the ShippingRate for this invoice.
+     */
+    shippingRate: string;
+    /**
+     * The taxes applied to the shipping rate.
+     */
+    taxes: outputs.CreditNoteShippingCostTax[];
+}
+
+export interface CreditNoteShippingCostTax {
+    /**
+     * Amount of tax applied for this rate.
+     */
+    amount: number;
+    /**
+     * Tax rates can be applied to [invoices](https://www.terraform.io/invoicing/taxes/tax-rates), [subscriptions](https://www.terraform.io/billing/taxes/tax-rates) and [Checkout Sessions](https://www.terraform.io/payments/checkout/use-manual-tax-rates) to collect tax.
+     */
+    rate: string;
+    /**
+     * The reasoning behind this tax, for example, if the product is tax exempt. The possible values for this field may be extended as new tax rules are supported.
+     */
+    taxabilityReason: string;
+    /**
+     * The amount on which tax is calculated, in cents (or local equivalent).
+     */
+    taxableAmount: number;
+}
+
+export interface CreditNoteTotalTax {
+    /**
+     * The amount of the tax, in cents (or local equivalent).
+     */
+    amount: number;
+    /**
+     * Whether this tax is inclusive or exclusive.
+     */
+    taxBehavior: string;
+    /**
+     * Additional details about the tax rate. Only present when `type` is `taxRateDetails`.
+     */
+    taxRateDetails: outputs.CreditNoteTotalTaxTaxRateDetails;
+    /**
+     * The reasoning behind this tax, for example, if the product is tax exempt. The possible values for this field may be extended as new tax rules are supported.
+     */
+    taxabilityReason: string;
+    /**
+     * The amount on which tax is calculated, in cents (or local equivalent).
+     */
+    taxableAmount: number;
+    /**
+     * The type of tax information.
+     */
+    type: string;
+}
+
+export interface CreditNoteTotalTaxTaxRateDetails {
+    /**
+     * ID of the tax rate
+     */
+    taxRate: string;
 }
 
 export interface CustomerAddress {
     /**
      * City, district, suburb, town, or village.
      */
-    city?: string;
+    city: string;
     /**
-     * A freeform text field for the country. However, in order to activate some tax features, the format should be a two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
      */
-    country?: string;
+    country: string;
     /**
      * Address line 1, such as the street, PO Box, or company name.
      */
-    line1?: string;
+    line1: string;
     /**
      * Address line 2, such as the apartment, suite, unit, or building.
      */
-    line2?: string;
+    line2: string;
     /**
      * ZIP or postal code.
      */
-    postalCode?: string;
+    postalCode: string;
     /**
-     * State, county, province, or region.
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
      */
-    state?: string;
+    state: string;
 }
 
 export interface CustomerCashBalance {
     /**
-     * A hash of all cash balances available to this customer. You cannot delete a customer with any cash balances, even if the balance is 0. Amounts are represented in the [smallest currency unit](https://stripe.com/docs/currencies#zero-decimal).
+     * A hash of all cash balances available to this customer. You cannot delete a customer with any cash balances, even if the balance is 0. Amounts are represented in the [smallest currency unit](https://docs.stripe.com/currencies#zero-decimal).
      */
-    available: {[key: string]: string};
+    available: {[key: string]: number};
     /**
      * The ID of the customer whose cash balance this object represents.
      */
     customer: string;
     /**
-     * The ID of the account whose cash balance this object represents.
+     * The ID of an Account representing a customer whose cash balance this object represents.
      */
     customerAccount: string;
     /**
-     * Settings controlling the behavior of the customer's cash balance, such as reconciliation of funds received.
+     * If the object exists in live mode, the value is `true`. If the object exists in test mode, the value is `false`.
      */
+    livemode: boolean;
+    /**
+     * String representing the object's type. Objects of the same type share the same value.
+     */
+    object: string;
     settings?: outputs.CustomerCashBalanceSettings;
 }
 
 export interface CustomerCashBalanceSettings {
     /**
-     * Controls how funds transferred by the customer are applied to payment intents and invoices. Valid options are `automatic`, `manual`, or `merchantDefault`. For more information about these reconciliation modes, see [Reconciliation](https://stripe.com/docs/payments/customer-balance/reconciliation).
+     * The configuration for how funds that land in the customer cash balance are reconciled.
      */
-    reconciliationMode?: string;
+    reconciliationMode: string;
+    /**
+     * A flag to indicate if reconciliation mode returned is the user's default or is specific to this customer cash balance
+     */
+    usingMerchantDefault: boolean;
 }
 
 export interface CustomerInvoiceSettings {
-    customFields?: any[][];
+    /**
+     * Default custom fields to be displayed on invoices for this customer.
+     */
+    customFields: outputs.CustomerInvoiceSettingsCustomField[];
     /**
      * ID of a payment method that's attached to the customer, to be used as the customer's default payment method for subscriptions and invoices.
      */
-    defaultPaymentMethod?: string;
+    defaultPaymentMethod: string;
     /**
      * Default footer to be displayed on invoices for this customer.
      */
-    footer?: string;
+    footer: string;
+    /**
+     * Default options for invoice PDF rendering for this customer.
+     */
     renderingOptions?: outputs.CustomerInvoiceSettingsRenderingOptions;
+}
+
+export interface CustomerInvoiceSettingsCustomField {
+    /**
+     * The name of the custom field.
+     */
+    name: string;
+    /**
+     * The value of the custom field.
+     */
+    value: string;
 }
 
 export interface CustomerInvoiceSettingsRenderingOptions {
     /**
-     * How line-item prices and amounts will be displayed with respect to tax on invoice PDFs. One of `excludeTax` or `includeInclusiveTax`. `includeInclusiveTax` will include inclusive tax (and exclude exclusive tax) in invoice PDF amounts. `excludeTax` will exclude all tax (inclusive and exclusive alike) from invoice PDF amounts.
+     * How line-item prices and amounts will be displayed with respect to tax on invoice PDFs.
      */
-    amountTaxDisplay?: string;
+    amountTaxDisplay: string;
     /**
-     * ID of the invoice rendering template to use for future invoices.
+     * ID of the invoice rendering template to be used for this customer's invoices. If set, the template will be used on all invoices for this customer unless a template is set directly on the invoice.
      */
-    template?: string;
+    template: string;
 }
 
 export interface CustomerShipping {
-    /**
-     * Customer shipping address.
-     */
-    address: outputs.CustomerShippingAddress;
+    address?: outputs.CustomerShippingAddress;
     /**
      * The delivery service that shipped a physical product, such as Fedex, UPS, USPS, etc.
      */
     carrier: string;
     /**
-     * Customer name.
+     * Recipient name.
      */
     name: string;
     /**
-     * Customer phone (including extension).
+     * Recipient phone (including extension).
      */
-    phone?: string;
+    phone: string;
     /**
      * The tracking number for a physical product, obtained from the delivery service. If multiple tracking numbers were generated for this purchase, please separate them with commas.
      */
@@ -164,27 +2503,27 @@ export interface CustomerShippingAddress {
     /**
      * City, district, suburb, town, or village.
      */
-    city?: string;
+    city: string;
     /**
-     * A freeform text field for the country. However, in order to activate some tax features, the format should be a two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
      */
-    country?: string;
+    country: string;
     /**
      * Address line 1, such as the street, PO Box, or company name.
      */
-    line1?: string;
+    line1: string;
     /**
      * Address line 2, such as the apartment, suite, unit, or building.
      */
-    line2?: string;
+    line2: string;
     /**
      * ZIP or postal code.
      */
-    postalCode?: string;
+    postalCode: string;
     /**
-     * State, county, province, or region.
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
      */
-    state?: string;
+    state: string;
 }
 
 export interface CustomerTax {
@@ -192,7 +2531,14 @@ export interface CustomerTax {
      * Surfaces if automatic tax computation is possible given the current customer location information.
      */
     automaticTax: string;
-    ipAddress?: string;
+    /**
+     * A recent IP address of the customer used for tax reporting and tax location inference.
+     */
+    ipAddress: string;
+    /**
+     * The identified tax location of the customer.
+     */
+    locations?: outputs.CustomerTaxLocation[];
     /**
      * The tax calculation provider used for location resolution. Defaults to `stripe` when not using a [third-party provider](https://www.terraform.io/tax/third-party-apps).
      */
@@ -205,7 +2551,7 @@ export interface CustomerTax {
 
 export interface CustomerTaxIdData {
     /**
-     * Type of the tax ID, one of `adNrt`, `aeTrn`, `alTin`, `amTin`, `aoTin`, `arCuit`, `auAbn`, `auArn`, `awTin`, `azTin`, `baTin`, `bbTin`, `bdBin`, `bfIfu`, `bgUic`, `bhVat`, `bjIfu`, `boTin`, `brCnpj`, `brCpf`, `bsTin`, `byTin`, `caBn`, `caGstHst`, `caPstBc`, `caPstMb`, `caPstSk`, `caQst`, `cdNif`, `chUid`, `chVat`, `clTin`, `cmNiu`, `cnTin`, `coNit`, `crTin`, `cvNif`, `deStn`, `doRcn`, `ecRuc`, `egTin`, `esCif`, `etTin`, `euOssVat`, `euVat`, `gbVat`, `geVat`, `gnNif`, `hkBr`, `hrOib`, `huTin`, `idNpwp`, `ilVat`, `inGst`, `isVat`, `jpCn`, `jpRn`, `jpTrn`, `kePin`, `kgTin`, `khTin`, `krBrn`, `kzBin`, `laTin`, `liUid`, `liVat`, `maVat`, `mdVat`, `mePib`, `mkVat`, `mrNif`, `mxRfc`, `myFrp`, `myItn`, `mySst`, `ngTin`, `noVat`, `noVoec`, `npPan`, `nzGst`, `omVat`, `peRuc`, `phTin`, `roTin`, `rsPib`, `ruInn`, `ruKpp`, `saVat`, `sgGst`, `sgUen`, `siTin`, `snNinea`, `srFin`, `svNit`, `thVat`, `tjTin`, `trTin`, `twVat`, `tzVat`, `uaVat`, `ugTin`, `usEin`, `uyRuc`, `uzTin`, `uzVat`, `veRif`, `vnTin`, `zaVat`, `zmTin`, or `zwTin`
+     * Type of the tax ID, one of `adNrt`, `aeTrn`, `alTin`, `amTin`, `aoTin`, `arCuit`, `auAbn`, `auArn`, `awTin`, `azTin`, `baTin`, `bbTin`, `bdBin`, `bfIfu`, `bgUic`, `bhVat`, `bjIfu`, `boTin`, `brCnpj`, `brCpf`, `bsTin`, `byTin`, `caBn`, `caGstHst`, `caPstBc`, `caPstMb`, `caPstSk`, `caQst`, `cdNif`, `chUid`, `chVat`, `clTin`, `cmNiu`, `cnTin`, `coNit`, `crTin`, `cvNif`, `deStn`, `doRcn`, `ecRuc`, `egTin`, `esCif`, `etTin`, `euOssVat`, `euVat`, `foVat`, `gbVat`, `geVat`, `giTin`, `gnNif`, `hkBr`, `hrOib`, `huTin`, `idNpwp`, `ilVat`, `inGst`, `isVat`, `itCf`, `jpCn`, `jpRn`, `jpTrn`, `kePin`, `kgTin`, `khTin`, `krBrn`, `kzBin`, `laTin`, `liUid`, `liVat`, `lkVat`, `maVat`, `mdVat`, `mePib`, `mkVat`, `mrNif`, `mxRfc`, `myFrp`, `myItn`, `mySst`, `ngTin`, `noVat`, `noVoec`, `npPan`, `nzGst`, `omVat`, `peRuc`, `phTin`, `plNip`, `pyRuc`, `roTin`, `rsPib`, `ruInn`, `ruKpp`, `saVat`, `sgGst`, `sgUen`, `siTin`, `snNinea`, `srFin`, `svNit`, `thVat`, `tjTin`, `trTin`, `twVat`, `tzVat`, `uaVat`, `ugTin`, `usEin`, `uyRuc`, `uzTin`, `uzVat`, `veRif`, `vnTin`, `zaVat`, `zmTin`, or `zwTin`
      */
     type: string;
     /**
@@ -214,26 +2560,8085 @@ export interface CustomerTaxIdData {
     value: string;
 }
 
+export interface CustomerTaxLocation {
+    /**
+     * The identified tax country of the customer.
+     */
+    country: string;
+    /**
+     * The data source used to infer the customer's location.
+     */
+    source: string;
+    /**
+     * The identified tax state, county, province, or region of the customer.
+     */
+    state: string;
+}
+
+export interface FileFileLinkData {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Set this to `true` to create a file link for the newly created file. Creating a link is only possible when the file's `purpose` is one of the following: `businessIcon`, `businessLogo`, `customerSignature`, `disputeEvidence`, `issuingRegulatoryReporting`, `pciDocument`, `taxDocumentUserUpload`, `terminalAndroidApk`, or `terminalReaderSplashscreen`.
+     */
+    create: boolean;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The link isn't available after this future timestamp.
+     */
+    expiresAt?: number;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
+     */
+    metadata?: {[key: string]: string};
+}
+
+export interface InvoiceAutomaticTax {
+    /**
+     * If Stripe disabled automatic tax, this enum describes why.
+     */
+    disabledReason: string;
+    /**
+     * Whether Stripe automatically computes tax on this invoice. Note that incompatible invoice items (invoice items with manually specified [tax rates](https://docs.stripe.com/api/tax_rates), negative amounts, or `tax_behavior=unspecified`) cannot be added to automatic tax invoices.
+     */
+    enabled: boolean;
+    /**
+     * The account that's liable for tax. If set, the business address and tax registrations required to perform the tax calculation are loaded from this account. The tax transaction is returned in the report of the connected account.
+     */
+    liability: outputs.InvoiceAutomaticTaxLiability;
+    /**
+     * The tax provider powering automatic tax.
+     */
+    provider: string;
+    /**
+     * The status of the most recent automated tax calculation for this invoice.
+     */
+    status: string;
+}
+
+export interface InvoiceAutomaticTaxLiability {
+    /**
+     * The connected account being referenced when `type` is `account`.
+     */
+    account: string;
+    /**
+     * Type of the account referenced.
+     */
+    type: string;
+}
+
+export interface InvoiceConfirmationSecret {
+    /**
+     * The clientSecret of the payment that Stripe creates for the invoice after finalization.
+     */
+    clientSecret: string;
+    /**
+     * The type of client*secret. Currently this is always payment*intent, referencing the default paymentIntent that Stripe creates during invoice finalization
+     */
+    type: string;
+}
+
+export interface InvoiceCustomField {
+    /**
+     * The name of the custom field.
+     */
+    name: string;
+    /**
+     * The value of the custom field.
+     */
+    value: string;
+}
+
+export interface InvoiceCustomerAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1: string;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2: string;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: string;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state: string;
+}
+
+export interface InvoiceCustomerShipping {
+    address: outputs.InvoiceCustomerShippingAddress;
+    /**
+     * The delivery service that shipped a physical product, such as Fedex, UPS, USPS, etc.
+     */
+    carrier: string;
+    /**
+     * Recipient name.
+     */
+    name: string;
+    /**
+     * Recipient phone (including extension).
+     */
+    phone: string;
+    /**
+     * The tracking number for a physical product, obtained from the delivery service. If multiple tracking numbers were generated for this purchase, please separate them with commas.
+     */
+    trackingNumber: string;
+}
+
+export interface InvoiceCustomerShippingAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1: string;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2: string;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: string;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state: string;
+}
+
+export interface InvoiceCustomerTaxId {
+    /**
+     * The type of the tax ID, one of `adNrt`, `arCuit`, `euVat`, `boTin`, `brCnpj`, `brCpf`, `cnTin`, `coNit`, `crTin`, `doRcn`, `ecRuc`, `euOssVat`, `hrOib`, `peRuc`, `roTin`, `rsPib`, `svNit`, `uyRuc`, `veRif`, `vnTin`, `gbVat`, `nzGst`, `auAbn`, `auArn`, `inGst`, `noVat`, `noVoec`, `zaVat`, `chVat`, `mxRfc`, `sgUen`, `ruInn`, `ruKpp`, `caBn`, `hkBr`, `esCif`, `plNip`, `itCf`, `foVat`, `giTin`, `pyRuc`, `twVat`, `thVat`, `jpCn`, `jpRn`, `jpTrn`, `liUid`, `liVat`, `lkVat`, `myItn`, `usEin`, `krBrn`, `caQst`, `caGstHst`, `caPstBc`, `caPstMb`, `caPstSk`, `mySst`, `sgGst`, `aeTrn`, `clTin`, `saVat`, `idNpwp`, `myFrp`, `ilVat`, `geVat`, `uaVat`, `isVat`, `bgUic`, `huTin`, `siTin`, `kePin`, `trTin`, `egTin`, `phTin`, `alTin`, `bhVat`, `kzBin`, `ngTin`, `omVat`, `deStn`, `chUid`, `tzVat`, `uzVat`, `uzTin`, `mdVat`, `maVat`, `byTin`, `aoTin`, `bsTin`, `bbTin`, `cdNif`, `mrNif`, `mePib`, `zwTin`, `baTin`, `gnNif`, `mkVat`, `srFin`, `snNinea`, `amTin`, `npPan`, `tjTin`, `ugTin`, `zmTin`, `khTin`, `awTin`, `azTin`, `bdBin`, `bjIfu`, `etTin`, `kgTin`, `laTin`, `cmNiu`, `cvNif`, `bfIfu`, or `unknown`
+     */
+    type: string;
+    /**
+     * The value of the tax ID.
+     */
+    value: string;
+}
+
+export interface InvoiceDiscount {
+    /**
+     * ID of the coupon to create a new discount for.
+     */
+    coupon?: string;
+    /**
+     * ID of an existing discount on the object (or one of its ancestors) to reuse.
+     */
+    discount?: string;
+    /**
+     * ID of the promotion code to create a new discount for.
+     */
+    promotionCode?: string;
+}
+
+export interface InvoiceFromInvoice {
+    /**
+     * The relation between this invoice and the cloned invoice
+     */
+    action: string;
+    /**
+     * The invoice that was cloned.
+     */
+    invoice: string;
+}
+
+export interface InvoiceIssuer {
+    /**
+     * The connected account being referenced when `type` is `account`.
+     */
+    account: string;
+    /**
+     * Type of the account referenced.
+     */
+    type: string;
+}
+
+export interface InvoiceItemDiscount {
+    /**
+     * ID of the coupon to create a new discount for.
+     */
+    coupon?: string;
+    /**
+     * ID of an existing discount on the object (or one of its ancestors) to reuse.
+     */
+    discount?: string;
+    /**
+     * ID of the promotion code to create a new discount for.
+     */
+    promotionCode?: string;
+}
+
+export interface InvoiceItemParent {
+    /**
+     * Details about the subscription that generated this invoice item
+     */
+    subscriptionDetails: outputs.InvoiceItemParentSubscriptionDetails;
+    /**
+     * The type of parent that generated this invoice item
+     */
+    type: string;
+}
+
+export interface InvoiceItemParentSubscriptionDetails {
+    /**
+     * The subscription that generated this invoice item
+     */
+    subscription: string;
+    /**
+     * The subscription item that generated this invoice item
+     */
+    subscriptionItem: string;
+}
+
+export interface InvoiceItemPeriod {
+    /**
+     * The end of the period, which must be greater than or equal to the start. This value is inclusive.
+     */
+    end: number;
+    /**
+     * The start of the period. This value is inclusive.
+     */
+    start: number;
+}
+
+export interface InvoiceItemPriceData {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+     */
+    currency: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The ID of the [Product](https://docs.stripe.com/api/products) that this [Price](https://docs.stripe.com/api/prices) will belong to.
+     */
+    product: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Only required if a [default tax behavior](<https://docs.stripe.com/tax/products-prices-tax-categories-tax-behavior#setting-a-default-tax-behavior-(recommended)>) was not provided in the Stripe Tax settings. Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
+     */
+    taxBehavior?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge.
+     */
+    unitAmount?: number;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Same as `unitAmount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unitAmount` and `unitAmountDecimal` can be set.
+     */
+    unitAmountDecimal?: number;
+}
+
+export interface InvoiceItemPricing {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The ID of the price object.
+     */
+    price?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     */
+    priceDetails?: outputs.InvoiceItemPricingPriceDetails;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The type of the pricing details.
+     */
+    type?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The unit amount (in the `currency` specified) of the item which contains a decimal value with at most 12 decimal places.
+     */
+    unitAmountDecimal?: number;
+}
+
+export interface InvoiceItemPricingPriceDetails {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The ID of the price this item is associated with.
+     */
+    price?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The ID of the product this item is associated with.
+     */
+    product?: string;
+}
+
+export interface InvoiceItemProrationDetails {
+    /**
+     * For a credit proration, links to the debit invoice line items or invoice item that the credit applies to.
+     */
+    creditedItems: outputs.InvoiceItemProrationDetailsCreditedItems;
+    /**
+     * Discount amounts applied when the proration was created.
+     */
+    discountAmounts: outputs.InvoiceItemProrationDetailsDiscountAmount[];
+}
+
+export interface InvoiceItemProrationDetailsCreditedItems {
+    /**
+     * When `type` is `invoiceItem`, the invoice item id for the debited invoice item corresponding to this credit proration.
+     */
+    invoiceItem: string;
+    invoiceLineItemDetails: outputs.InvoiceItemProrationDetailsCreditedItemsInvoiceLineItemDetails;
+    /**
+     * Whether the credit references a pending invoice item or one or more invoice line items on an invoice.
+     */
+    type: string;
+}
+
+export interface InvoiceItemProrationDetailsCreditedItemsInvoiceLineItemDetails {
+    /**
+     * The invoice id for the debited line item(s).
+     */
+    invoice: string;
+    /**
+     * IDs of the debited invoice line item(s) on the invoice that correspond to the credit proration.
+     */
+    invoiceLineItems: string[];
+}
+
+export interface InvoiceItemProrationDetailsDiscountAmount {
+    /**
+     * The amount, in cents (or local equivalent), of the discount.
+     */
+    amount: number;
+    /**
+     * The discount that was applied to get this discount amount.
+     */
+    discount: string;
+}
+
+export interface InvoiceLastFinalizationError {
+    /**
+     * For card errors resulting from a card issuer decline, a short string indicating [how to proceed with an error](https://docs.stripe.com/declines#retrying-issuer-declines) if they provide one.
+     */
+    adviceCode: string;
+    /**
+     * For card errors, the ID of the failed charge.
+     */
+    charge: string;
+    /**
+     * For some errors that could be handled programmatically, a short string indicating the [error code](https://docs.stripe.com/error-codes) reported.
+     */
+    code: string;
+    /**
+     * For card errors resulting from a card issuer decline, a short string indicating the [card issuer's reason for the decline](https://docs.stripe.com/declines#issuer-declines) if they provide one.
+     */
+    declineCode: string;
+    /**
+     * A URL to more information about the [error code](https://docs.stripe.com/error-codes) reported.
+     */
+    docUrl: string;
+    /**
+     * A human-readable message providing more details about the error. For card errors, these messages can be shown to your users.
+     */
+    message: string;
+    /**
+     * For card errors resulting from a card issuer decline, a 2 digit code which indicates the advice given to merchant by the card network on how to proceed with an error.
+     */
+    networkAdviceCode: string;
+    /**
+     * For payments declined by the network, an alphanumeric code which indicates the reason the payment failed.
+     */
+    networkDeclineCode: string;
+    /**
+     * If the error is parameter-specific, the parameter related to the error. For example, you can use this to display a message near the correct form field.
+     */
+    param: string;
+    /**
+     * A PaymentIntent guides you through the process of collecting a payment from your customer.
+     * We recommend that you create exactly one PaymentIntent for each order or
+     * customer session in your system. You can reference the PaymentIntent later to
+     * see the history of payment attempts for a particular session.
+     */
+    paymentIntent: string;
+    /**
+     * PaymentMethod objects represent your customer's payment instruments.
+     * You can use them with [PaymentIntents](https://docs.stripe.com/payments/payment-intents) to collect payments or save them to
+     * Customer objects to store instrument details for future payments.
+     *
+     * Related guides: [Payment Methods](https://docs.stripe.com/payments/payment-methods) and [More Payment Scenarios](https://docs.stripe.com/payments/more-payment-scenarios).
+     */
+    paymentMethod: string;
+    /**
+     * If the error is specific to the type of payment method, the payment method type that had a problem. This field is only populated for invoice-related errors.
+     */
+    paymentMethodType: string;
+    /**
+     * A URL to the request log entry in your dashboard.
+     */
+    requestLogUrl: string;
+    /**
+     * A SetupIntent guides you through the process of setting up and saving a customer's payment credentials for future payments.
+     * For example, you can use a SetupIntent to set up and save your customer's card without immediately collecting a payment.
+     * Later, you can use [PaymentIntents](https://api.stripe.com#payment_intents) to drive the payment flow.
+     *
+     * Create a SetupIntent when you're ready to collect your customer's payment credentials.
+     * Don't maintain long-lived, unconfirmed SetupIntents because they might not be valid.
+     * The SetupIntent transitions through multiple [statuses](https://docs.stripe.com/payments/intents#intent-statuses) as it guides
+     * you through the setup process.
+     *
+     * Successful SetupIntents result in payment credentials that are optimized for future payments.
+     * For example, cardholders in [certain regions](https://stripe.com/guides/strong-customer-authentication) might need to be run through
+     * [Strong Customer Authentication](https://docs.stripe.com/strong-customer-authentication) during payment method collection
+     * to streamline later [off-session payments](https://docs.stripe.com/payments/setup-intents).
+     * If you use the SetupIntent with a [Customer](https://api.stripe.com#setup_intent_object-customer),
+     * it automatically attaches the resulting payment method to that Customer after successful setup.
+     * We recommend using SetupIntents or [setupFutureUsage](https://api.stripe.com#payment_intent_object-setup_future_usage) on
+     * PaymentIntents to save payment methods to prevent saving invalid or unoptimized payment methods.
+     *
+     * By using SetupIntents, you can reduce friction for your customers, even as regulations change over time.
+     *
+     * Related guide: [Setup Intents API](https://docs.stripe.com/payments/setup-intents)
+     */
+    setupIntent: string;
+    source: string;
+    /**
+     * The type of error returned. One of `apiError`, `cardError`, `idempotencyError`, or `invalidRequestError`
+     */
+    type: string;
+}
+
+export interface InvoiceParent {
+    /**
+     * Details about the quote that generated this invoice
+     */
+    quoteDetails: outputs.InvoiceParentQuoteDetails;
+    /**
+     * Details about the subscription that generated this invoice
+     */
+    subscriptionDetails: outputs.InvoiceParentSubscriptionDetails;
+    /**
+     * The type of parent that generated this invoice
+     */
+    type: string;
+}
+
+export interface InvoiceParentQuoteDetails {
+    /**
+     * The quote that generated this invoice
+     */
+    quote: string;
+}
+
+export interface InvoiceParentSubscriptionDetails {
+    /**
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) defined as subscription metadata when an invoice is created. Becomes an immutable snapshot of the subscription metadata at the time of invoice finalization.
+     * *Note: This attribute is populated only for invoices created on or after June 29, 2023.*
+     */
+    metadata: {[key: string]: string};
+    /**
+     * The subscription that generated this invoice
+     */
+    subscription: string;
+    /**
+     * Only set for upcoming invoices that preview prorations. The time used to calculate prorations.
+     */
+    subscriptionProrationDate: number;
+}
+
+export interface InvoicePaymentSettings {
+    /**
+     * ID of the mandate to be used for this invoice. It must correspond to the payment method used to pay the invoice, including the invoice's default*payment*method or default_source, if set.
+     */
+    defaultMandate: string;
+    /**
+     * Payment-method-specific configuration to provide to the invoice’s PaymentIntent.
+     */
+    paymentMethodOptions: outputs.InvoicePaymentSettingsPaymentMethodOptions;
+    /**
+     * The list of payment method types (e.g. card) to provide to the invoice’s PaymentIntent. If not set, Stripe attempts to automatically determine the types to use by looking at the invoice’s default payment method, the subscription’s default payment method, the customer’s default payment method, and your [invoice template settings](https://dashboard.stripe.com/settings/billing/invoice).
+     */
+    paymentMethodTypes: string[];
+}
+
+export interface InvoicePaymentSettingsPaymentMethodOptions {
+    /**
+     * If paying by `acssDebit`, this sub-hash contains details about the Canadian pre-authorized debit payment method options to pass to the invoice’s PaymentIntent.
+     */
+    acssDebit: outputs.InvoicePaymentSettingsPaymentMethodOptionsAcssDebit;
+    /**
+     * If paying by `bancontact`, this sub-hash contains details about the Bancontact payment method options to pass to the invoice’s PaymentIntent.
+     */
+    bancontact: outputs.InvoicePaymentSettingsPaymentMethodOptionsBancontact;
+    /**
+     * If paying by `card`, this sub-hash contains details about the Card payment method options to pass to the invoice’s PaymentIntent.
+     */
+    card: outputs.InvoicePaymentSettingsPaymentMethodOptionsCard;
+    /**
+     * If paying by `customerBalance`, this sub-hash contains details about the Bank transfer payment method options to pass to the invoice’s PaymentIntent.
+     */
+    customerBalance: outputs.InvoicePaymentSettingsPaymentMethodOptionsCustomerBalance;
+    /**
+     * If paying by `payto`, this sub-hash contains details about the PayTo payment method options to pass to the invoice’s PaymentIntent.
+     */
+    payto: outputs.InvoicePaymentSettingsPaymentMethodOptionsPayto;
+    /**
+     * If paying by `pix`, this sub-hash contains details about the Pix payment method options to pass to the invoice’s PaymentIntent.
+     */
+    pix: outputs.InvoicePaymentSettingsPaymentMethodOptionsPix;
+    /**
+     * If paying by `upi`, this sub-hash contains details about the UPI payment method options to pass to the invoice’s PaymentIntent.
+     */
+    upi: outputs.InvoicePaymentSettingsPaymentMethodOptionsUpi;
+    /**
+     * If paying by `usBankAccount`, this sub-hash contains details about the ACH direct debit payment method options to pass to the invoice’s PaymentIntent.
+     */
+    usBankAccount: outputs.InvoicePaymentSettingsPaymentMethodOptionsUsBankAccount;
+}
+
+export interface InvoicePaymentSettingsPaymentMethodOptionsAcssDebit {
+    mandateOptions: outputs.InvoicePaymentSettingsPaymentMethodOptionsAcssDebitMandateOptions;
+    /**
+     * Bank account verification method. The default value is `automatic`.
+     */
+    verificationMethod: string;
+}
+
+export interface InvoicePaymentSettingsPaymentMethodOptionsAcssDebitMandateOptions {
+    /**
+     * Transaction type of the mandate.
+     */
+    transactionType: string;
+}
+
+export interface InvoicePaymentSettingsPaymentMethodOptionsBancontact {
+    /**
+     * Preferred language of the Bancontact authorization page that the customer is redirected to.
+     */
+    preferredLanguage: string;
+}
+
+export interface InvoicePaymentSettingsPaymentMethodOptionsCard {
+    installments: outputs.InvoicePaymentSettingsPaymentMethodOptionsCardInstallments;
+    /**
+     * We strongly recommend that you rely on our SCA Engine to automatically prompt your customers for authentication based on risk level and [other requirements](https://docs.stripe.com/strong-customer-authentication). However, if you wish to request 3D Secure based on logic from your own fraud engine, provide this option. Read our guide on [manually requesting 3D Secure](https://docs.stripe.com/payments/3d-secure/authentication-flow#manual-three-ds) for more information on how this configuration interacts with Radar and our SCA Engine.
+     */
+    requestThreeDSecure: string;
+}
+
+export interface InvoicePaymentSettingsPaymentMethodOptionsCardInstallments {
+    /**
+     * Whether Installments are enabled for this Invoice.
+     */
+    enabled: boolean;
+    /**
+     * The selected installment plan to use for this invoice.
+     */
+    plan?: outputs.InvoicePaymentSettingsPaymentMethodOptionsCardInstallmentsPlan;
+}
+
+export interface InvoicePaymentSettingsPaymentMethodOptionsCardInstallmentsPlan {
+    /**
+     * For `fixedCount` installment plans, this is required. It represents the number of installment payments your customer will make to their credit card.
+     */
+    count?: number;
+    /**
+     * For `fixedCount` installment plans, this is required. It represents the interval between installment payments your customer will make to their credit card.
+     * One of `month`.
+     */
+    interval?: string;
+    /**
+     * Type of installment plan, one of `fixedCount`, `bonus`, or `revolving`.
+     */
+    type: string;
+}
+
+export interface InvoicePaymentSettingsPaymentMethodOptionsCustomerBalance {
+    bankTransfer: outputs.InvoicePaymentSettingsPaymentMethodOptionsCustomerBalanceBankTransfer;
+    /**
+     * The funding method type to be used when there are not enough funds in the customer balance. Permitted values include: `bankTransfer`.
+     */
+    fundingType: string;
+}
+
+export interface InvoicePaymentSettingsPaymentMethodOptionsCustomerBalanceBankTransfer {
+    euBankTransfer: outputs.InvoicePaymentSettingsPaymentMethodOptionsCustomerBalanceBankTransferEuBankTransfer;
+    /**
+     * The bank transfer type that can be used for funding. Permitted values include: `euBankTransfer`, `gbBankTransfer`, `jpBankTransfer`, `mxBankTransfer`, or `usBankTransfer`.
+     */
+    type: string;
+}
+
+export interface InvoicePaymentSettingsPaymentMethodOptionsCustomerBalanceBankTransferEuBankTransfer {
+    /**
+     * The desired country code of the bank account information. Permitted values include: `DE`, `FR`, `IE`, or `NL`.
+     */
+    country: string;
+}
+
+export interface InvoicePaymentSettingsPaymentMethodOptionsPayto {
+    mandateOptions: outputs.InvoicePaymentSettingsPaymentMethodOptionsPaytoMandateOptions;
+}
+
+export interface InvoicePaymentSettingsPaymentMethodOptionsPaytoMandateOptions {
+    /**
+     * The maximum amount that can be collected in a single invoice. If you don't specify a maximum, then there is no limit.
+     */
+    amount: number;
+    /**
+     * Only `maximum` is supported.
+     */
+    amountType: string;
+    /**
+     * The purpose for which payments are made. Has a default value based on your merchant category code.
+     */
+    purpose: string;
+}
+
+export interface InvoicePaymentSettingsPaymentMethodOptionsPix {
+    /**
+     * Determines if the amount includes the IOF tax.
+     */
+    amountIncludesIof: string;
+    /**
+     * The number of seconds (between 10 and 1209600) after which Pix payment will expire. Defaults to 86400 seconds.
+     */
+    expiresAfterSeconds: number;
+}
+
+export interface InvoicePaymentSettingsPaymentMethodOptionsUpi {
+    mandateOptions: outputs.InvoicePaymentSettingsPaymentMethodOptionsUpiMandateOptions;
+}
+
+export interface InvoicePaymentSettingsPaymentMethodOptionsUpiMandateOptions {
+    /**
+     * Amount to be charged for future payments.
+     */
+    amount: number;
+    /**
+     * One of `fixed` or `maximum`. If `fixed`, the `amount` param refers to the exact amount to be charged in future payments. If `maximum`, the amount charged can be up to the value passed for the `amount` param.
+     */
+    amountType: string;
+    /**
+     * A description of the mandate or subscription that is meant to be displayed to the customer.
+     */
+    description: string;
+    /**
+     * End date of the mandate or subscription.
+     */
+    endDate: number;
+}
+
+export interface InvoicePaymentSettingsPaymentMethodOptionsUsBankAccount {
+    financialConnections: outputs.InvoicePaymentSettingsPaymentMethodOptionsUsBankAccountFinancialConnections;
+    /**
+     * Bank account verification method. The default value is `automatic`.
+     */
+    verificationMethod: string;
+}
+
+export interface InvoicePaymentSettingsPaymentMethodOptionsUsBankAccountFinancialConnections {
+    filters: outputs.InvoicePaymentSettingsPaymentMethodOptionsUsBankAccountFinancialConnectionsFilters;
+    /**
+     * The list of permissions to request. The `paymentMethod` permission must be included.
+     */
+    permissions: string[];
+    /**
+     * Data features requested to be retrieved upon account creation.
+     */
+    prefetches: string[];
+}
+
+export interface InvoicePaymentSettingsPaymentMethodOptionsUsBankAccountFinancialConnectionsFilters {
+    /**
+     * The account subcategories to use to filter for possible accounts to link. Valid subcategories are `checking` and `savings`.
+     */
+    accountSubcategories: string[];
+}
+
+export interface InvoiceRendering {
+    /**
+     * How line-item prices and amounts will be displayed with respect to tax on invoice PDFs.
+     */
+    amountTaxDisplay: string;
+    /**
+     * Invoice pdf rendering options
+     */
+    pdf: outputs.InvoiceRenderingPdf;
+    /**
+     * ID of the rendering template that the invoice is formatted by.
+     */
+    template: string;
+    /**
+     * Version of the rendering template that the invoice is using.
+     */
+    templateVersion: number;
+}
+
+export interface InvoiceRenderingPdf {
+    /**
+     * Page size of invoice pdf. Options include a4, letter, and auto. If set to auto, page size will be switched to a4 or letter based on customer locale.
+     */
+    pageSize: string;
+}
+
+export interface InvoiceShippingCost {
+    /**
+     * Total shipping cost before any taxes are applied.
+     */
+    amountSubtotal: number;
+    /**
+     * Total tax amount applied due to shipping costs. If no tax was applied, defaults to 0.
+     */
+    amountTax: number;
+    /**
+     * Total shipping cost after taxes are applied.
+     */
+    amountTotal: number;
+    /**
+     * The ID of the ShippingRate for this invoice.
+     */
+    shippingRate: string;
+    /**
+     * Parameters to create a new ad-hoc shipping rate for this order.
+     */
+    shippingRateData?: outputs.InvoiceShippingCostShippingRateData;
+    /**
+     * The taxes applied to the shipping rate.
+     */
+    taxes: outputs.InvoiceShippingCostTax[];
+}
+
+export interface InvoiceShippingCostShippingRateData {
+    /**
+     * The estimated range for how long shipping will take, meant to be displayable to the customer. This will appear on CheckoutSessions.
+     */
+    deliveryEstimate?: outputs.InvoiceShippingCostShippingRateDataDeliveryEstimate;
+    /**
+     * The name of the shipping rate, meant to be displayable to the customer. This will appear on CheckoutSessions.
+     */
+    displayName: string;
+    /**
+     * Describes a fixed amount to charge for shipping. Must be present if type is `fixedAmount`.
+     */
+    fixedAmount?: outputs.InvoiceShippingCostShippingRateDataFixedAmount;
+    /**
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
+     */
+    metadata?: {[key: string]: string};
+    /**
+     * Specifies whether the rate is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`.
+     */
+    taxBehavior?: string;
+    /**
+     * A [tax code](https://docs.stripe.com/tax/tax-categories) ID. The Shipping tax code is `txcd92010001`.
+     */
+    taxCode?: string;
+    /**
+     * The type of calculation to use on the shipping rate.
+     */
+    type?: string;
+}
+
+export interface InvoiceShippingCostShippingRateDataDeliveryEstimate {
+    /**
+     * The upper bound of the estimated range. If empty, represents no upper bound i.e., infinite.
+     */
+    maximum?: outputs.InvoiceShippingCostShippingRateDataDeliveryEstimateMaximum;
+    /**
+     * The lower bound of the estimated range. If empty, represents no lower bound.
+     */
+    minimum?: outputs.InvoiceShippingCostShippingRateDataDeliveryEstimateMinimum;
+}
+
+export interface InvoiceShippingCostShippingRateDataDeliveryEstimateMaximum {
+    /**
+     * A unit of time.
+     */
+    unit: string;
+    /**
+     * Must be greater than 0.
+     */
+    value: number;
+}
+
+export interface InvoiceShippingCostShippingRateDataDeliveryEstimateMinimum {
+    /**
+     * A unit of time.
+     */
+    unit: string;
+    /**
+     * Must be greater than 0.
+     */
+    value: number;
+}
+
+export interface InvoiceShippingCostShippingRateDataFixedAmount {
+    /**
+     * A non-negative integer in cents representing how much to charge.
+     */
+    amount: number;
+    /**
+     * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+     */
+    currency: string;
+    /**
+     * Shipping rates defined in each available currency option. Each key must be a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html) and a [supported currency](https://stripe.com/docs/currencies).
+     */
+    currencyOptions?: {[key: string]: outputs.InvoiceShippingCostShippingRateDataFixedAmountCurrencyOptions};
+}
+
+export interface InvoiceShippingCostShippingRateDataFixedAmountCurrencyOptions {
+    /**
+     * A non-negative integer in cents representing how much to charge.
+     */
+    amount: number;
+    /**
+     * Specifies whether the rate is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`.
+     */
+    taxBehavior?: string;
+}
+
+export interface InvoiceShippingCostTax {
+    /**
+     * Amount of tax applied for this rate.
+     */
+    amount: number;
+    /**
+     * Tax rates can be applied to [invoices](https://www.terraform.io/invoicing/taxes/tax-rates), [subscriptions](https://www.terraform.io/billing/taxes/tax-rates) and [Checkout Sessions](https://www.terraform.io/payments/checkout/use-manual-tax-rates) to collect tax.
+     */
+    rate: string;
+    /**
+     * The reasoning behind this tax, for example, if the product is tax exempt. The possible values for this field may be extended as new tax rules are supported.
+     */
+    taxabilityReason: string;
+    /**
+     * The amount on which tax is calculated, in cents (or local equivalent).
+     */
+    taxableAmount: number;
+}
+
+export interface InvoiceShippingDetails {
+    address: outputs.InvoiceShippingDetailsAddress;
+    /**
+     * The delivery service that shipped a physical product, such as Fedex, UPS, USPS, etc.
+     */
+    carrier: string;
+    /**
+     * Recipient name.
+     */
+    name: string;
+    /**
+     * Recipient phone (including extension).
+     */
+    phone: string;
+    /**
+     * The tracking number for a physical product, obtained from the delivery service. If multiple tracking numbers were generated for this purchase, please separate them with commas.
+     */
+    trackingNumber: string;
+}
+
+export interface InvoiceShippingDetailsAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1: string;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2: string;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: string;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state: string;
+}
+
+export interface InvoiceStatusTransitions {
+    /**
+     * The time that the invoice draft was finalized.
+     */
+    finalizedAt: number;
+    /**
+     * The time that the invoice was marked uncollectible.
+     */
+    markedUncollectibleAt: number;
+    /**
+     * The time that the invoice was paid.
+     */
+    paidAt: number;
+    /**
+     * The time that the invoice was voided.
+     */
+    voidedAt: number;
+}
+
+export interface InvoiceThresholdReason {
+    /**
+     * The total invoice amount threshold boundary if it triggered the threshold invoice.
+     */
+    amountGte: number;
+    /**
+     * Indicates which line items triggered a threshold invoice.
+     */
+    itemReasons: outputs.InvoiceThresholdReasonItemReason[];
+}
+
+export interface InvoiceThresholdReasonItemReason {
+    /**
+     * The IDs of the line items that triggered the threshold invoice.
+     */
+    lineItemIds: string[];
+    /**
+     * The quantity threshold boundary that applied to the given line item.
+     */
+    usageGte: number;
+}
+
+export interface InvoiceTotalDiscountAmount {
+    /**
+     * The amount, in cents (or local equivalent), of the discount.
+     */
+    amount: number;
+    /**
+     * The discount that was applied to get this discount amount.
+     */
+    discount: string;
+}
+
+export interface InvoiceTotalPretaxCreditAmount {
+    /**
+     * The amount, in cents (or local equivalent), of the pretax credit amount.
+     */
+    amount: number;
+    /**
+     * The credit balance transaction that was applied to get this pretax credit amount.
+     */
+    creditBalanceTransaction: string;
+    /**
+     * The discount that was applied to get this pretax credit amount.
+     */
+    discount: string;
+    /**
+     * Type of the pretax credit amount referenced.
+     */
+    type: string;
+}
+
+export interface InvoiceTotalTax {
+    /**
+     * The amount of the tax, in cents (or local equivalent).
+     */
+    amount: number;
+    /**
+     * Whether this tax is inclusive or exclusive.
+     */
+    taxBehavior: string;
+    /**
+     * Additional details about the tax rate. Only present when `type` is `taxRateDetails`.
+     */
+    taxRateDetails: outputs.InvoiceTotalTaxTaxRateDetails;
+    /**
+     * The reasoning behind this tax, for example, if the product is tax exempt. The possible values for this field may be extended as new tax rules are supported.
+     */
+    taxabilityReason: string;
+    /**
+     * The amount on which tax is calculated, in cents (or local equivalent).
+     */
+    taxableAmount: number;
+    /**
+     * The type of tax information.
+     */
+    type: string;
+}
+
+export interface InvoiceTotalTaxTaxRateDetails {
+    /**
+     * ID of the tax rate
+     */
+    taxRate: string;
+}
+
+export interface InvoiceTransferData {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The amount that will be transferred automatically when the invoice is paid. If no amount is set, the full amount is transferred.
+     */
+    amount?: number;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * ID of an existing, connected Stripe account.
+     */
+    destination: string;
+}
+
+export interface IssuingCardLatestFraudWarning {
+    /**
+     * Timestamp of the most recent fraud warning.
+     */
+    startedAt: number;
+    /**
+     * The type of fraud warning that most recently took place on this card. This field updates with every new fraud warning, so the value changes over time. If populated, cancel and reissue the card.
+     */
+    type: string;
+}
+
+export interface IssuingCardLifecycleControls {
+    cancelAfter: outputs.IssuingCardLifecycleControlsCancelAfter;
+}
+
+export interface IssuingCardLifecycleControlsCancelAfter {
+    /**
+     * The card is automatically cancelled when it makes this number of non-zero payment authorizations and transactions. The count includes penny authorizations, but doesn't include non-payment actions, such as authorization advice.
+     */
+    paymentCount: number;
+}
+
+export interface IssuingCardPin {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The card's desired new PIN, encrypted under Stripe's public key.
+     */
+    encryptedNumber?: string;
+}
+
+export interface IssuingCardShipping {
+    address: outputs.IssuingCardShippingAddress;
+    /**
+     * Address validation details for the shipment.
+     */
+    addressValidation: outputs.IssuingCardShippingAddressValidation;
+    /**
+     * The delivery company that shipped a card.
+     */
+    carrier: string;
+    /**
+     * Additional information that may be required for clearing customs.
+     */
+    customs: outputs.IssuingCardShippingCustoms;
+    /**
+     * A unix timestamp representing a best estimate of when the card will be delivered.
+     */
+    eta: number;
+    /**
+     * Recipient name.
+     */
+    name: string;
+    /**
+     * The phone number of the receiver of the shipment. Our courier partners will use this number to contact you in the event of card delivery issues. For individual shipments to the EU/UK, if this field is empty, we will provide them with the phone number provided when the cardholder was initially created.
+     */
+    phoneNumber: string;
+    /**
+     * Whether a signature is required for card delivery. This feature is only supported for US users. Standard shipping service does not support signature on delivery. The default value for standard shipping service is false and for express and priority services is true.
+     */
+    requireSignature: boolean;
+    /**
+     * Shipment service, such as `standard` or `express`.
+     */
+    service: string;
+    /**
+     * The delivery status of the card.
+     */
+    status: string;
+    /**
+     * A tracking number for a card shipment.
+     */
+    trackingNumber: string;
+    /**
+     * A link to the shipping carrier's site where you can view detailed information about a card shipment.
+     */
+    trackingUrl: string;
+    /**
+     * Packaging options.
+     */
+    type: string;
+}
+
+export interface IssuingCardShippingAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1: string;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2: string;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: string;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state: string;
+}
+
+export interface IssuingCardShippingAddressValidation {
+    /**
+     * The address validation capabilities to use.
+     */
+    mode: string;
+    /**
+     * The normalized shipping address.
+     */
+    normalizedAddress: outputs.IssuingCardShippingAddressValidationNormalizedAddress;
+    /**
+     * The validation result for the shipping address.
+     */
+    result: string;
+}
+
+export interface IssuingCardShippingAddressValidationNormalizedAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1: string;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2: string;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: string;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state: string;
+}
+
+export interface IssuingCardShippingCustoms {
+    /**
+     * A registration number used for customs in Europe. See [https://www.gov.uk/eori](https://www.gov.uk/eori) for the UK and [https://ec.europa.eu/taxation*customs/business/customs-procedures-import-and-export/customs-procedures/economic-operators-registration-and-identification-number-eori*en](https://ec.europa.eu/taxation_customs/business/customs-procedures-import-and-export/customs-procedures/economic-operators-registration-and-identification-number-eori_en) for the EU.
+     */
+    eoriNumber: string;
+}
+
+export interface IssuingCardSpendingControls {
+    /**
+     * Array of card presence statuses from which authorizations will be allowed. Possible options are `present`, `notPresent`. All other statuses will be blocked. Cannot be set with `blockedCardPresences`. Provide an empty value to unset this control.
+     */
+    allowedCardPresences: string[];
+    /**
+     * Array of strings containing [categories](https://docs.stripe.com/api#issuing_authorization_object-merchant_data-category) of authorizations to allow. All other categories will be blocked. Cannot be set with `blockedCategories`.
+     */
+    allowedCategories: string[];
+    /**
+     * Array of strings containing representing countries from which authorizations will be allowed. Authorizations from merchants in all other countries will be declined. Country codes should be ISO 3166 alpha-2 country codes (e.g. `US`). Cannot be set with `blockedMerchantCountries`. Provide an empty value to unset this control.
+     */
+    allowedMerchantCountries: string[];
+    /**
+     * Array of card presence statuses from which authorizations will be declined. Possible options are `present`, `notPresent`. Cannot be set with `allowedCardPresences`. Provide an empty value to unset this control.
+     */
+    blockedCardPresences: string[];
+    /**
+     * Array of strings containing [categories](https://docs.stripe.com/api#issuing_authorization_object-merchant_data-category) of authorizations to decline. All other categories will be allowed. Cannot be set with `allowedCategories`.
+     */
+    blockedCategories: string[];
+    /**
+     * Array of strings containing representing countries from which authorizations will be declined. Country codes should be ISO 3166 alpha-2 country codes (e.g. `US`). Cannot be set with `allowedMerchantCountries`. Provide an empty value to unset this control.
+     */
+    blockedMerchantCountries: string[];
+    /**
+     * Limit spending with amount-based rules that apply across any cards this card replaced (i.e., its `replacementFor` card and *that* card's `replacementFor` card, up the chain).
+     */
+    spendingLimits: outputs.IssuingCardSpendingControlsSpendingLimit[];
+    /**
+     * Currency of the amounts within `spendingLimits`. Always the same as the currency of the card.
+     */
+    spendingLimitsCurrency: string;
+}
+
+export interface IssuingCardSpendingControlsSpendingLimit {
+    /**
+     * Maximum amount allowed to spend per interval. This amount is in the card's currency and in the [smallest currency unit](https://docs.stripe.com/currencies#zero-decimal).
+     */
+    amount: number;
+    /**
+     * Array of strings containing [categories](https://docs.stripe.com/api#issuing_authorization_object-merchant_data-category) this limit applies to. Omitting this field will apply the limit to all categories.
+     */
+    categories: string[];
+    /**
+     * Interval (or event) to which the amount applies.
+     */
+    interval: string;
+}
+
+export interface IssuingCardWallets {
+    applePay: outputs.IssuingCardWalletsApplePay;
+    googlePay: outputs.IssuingCardWalletsGooglePay;
+    /**
+     * Unique identifier for a card used with digital wallets
+     */
+    primaryAccountIdentifier: string;
+}
+
+export interface IssuingCardWalletsApplePay {
+    /**
+     * Apple Pay Eligibility
+     */
+    eligible: boolean;
+    /**
+     * Reason the card is ineligible for Apple Pay
+     */
+    ineligibleReason: string;
+}
+
+export interface IssuingCardWalletsGooglePay {
+    /**
+     * Google Pay Eligibility
+     */
+    eligible: boolean;
+    /**
+     * Reason the card is ineligible for Google Pay
+     */
+    ineligibleReason: string;
+}
+
+export interface IssuingCardholderBilling {
+    address: outputs.IssuingCardholderBillingAddress;
+}
+
+export interface IssuingCardholderBillingAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1: string;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2: string;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: string;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state: string;
+}
+
+export interface IssuingCardholderCompany {
+    /**
+     * The entity's business ID number.
+     */
+    taxId?: string;
+    /**
+     * Whether the company's business ID number was provided.
+     */
+    taxIdProvided: boolean;
+}
+
+export interface IssuingCardholderIndividual {
+    /**
+     * Information related to the card*issuing program for this cardholder.
+     */
+    cardIssuing: outputs.IssuingCardholderIndividualCardIssuing;
+    /**
+     * The date of birth of this cardholder.
+     */
+    dob: outputs.IssuingCardholderIndividualDob;
+    /**
+     * The first name of this cardholder. Required before activating Cards. This field cannot contain any numbers, special characters (except periods, commas, hyphens, spaces and apostrophes) or non-latin letters.
+     */
+    firstName: string;
+    /**
+     * The last name of this cardholder. Required before activating Cards. This field cannot contain any numbers, special characters (except periods, commas, hyphens, spaces and apostrophes) or non-latin letters.
+     */
+    lastName: string;
+    /**
+     * Government-issued ID document for this cardholder.
+     */
+    verification: outputs.IssuingCardholderIndividualVerification;
+}
+
+export interface IssuingCardholderIndividualCardIssuing {
+    /**
+     * Information about cardholder acceptance of Celtic [Authorized User Terms](https://stripe.com/docs/issuing/cards#accept-authorized-user-terms). Required for cards backed by a Celtic program.
+     */
+    userTermsAcceptance: outputs.IssuingCardholderIndividualCardIssuingUserTermsAcceptance;
+}
+
+export interface IssuingCardholderIndividualCardIssuingUserTermsAcceptance {
+    /**
+     * The Unix timestamp marking when the cardholder accepted the Authorized User Terms.
+     */
+    date: number;
+    /**
+     * The IP address from which the cardholder accepted the Authorized User Terms.
+     */
+    ip: string;
+    /**
+     * The user agent of the browser from which the cardholder accepted the Authorized User Terms.
+     */
+    userAgent: string;
+}
+
+export interface IssuingCardholderIndividualDob {
+    /**
+     * The day of birth, between 1 and 31.
+     */
+    day: number;
+    /**
+     * The month of birth, between 1 and 12.
+     */
+    month: number;
+    /**
+     * The four-digit year of birth.
+     */
+    year: number;
+}
+
+export interface IssuingCardholderIndividualVerification {
+    /**
+     * An identifying document, either a passport or local ID card.
+     */
+    document: outputs.IssuingCardholderIndividualVerificationDocument;
+}
+
+export interface IssuingCardholderIndividualVerificationDocument {
+    /**
+     * The back of a document returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `identityDocument`.
+     */
+    back: string;
+    /**
+     * The front of a document returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `identityDocument`.
+     */
+    front: string;
+}
+
+export interface IssuingCardholderRequirements {
+    /**
+     * Array of fields that need to be collected in order to verify and re-enable the cardholder.
+     */
+    pastDues: string[];
+}
+
+export interface IssuingCardholderSpendingControls {
+    /**
+     * Array of card presence statuses from which authorizations will be allowed. Possible options are `present`, `notPresent`. All other statuses will be blocked. Cannot be set with `blockedCardPresences`. Provide an empty value to unset this control.
+     */
+    allowedCardPresences: string[];
+    /**
+     * Array of strings containing [categories](https://docs.stripe.com/api#issuing_authorization_object-merchant_data-category) of authorizations to allow. All other categories will be blocked. Cannot be set with `blockedCategories`.
+     */
+    allowedCategories: string[];
+    /**
+     * Array of strings containing representing countries from which authorizations will be allowed. Authorizations from merchants in all other countries will be declined. Country codes should be ISO 3166 alpha-2 country codes (e.g. `US`). Cannot be set with `blockedMerchantCountries`. Provide an empty value to unset this control.
+     */
+    allowedMerchantCountries: string[];
+    /**
+     * Array of card presence statuses from which authorizations will be declined. Possible options are `present`, `notPresent`. Cannot be set with `allowedCardPresences`. Provide an empty value to unset this control.
+     */
+    blockedCardPresences: string[];
+    /**
+     * Array of strings containing [categories](https://docs.stripe.com/api#issuing_authorization_object-merchant_data-category) of authorizations to decline. All other categories will be allowed. Cannot be set with `allowedCategories`.
+     */
+    blockedCategories: string[];
+    /**
+     * Array of strings containing representing countries from which authorizations will be declined. Country codes should be ISO 3166 alpha-2 country codes (e.g. `US`). Cannot be set with `allowedMerchantCountries`. Provide an empty value to unset this control.
+     */
+    blockedMerchantCountries: string[];
+    /**
+     * Limit spending with amount-based rules that apply across this cardholder's cards.
+     */
+    spendingLimits: outputs.IssuingCardholderSpendingControlsSpendingLimit[];
+    /**
+     * Currency of the amounts within `spendingLimits`.
+     */
+    spendingLimitsCurrency: string;
+}
+
+export interface IssuingCardholderSpendingControlsSpendingLimit {
+    /**
+     * Maximum amount allowed to spend per interval. This amount is in the card's currency and in the [smallest currency unit](https://docs.stripe.com/currencies#zero-decimal).
+     */
+    amount: number;
+    /**
+     * Array of strings containing [categories](https://docs.stripe.com/api#issuing_authorization_object-merchant_data-category) this limit applies to. Omitting this field will apply the limit to all categories.
+     */
+    categories: string[];
+    /**
+     * Interval (or event) to which the amount applies.
+     */
+    interval: string;
+}
+
+export interface IssuingDisputeEvidence {
+    canceled: outputs.IssuingDisputeEvidenceCanceled;
+    duplicate: outputs.IssuingDisputeEvidenceDuplicate;
+    fraudulent: outputs.IssuingDisputeEvidenceFraudulent;
+    merchandiseNotAsDescribed: outputs.IssuingDisputeEvidenceMerchandiseNotAsDescribed;
+    noValidAuthorization: outputs.IssuingDisputeEvidenceNoValidAuthorization;
+    notReceived: outputs.IssuingDisputeEvidenceNotReceived;
+    other: outputs.IssuingDisputeEvidenceOther;
+    /**
+     * The reason for filing the dispute. Its value will match the field containing the evidence.
+     */
+    reason: string;
+    serviceNotAsDescribed: outputs.IssuingDisputeEvidenceServiceNotAsDescribed;
+}
+
+export interface IssuingDisputeEvidenceCanceled {
+    /**
+     * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Additional documentation supporting the dispute.
+     */
+    additionalDocumentation: string;
+    /**
+     * Date when order was canceled.
+     */
+    canceledAt: number;
+    /**
+     * Whether the cardholder was provided with a cancellation policy.
+     */
+    cancellationPolicyProvided: boolean;
+    /**
+     * Reason for canceling the order.
+     */
+    cancellationReason: string;
+    /**
+     * Date when the cardholder expected to receive the product.
+     */
+    expectedAt: number;
+    /**
+     * Explanation of why the cardholder is disputing this transaction.
+     */
+    explanation: string;
+    /**
+     * Description of the merchandise or service that was purchased.
+     */
+    productDescription: string;
+    /**
+     * Whether the product was a merchandise or service.
+     */
+    productType: string;
+    /**
+     * Result of cardholder's attempt to return the product.
+     */
+    returnStatus: string;
+    /**
+     * Date when the product was returned or attempted to be returned.
+     */
+    returnedAt: number;
+}
+
+export interface IssuingDisputeEvidenceDuplicate {
+    /**
+     * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Additional documentation supporting the dispute.
+     */
+    additionalDocumentation: string;
+    /**
+     * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Copy of the card statement showing that the product had already been paid for.
+     */
+    cardStatement: string;
+    /**
+     * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Copy of the receipt showing that the product had been paid for in cash.
+     */
+    cashReceipt: string;
+    /**
+     * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Image of the front and back of the check that was used to pay for the product.
+     */
+    checkImage: string;
+    /**
+     * Explanation of why the cardholder is disputing this transaction.
+     */
+    explanation: string;
+    /**
+     * Transaction (e.g., ipi_...) that the disputed transaction is a duplicate of. Of the two or more transactions that are copies of each other, this is original undisputed one.
+     */
+    originalTransaction: string;
+}
+
+export interface IssuingDisputeEvidenceFraudulent {
+    /**
+     * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Additional documentation supporting the dispute.
+     */
+    additionalDocumentation: string;
+    /**
+     * Explanation of why the cardholder is disputing this transaction.
+     */
+    explanation: string;
+}
+
+export interface IssuingDisputeEvidenceMerchandiseNotAsDescribed {
+    /**
+     * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Additional documentation supporting the dispute.
+     */
+    additionalDocumentation: string;
+    /**
+     * Explanation of why the cardholder is disputing this transaction.
+     */
+    explanation: string;
+    /**
+     * Date when the product was received.
+     */
+    receivedAt: number;
+    /**
+     * Description of the cardholder's attempt to return the product.
+     */
+    returnDescription: string;
+    /**
+     * Result of cardholder's attempt to return the product.
+     */
+    returnStatus: string;
+    /**
+     * Date when the product was returned or attempted to be returned.
+     */
+    returnedAt: number;
+}
+
+export interface IssuingDisputeEvidenceNoValidAuthorization {
+    /**
+     * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Additional documentation supporting the dispute.
+     */
+    additionalDocumentation: string;
+    /**
+     * Explanation of why the cardholder is disputing this transaction.
+     */
+    explanation: string;
+}
+
+export interface IssuingDisputeEvidenceNotReceived {
+    /**
+     * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Additional documentation supporting the dispute.
+     */
+    additionalDocumentation: string;
+    /**
+     * Date when the cardholder expected to receive the product.
+     */
+    expectedAt: number;
+    /**
+     * Explanation of why the cardholder is disputing this transaction.
+     */
+    explanation: string;
+    /**
+     * Description of the merchandise or service that was purchased.
+     */
+    productDescription: string;
+    /**
+     * Whether the product was a merchandise or service.
+     */
+    productType: string;
+}
+
+export interface IssuingDisputeEvidenceOther {
+    /**
+     * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Additional documentation supporting the dispute.
+     */
+    additionalDocumentation: string;
+    /**
+     * Explanation of why the cardholder is disputing this transaction.
+     */
+    explanation: string;
+    /**
+     * Description of the merchandise or service that was purchased.
+     */
+    productDescription: string;
+    /**
+     * Whether the product was a merchandise or service.
+     */
+    productType: string;
+}
+
+export interface IssuingDisputeEvidenceServiceNotAsDescribed {
+    /**
+     * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Additional documentation supporting the dispute.
+     */
+    additionalDocumentation: string;
+    /**
+     * Date when order was canceled.
+     */
+    canceledAt: number;
+    /**
+     * Reason for canceling the order.
+     */
+    cancellationReason: string;
+    /**
+     * Explanation of why the cardholder is disputing this transaction.
+     */
+    explanation: string;
+    /**
+     * Date when the product was received.
+     */
+    receivedAt: number;
+}
+
+export interface IssuingDisputeTreasury {
+    /**
+     * The Treasury [DebitReversal](https://docs.stripe.com/api/treasury/debit_reversals) representing this Issuing dispute
+     */
+    debitReversal: string;
+    /**
+     * The Treasury [ReceivedDebit](https://docs.stripe.com/api/treasury/received_debits) that is being disputed.
+     */
+    receivedDebit: string;
+}
+
+export interface IssuingPersonalizationDesignCarrierText {
+    /**
+     * The footer body text of the carrier letter.
+     */
+    footerBody: string;
+    /**
+     * The footer title text of the carrier letter.
+     */
+    footerTitle: string;
+    /**
+     * The header body text of the carrier letter.
+     */
+    headerBody: string;
+    /**
+     * The header title text of the carrier letter.
+     */
+    headerTitle: string;
+}
+
+export interface IssuingPersonalizationDesignPreferences {
+    /**
+     * Whether we use this personalization design to create cards when one isn't specified. A connected account uses the Connect platform's default design if no personalization design is set as the default design.
+     */
+    isDefault: boolean;
+    /**
+     * Whether this personalization design is used to create cards when one is not specified and a default for this connected account does not exist.
+     */
+    isPlatformDefault: boolean;
+}
+
+export interface IssuingPersonalizationDesignRejectionReasons {
+    /**
+     * The reason(s) the card logo was rejected.
+     */
+    cardLogos: string[];
+    /**
+     * The reason(s) the carrier text was rejected.
+     */
+    carrierTexts: string[];
+}
+
+export interface PaymentIntentAutomaticPaymentMethods {
+    /**
+     * Controls whether this PaymentIntent will accept redirect-based payment methods.
+     */
+    allowRedirects: string;
+    /**
+     * Automatically calculates compatible payment methods
+     */
+    enabled: boolean;
+}
+
+export interface PaymentIntentHooks {
+    inputs: outputs.PaymentIntentHooksInputs;
+}
+
+export interface PaymentIntentHooksInputs {
+    tax: outputs.PaymentIntentHooksInputsTax;
+}
+
+export interface PaymentIntentHooksInputsTax {
+    /**
+     * The [TaxCalculation](https://docs.stripe.com/api/tax/calculations) id
+     */
+    calculation: string;
+}
+
+export interface PaymentIntentLastPaymentError {
+    /**
+     * For card errors resulting from a card issuer decline, a short string indicating [how to proceed with an error](https://docs.stripe.com/declines#retrying-issuer-declines) if they provide one.
+     */
+    adviceCode: string;
+    /**
+     * For card errors, the ID of the failed charge.
+     */
+    charge: string;
+    /**
+     * For some errors that could be handled programmatically, a short string indicating the [error code](https://docs.stripe.com/error-codes) reported.
+     */
+    code: string;
+    /**
+     * For card errors resulting from a card issuer decline, a short string indicating the [card issuer's reason for the decline](https://docs.stripe.com/declines#issuer-declines) if they provide one.
+     */
+    declineCode: string;
+    /**
+     * A URL to more information about the [error code](https://docs.stripe.com/error-codes) reported.
+     */
+    docUrl: string;
+    /**
+     * A human-readable message providing more details about the error. For card errors, these messages can be shown to your users.
+     */
+    message: string;
+    /**
+     * For card errors resulting from a card issuer decline, a 2 digit code which indicates the advice given to merchant by the card network on how to proceed with an error.
+     */
+    networkAdviceCode: string;
+    /**
+     * For payments declined by the network, an alphanumeric code which indicates the reason the payment failed.
+     */
+    networkDeclineCode: string;
+    /**
+     * If the error is parameter-specific, the parameter related to the error. For example, you can use this to display a message near the correct form field.
+     */
+    param: string;
+    /**
+     * A PaymentIntent guides you through the process of collecting a payment from your customer.
+     * We recommend that you create exactly one PaymentIntent for each order or
+     * customer session in your system. You can reference the PaymentIntent later to
+     * see the history of payment attempts for a particular session.
+     */
+    paymentIntent: string;
+    /**
+     * PaymentMethod objects represent your customer's payment instruments.
+     * You can use them with [PaymentIntents](https://docs.stripe.com/payments/payment-intents) to collect payments or save them to
+     * Customer objects to store instrument details for future payments.
+     *
+     * Related guides: [Payment Methods](https://docs.stripe.com/payments/payment-methods) and [More Payment Scenarios](https://docs.stripe.com/payments/more-payment-scenarios).
+     */
+    paymentMethod: string;
+    /**
+     * If the error is specific to the type of payment method, the payment method type that had a problem. This field is only populated for invoice-related errors.
+     */
+    paymentMethodType: string;
+    /**
+     * A URL to the request log entry in your dashboard.
+     */
+    requestLogUrl: string;
+    /**
+     * A SetupIntent guides you through the process of setting up and saving a customer's payment credentials for future payments.
+     * For example, you can use a SetupIntent to set up and save your customer's card without immediately collecting a payment.
+     * Later, you can use [PaymentIntents](https://api.stripe.com#payment_intents) to drive the payment flow.
+     *
+     * Create a SetupIntent when you're ready to collect your customer's payment credentials.
+     * Don't maintain long-lived, unconfirmed SetupIntents because they might not be valid.
+     * The SetupIntent transitions through multiple [statuses](https://docs.stripe.com/payments/intents#intent-statuses) as it guides
+     * you through the setup process.
+     *
+     * Successful SetupIntents result in payment credentials that are optimized for future payments.
+     * For example, cardholders in [certain regions](https://stripe.com/guides/strong-customer-authentication) might need to be run through
+     * [Strong Customer Authentication](https://docs.stripe.com/strong-customer-authentication) during payment method collection
+     * to streamline later [off-session payments](https://docs.stripe.com/payments/setup-intents).
+     * If you use the SetupIntent with a [Customer](https://api.stripe.com#setup_intent_object-customer),
+     * it automatically attaches the resulting payment method to that Customer after successful setup.
+     * We recommend using SetupIntents or [setupFutureUsage](https://api.stripe.com#payment_intent_object-setup_future_usage) on
+     * PaymentIntents to save payment methods to prevent saving invalid or unoptimized payment methods.
+     *
+     * By using SetupIntents, you can reduce friction for your customers, even as regulations change over time.
+     *
+     * Related guide: [Setup Intents API](https://docs.stripe.com/payments/setup-intents)
+     */
+    setupIntent: string;
+    source: string;
+    /**
+     * The type of error returned. One of `apiError`, `cardError`, `idempotencyError`, or `invalidRequestError`
+     */
+    type: string;
+}
+
+export interface PaymentIntentManagedPayments {
+    /**
+     * Set to `true` to enable [Managed Payments](https://docs.stripe.com/payments/managed-payments), Stripe's merchant of record solution, for this session.
+     */
+    enabled: boolean;
+}
+
+export interface PaymentIntentMandateData {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * This hash contains details about the customer acceptance of the Mandate.
+     */
+    customerAcceptance: outputs.PaymentIntentMandateDataCustomerAcceptance;
+}
+
+export interface PaymentIntentMandateDataCustomerAcceptance {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The time at which the customer accepted the Mandate.
+     */
+    acceptedAt?: number;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a Mandate accepted online, this hash contains details about the online acceptance.
+     */
+    online?: outputs.PaymentIntentMandateDataCustomerAcceptanceOnline;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The type of customer acceptance information included with the Mandate. One of `online` or `offline`.
+     */
+    type: string;
+}
+
+export interface PaymentIntentMandateDataCustomerAcceptanceOnline {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The IP address from which the Mandate was accepted by the customer.
+     */
+    ipAddress: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The user agent of the browser from which the Mandate was accepted by the customer.
+     */
+    userAgent: string;
+}
+
+export interface PaymentIntentNextAction {
+    alipayHandleRedirect: outputs.PaymentIntentNextActionAlipayHandleRedirect;
+    boletoDisplayDetails: outputs.PaymentIntentNextActionBoletoDisplayDetails;
+    cardAwaitNotification: outputs.PaymentIntentNextActionCardAwaitNotification;
+    cashappHandleRedirectOrDisplayQrCode: outputs.PaymentIntentNextActionCashappHandleRedirectOrDisplayQrCode;
+    displayBankTransferInstructions: outputs.PaymentIntentNextActionDisplayBankTransferInstructions;
+    klarnaDisplayQrCode: outputs.PaymentIntentNextActionKlarnaDisplayQrCode;
+    konbiniDisplayDetails: outputs.PaymentIntentNextActionKonbiniDisplayDetails;
+    multibancoDisplayDetails: outputs.PaymentIntentNextActionMultibancoDisplayDetails;
+    oxxoDisplayDetails: outputs.PaymentIntentNextActionOxxoDisplayDetails;
+    paynowDisplayQrCode: outputs.PaymentIntentNextActionPaynowDisplayQrCode;
+    pixDisplayQrCode: outputs.PaymentIntentNextActionPixDisplayQrCode;
+    promptpayDisplayQrCode: outputs.PaymentIntentNextActionPromptpayDisplayQrCode;
+    redirectToUrl: outputs.PaymentIntentNextActionRedirectToUrl;
+    swishHandleRedirectOrDisplayQrCode: outputs.PaymentIntentNextActionSwishHandleRedirectOrDisplayQrCode;
+    /**
+     * Type of the next action to perform. Refer to the other child attributes under `nextAction` for available values. Examples include: `redirectToUrl`, `useStripeSdk`, `alipayHandleRedirect`, `oxxoDisplayDetails`, or `verifyWithMicrodeposits`.
+     */
+    type: string;
+    upiHandleRedirectOrDisplayQrCode: outputs.PaymentIntentNextActionUpiHandleRedirectOrDisplayQrCode;
+    /**
+     * When confirming a PaymentIntent with Stripe.js, Stripe.js depends on the contents of this dictionary to invoke authentication flows. The shape of the contents is subject to change and is only intended to be used by Stripe.js.
+     */
+    useStripeSdk: {[key: string]: string};
+    verifyWithMicrodeposits: outputs.PaymentIntentNextActionVerifyWithMicrodeposits;
+    wechatPayDisplayQrCode: outputs.PaymentIntentNextActionWechatPayDisplayQrCode;
+    wechatPayRedirectToAndroidApp: outputs.PaymentIntentNextActionWechatPayRedirectToAndroidApp;
+    wechatPayRedirectToIosApp: outputs.PaymentIntentNextActionWechatPayRedirectToIosApp;
+}
+
+export interface PaymentIntentNextActionAlipayHandleRedirect {
+    /**
+     * The native data to be used with Alipay SDK you must redirect your customer to in order to authenticate the payment in an Android App.
+     */
+    nativeData: string;
+    /**
+     * The native URL you must redirect your customer to in order to authenticate the payment in an iOS App.
+     */
+    nativeUrl: string;
+    /**
+     * If the customer does not exit their browser while authenticating, they will be redirected to this specified URL after completion.
+     */
+    returnUrl: string;
+    /**
+     * The URL you must redirect your customer to in order to authenticate the payment.
+     */
+    url: string;
+}
+
+export interface PaymentIntentNextActionBoletoDisplayDetails {
+    /**
+     * The timestamp after which the boleto expires.
+     */
+    expiresAt: number;
+    /**
+     * The URL to the hosted boleto voucher page, which allows customers to view the boleto voucher.
+     */
+    hostedVoucherUrl: string;
+    /**
+     * The boleto number.
+     */
+    number: string;
+    /**
+     * The URL to the downloadable boleto voucher PDF.
+     */
+    pdf: string;
+}
+
+export interface PaymentIntentNextActionCardAwaitNotification {
+    /**
+     * The time that payment will be attempted. If customer approval is required, they need to provide approval before this time.
+     */
+    chargeAttemptAt: number;
+    /**
+     * For payments greater than INR 15000, the customer must provide explicit approval of the payment with their bank. For payments of lower amount, no customer action is required.
+     */
+    customerApprovalRequired: boolean;
+}
+
+export interface PaymentIntentNextActionCashappHandleRedirectOrDisplayQrCode {
+    /**
+     * The URL to the hosted Cash App Pay instructions page, which allows customers to view the QR code, and supports QR code refreshing on expiration.
+     */
+    hostedInstructionsUrl: string;
+    /**
+     * The url for mobile redirect based auth
+     */
+    mobileAuthUrl: string;
+    qrCode: outputs.PaymentIntentNextActionCashappHandleRedirectOrDisplayQrCodeQrCode;
+}
+
+export interface PaymentIntentNextActionCashappHandleRedirectOrDisplayQrCodeQrCode {
+    /**
+     * The date (unix timestamp) when the QR code expires.
+     */
+    expiresAt: number;
+    /**
+     * The image*url*png string used to render QR code
+     */
+    imageUrlPng: string;
+    /**
+     * The image*url*svg string used to render QR code
+     */
+    imageUrlSvg: string;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructions {
+    /**
+     * The remaining amount that needs to be transferred to complete the payment.
+     */
+    amountRemaining: number;
+    /**
+     * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+     */
+    currency: string;
+    /**
+     * A list of financial addresses that can be used to fund the customer balance
+     */
+    financialAddresses: outputs.PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddress[];
+    /**
+     * A link to a hosted page that guides your customer through completing the transfer.
+     */
+    hostedInstructionsUrl: string;
+    /**
+     * A string identifying this payment. Instruct your customer to include this code in the reference or memo field of their bank transfer.
+     */
+    reference: string;
+    /**
+     * Type of bank transfer
+     */
+    type: string;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddress {
+    /**
+     * ABA Records contain U.S. bank account details per the ABA format.
+     */
+    aba: outputs.PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressAba;
+    /**
+     * Iban Records contain E.U. bank account details per the SEPA format.
+     */
+    iban: outputs.PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressIban;
+    /**
+     * Sort Code Records contain U.K. bank account details per the sort code format.
+     */
+    sortCode: outputs.PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressSortCode;
+    /**
+     * SPEI Records contain Mexico bank account details per the SPEI format.
+     */
+    spei: outputs.PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressSpei;
+    /**
+     * The payment networks supported by this FinancialAddress
+     */
+    supportedNetworks: string[];
+    /**
+     * SWIFT Records contain U.S. bank account details per the SWIFT format.
+     */
+    swift: outputs.PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressSwift;
+    /**
+     * The type of financial address
+     */
+    type: string;
+    /**
+     * Zengin Records contain Japan bank account details per the Zengin format.
+     */
+    zengin: outputs.PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressZengin;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressAba {
+    accountHolderAddress: outputs.PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressAbaAccountHolderAddress;
+    /**
+     * The account holder name
+     */
+    accountHolderName: string;
+    /**
+     * The ABA account number
+     */
+    accountNumber: string;
+    /**
+     * The account type
+     */
+    accountType: string;
+    bankAddress: outputs.PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressAbaBankAddress;
+    /**
+     * The bank name
+     */
+    bankName: string;
+    /**
+     * The ABA routing number
+     */
+    routingNumber: string;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressAbaAccountHolderAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1: string;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2: string;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: string;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state: string;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressAbaBankAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1: string;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2: string;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: string;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state: string;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressIban {
+    accountHolderAddress: outputs.PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressIbanAccountHolderAddress;
+    /**
+     * The name of the person or business that owns the bank account
+     */
+    accountHolderName: string;
+    bankAddress: outputs.PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressIbanBankAddress;
+    /**
+     * The BIC/SWIFT code of the account.
+     */
+    bic: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * The IBAN of the account.
+     */
+    iban: string;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressIbanAccountHolderAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1: string;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2: string;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: string;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state: string;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressIbanBankAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1: string;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2: string;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: string;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state: string;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressSortCode {
+    accountHolderAddress: outputs.PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressSortCodeAccountHolderAddress;
+    /**
+     * The name of the person or business that owns the bank account
+     */
+    accountHolderName: string;
+    /**
+     * The account number
+     */
+    accountNumber: string;
+    bankAddress: outputs.PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressSortCodeBankAddress;
+    /**
+     * The six-digit sort code
+     */
+    sortCode: string;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressSortCodeAccountHolderAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1: string;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2: string;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: string;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state: string;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressSortCodeBankAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1: string;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2: string;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: string;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state: string;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressSpei {
+    accountHolderAddress: outputs.PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressSpeiAccountHolderAddress;
+    /**
+     * The account holder name
+     */
+    accountHolderName: string;
+    bankAddress: outputs.PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressSpeiBankAddress;
+    /**
+     * The three-digit bank code
+     */
+    bankCode: string;
+    /**
+     * The short banking institution name
+     */
+    bankName: string;
+    /**
+     * The CLABE number
+     */
+    clabe: string;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressSpeiAccountHolderAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1: string;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2: string;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: string;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state: string;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressSpeiBankAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1: string;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2: string;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: string;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state: string;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressSwift {
+    accountHolderAddress: outputs.PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressSwiftAccountHolderAddress;
+    /**
+     * The account holder name
+     */
+    accountHolderName: string;
+    /**
+     * The account number
+     */
+    accountNumber: string;
+    /**
+     * The account type
+     */
+    accountType: string;
+    bankAddress: outputs.PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressSwiftBankAddress;
+    /**
+     * The bank name
+     */
+    bankName: string;
+    /**
+     * The SWIFT code
+     */
+    swiftCode: string;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressSwiftAccountHolderAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1: string;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2: string;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: string;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state: string;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressSwiftBankAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1: string;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2: string;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: string;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state: string;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressZengin {
+    accountHolderAddress: outputs.PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressZenginAccountHolderAddress;
+    /**
+     * The account holder name
+     */
+    accountHolderName: string;
+    /**
+     * The account number
+     */
+    accountNumber: string;
+    /**
+     * The bank account type. In Japan, this can only be `futsu` or `toza`.
+     */
+    accountType: string;
+    bankAddress: outputs.PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressZenginBankAddress;
+    /**
+     * The bank code of the account
+     */
+    bankCode: string;
+    /**
+     * The bank name of the account
+     */
+    bankName: string;
+    /**
+     * The branch code of the account
+     */
+    branchCode: string;
+    /**
+     * The branch name of the account
+     */
+    branchName: string;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressZenginAccountHolderAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1: string;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2: string;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: string;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state: string;
+}
+
+export interface PaymentIntentNextActionDisplayBankTransferInstructionsFinancialAddressZenginBankAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1: string;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2: string;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: string;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state: string;
+}
+
+export interface PaymentIntentNextActionKlarnaDisplayQrCode {
+    /**
+     * The data being used to generate QR code
+     */
+    data: string;
+    /**
+     * The timestamp at which the QR code expires.
+     */
+    expiresAt: number;
+    /**
+     * The image*url*png string used to render QR code
+     */
+    imageUrlPng: string;
+    /**
+     * The image*url*svg string used to render QR code
+     */
+    imageUrlSvg: string;
+}
+
+export interface PaymentIntentNextActionKonbiniDisplayDetails {
+    /**
+     * The timestamp at which the pending Konbini payment expires.
+     */
+    expiresAt: number;
+    /**
+     * The URL for the Konbini payment instructions page, which allows customers to view and print a Konbini voucher.
+     */
+    hostedVoucherUrl: string;
+    stores: outputs.PaymentIntentNextActionKonbiniDisplayDetailsStores;
+}
+
+export interface PaymentIntentNextActionKonbiniDisplayDetailsStores {
+    /**
+     * FamilyMart instruction details.
+     */
+    familymart: outputs.PaymentIntentNextActionKonbiniDisplayDetailsStoresFamilymart;
+    /**
+     * Lawson instruction details.
+     */
+    lawson: outputs.PaymentIntentNextActionKonbiniDisplayDetailsStoresLawson;
+    /**
+     * Ministop instruction details.
+     */
+    ministop: outputs.PaymentIntentNextActionKonbiniDisplayDetailsStoresMinistop;
+    /**
+     * Seicomart instruction details.
+     */
+    seicomart: outputs.PaymentIntentNextActionKonbiniDisplayDetailsStoresSeicomart;
+}
+
+export interface PaymentIntentNextActionKonbiniDisplayDetailsStoresFamilymart {
+    /**
+     * The confirmation number.
+     */
+    confirmationNumber: string;
+    /**
+     * The payment code.
+     */
+    paymentCode: string;
+}
+
+export interface PaymentIntentNextActionKonbiniDisplayDetailsStoresLawson {
+    /**
+     * The confirmation number.
+     */
+    confirmationNumber: string;
+    /**
+     * The payment code.
+     */
+    paymentCode: string;
+}
+
+export interface PaymentIntentNextActionKonbiniDisplayDetailsStoresMinistop {
+    /**
+     * The confirmation number.
+     */
+    confirmationNumber: string;
+    /**
+     * The payment code.
+     */
+    paymentCode: string;
+}
+
+export interface PaymentIntentNextActionKonbiniDisplayDetailsStoresSeicomart {
+    /**
+     * The confirmation number.
+     */
+    confirmationNumber: string;
+    /**
+     * The payment code.
+     */
+    paymentCode: string;
+}
+
+export interface PaymentIntentNextActionMultibancoDisplayDetails {
+    /**
+     * Entity number associated with this Multibanco payment.
+     */
+    entity: string;
+    /**
+     * The timestamp at which the Multibanco voucher expires.
+     */
+    expiresAt: number;
+    /**
+     * The URL for the hosted Multibanco voucher page, which allows customers to view a Multibanco voucher.
+     */
+    hostedVoucherUrl: string;
+    /**
+     * Reference number associated with this Multibanco payment.
+     */
+    reference: string;
+}
+
+export interface PaymentIntentNextActionOxxoDisplayDetails {
+    /**
+     * The timestamp after which the OXXO voucher expires.
+     */
+    expiresAfter: number;
+    /**
+     * The URL for the hosted OXXO voucher page, which allows customers to view and print an OXXO voucher.
+     */
+    hostedVoucherUrl: string;
+    /**
+     * OXXO reference number.
+     */
+    number: string;
+}
+
+export interface PaymentIntentNextActionPaynowDisplayQrCode {
+    /**
+     * The raw data string used to generate QR code, it should be used together with QR code library.
+     */
+    data: string;
+    /**
+     * The URL to the hosted PayNow instructions page, which allows customers to view the PayNow QR code.
+     */
+    hostedInstructionsUrl: string;
+    /**
+     * The image*url*png string used to render QR code
+     */
+    imageUrlPng: string;
+    /**
+     * The image*url*svg string used to render QR code
+     */
+    imageUrlSvg: string;
+}
+
+export interface PaymentIntentNextActionPixDisplayQrCode {
+    /**
+     * The raw data string used to generate QR code, it should be used together with QR code library.
+     */
+    data: string;
+    /**
+     * The date (unix timestamp) when the PIX expires.
+     */
+    expiresAt: number;
+    /**
+     * The URL to the hosted pix instructions page, which allows customers to view the pix QR code.
+     */
+    hostedInstructionsUrl: string;
+    /**
+     * The image*url*png string used to render png QR code
+     */
+    imageUrlPng: string;
+    /**
+     * The image*url*svg string used to render svg QR code
+     */
+    imageUrlSvg: string;
+}
+
+export interface PaymentIntentNextActionPromptpayDisplayQrCode {
+    /**
+     * The raw data string used to generate QR code, it should be used together with QR code library.
+     */
+    data: string;
+    /**
+     * The URL to the hosted PromptPay instructions page, which allows customers to view the PromptPay QR code.
+     */
+    hostedInstructionsUrl: string;
+    /**
+     * The PNG path used to render the QR code, can be used as the source in an HTML img tag
+     */
+    imageUrlPng: string;
+    /**
+     * The SVG path used to render the QR code, can be used as the source in an HTML img tag
+     */
+    imageUrlSvg: string;
+}
+
+export interface PaymentIntentNextActionRedirectToUrl {
+    /**
+     * If the customer does not exit their browser while authenticating, they will be redirected to this specified URL after completion.
+     */
+    returnUrl: string;
+    /**
+     * The URL you must redirect your customer to in order to authenticate the payment.
+     */
+    url: string;
+}
+
+export interface PaymentIntentNextActionSwishHandleRedirectOrDisplayQrCode {
+    /**
+     * The URL to the hosted Swish instructions page, which allows customers to view the QR code.
+     */
+    hostedInstructionsUrl: string;
+    /**
+     * The url for mobile redirect based auth (for internal use only and not typically available in standard API requests).
+     */
+    mobileAuthUrl: string;
+    qrCode: outputs.PaymentIntentNextActionSwishHandleRedirectOrDisplayQrCodeQrCode;
+}
+
+export interface PaymentIntentNextActionSwishHandleRedirectOrDisplayQrCodeQrCode {
+    /**
+     * The raw data string used to generate QR code, it should be used together with QR code library.
+     */
+    data: string;
+    /**
+     * The image*url*png string used to render QR code
+     */
+    imageUrlPng: string;
+    /**
+     * The image*url*svg string used to render QR code
+     */
+    imageUrlSvg: string;
+}
+
+export interface PaymentIntentNextActionUpiHandleRedirectOrDisplayQrCode {
+    /**
+     * The URL to the hosted UPI instructions page, which allows customers to view the QR code.
+     */
+    hostedInstructionsUrl: string;
+    qrCode: outputs.PaymentIntentNextActionUpiHandleRedirectOrDisplayQrCodeQrCode;
+}
+
+export interface PaymentIntentNextActionUpiHandleRedirectOrDisplayQrCodeQrCode {
+    /**
+     * The date (unix timestamp) when the QR code expires.
+     */
+    expiresAt: number;
+    /**
+     * The image*url*png string used to render QR code
+     */
+    imageUrlPng: string;
+    /**
+     * The image*url*svg string used to render QR code
+     */
+    imageUrlSvg: string;
+}
+
+export interface PaymentIntentNextActionVerifyWithMicrodeposits {
+    /**
+     * The timestamp when the microdeposits are expected to land.
+     */
+    arrivalDate: number;
+    /**
+     * The URL for the hosted verification page, which allows customers to verify their bank account.
+     */
+    hostedVerificationUrl: string;
+    /**
+     * The type of the microdeposit sent to the customer. Used to distinguish between different verification methods.
+     */
+    microdepositType: string;
+}
+
+export interface PaymentIntentNextActionWechatPayDisplayQrCode {
+    /**
+     * The data being used to generate QR code
+     */
+    data: string;
+    /**
+     * The URL to the hosted WeChat Pay instructions page, which allows customers to view the WeChat Pay QR code.
+     */
+    hostedInstructionsUrl: string;
+    /**
+     * The base64 image data for a pre-generated QR code
+     */
+    imageDataUrl: string;
+    /**
+     * The image*url*png string used to render QR code
+     */
+    imageUrlPng: string;
+    /**
+     * The image*url*svg string used to render QR code
+     */
+    imageUrlSvg: string;
+}
+
+export interface PaymentIntentNextActionWechatPayRedirectToAndroidApp {
+    /**
+     * app_id is the APP ID registered on WeChat open platform
+     */
+    appId: string;
+    /**
+     * nonce_str is a random string
+     */
+    nonceStr: string;
+    /**
+     * package is static value
+     */
+    package: string;
+    /**
+     * an unique merchant ID assigned by WeChat Pay
+     */
+    partnerId: string;
+    /**
+     * an unique trading ID assigned by WeChat Pay
+     */
+    prepayId: string;
+    /**
+     * A signature
+     */
+    sign: string;
+    /**
+     * Specifies the current time in epoch format
+     */
+    timestamp: string;
+}
+
+export interface PaymentIntentNextActionWechatPayRedirectToIosApp {
+    /**
+     * An universal link that redirect to WeChat Pay app
+     */
+    nativeUrl: string;
+}
+
+export interface PaymentIntentPaymentDetails {
+    /**
+     * A unique value to identify the customer. This field is available only for card payments.
+     */
+    customerReference: string;
+    /**
+     * A unique value assigned by the business to identify the transaction. Required for L2 and L3 rates.
+     *
+     * For Cards, this field is truncated to 25 alphanumeric characters, excluding spaces, before being sent to card networks. For Klarna, this field is truncated to 255 characters and is visible to customers when they view the order in the Klarna app.
+     */
+    orderReference: string;
+}
+
+export interface PaymentIntentPaymentMethodConfigurationDetails {
+    /**
+     * ID of the payment method configuration used.
+     */
+    id: string;
+    /**
+     * ID of the parent payment method configuration used.
+     */
+    parent: string;
+}
+
+export interface PaymentIntentPaymentMethodData {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is an `acssDebit` PaymentMethod, this hash contains details about the ACSS Debit payment method.
+     */
+    acssDebit?: outputs.PaymentIntentPaymentMethodDataAcssDebit;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * This field indicates whether this payment method can be shown again to its customer in a checkout flow. Stripe products such as Checkout and Elements use this field to determine whether a payment method can be shown as a saved payment method in a checkout flow. The field defaults to `unspecified`.
+     */
+    allowRedisplay?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is an `auBecsDebit` PaymentMethod, this hash contains details about the bank account.
+     */
+    auBecsDebit?: outputs.PaymentIntentPaymentMethodDataAuBecsDebit;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a `bacsDebit` PaymentMethod, this hash contains details about the Bacs Direct Debit bank account.
+     */
+    bacsDebit?: outputs.PaymentIntentPaymentMethodDataBacsDebit;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Billing information associated with the PaymentMethod that may be used or required by particular types of payment methods.
+     */
+    billingDetails?: outputs.PaymentIntentPaymentMethodDataBillingDetails;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a `boleto` PaymentMethod, this hash contains details about the Boleto payment method.
+     */
+    boleto?: outputs.PaymentIntentPaymentMethodDataBoleto;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is an `eps` PaymentMethod, this hash contains details about the EPS payment method.
+     */
+    eps?: outputs.PaymentIntentPaymentMethodDataEps;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is an `fpx` PaymentMethod, this hash contains details about the FPX payment method.
+     */
+    fpx?: outputs.PaymentIntentPaymentMethodDataFpx;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is an `ideal` PaymentMethod, this hash contains details about the iDEAL payment method.
+     */
+    ideal?: outputs.PaymentIntentPaymentMethodDataIdeal;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a `klarna` PaymentMethod, this hash contains details about the Klarna payment method.
+     */
+    klarna?: outputs.PaymentIntentPaymentMethodDataKlarna;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
+     */
+    metadata?: {[key: string]: string};
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a `naverPay` PaymentMethod, this hash contains details about the Naver Pay payment method.
+     */
+    naverPay?: outputs.PaymentIntentPaymentMethodDataNaverPay;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is an nz*bank*account PaymentMethod, this hash contains details about the nz*bank*account payment method.
+     */
+    nzBankAccount?: outputs.PaymentIntentPaymentMethodDataNzBankAccount;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a `p24` PaymentMethod, this hash contains details about the P24 payment method.
+     */
+    p24?: outputs.PaymentIntentPaymentMethodDataP24;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a `payto` PaymentMethod, this hash contains details about the PayTo payment method.
+     */
+    payto?: outputs.PaymentIntentPaymentMethodDataPayto;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Options to configure Radar. See [Radar Session](https://docs.stripe.com/radar/radar-session) for more information.
+     */
+    radarOptions?: outputs.PaymentIntentPaymentMethodDataRadarOptions;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a `sepaDebit` PaymentMethod, this hash contains details about the SEPA debit bank account.
+     */
+    sepaDebit?: outputs.PaymentIntentPaymentMethodDataSepaDebit;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a `sofort` PaymentMethod, this hash contains details about the SOFORT payment method.
+     */
+    sofort?: outputs.PaymentIntentPaymentMethodDataSofort;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The type of the PaymentMethod. An additional hash is included on the PaymentMethod with a name matching this value. It contains additional information specific to the PaymentMethod type.
+     */
+    type: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a `upi` PaymentMethod, this hash contains details about the UPI payment method.
+     */
+    upi?: outputs.PaymentIntentPaymentMethodDataUpi;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is an `usBankAccount` PaymentMethod, this hash contains details about the US bank account payment method.
+     */
+    usBankAccount?: outputs.PaymentIntentPaymentMethodDataUsBankAccount;
+}
+
+export interface PaymentIntentPaymentMethodDataAcssDebit {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Customer's bank account number.
+     */
+    accountNumber: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Institution number of the customer's bank.
+     */
+    institutionNumber: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Transit number of the customer's bank.
+     */
+    transitNumber: string;
+}
+
+export interface PaymentIntentPaymentMethodDataAuBecsDebit {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The account number for the bank account.
+     */
+    accountNumber: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Bank-State-Branch number of the bank account.
+     */
+    bsbNumber: string;
+}
+
+export interface PaymentIntentPaymentMethodDataBacsDebit {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Account number of the bank account that the funds will be debited from.
+     */
+    accountNumber?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Sort code of the bank account. (e.g., `10-20-30`)
+     */
+    sortCode?: string;
+}
+
+export interface PaymentIntentPaymentMethodDataBillingDetails {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Billing address.
+     */
+    address?: outputs.PaymentIntentPaymentMethodDataBillingDetailsAddress;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Email address.
+     */
+    email?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Full name.
+     */
+    name?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Billing phone number (including extension).
+     */
+    phone?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Taxpayer identification number. Used only for transactions between LATAM buyers and non-LATAM sellers.
+     */
+    taxId?: string;
+}
+
+export interface PaymentIntentPaymentMethodDataBillingDetailsAddress {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * City, district, suburb, town, or village.
+     */
+    city?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * ZIP or postal code.
+     */
+    postalCode?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: string;
+}
+
+export interface PaymentIntentPaymentMethodDataBoleto {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The tax ID of the customer (CPF for individual consumers or CNPJ for businesses consumers)
+     */
+    taxId: string;
+}
+
+export interface PaymentIntentPaymentMethodDataEps {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The customer's bank.
+     */
+    bank?: string;
+}
+
+export interface PaymentIntentPaymentMethodDataFpx {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Account holder type for FPX transaction
+     */
+    accountHolderType?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The customer's bank.
+     */
+    bank: string;
+}
+
+export interface PaymentIntentPaymentMethodDataIdeal {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The customer's bank. Only use this parameter for existing customers. Don't use it for new customers.
+     */
+    bank?: string;
+}
+
+export interface PaymentIntentPaymentMethodDataKlarna {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Customer's date of birth
+     */
+    dob?: outputs.PaymentIntentPaymentMethodDataKlarnaDob;
+}
+
+export interface PaymentIntentPaymentMethodDataKlarnaDob {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The day of birth, between 1 and 31.
+     */
+    day: number;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The month of birth, between 1 and 12.
+     */
+    month: number;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The four-digit year of birth.
+     */
+    year: number;
+}
+
+export interface PaymentIntentPaymentMethodDataNaverPay {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether to use Naver Pay points or a card to fund this transaction. If not provided, this defaults to `card`.
+     */
+    funding?: string;
+}
+
+export interface PaymentIntentPaymentMethodDataNzBankAccount {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The name on the bank account. Only required if the account holder name is different from the name of the authorized signatory collected in the PaymentMethod’s billing details.
+     */
+    accountHolderName?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The account number for the bank account.
+     */
+    accountNumber: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The numeric code for the bank account's bank.
+     */
+    bankCode: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The numeric code for the bank account's bank branch.
+     */
+    branchCode: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     */
+    reference?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The suffix of the bank account number.
+     */
+    suffix: string;
+}
+
+export interface PaymentIntentPaymentMethodDataP24 {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The customer's bank.
+     */
+    bank?: string;
+}
+
+export interface PaymentIntentPaymentMethodDataPayto {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The account number for the bank account.
+     */
+    accountNumber?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Bank-State-Branch number of the bank account.
+     */
+    bsbNumber?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The PayID alias for the bank account.
+     */
+    payId?: string;
+}
+
+export interface PaymentIntentPaymentMethodDataRadarOptions {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * A [Radar Session](https://docs.stripe.com/radar/radar-session) is a snapshot of the browser metadata and device details that help Radar make more accurate predictions on your payments.
+     */
+    session?: string;
+}
+
+export interface PaymentIntentPaymentMethodDataSepaDebit {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * IBAN of the bank account.
+     */
+    iban: string;
+}
+
+export interface PaymentIntentPaymentMethodDataSofort {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Two-letter ISO code representing the country the bank account is located in.
+     */
+    country: string;
+}
+
+export interface PaymentIntentPaymentMethodDataUpi {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Configuration options for setting up an eMandate
+     */
+    mandateOptions?: outputs.PaymentIntentPaymentMethodDataUpiMandateOptions;
+}
+
+export interface PaymentIntentPaymentMethodDataUpiMandateOptions {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Amount to be charged for future payments.
+     */
+    amount?: number;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * One of `fixed` or `maximum`. If `fixed`, the `amount` param refers to the exact amount to be charged in future payments. If `maximum`, the amount charged can be up to the value passed for the `amount` param.
+     */
+    amountType?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * A description of the mandate or subscription that is meant to be displayed to the customer.
+     */
+    description?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * End date of the mandate or subscription.
+     */
+    endDate?: number;
+}
+
+export interface PaymentIntentPaymentMethodDataUsBankAccount {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Account holder type: individual or company.
+     */
+    accountHolderType?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Account number of the bank account.
+     */
+    accountNumber?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Account type: checkings or savings. Defaults to checking if omitted.
+     */
+    accountType?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The ID of a Financial Connections Account to use as a payment method.
+     */
+    financialConnectionsAccount?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Routing number of the bank account.
+     */
+    routingNumber?: string;
+}
+
+export interface PaymentIntentPaymentMethodOptions {
+    acssDebit: outputs.PaymentIntentPaymentMethodOptionsAcssDebit;
+    affirm: outputs.PaymentIntentPaymentMethodOptionsAffirm;
+    afterpayClearpay: outputs.PaymentIntentPaymentMethodOptionsAfterpayClearpay;
+    alipay: outputs.PaymentIntentPaymentMethodOptionsAlipay;
+    alma: outputs.PaymentIntentPaymentMethodOptionsAlma;
+    amazonPay: outputs.PaymentIntentPaymentMethodOptionsAmazonPay;
+    auBecsDebit: outputs.PaymentIntentPaymentMethodOptionsAuBecsDebit;
+    bacsDebit: outputs.PaymentIntentPaymentMethodOptionsBacsDebit;
+    bancontact: outputs.PaymentIntentPaymentMethodOptionsBancontact;
+    billie: outputs.PaymentIntentPaymentMethodOptionsBillie;
+    blik: outputs.PaymentIntentPaymentMethodOptionsBlik;
+    boleto: outputs.PaymentIntentPaymentMethodOptionsBoleto;
+    card: outputs.PaymentIntentPaymentMethodOptionsCard;
+    cardPresent: outputs.PaymentIntentPaymentMethodOptionsCardPresent;
+    cashapp: outputs.PaymentIntentPaymentMethodOptionsCashapp;
+    crypto: outputs.PaymentIntentPaymentMethodOptionsCrypto;
+    customerBalance: outputs.PaymentIntentPaymentMethodOptionsCustomerBalance;
+    eps: outputs.PaymentIntentPaymentMethodOptionsEps;
+    fpx: outputs.PaymentIntentPaymentMethodOptionsFpx;
+    giropay: outputs.PaymentIntentPaymentMethodOptionsGiropay;
+    grabpay: outputs.PaymentIntentPaymentMethodOptionsGrabpay;
+    ideal: outputs.PaymentIntentPaymentMethodOptionsIdeal;
+    kakaoPay: outputs.PaymentIntentPaymentMethodOptionsKakaoPay;
+    klarna: outputs.PaymentIntentPaymentMethodOptionsKlarna;
+    konbini: outputs.PaymentIntentPaymentMethodOptionsKonbini;
+    krCard: outputs.PaymentIntentPaymentMethodOptionsKrCard;
+    mbWay: outputs.PaymentIntentPaymentMethodOptionsMbWay;
+    mobilepay: outputs.PaymentIntentPaymentMethodOptionsMobilepay;
+    multibanco: outputs.PaymentIntentPaymentMethodOptionsMultibanco;
+    naverPay: outputs.PaymentIntentPaymentMethodOptionsNaverPay;
+    nzBankAccount: outputs.PaymentIntentPaymentMethodOptionsNzBankAccount;
+    oxxo: outputs.PaymentIntentPaymentMethodOptionsOxxo;
+    p24: outputs.PaymentIntentPaymentMethodOptionsP24;
+    payco: outputs.PaymentIntentPaymentMethodOptionsPayco;
+    paynow: outputs.PaymentIntentPaymentMethodOptionsPaynow;
+    paypal: outputs.PaymentIntentPaymentMethodOptionsPaypal;
+    payto: outputs.PaymentIntentPaymentMethodOptionsPayto;
+    pix: outputs.PaymentIntentPaymentMethodOptionsPix;
+    promptpay: outputs.PaymentIntentPaymentMethodOptionsPromptpay;
+    revolutPay: outputs.PaymentIntentPaymentMethodOptionsRevolutPay;
+    samsungPay: outputs.PaymentIntentPaymentMethodOptionsSamsungPay;
+    satispay: outputs.PaymentIntentPaymentMethodOptionsSatispay;
+    scalapay: outputs.PaymentIntentPaymentMethodOptionsScalapay;
+    sepaDebit: outputs.PaymentIntentPaymentMethodOptionsSepaDebit;
+    sofort: outputs.PaymentIntentPaymentMethodOptionsSofort;
+    swish: outputs.PaymentIntentPaymentMethodOptionsSwish;
+    twint: outputs.PaymentIntentPaymentMethodOptionsTwint;
+    upi: outputs.PaymentIntentPaymentMethodOptionsUpi;
+    usBankAccount: outputs.PaymentIntentPaymentMethodOptionsUsBankAccount;
+    wechatPay: outputs.PaymentIntentPaymentMethodOptionsWechatPay;
+    zip: outputs.PaymentIntentPaymentMethodOptionsZip;
+}
+
+export interface PaymentIntentPaymentMethodOptionsAcssDebit {
+    mandateOptions: outputs.PaymentIntentPaymentMethodOptionsAcssDebitMandateOptions;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+    /**
+     * Controls when Stripe will attempt to debit the funds from the customer's account. The date must be a string in YYYY-MM-DD format. The date must be in the future and between 3 and 15 calendar days from now.
+     */
+    targetDate: string;
+    /**
+     * Bank account verification method. The default value is `automatic`.
+     */
+    verificationMethod: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsAcssDebitMandateOptions {
+    /**
+     * A URL for custom mandate text
+     */
+    customMandateUrl: string;
+    /**
+     * Description of the interval. Only required if the 'payment_schedule' parameter is 'interval' or 'combined'.
+     */
+    intervalDescription: string;
+    /**
+     * Payment schedule for the mandate.
+     */
+    paymentSchedule: string;
+    /**
+     * Transaction type of the mandate.
+     */
+    transactionType: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsAffirm {
+    /**
+     * Controls when the funds will be captured from the customer's account.
+     */
+    captureMethod: string;
+    /**
+     * Preferred language of the Affirm authorization page that the customer is redirected to.
+     */
+    preferredLocale: string;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsAfterpayClearpay {
+    /**
+     * Controls when the funds will be captured from the customer's account.
+     */
+    captureMethod: string;
+    /**
+     * An internal identifier or reference that this payment corresponds to. You must limit the identifier to 128 characters, and it can only contain letters, numbers, underscores, backslashes, and dashes.
+     * This field differs from the statement descriptor and item name.
+     */
+    reference: string;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsAlipay {
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsAlma {
+    /**
+     * Controls when the funds will be captured from the customer's account.
+     */
+    captureMethod: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsAmazonPay {
+    /**
+     * Controls when the funds will be captured from the customer's account.
+     */
+    captureMethod: string;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsAuBecsDebit {
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+    /**
+     * Controls when Stripe will attempt to debit the funds from the customer's account. The date must be a string in YYYY-MM-DD format. The date must be in the future and between 3 and 15 calendar days from now.
+     */
+    targetDate: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsBacsDebit {
+    mandateOptions: outputs.PaymentIntentPaymentMethodOptionsBacsDebitMandateOptions;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+    /**
+     * Controls when Stripe will attempt to debit the funds from the customer's account. The date must be a string in YYYY-MM-DD format. The date must be in the future and between 3 and 15 calendar days from now.
+     */
+    targetDate: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsBacsDebitMandateOptions {
+    /**
+     * Prefix used to generate the Mandate reference. Must be at most 12 characters long. Must consist of only uppercase letters, numbers, spaces, or the following special characters: '/', '_', '-', '&', '.'. Cannot begin with 'DDIC' or 'STRIPE'.
+     */
+    referencePrefix: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsBancontact {
+    /**
+     * Preferred language of the Bancontact authorization page that the customer is redirected to.
+     */
+    preferredLanguage: string;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsBillie {
+    /**
+     * Controls when the funds will be captured from the customer's account.
+     */
+    captureMethod: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsBlik {
+    /**
+     * The 6-digit BLIK code that a customer has generated using their banking application. Can only be set on confirmation.
+     */
+    code?: string;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsBoleto {
+    /**
+     * The number of calendar days before a Boleto voucher expires. For example, if you create a Boleto voucher on Monday and you set expires*after*days to 2, the Boleto voucher will expire on Wednesday at 23:59 America/Sao_Paulo time.
+     */
+    expiresAfterDays: number;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsCard {
+    /**
+     * Controls when the funds will be captured from the customer's account.
+     */
+    captureMethod: string;
+    /**
+     * A single-use `cvcUpdate` Token that represents a card CVC value. When provided, the CVC value will be verified during the card payment attempt. This parameter can only be provided during confirmation.
+     */
+    cvcToken?: string;
+    /**
+     * Installment details for this payment.
+     */
+    installments: outputs.PaymentIntentPaymentMethodOptionsCardInstallments;
+    /**
+     * Configuration options for setting up an eMandate for cards issued in India.
+     */
+    mandateOptions: outputs.PaymentIntentPaymentMethodOptionsCardMandateOptions;
+    /**
+     * When specified, this parameter indicates that a transaction will be marked
+     * as MOTO (Mail Order Telephone Order) and thus out of scope for SCA. This
+     * parameter can only be provided during confirmation.
+     */
+    moto?: boolean;
+    /**
+     * Selected network to process this payment intent on. Depends on the available networks of the card attached to the payment intent. Can be only set confirm-time.
+     */
+    network: string;
+    /**
+     * Request ability to [capture beyond the standard authorization validity window](https://docs.stripe.com/payments/extended-authorization) for this PaymentIntent.
+     */
+    requestExtendedAuthorization: string;
+    /**
+     * Request ability to [increment the authorization](https://docs.stripe.com/payments/incremental-authorization) for this PaymentIntent.
+     */
+    requestIncrementalAuthorization: string;
+    /**
+     * Request ability to make [multiple captures](https://docs.stripe.com/payments/multicapture) for this PaymentIntent.
+     */
+    requestMulticapture: string;
+    /**
+     * Request ability to [overcapture](https://docs.stripe.com/payments/overcapture) for this PaymentIntent.
+     */
+    requestOvercapture: string;
+    /**
+     * We strongly recommend that you rely on our SCA Engine to automatically prompt your customers for authentication based on risk level and [other requirements](https://docs.stripe.com/strong-customer-authentication). However, if you wish to request 3D Secure based on logic from your own fraud engine, provide this option. If not provided, this value defaults to `automatic`. Read our guide on [manually requesting 3D Secure](https://docs.stripe.com/payments/3d-secure/authentication-flow#manual-three-ds) for more information on how this configuration interacts with Radar and our SCA Engine.
+     */
+    requestThreeDSecure: string;
+    /**
+     * When enabled, using a card that is attached to a customer will require the CVC to be provided again (i.e. using the cvcToken parameter).
+     */
+    requireCvcRecollection: boolean;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     *
+     * If you provide a Customer with the PaymentIntent, you can use this parameter to [attach the payment method](https://www.terraform.io/payments/save-during-payment) to the Customer after the PaymentIntent is confirmed and the customer completes any required actions. If you don't provide a Customer, you can still [attach](https://www.terraform.io/api/payment_methods/attach) the payment method to a Customer after the transaction completes.
+     *
+     * If the payment method is `cardPresent` and isn't a digital wallet, Stripe creates and attaches a [generatedCard](https://www.terraform.io/api/charges/object#charge_object-payment_method_details-card_present-generated_card) payment method representing the card to the Customer instead.
+     *
+     * When processing card payments, Stripe uses `setupFutureUsage` to help you comply with regional legislation and network rules, such as [SCA](https://www.terraform.io/strong-customer-authentication).
+     */
+    setupFutureUsage: string;
+    /**
+     * Provides information about a card payment that customers see on their statements. Concatenated with the Kana prefix (shortened Kana descriptor) or Kana statement descriptor that’s set on the account to form the complete statement descriptor. Maximum 22 characters. On card statements, the *concatenation* of both prefix and suffix (including separators) will appear truncated to 22 characters.
+     */
+    statementDescriptorSuffixKana: string;
+    /**
+     * Provides information about a card payment that customers see on their statements. Concatenated with the Kanji prefix (shortened Kanji descriptor) or Kanji statement descriptor that’s set on the account to form the complete statement descriptor. Maximum 17 characters. On card statements, the *concatenation* of both prefix and suffix (including separators) will appear truncated to 17 characters.
+     */
+    statementDescriptorSuffixKanji: string;
+    /**
+     * If 3D Secure authentication was performed with a third-party provider,
+     * the authentication details to use for this payment.
+     */
+    threeDSecure?: outputs.PaymentIntentPaymentMethodOptionsCardThreeDSecure;
+}
+
+export interface PaymentIntentPaymentMethodOptionsCardInstallments {
+    /**
+     * Installment plans that may be selected for this PaymentIntent.
+     */
+    availablePlans: outputs.PaymentIntentPaymentMethodOptionsCardInstallmentsAvailablePlan[];
+    /**
+     * Whether Installments are enabled for this PaymentIntent.
+     */
+    enabled: boolean;
+    /**
+     * Installment plan selected for this PaymentIntent.
+     */
+    plan: outputs.PaymentIntentPaymentMethodOptionsCardInstallmentsPlan;
+}
+
+export interface PaymentIntentPaymentMethodOptionsCardInstallmentsAvailablePlan {
+    /**
+     * For `fixedCount` installment plans, this is the number of installment payments your customer will make to their credit card.
+     */
+    count: number;
+    /**
+     * For `fixedCount` installment plans, this is the interval between installment payments your customer will make to their credit card.
+     * One of `month`.
+     */
+    interval: string;
+    /**
+     * Type of installment plan, one of `fixedCount`, `bonus`, or `revolving`.
+     */
+    type: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsCardInstallmentsPlan {
+    /**
+     * For `fixedCount` installment plans, this is the number of installment payments your customer will make to their credit card.
+     */
+    count: number;
+    /**
+     * For `fixedCount` installment plans, this is the interval between installment payments your customer will make to their credit card.
+     * One of `month`.
+     */
+    interval: string;
+    /**
+     * Type of installment plan, one of `fixedCount`, `bonus`, or `revolving`.
+     */
+    type: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsCardMandateOptions {
+    /**
+     * Amount to be charged for future payments, specified in the presentment currency.
+     */
+    amount: number;
+    /**
+     * One of `fixed` or `maximum`. If `fixed`, the `amount` param refers to the exact amount to be charged in future payments. If `maximum`, the amount charged can be up to the value passed for the `amount` param.
+     */
+    amountType: string;
+    /**
+     * A description of the mandate or subscription that is meant to be displayed to the customer.
+     */
+    description: string;
+    /**
+     * End date of the mandate or subscription. If not provided, the mandate will be active until canceled. If provided, end date should be after start date.
+     */
+    endDate: number;
+    /**
+     * Specifies payment frequency. One of `day`, `week`, `month`, `year`, or `sporadic`.
+     */
+    interval: string;
+    /**
+     * The number of intervals between payments. For example, `interval=month` and `interval_count=3` indicates one payment every three months. Maximum of one year interval allowed (1 year, 12 months, or 52 weeks). This parameter is optional when `interval=sporadic`.
+     */
+    intervalCount: number;
+    /**
+     * Unique identifier for the mandate or subscription.
+     */
+    reference: string;
+    /**
+     * Start date of the mandate or subscription. Start date should not be lesser than yesterday.
+     */
+    startDate: number;
+    /**
+     * Specifies the type of mandates supported. Possible values are `india`.
+     */
+    supportedTypes: string[];
+}
+
+export interface PaymentIntentPaymentMethodOptionsCardPresent {
+    /**
+     * Controls when the funds will be captured from the customer's account.
+     */
+    captureMethod: string;
+    /**
+     * Request ability to capture this payment beyond the standard [authorization validity window](https://docs.stripe.com/terminal/features/extended-authorizations#authorization-validity)
+     */
+    requestExtendedAuthorization: boolean;
+    /**
+     * Request ability to [increment](https://docs.stripe.com/terminal/features/incremental-authorizations) this PaymentIntent if the combination of MCC and card brand is eligible. Check [incremental*authorization*supported](https://docs.stripe.com/api/charges/object#charge_object-payment_method_details-card_present-incremental_authorization_supported) in the [Confirm](https://docs.stripe.com/api/payment_intents/confirm) response to verify support.
+     */
+    requestIncrementalAuthorizationSupport: boolean;
+    routing: outputs.PaymentIntentPaymentMethodOptionsCardPresentRouting;
+}
+
+export interface PaymentIntentPaymentMethodOptionsCardPresentRouting {
+    /**
+     * Requested routing priority
+     */
+    requestedPriority: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsCardThreeDSecure {
+    /**
+     * The `transStatus` returned from the card Issuer’s ACS in the ARes.
+     */
+    aresTransStatus?: string;
+    /**
+     * The cryptogram, also known as the "authentication value" (AAV, CAVV or
+     * AEVV). This value is 20 bytes, base64-encoded into a 28-character string.
+     * (Most 3D Secure providers will return the base64-encoded version, which
+     * is what you should specify here.)
+     */
+    cryptogram: string;
+    /**
+     * The Electronic Commerce Indicator (ECI) is returned by your 3D Secure
+     * provider and indicates what degree of authentication was performed.
+     */
+    electronicCommerceIndicator?: string;
+    /**
+     * The exemption requested via 3DS and accepted by the issuer at authentication time.
+     */
+    exemptionIndicator?: string;
+    /**
+     * Network specific 3DS fields. Network specific arguments require an
+     * explicit card brand choice. The parameter `payment_method_options.card.network``
+     * must be populated accordingly
+     */
+    networkOptions?: outputs.PaymentIntentPaymentMethodOptionsCardThreeDSecureNetworkOptions;
+    /**
+     * The challenge indicator (`threeDSRequestorChallengeInd`) which was requested in the
+     * AReq sent to the card Issuer's ACS. A string containing 2 digits from 01-99.
+     */
+    requestorChallengeIndicator?: string;
+    /**
+     * For 3D Secure 1, the XID. For 3D Secure 2, the Directory Server
+     * Transaction ID (dsTransID).
+     */
+    transactionId: string;
+    /**
+     * The version of 3D Secure that was performed.
+     */
+    version: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsCardThreeDSecureNetworkOptions {
+    /**
+     * Cartes Bancaires-specific 3DS fields.
+     */
+    cartesBancaires?: outputs.PaymentIntentPaymentMethodOptionsCardThreeDSecureNetworkOptionsCartesBancaires;
+}
+
+export interface PaymentIntentPaymentMethodOptionsCardThreeDSecureNetworkOptionsCartesBancaires {
+    /**
+     * The cryptogram calculation algorithm used by the card Issuer's ACS
+     * to calculate the Authentication cryptogram. Also known as `cavvAlgorithm`.
+     * messageExtension: CB-AVALGO
+     */
+    cbAvalgo: string;
+    /**
+     * The exemption indicator returned from Cartes Bancaires in the ARes.
+     * message extension: CB-EXEMPTION; string (4 characters)
+     * This is a 3 byte bitmap (low significant byte first and most significant
+     * bit first) that has been Base64 encoded
+     */
+    cbExemption?: string;
+    /**
+     * The risk score returned from Cartes Bancaires in the ARes.
+     * message extension: CB-SCORE; numeric value 0-99
+     */
+    cbScore?: number;
+}
+
+export interface PaymentIntentPaymentMethodOptionsCashapp {
+    /**
+     * Controls when the funds will be captured from the customer's account.
+     */
+    captureMethod: string;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsCrypto {
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsCustomerBalance {
+    bankTransfer: outputs.PaymentIntentPaymentMethodOptionsCustomerBalanceBankTransfer;
+    /**
+     * The funding method type to be used when there are not enough funds in the customer balance. Permitted values include: `bankTransfer`.
+     */
+    fundingType: string;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsCustomerBalanceBankTransfer {
+    euBankTransfer: outputs.PaymentIntentPaymentMethodOptionsCustomerBalanceBankTransferEuBankTransfer;
+    /**
+     * List of address types that should be returned in the financialAddresses response. If not specified, all valid types will be returned.
+     */
+    requestedAddressTypes: string[];
+    /**
+     * The bank transfer type that this PaymentIntent is allowed to use for funding Permitted values include: `euBankTransfer`, `gbBankTransfer`, `jpBankTransfer`, `mxBankTransfer`, or `usBankTransfer`.
+     */
+    type: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsCustomerBalanceBankTransferEuBankTransfer {
+    /**
+     * The desired country code of the bank account information. Permitted values include: `DE`, `FR`, `IE`, or `NL`.
+     */
+    country: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsEps {
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsFpx {
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsGiropay {
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsGrabpay {
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsIdeal {
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsKakaoPay {
+    /**
+     * Controls when the funds will be captured from the customer's account.
+     */
+    captureMethod: string;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsKlarna {
+    /**
+     * Controls when the funds will be captured from the customer's account.
+     */
+    captureMethod: string;
+    /**
+     * On-demand details if setting up or charging an on-demand payment.
+     */
+    onDemand?: outputs.PaymentIntentPaymentMethodOptionsKlarnaOnDemand;
+    /**
+     * Preferred locale of the Klarna checkout page that the customer is redirected to.
+     */
+    preferredLocale: string;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+    /**
+     * Subscription details if setting up or charging a subscription.
+     */
+    subscriptions?: outputs.PaymentIntentPaymentMethodOptionsKlarnaSubscription[];
+}
+
+export interface PaymentIntentPaymentMethodOptionsKlarnaOnDemand {
+    /**
+     * Your average amount value. You can use a value across your customer base, or segment based on customer type, country, etc.
+     */
+    averageAmount?: number;
+    /**
+     * The maximum value you may charge a customer per purchase. You can use a value across your customer base, or segment based on customer type, country, etc.
+     */
+    maximumAmount?: number;
+    /**
+     * The lowest or minimum value you may charge a customer per purchase. You can use a value across your customer base, or segment based on customer type, country, etc.
+     */
+    minimumAmount?: number;
+    /**
+     * Interval at which the customer is making purchases
+     */
+    purchaseInterval?: string;
+    /**
+     * The number of `purchaseInterval` between charges
+     */
+    purchaseIntervalCount?: number;
+}
+
+export interface PaymentIntentPaymentMethodOptionsKlarnaSubscription {
+    /**
+     * Unit of time between subscription charges.
+     */
+    interval: string;
+    /**
+     * The number of intervals (specified in the `interval` attribute) between subscription charges. For example, `interval=month` and `interval_count=3` charges every 3 months.
+     */
+    intervalCount?: number;
+    /**
+     * Name for subscription.
+     */
+    name?: string;
+    /**
+     * Describes the upcoming charge for this subscription.
+     */
+    nextBilling?: outputs.PaymentIntentPaymentMethodOptionsKlarnaSubscriptionNextBilling;
+    /**
+     * A non-customer-facing reference to correlate subscription charges in the Klarna app. Use a value that persists across subscription charges.
+     */
+    reference: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsKlarnaSubscriptionNextBilling {
+    /**
+     * The amount of the next charge for the subscription.
+     */
+    amount: number;
+    /**
+     * The date of the next charge for the subscription in YYYY-MM-DD format.
+     */
+    date: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsKonbini {
+    /**
+     * An optional 10 to 11 digit numeric-only string determining the confirmation code at applicable convenience stores.
+     */
+    confirmationNumber: string;
+    /**
+     * The number of calendar days (between 1 and 60) after which Konbini payment instructions will expire. For example, if a PaymentIntent is confirmed with Konbini and `expiresAfterDays` set to 2 on Monday JST, the instructions will expire on Wednesday 23:59:59 JST.
+     */
+    expiresAfterDays: number;
+    /**
+     * The timestamp at which the Konbini payment instructions will expire. Only one of `expiresAfterDays` or `expiresAt` may be set.
+     */
+    expiresAt: number;
+    /**
+     * A product descriptor of up to 22 characters, which will appear to customers at the convenience store.
+     */
+    productDescription: string;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsKrCard {
+    /**
+     * Controls when the funds will be captured from the customer's account.
+     */
+    captureMethod: string;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsMbWay {
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsMobilepay {
+    /**
+     * Controls when the funds will be captured from the customer's account.
+     */
+    captureMethod: string;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsMultibanco {
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsNaverPay {
+    /**
+     * Controls when the funds will be captured from the customer's account.
+     */
+    captureMethod: string;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsNzBankAccount {
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+    /**
+     * Controls when Stripe will attempt to debit the funds from the customer's account. The date must be a string in YYYY-MM-DD format. The date must be in the future and between 3 and 15 calendar days from now.
+     */
+    targetDate: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsOxxo {
+    /**
+     * The number of calendar days before an OXXO invoice expires. For example, if you create an OXXO invoice on Monday and you set expires*after*days to 2, the OXXO invoice will expire on Wednesday at 23:59 America/Mexico_City time.
+     */
+    expiresAfterDays: number;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsP24 {
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+    /**
+     * Confirm that the payer has accepted the P24 terms and conditions.
+     */
+    tosShownAndAccepted?: boolean;
+}
+
+export interface PaymentIntentPaymentMethodOptionsPayco {
+    /**
+     * Controls when the funds will be captured from the customer's account.
+     */
+    captureMethod: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsPaynow {
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsPaypal {
+    /**
+     * Controls when the funds will be captured from the customer's account.
+     */
+    captureMethod: string;
+    /**
+     * Preferred locale of the PayPal checkout page that the customer is redirected to.
+     */
+    preferredLocale: string;
+    /**
+     * A reference of the PayPal transaction visible to customer which is mapped to PayPal's invoice ID. This must be a globally unique ID if you have configured in your PayPal settings to block multiple payments per invoice ID.
+     */
+    reference: string;
+    /**
+     * The risk correlation ID for an on-session payment using a saved PayPal payment method.
+     */
+    riskCorrelationId?: string;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsPayto {
+    mandateOptions: outputs.PaymentIntentPaymentMethodOptionsPaytoMandateOptions;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsPaytoMandateOptions {
+    /**
+     * Amount that will be collected. It is required when `amountType` is `fixed`.
+     */
+    amount: number;
+    /**
+     * The type of amount that will be collected. The amount charged must be exact or up to the value of `amount` param for `fixed` or `maximum` type respectively. Defaults to `maximum`.
+     */
+    amountType: string;
+    /**
+     * Date, in YYYY-MM-DD format, after which payments will not be collected. Defaults to no end date.
+     */
+    endDate: string;
+    /**
+     * The periodicity at which payments will be collected. Defaults to `adhoc`.
+     */
+    paymentSchedule: string;
+    /**
+     * The number of payments that will be made during a payment period. Defaults to 1 except for when `paymentSchedule` is `adhoc`. In that case, it defaults to no limit.
+     */
+    paymentsPerPeriod: number;
+    /**
+     * The purpose for which payments are made. Has a default value based on your merchant category code.
+     */
+    purpose: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsPix {
+    /**
+     * Determines if the amount includes the IOF tax.
+     */
+    amountIncludesIof: string;
+    /**
+     * The number of seconds (between 10 and 1209600) after which Pix payment will expire.
+     */
+    expiresAfterSeconds: number;
+    /**
+     * The timestamp at which the Pix expires.
+     */
+    expiresAt: number;
+    mandateOptions: outputs.PaymentIntentPaymentMethodOptionsPixMandateOptions;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsPixMandateOptions {
+    /**
+     * Amount to be charged for future payments.
+     */
+    amount: number;
+    /**
+     * Determines if the amount includes the IOF tax.
+     */
+    amountIncludesIof: string;
+    /**
+     * Type of amount.
+     */
+    amountType: string;
+    /**
+     * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase.
+     */
+    currency: string;
+    /**
+     * Date when the mandate expires and no further payments will be charged, in `YYYY-MM-DD`.
+     */
+    endDate: string;
+    /**
+     * Schedule at which the future payments will be charged.
+     */
+    paymentSchedule: string;
+    /**
+     * Subscription name displayed to buyers in their bank app.
+     */
+    reference: string;
+    /**
+     * Start date of the mandate, in `YYYY-MM-DD`.
+     */
+    startDate: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsPromptpay {
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsRevolutPay {
+    /**
+     * Controls when the funds will be captured from the customer's account.
+     */
+    captureMethod: string;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsSamsungPay {
+    /**
+     * Controls when the funds will be captured from the customer's account.
+     */
+    captureMethod: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsSatispay {
+    /**
+     * Controls when the funds will be captured from the customer's account.
+     */
+    captureMethod: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsScalapay {
+    /**
+     * Controls when the funds will be captured from the customer's account.
+     */
+    captureMethod: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsSepaDebit {
+    mandateOptions: outputs.PaymentIntentPaymentMethodOptionsSepaDebitMandateOptions;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+    /**
+     * Controls when Stripe will attempt to debit the funds from the customer's account. The date must be a string in YYYY-MM-DD format. The date must be in the future and between 3 and 15 calendar days from now.
+     */
+    targetDate: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsSepaDebitMandateOptions {
+    /**
+     * Prefix used to generate the Mandate reference. Must be at most 12 characters long. Must consist of only uppercase letters, numbers, spaces, or the following special characters: '/', '_', '-', '&', '.'. Cannot begin with 'STRIPE'.
+     */
+    referencePrefix: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsSofort {
+    /**
+     * Preferred language of the SOFORT authorization page that the customer is redirected to.
+     */
+    preferredLanguage: string;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsSwish {
+    /**
+     * A reference for this payment to be displayed in the Swish app.
+     */
+    reference: string;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsTwint {
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsUpi {
+    /**
+     * Configuration options for setting up an eMandate
+     */
+    mandateOptions?: outputs.PaymentIntentPaymentMethodOptionsUpiMandateOptions;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsUpiMandateOptions {
+    /**
+     * Amount to be charged for future payments.
+     */
+    amount?: number;
+    /**
+     * One of `fixed` or `maximum`. If `fixed`, the `amount` param refers to the exact amount to be charged in future payments. If `maximum`, the amount charged can be up to the value passed for the `amount` param.
+     */
+    amountType?: string;
+    /**
+     * A description of the mandate or subscription that is meant to be displayed to the customer.
+     */
+    description?: string;
+    /**
+     * End date of the mandate or subscription.
+     */
+    endDate?: number;
+}
+
+export interface PaymentIntentPaymentMethodOptionsUsBankAccount {
+    financialConnections: outputs.PaymentIntentPaymentMethodOptionsUsBankAccountFinancialConnections;
+    mandateOptions: outputs.PaymentIntentPaymentMethodOptionsUsBankAccountMandateOptions;
+    /**
+     * Additional fields for network related functions
+     */
+    networks?: outputs.PaymentIntentPaymentMethodOptionsUsBankAccountNetworks;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+    /**
+     * Controls when Stripe will attempt to debit the funds from the customer's account. The date must be a string in YYYY-MM-DD format. The date must be in the future and between 3 and 15 calendar days from now.
+     */
+    targetDate: string;
+    /**
+     * The purpose of the transaction.
+     */
+    transactionPurpose: string;
+    /**
+     * Bank account verification method. The default value is `automatic`.
+     */
+    verificationMethod: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsUsBankAccountFinancialConnections {
+    filters: outputs.PaymentIntentPaymentMethodOptionsUsBankAccountFinancialConnectionsFilters;
+    /**
+     * The list of permissions to request. The `paymentMethod` permission must be included.
+     */
+    permissions: string[];
+    /**
+     * Data features requested to be retrieved upon account creation.
+     */
+    prefetches: string[];
+    /**
+     * For webview integrations only. Upon completing OAuth login in the native browser, the user will be redirected to this URL to return to your app.
+     */
+    returnUrl: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsUsBankAccountFinancialConnectionsFilters {
+    /**
+     * The account subcategories to use to filter for possible accounts to link. Valid subcategories are `checking` and `savings`.
+     */
+    accountSubcategories: string[];
+}
+
+export interface PaymentIntentPaymentMethodOptionsUsBankAccountMandateOptions {
+    /**
+     * Mandate collection method
+     */
+    collectionMethod: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsUsBankAccountNetworks {
+    /**
+     * Triggers validations to run across the selected networks
+     */
+    requesteds?: string[];
+}
+
+export interface PaymentIntentPaymentMethodOptionsWechatPay {
+    /**
+     * The app ID registered with WeChat Pay. Only required when client is ios or android.
+     */
+    appId: string;
+    /**
+     * The client type that the end customer will pay from
+     */
+    client: string;
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+}
+
+export interface PaymentIntentPaymentMethodOptionsZip {
+    /**
+     * Indicates that you intend to make future payments with this PaymentIntent's payment method.
+     */
+    setupFutureUsage: string;
+}
+
+export interface PaymentIntentPresentmentDetails {
+    /**
+     * Amount intended to be collected by this payment, denominated in `presentmentCurrency`.
+     */
+    presentmentAmount: number;
+    /**
+     * Currency presented to the customer during payment.
+     */
+    presentmentCurrency: string;
+}
+
+export interface PaymentIntentProcessing {
+    card: outputs.PaymentIntentProcessingCard;
+    /**
+     * Type of the payment method for which payment is in `processing` state, one of `card`.
+     */
+    type: string;
+}
+
+export interface PaymentIntentProcessingCard {
+    customerNotification: outputs.PaymentIntentProcessingCardCustomerNotification;
+}
+
+export interface PaymentIntentProcessingCardCustomerNotification {
+    /**
+     * Whether customer approval has been requested for this payment. For payments greater than INR 15000 or mandate amount, the customer must provide explicit approval of the payment with their bank.
+     */
+    approvalRequested: boolean;
+    /**
+     * If customer approval is required, they need to provide approval before this time.
+     */
+    completesAt: number;
+}
+
+export interface PaymentIntentRadarOptions {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * A [Radar Session](https://docs.stripe.com/radar/radar-session) is a snapshot of the browser metadata and device details that help Radar make more accurate predictions on your payments.
+     */
+    session?: string;
+}
+
+export interface PaymentIntentShipping {
+    address: outputs.PaymentIntentShippingAddress;
+    /**
+     * The delivery service that shipped a physical product, such as Fedex, UPS, USPS, etc.
+     */
+    carrier: string;
+    /**
+     * Recipient name.
+     */
+    name: string;
+    /**
+     * Recipient phone (including extension).
+     */
+    phone: string;
+    /**
+     * The tracking number for a physical product, obtained from the delivery service. If multiple tracking numbers were generated for this purchase, please separate them with commas.
+     */
+    trackingNumber: string;
+}
+
+export interface PaymentIntentShippingAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1: string;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2: string;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: string;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state: string;
+}
+
+export interface PaymentIntentTransferData {
+    /**
+     * The amount transferred to the destination account. This transfer will occur automatically after the payment succeeds. If no amount is specified, by default the entire payment amount is transferred to the destination account.
+     * The amount must be less than or equal to the [amount](https://docs.stripe.com/api/payment_intents/object#payment_intent_object-amount), and must be a positive integer
+     * representing how much to transfer in the smallest currency unit (e.g., 100 cents to charge $1.00).
+     */
+    amount: number;
+    /**
+     * An arbitrary string attached to the transfer. Often useful for displaying to users.
+     */
+    description: string;
+    /**
+     * The account (if any) that the payment is attributed to for tax reporting, and where funds from the payment are transferred to after payment success.
+     */
+    destination: string;
+    /**
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+     */
+    metadata: {[key: string]: string};
+    paymentData: outputs.PaymentIntentTransferDataPaymentData;
+}
+
+export interface PaymentIntentTransferDataPaymentData {
+    /**
+     * An arbitrary string attached to the destination payment. Often useful for displaying to users.
+     */
+    description: string;
+    /**
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+     */
+    metadata: {[key: string]: string};
+}
+
+export interface PaymentLinkAfterCompletion {
+    hostedConfirmation: outputs.PaymentLinkAfterCompletionHostedConfirmation;
+    redirect: outputs.PaymentLinkAfterCompletionRedirect;
+    /**
+     * The specified behavior after the purchase is complete.
+     */
+    type: string;
+}
+
+export interface PaymentLinkAfterCompletionHostedConfirmation {
+    /**
+     * The custom message that is displayed to the customer after the purchase is complete.
+     */
+    customMessage: string;
+}
+
+export interface PaymentLinkAfterCompletionRedirect {
+    /**
+     * The URL the customer will be redirected to after the purchase is complete.
+     */
+    url: string;
+}
+
+export interface PaymentLinkAutomaticTax {
+    /**
+     * If `true`, tax will be calculated automatically using the customer's location.
+     */
+    enabled: boolean;
+    /**
+     * The account that's liable for tax. If set, the business address and tax registrations required to perform the tax calculation are loaded from this account. The tax transaction is returned in the report of the connected account.
+     */
+    liability: outputs.PaymentLinkAutomaticTaxLiability;
+}
+
+export interface PaymentLinkAutomaticTaxLiability {
+    /**
+     * The connected account being referenced when `type` is `account`.
+     */
+    account: string;
+    /**
+     * Type of the account referenced.
+     */
+    type: string;
+}
+
+export interface PaymentLinkConsentCollection {
+    /**
+     * Settings related to the payment method reuse text shown in the Checkout UI.
+     */
+    paymentMethodReuseAgreement: outputs.PaymentLinkConsentCollectionPaymentMethodReuseAgreement;
+    /**
+     * If set to `auto`, enables the collection of customer consent for promotional communications.
+     */
+    promotions: string;
+    /**
+     * If set to `required`, it requires cutomers to accept the terms of service before being able to pay. If set to `none`, customers won't be shown a checkbox to accept the terms of service.
+     */
+    termsOfService: string;
+}
+
+export interface PaymentLinkConsentCollectionPaymentMethodReuseAgreement {
+    /**
+     * Determines the position and visibility of the payment method reuse agreement in the UI. When set to `auto`, Stripe's defaults will be used.
+     */
+    position: string;
+}
+
+export interface PaymentLinkCustomField {
+    dropdown: outputs.PaymentLinkCustomFieldDropdown;
+    /**
+     * String of your choice that your integration can use to reconcile this field. Must be unique to this field, alphanumeric, and up to 200 characters.
+     */
+    key: string;
+    label: outputs.PaymentLinkCustomFieldLabel;
+    numeric: outputs.PaymentLinkCustomFieldNumeric;
+    /**
+     * Whether the customer is required to complete the field before completing the Checkout Session. Defaults to `false`.
+     */
+    optional: boolean;
+    text: outputs.PaymentLinkCustomFieldText;
+    /**
+     * The type of the field.
+     */
+    type: string;
+}
+
+export interface PaymentLinkCustomFieldDropdown {
+    /**
+     * The value that pre-fills on the payment page.
+     */
+    defaultValue: string;
+    /**
+     * The options available for the customer to select. Up to 200 options allowed.
+     */
+    options: outputs.PaymentLinkCustomFieldDropdownOption[];
+}
+
+export interface PaymentLinkCustomFieldDropdownOption {
+    /**
+     * The label for the option, displayed to the customer. Up to 100 characters.
+     */
+    label: string;
+    /**
+     * The value for this option, not displayed to the customer, used by your integration to reconcile the option selected by the customer. Must be unique to this option, alphanumeric, and up to 100 characters.
+     */
+    value: string;
+}
+
+export interface PaymentLinkCustomFieldLabel {
+    /**
+     * Custom text for the label, displayed to the customer. Up to 50 characters.
+     */
+    custom: string;
+    /**
+     * The type of the label.
+     */
+    type: string;
+}
+
+export interface PaymentLinkCustomFieldNumeric {
+    /**
+     * The value that pre-fills the field on the payment page.
+     */
+    defaultValue: string;
+    /**
+     * The maximum character length constraint for the customer's input.
+     */
+    maximumLength: number;
+    /**
+     * The minimum character length requirement for the customer's input.
+     */
+    minimumLength: number;
+}
+
+export interface PaymentLinkCustomFieldText {
+    /**
+     * The value that pre-fills the field on the payment page.
+     */
+    defaultValue: string;
+    /**
+     * The maximum character length constraint for the customer's input.
+     */
+    maximumLength: number;
+    /**
+     * The minimum character length requirement for the customer's input.
+     */
+    minimumLength: number;
+}
+
+export interface PaymentLinkCustomText {
+    /**
+     * Custom text that should be displayed after the payment confirmation button.
+     */
+    afterSubmit: outputs.PaymentLinkCustomTextAfterSubmit;
+    /**
+     * Custom text that should be displayed alongside shipping address collection.
+     */
+    shippingAddress: outputs.PaymentLinkCustomTextShippingAddress;
+    /**
+     * Custom text that should be displayed alongside the payment confirmation button.
+     */
+    submit: outputs.PaymentLinkCustomTextSubmit;
+    /**
+     * Custom text that should be displayed in place of the default terms of service agreement text.
+     */
+    termsOfServiceAcceptance: outputs.PaymentLinkCustomTextTermsOfServiceAcceptance;
+}
+
+export interface PaymentLinkCustomTextAfterSubmit {
+    /**
+     * Text can be up to 1200 characters in length.
+     */
+    message: string;
+}
+
+export interface PaymentLinkCustomTextShippingAddress {
+    /**
+     * Text can be up to 1200 characters in length.
+     */
+    message: string;
+}
+
+export interface PaymentLinkCustomTextSubmit {
+    /**
+     * Text can be up to 1200 characters in length.
+     */
+    message: string;
+}
+
+export interface PaymentLinkCustomTextTermsOfServiceAcceptance {
+    /**
+     * Text can be up to 1200 characters in length.
+     */
+    message: string;
+}
+
+export interface PaymentLinkInvoiceCreation {
+    /**
+     * Enable creating an invoice on successful payment.
+     */
+    enabled: boolean;
+    /**
+     * Configuration for the invoice. Default invoice values will be used if unspecified.
+     */
+    invoiceData: outputs.PaymentLinkInvoiceCreationInvoiceData;
+}
+
+export interface PaymentLinkInvoiceCreationInvoiceData {
+    /**
+     * The account tax IDs associated with the invoice.
+     */
+    accountTaxIds: string[];
+    /**
+     * A list of up to 4 custom fields to be displayed on the invoice.
+     */
+    customFields: outputs.PaymentLinkInvoiceCreationInvoiceDataCustomField[];
+    /**
+     * An arbitrary string attached to the object. Often useful for displaying to users.
+     */
+    description: string;
+    /**
+     * Footer to be displayed on the invoice.
+     */
+    footer: string;
+    /**
+     * The connected account that issues the invoice. The invoice is presented with the branding and support information of the specified account.
+     */
+    issuer: outputs.PaymentLinkInvoiceCreationInvoiceDataIssuer;
+    /**
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+     */
+    metadata: {[key: string]: string};
+    /**
+     * Options for invoice PDF rendering.
+     */
+    renderingOptions: outputs.PaymentLinkInvoiceCreationInvoiceDataRenderingOptions;
+}
+
+export interface PaymentLinkInvoiceCreationInvoiceDataCustomField {
+    /**
+     * The name of the custom field.
+     */
+    name: string;
+    /**
+     * The value of the custom field.
+     */
+    value: string;
+}
+
+export interface PaymentLinkInvoiceCreationInvoiceDataIssuer {
+    /**
+     * The connected account being referenced when `type` is `account`.
+     */
+    account: string;
+    /**
+     * Type of the account referenced.
+     */
+    type: string;
+}
+
+export interface PaymentLinkInvoiceCreationInvoiceDataRenderingOptions {
+    /**
+     * How line-item prices and amounts will be displayed with respect to tax on invoice PDFs.
+     */
+    amountTaxDisplay: string;
+    /**
+     * ID of the invoice rendering template to be used for the generated invoice.
+     */
+    template: string;
+}
+
+export interface PaymentLinkLineItem {
+    /**
+     * When set, provides configuration for this item’s quantity to be adjusted by the customer during checkout.
+     */
+    adjustableQuantity: outputs.PaymentLinkLineItemAdjustableQuantity;
+    /**
+     * Unique identifier for the object.
+     */
+    id: string;
+    /**
+     * The ID of the [Price](https://docs.stripe.com/api/prices) or [Plan](https://docs.stripe.com/api/plans) object. One of `price` or `priceData` is required.
+     */
+    price: string;
+    /**
+     * Data used to generate a new [Price](https://docs.stripe.com/api/prices) object inline. One of `price` or `priceData` is required.
+     */
+    priceData: outputs.PaymentLinkLineItemPriceData;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The quantity of the line item being purchased.
+     */
+    quantity: number;
+}
+
+export interface PaymentLinkLineItemAdjustableQuantity {
+    /**
+     * Set to true if the quantity can be adjusted to any non-negative Integer.
+     */
+    enabled: boolean;
+    /**
+     * The maximum quantity the customer can purchase. By default this value is 99. You can specify a value up to 999999.
+     */
+    maximum: number;
+    /**
+     * The minimum quantity the customer can purchase. By default this value is 0. If there is only one item in the cart then that item's quantity cannot go down to 0.
+     */
+    minimum: number;
+}
+
+export interface PaymentLinkLineItemPriceData {
+    /**
+     * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+     */
+    currency: string;
+    /**
+     * The ID of the [Product](https://docs.stripe.com/api/products) that this [Price](https://docs.stripe.com/api/prices) will belong to. One of `product` or `productData` is required.
+     */
+    product: string;
+    /**
+     * Data used to generate a new [Product](https://docs.stripe.com/api/products) object inline. One of `product` or `productData` is required.
+     */
+    productData: outputs.PaymentLinkLineItemPriceDataProductData;
+    /**
+     * The recurring components of a price such as `interval` and `intervalCount`.
+     */
+    recurring: outputs.PaymentLinkLineItemPriceDataRecurring;
+    /**
+     * Only required if a [default tax behavior](<https://docs.stripe.com/tax/products-prices-tax-categories-tax-behavior#setting-a-default-tax-behavior-(recommended)>) was not provided in the Stripe Tax settings. Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
+     */
+    taxBehavior: string;
+    /**
+     * A non-negative integer in cents (or local equivalent) representing how much to charge. One of `unitAmount` or `unitAmountDecimal` is required.
+     */
+    unitAmount: number;
+    /**
+     * Same as `unitAmount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unitAmount` and `unitAmountDecimal` can be set.
+     */
+    unitAmountDecimal: number;
+}
+
+export interface PaymentLinkLineItemPriceDataProductData {
+    /**
+     * The product's description, meant to be displayable to the customer. Use this field to optionally store a long form explanation of the product being sold for your own rendering purposes.
+     */
+    description: string;
+    /**
+     * A list of up to 8 URLs of images for this product, meant to be displayable to the customer.
+     */
+    images: string[];
+    /**
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
+     */
+    metadata: {[key: string]: string};
+    /**
+     * The product's name, meant to be displayable to the customer.
+     */
+    name: string;
+    /**
+     * A [tax code](https://docs.stripe.com/tax/tax-categories) ID.
+     */
+    taxCode: string;
+    /**
+     * A label that represents units of this product. When set, this will be included in customers' receipts, invoices, Checkout, and the customer portal.
+     */
+    unitLabel: string;
+}
+
+export interface PaymentLinkLineItemPriceDataRecurring {
+    /**
+     * Specifies billing frequency. Either `day`, `week`, `month` or `year`.
+     */
+    interval: string;
+    /**
+     * The number of intervals between subscription billings. For example, `interval=month` and `interval_count=3` bills every 3 months. Maximum of three years interval allowed (3 years, 36 months, or 156 weeks).
+     */
+    intervalCount: number;
+}
+
+export interface PaymentLinkManagedPayments {
+    /**
+     * Set to `true` to enable [Managed Payments](https://docs.stripe.com/payments/managed-payments), Stripe's merchant of record solution, for this session.
+     */
+    enabled: boolean;
+}
+
+export interface PaymentLinkNameCollection {
+    business: outputs.PaymentLinkNameCollectionBusiness;
+    individual: outputs.PaymentLinkNameCollectionIndividual;
+}
+
+export interface PaymentLinkNameCollectionBusiness {
+    /**
+     * Indicates whether business name collection is enabled for the payment link.
+     */
+    enabled: boolean;
+    /**
+     * Whether the customer is required to complete the field before checking out. Defaults to `false`.
+     */
+    optional: boolean;
+}
+
+export interface PaymentLinkNameCollectionIndividual {
+    /**
+     * Indicates whether individual name collection is enabled for the payment link.
+     */
+    enabled: boolean;
+    /**
+     * Whether the customer is required to complete the field before checking out. Defaults to `false`.
+     */
+    optional: boolean;
+}
+
+export interface PaymentLinkOptionalItem {
+    adjustableQuantity: outputs.PaymentLinkOptionalItemAdjustableQuantity;
+    price: string;
+    quantity: number;
+}
+
+export interface PaymentLinkOptionalItemAdjustableQuantity {
+    /**
+     * Set to true if the quantity can be adjusted to any non-negative integer.
+     */
+    enabled: boolean;
+    /**
+     * The maximum quantity of this item the customer can purchase. By default this value is 99.
+     */
+    maximum: number;
+    /**
+     * The minimum quantity of this item the customer must purchase, if they choose to purchase it. Because this item is optional, the customer will always be able to remove it from their order, even if the `minimum` configured here is greater than 0. By default this value is 0.
+     */
+    minimum: number;
+}
+
+export interface PaymentLinkPaymentIntentData {
+    /**
+     * Indicates when the funds will be captured from the customer's account.
+     */
+    captureMethod: string;
+    /**
+     * An arbitrary string attached to the object. Often useful for displaying to users.
+     */
+    description: string;
+    /**
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that will set metadata on [Payment Intents](https://docs.stripe.com/api/payment_intents) generated from this payment link.
+     */
+    metadata: {[key: string]: string};
+    /**
+     * Indicates that you intend to make future payments with the payment method collected during checkout.
+     */
+    setupFutureUsage: string;
+    /**
+     * For a non-card payment, information about the charge that appears on the customer's statement when this payment succeeds in creating a charge.
+     */
+    statementDescriptor: string;
+    /**
+     * For a card payment, information about the charge that appears on the customer's statement when this payment succeeds in creating a charge. Concatenated with the account's statement descriptor prefix to form the complete statement descriptor.
+     */
+    statementDescriptorSuffix: string;
+    /**
+     * A string that identifies the resulting payment as part of a group. See the PaymentIntents [use case for connected accounts](https://docs.stripe.com/connect/separate-charges-and-transfers) for details.
+     */
+    transferGroup: string;
+}
+
+export interface PaymentLinkPaymentMethodOptions {
+    /**
+     * Configuration for `card` payment methods.
+     */
+    card: outputs.PaymentLinkPaymentMethodOptionsCard;
+}
+
+export interface PaymentLinkPaymentMethodOptionsCard {
+    /**
+     * Restrictions to apply to the card payment method. For example, you can block specific card brands.
+     */
+    restrictions: outputs.PaymentLinkPaymentMethodOptionsCardRestrictions;
+}
+
+export interface PaymentLinkPaymentMethodOptionsCardRestrictions {
+    /**
+     * The card brands to block. If a customer enters or selects a card belonging to a blocked brand, they can't complete the payment.
+     */
+    brandsBlockeds: string[];
+}
+
+export interface PaymentLinkPhoneNumberCollection {
+    /**
+     * If `true`, a phone number will be collected during checkout.
+     */
+    enabled: boolean;
+}
+
+export interface PaymentLinkRestrictions {
+    completedSessions: outputs.PaymentLinkRestrictionsCompletedSessions;
+}
+
+export interface PaymentLinkRestrictionsCompletedSessions {
+    /**
+     * The current number of checkout sessions that have been completed on the payment link which count towards the `completedSessions` restriction to be met.
+     */
+    count: number;
+    /**
+     * The maximum number of checkout sessions that can be completed for the `completedSessions` restriction to be met.
+     */
+    limit: number;
+}
+
+export interface PaymentLinkShippingAddressCollection {
+    /**
+     * An array of two-letter ISO country codes representing which countries Checkout should provide as options for shipping locations. Unsupported country codes: `AS, CX, CC, CU, HM, IR, KP, MH, FM, NF, MP, PW, SD, SY, UM, VI`.
+     */
+    allowedCountries: string[];
+}
+
+export interface PaymentLinkShippingOption {
+    /**
+     * A non-negative integer in cents representing how much to charge.
+     */
+    shippingAmount: number;
+    /**
+     * The ID of the Shipping Rate to use for this shipping option.
+     */
+    shippingRate: string;
+}
+
+export interface PaymentLinkSubscriptionData {
+    /**
+     * The subscription's description, meant to be displayable to the customer. Use this field to optionally store an explanation of the subscription for rendering in Stripe surfaces and certain local payment methods UIs.
+     */
+    description: string;
+    invoiceSettings: outputs.PaymentLinkSubscriptionDataInvoiceSettings;
+    /**
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that will set metadata on [Subscriptions](https://docs.stripe.com/api/subscriptions) generated from this payment link.
+     */
+    metadata: {[key: string]: string};
+    /**
+     * Integer representing the number of trial period days before the customer is charged for the first time.
+     */
+    trialPeriodDays: number;
+    /**
+     * Settings related to subscription trials.
+     */
+    trialSettings: outputs.PaymentLinkSubscriptionDataTrialSettings;
+}
+
+export interface PaymentLinkSubscriptionDataInvoiceSettings {
+    issuer: outputs.PaymentLinkSubscriptionDataInvoiceSettingsIssuer;
+}
+
+export interface PaymentLinkSubscriptionDataInvoiceSettingsIssuer {
+    /**
+     * The connected account being referenced when `type` is `account`.
+     */
+    account: string;
+    /**
+     * Type of the account referenced.
+     */
+    type: string;
+}
+
+export interface PaymentLinkSubscriptionDataTrialSettings {
+    /**
+     * Defines how a subscription behaves when a free trial ends.
+     */
+    endBehavior: outputs.PaymentLinkSubscriptionDataTrialSettingsEndBehavior;
+}
+
+export interface PaymentLinkSubscriptionDataTrialSettingsEndBehavior {
+    /**
+     * Indicates how the subscription should change when the trial ends if the user did not provide a payment method.
+     */
+    missingPaymentMethod: string;
+}
+
+export interface PaymentLinkTaxIdCollection {
+    /**
+     * Indicates whether tax ID collection is enabled for the session.
+     */
+    enabled: boolean;
+    required: string;
+}
+
+export interface PaymentLinkTransferData {
+    /**
+     * The amount in cents (or local equivalent) that will be transferred to the destination account. By default, the entire amount is transferred to the destination.
+     */
+    amount: number;
+    /**
+     * The connected account receiving the transfer.
+     */
+    destination: string;
+}
+
+export interface PaymentMethodAcssDebit {
+    /**
+     * Customer's bank account number.
+     */
+    accountNumber: string;
+    /**
+     * Name of the bank associated with the bank account.
+     */
+    bankName: string;
+    /**
+     * Uniquely identifies this particular bank account. You can use this attribute to check whether two bank accounts are the same.
+     */
+    fingerprint: string;
+    /**
+     * Institution number of the bank account.
+     */
+    institutionNumber: string;
+    /**
+     * Last four digits of the bank account number.
+     */
+    last4: string;
+    /**
+     * Transit number of the bank account.
+     */
+    transitNumber: string;
+}
+
+export interface PaymentMethodAuBecsDebit {
+    /**
+     * The account number for the bank account.
+     */
+    accountNumber: string;
+    /**
+     * Six-digit number identifying bank and branch associated with this bank account.
+     */
+    bsbNumber: string;
+    /**
+     * Uniquely identifies this particular bank account. You can use this attribute to check whether two bank accounts are the same.
+     */
+    fingerprint: string;
+    /**
+     * Last four digits of the bank account number.
+     */
+    last4: string;
+}
+
+export interface PaymentMethodBacsDebit {
+    /**
+     * Account number of the bank account that the funds will be debited from.
+     */
+    accountNumber?: string;
+    /**
+     * Uniquely identifies this particular bank account. You can use this attribute to check whether two bank accounts are the same.
+     */
+    fingerprint: string;
+    /**
+     * Last four digits of the bank account number.
+     */
+    last4: string;
+    /**
+     * Sort code of the bank account. (e.g., `10-20-30`)
+     */
+    sortCode: string;
+}
+
+export interface PaymentMethodBillingDetails {
+    /**
+     * Billing address.
+     */
+    address: outputs.PaymentMethodBillingDetailsAddress;
+    /**
+     * Email address.
+     */
+    email: string;
+    /**
+     * Full name.
+     */
+    name: string;
+    /**
+     * Billing phone number (including extension).
+     */
+    phone: string;
+    /**
+     * Taxpayer identification number. Used only for transactions between LATAM buyers and non-LATAM sellers.
+     */
+    taxId: string;
+}
+
+export interface PaymentMethodBillingDetailsAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1: string;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2: string;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: string;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state: string;
+}
+
+export interface PaymentMethodBoleto {
+    /**
+     * Uniquely identifies the customer tax id (CNPJ or CPF)
+     */
+    taxId: string;
+}
+
+export interface PaymentMethodCard {
+    /**
+     * Card brand. Can be `amex`, `cartesBancaires`, `diners`, `discover`, `eftposAu`, `jcb`, `link`, `mastercard`, `unionpay`, `visa` or `unknown`.
+     */
+    brand: string;
+    /**
+     * Checks on Card address and CVC if provided.
+     */
+    checks: outputs.PaymentMethodCardChecks;
+    /**
+     * Two-letter ISO code representing the country of the card. You could use this attribute to get a sense of the international breakdown of cards you've collected.
+     */
+    country: string;
+    /**
+     * The card's CVC. It is highly recommended to always include this value.
+     */
+    cvc?: string;
+    /**
+     * A high-level description of the type of cards issued in this range. (For internal use only and not typically available in standard API requests.)
+     */
+    description: string;
+    /**
+     * The brand to use when displaying the card, this accounts for customer's brand choice on dual-branded cards. Can be `americanExpress`, `cartesBancaires`, `dinersClub`, `discover`, `eftposAustralia`, `interac`, `jcb`, `mastercard`, `unionPay`, `visa`, or `other` and may contain more values in the future.
+     */
+    displayBrand: string;
+    /**
+     * Two-digit number representing the card's expiration month.
+     */
+    expMonth: number;
+    /**
+     * Four-digit number representing the card's expiration year.
+     */
+    expYear: number;
+    /**
+     * Uniquely identifies this particular card number. You can use this attribute to check whether two customers who’ve signed up with you are using the same card number, for example. For payment methods that tokenize card information (Apple Pay, Google Pay), the tokenized number might be provided instead of the underlying card number.
+     */
+    fingerprint: string;
+    /**
+     * Card funding type. Can be `credit`, `debit`, `prepaid`, or `unknown`.
+     */
+    funding: string;
+    /**
+     * Details of the original PaymentMethod that created this object.
+     */
+    generatedFrom: outputs.PaymentMethodCardGeneratedFrom;
+    /**
+     * Issuer identification number of the card. (For internal use only and not typically available in standard API requests.)
+     */
+    iin: string;
+    /**
+     * The name of the card's issuing bank. (For internal use only and not typically available in standard API requests.)
+     */
+    issuer: string;
+    /**
+     * The last four digits of the card.
+     */
+    last4: string;
+    /**
+     * Contains information about card networks that can be used to process the payment.
+     */
+    networks: outputs.PaymentMethodCardNetworks;
+    /**
+     * The card number, as a string without any separators.
+     */
+    number?: string;
+    /**
+     * Status of a card based on the card issuer.
+     */
+    regulatedStatus: string;
+    /**
+     * Contains details on how this Card may be used for 3D Secure authentication.
+     */
+    threeDSecureUsage: outputs.PaymentMethodCardThreeDSecureUsage;
+    /**
+     * For backwards compatibility, you can alternatively provide a Stripe token (e.g., for Apple Pay, Amex Express Checkout, or legacy Checkout) into the card hash with format card: {token: "tokVisa"}.
+     */
+    token?: string;
+    /**
+     * If this Card is part of a card wallet, this contains the details of the card wallet.
+     */
+    wallet: outputs.PaymentMethodCardWallet;
+}
+
+export interface PaymentMethodCardChecks {
+    /**
+     * If a address line1 was provided, results of the check, one of `pass`, `fail`, `unavailable`, or `unchecked`.
+     */
+    addressLine1Check: string;
+    /**
+     * If a address postal code was provided, results of the check, one of `pass`, `fail`, `unavailable`, or `unchecked`.
+     */
+    addressPostalCodeCheck: string;
+    /**
+     * If a CVC was provided, results of the check, one of `pass`, `fail`, `unavailable`, or `unchecked`.
+     */
+    cvcCheck: string;
+}
+
+export interface PaymentMethodCardGeneratedFrom {
+    /**
+     * The charge that created this object.
+     */
+    charge: string;
+    /**
+     * Transaction-specific details of the payment method used in the payment.
+     */
+    paymentMethodDetails: outputs.PaymentMethodCardGeneratedFromPaymentMethodDetails;
+    /**
+     * The ID of the SetupAttempt that generated this PaymentMethod, if any.
+     */
+    setupAttempt: string;
+}
+
+export interface PaymentMethodCardGeneratedFromPaymentMethodDetails {
+    cardPresent: outputs.PaymentMethodCardGeneratedFromPaymentMethodDetailsCardPresent;
+    /**
+     * The type of payment method transaction-specific details from the transaction that generated this `card` payment method. Always `cardPresent`.
+     */
+    type: string;
+}
+
+export interface PaymentMethodCardGeneratedFromPaymentMethodDetailsCardPresent {
+    /**
+     * The authorized amount
+     */
+    amountAuthorized: number;
+    /**
+     * Card brand. Can be `amex`, `cartesBancaires`, `diners`, `discover`, `eftposAu`, `jcb`, `link`, `mastercard`, `unionpay`, `visa` or `unknown`.
+     */
+    brand: string;
+    /**
+     * The [product code](https://stripe.com/docs/card-product-codes) that identifies the specific program or product associated with a card.
+     */
+    brandProduct: string;
+    /**
+     * When using manual capture, a future timestamp after which the charge will be automatically refunded if uncaptured.
+     */
+    captureBefore: number;
+    /**
+     * The cardholder name as read from the card, in [ISO 7813](https://en.wikipedia.org/wiki/ISO/IEC_7813) format. May include alphanumeric characters, special characters and first/last name separator (`/`). In some cases, the cardholder name may not be available depending on how the issuer has configured the card. Cardholder name is typically not available on swipe or contactless payments, such as those made with Apple Pay and Google Pay.
+     */
+    cardholderName: string;
+    /**
+     * Two-letter ISO code representing the country of the card. You could use this attribute to get a sense of the international breakdown of cards you've collected.
+     */
+    country: string;
+    /**
+     * A high-level description of the type of cards issued in this range. (For internal use only and not typically available in standard API requests.)
+     */
+    description: string;
+    /**
+     * Authorization response cryptogram.
+     */
+    emvAuthData: string;
+    /**
+     * Two-digit number representing the card's expiration month.
+     */
+    expMonth: number;
+    /**
+     * Four-digit number representing the card's expiration year.
+     */
+    expYear: number;
+    /**
+     * Uniquely identifies this particular card number. You can use this attribute to check whether two customers who’ve signed up with you are using the same card number, for example. For payment methods that tokenize card information (Apple Pay, Google Pay), the tokenized number might be provided instead of the underlying card number.
+     */
+    fingerprint: string;
+    /**
+     * Card funding type. Can be `credit`, `debit`, `prepaid`, or `unknown`.
+     */
+    funding: string;
+    /**
+     * ID of a card PaymentMethod generated from the cardPresent PaymentMethod that may be attached to a Customer for future transactions. Only present if it was possible to generate a card PaymentMethod.
+     */
+    generatedCard: string;
+    /**
+     * Issuer identification number of the card. (For internal use only and not typically available in standard API requests.)
+     */
+    iin: string;
+    /**
+     * Whether this [PaymentIntent](https://docs.stripe.com/api/payment_intents) is eligible for incremental authorizations. Request support using [requestIncrementalAuthorizationSupport](https://docs.stripe.com/api/payment_intents/create#create_payment_intent-payment_method_options-card_present-request_incremental_authorization_support).
+     */
+    incrementalAuthorizationSupported: boolean;
+    /**
+     * The name of the card's issuing bank. (For internal use only and not typically available in standard API requests.)
+     */
+    issuer: string;
+    /**
+     * The last four digits of the card.
+     */
+    last4: string;
+    /**
+     * ID of the [location](https://docs.stripe.com/api/terminal/locations) that this transaction's reader is assigned to.
+     */
+    location: string;
+    /**
+     * Identifies which network this charge was processed on. Can be `amex`, `cartesBancaires`, `diners`, `discover`, `eftposAu`, `interac`, `jcb`, `link`, `mastercard`, `unionpay`, `visa`, or `unknown`.
+     */
+    network: string;
+    /**
+     * This is used by the financial networks to identify a transaction. Visa calls this the Transaction ID, Mastercard calls this the Trace ID, and American Express calls this the Acquirer Reference Data. This value will be present if it is returned by the financial network in the authorization response, and null otherwise.
+     */
+    networkTransactionId: string;
+    /**
+     * Details about payments collected offline.
+     */
+    offline: outputs.PaymentMethodCardGeneratedFromPaymentMethodDetailsCardPresentOffline;
+    /**
+     * Defines whether the authorized amount can be over-captured or not
+     */
+    overcaptureSupported: boolean;
+    /**
+     * The languages that the issuing bank recommends using for localizing any customer-facing text, as read from the card. Referenced from EMV tag 5F2D, data encoded on the card's chip.
+     */
+    preferredLocales: string[];
+    /**
+     * How card details were read in this transaction.
+     */
+    readMethod: string;
+    /**
+     * ID of the [reader](https://docs.stripe.com/api/terminal/readers) this transaction was made on.
+     */
+    reader: string;
+    /**
+     * A collection of fields required to be displayed on receipts. Only required for EMV transactions.
+     */
+    receipt: outputs.PaymentMethodCardGeneratedFromPaymentMethodDetailsCardPresentReceipt;
+    wallet: outputs.PaymentMethodCardGeneratedFromPaymentMethodDetailsCardPresentWallet;
+}
+
+export interface PaymentMethodCardGeneratedFromPaymentMethodDetailsCardPresentOffline {
+    /**
+     * Time at which the payment was collected while offline
+     */
+    storedAt: number;
+    /**
+     * The method used to process this payment method offline. Only deferred is allowed.
+     */
+    type: string;
+}
+
+export interface PaymentMethodCardGeneratedFromPaymentMethodDetailsCardPresentReceipt {
+    /**
+     * The type of account being debited or credited
+     */
+    accountType: string;
+    /**
+     * The Application Cryptogram, a unique value generated by the card to authenticate the transaction with issuers.
+     */
+    applicationCryptogram: string;
+    /**
+     * The Application Identifier (AID) on the card used to determine which networks are eligible to process the transaction. Referenced from EMV tag 9F12, data encoded on the card's chip.
+     */
+    applicationPreferredName: string;
+    /**
+     * Identifier for this transaction.
+     */
+    authorizationCode: string;
+    /**
+     * EMV tag 8A. A code returned by the card issuer.
+     */
+    authorizationResponseCode: string;
+    /**
+     * Describes the method used by the cardholder to verify ownership of the card. One of the following: `approval`, `failure`, `none`, `offlinePin`, `offlinePinAndSignature`, `onlinePin`, or `signature`.
+     */
+    cardholderVerificationMethod: string;
+    /**
+     * Similar to the application*preferred*name, identifying the applications (AIDs) available on the card. Referenced from EMV tag 84.
+     */
+    dedicatedFileName: string;
+    /**
+     * A 5-byte string that records the checks and validations that occur between the card and the terminal. These checks determine how the terminal processes the transaction and what risk tolerance is acceptable. Referenced from EMV Tag 95.
+     */
+    terminalVerificationResults: string;
+    /**
+     * An indication of which steps were completed during the card read process. Referenced from EMV Tag 9B.
+     */
+    transactionStatusInformation: string;
+}
+
+export interface PaymentMethodCardGeneratedFromPaymentMethodDetailsCardPresentWallet {
+    /**
+     * The type of mobile wallet, one of `applePay`, `googlePay`, `samsungPay`, or `unknown`.
+     */
+    type: string;
+}
+
+export interface PaymentMethodCardNetworks {
+    /**
+     * All networks available for selection via [payment*method*options.card.network](https://www.terraform.io/api/payment_intents/confirm#confirm_payment_intent-payment_method_options-card-network).
+     */
+    availables: string[];
+    /**
+     * The preferred network for co-branded cards. Can be `cartesBancaires`, `mastercard`, `visa` or `invalidPreference` if requested network is not valid for the card.
+     */
+    preferred: string;
+}
+
+export interface PaymentMethodCardPresent {
+    /**
+     * Card brand. Can be `amex`, `cartesBancaires`, `diners`, `discover`, `eftposAu`, `jcb`, `link`, `mastercard`, `unionpay`, `visa` or `unknown`.
+     */
+    brand: string;
+    /**
+     * The [product code](https://stripe.com/docs/card-product-codes) that identifies the specific program or product associated with a card.
+     */
+    brandProduct: string;
+    /**
+     * The cardholder name as read from the card, in [ISO 7813](https://en.wikipedia.org/wiki/ISO/IEC_7813) format. May include alphanumeric characters, special characters and first/last name separator (`/`). In some cases, the cardholder name may not be available depending on how the issuer has configured the card. Cardholder name is typically not available on swipe or contactless payments, such as those made with Apple Pay and Google Pay.
+     */
+    cardholderName: string;
+    /**
+     * Two-letter ISO code representing the country of the card. You could use this attribute to get a sense of the international breakdown of cards you've collected.
+     */
+    country: string;
+    /**
+     * A high-level description of the type of cards issued in this range. (For internal use only and not typically available in standard API requests.)
+     */
+    description: string;
+    /**
+     * Two-digit number representing the card's expiration month.
+     */
+    expMonth: number;
+    /**
+     * Four-digit number representing the card's expiration year.
+     */
+    expYear: number;
+    /**
+     * Uniquely identifies this particular card number. You can use this attribute to check whether two customers who’ve signed up with you are using the same card number, for example. For payment methods that tokenize card information (Apple Pay, Google Pay), the tokenized number might be provided instead of the underlying card number.
+     */
+    fingerprint: string;
+    /**
+     * Card funding type. Can be `credit`, `debit`, `prepaid`, or `unknown`.
+     */
+    funding: string;
+    /**
+     * Issuer identification number of the card. (For internal use only and not typically available in standard API requests.)
+     */
+    iin: string;
+    /**
+     * The name of the card's issuing bank. (For internal use only and not typically available in standard API requests.)
+     */
+    issuer: string;
+    /**
+     * The last four digits of the card.
+     */
+    last4: string;
+    /**
+     * Contains information about card networks that can be used to process the payment.
+     */
+    networks: outputs.PaymentMethodCardPresentNetworks;
+    /**
+     * Details about payment methods collected offline.
+     */
+    offline: outputs.PaymentMethodCardPresentOffline;
+    /**
+     * The languages that the issuing bank recommends using for localizing any customer-facing text, as read from the card. Referenced from EMV tag 5F2D, data encoded on the card's chip.
+     */
+    preferredLocales: string[];
+    /**
+     * How card details were read in this transaction.
+     */
+    readMethod: string;
+    wallet: outputs.PaymentMethodCardPresentWallet;
+}
+
+export interface PaymentMethodCardPresentNetworks {
+    /**
+     * All networks available for selection via [payment*method*options.card.network](https://www.terraform.io/api/payment_intents/confirm#confirm_payment_intent-payment_method_options-card-network).
+     */
+    availables: string[];
+    /**
+     * The preferred network for the card.
+     */
+    preferred: string;
+}
+
+export interface PaymentMethodCardPresentOffline {
+    /**
+     * Time at which the payment was collected while offline
+     */
+    storedAt: number;
+    /**
+     * The method used to process this payment method offline. Only deferred is allowed.
+     */
+    type: string;
+}
+
+export interface PaymentMethodCardPresentWallet {
+    /**
+     * The type of mobile wallet, one of `applePay`, `googlePay`, `samsungPay`, or `unknown`.
+     */
+    type: string;
+}
+
+export interface PaymentMethodCardThreeDSecureUsage {
+    /**
+     * Whether 3D Secure is supported on this card.
+     */
+    supported: boolean;
+}
+
+export interface PaymentMethodCardWallet {
+    /**
+     * (For tokenized numbers only.) The last four digits of the device account number.
+     */
+    dynamicLast4: string;
+    masterpass: outputs.PaymentMethodCardWalletMasterpass;
+    /**
+     * The type of the card wallet, one of `amexExpressCheckout`, `applePay`, `googlePay`, `masterpass`, `samsungPay`, `visaCheckout`, or `link`. An additional hash is included on the Wallet subhash with a name matching this value. It contains additional information specific to the card wallet type.
+     */
+    type: string;
+    visaCheckout: outputs.PaymentMethodCardWalletVisaCheckout;
+}
+
+export interface PaymentMethodCardWalletMasterpass {
+    /**
+     * Owner's verified billing address. Values are verified or provided by the wallet directly (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    billingAddress: outputs.PaymentMethodCardWalletMasterpassBillingAddress;
+    /**
+     * Owner's verified email. Values are verified or provided by the wallet directly (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    email: string;
+    /**
+     * Owner's verified full name. Values are verified or provided by the wallet directly (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    name: string;
+    /**
+     * Owner's verified shipping address. Values are verified or provided by the wallet directly (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    shippingAddress: outputs.PaymentMethodCardWalletMasterpassShippingAddress;
+}
+
+export interface PaymentMethodCardWalletMasterpassBillingAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1: string;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2: string;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: string;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state: string;
+}
+
+export interface PaymentMethodCardWalletMasterpassShippingAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1: string;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2: string;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: string;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state: string;
+}
+
+export interface PaymentMethodCardWalletVisaCheckout {
+    /**
+     * Owner's verified billing address. Values are verified or provided by the wallet directly (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    billingAddress: outputs.PaymentMethodCardWalletVisaCheckoutBillingAddress;
+    /**
+     * Owner's verified email. Values are verified or provided by the wallet directly (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    email: string;
+    /**
+     * Owner's verified full name. Values are verified or provided by the wallet directly (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    name: string;
+    /**
+     * Owner's verified shipping address. Values are verified or provided by the wallet directly (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    shippingAddress: outputs.PaymentMethodCardWalletVisaCheckoutShippingAddress;
+}
+
+export interface PaymentMethodCardWalletVisaCheckoutBillingAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1: string;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2: string;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: string;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state: string;
+}
+
+export interface PaymentMethodCardWalletVisaCheckoutShippingAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1: string;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2: string;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: string;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state: string;
+}
+
+export interface PaymentMethodCashapp {
+    /**
+     * A unique and immutable identifier assigned by Cash App to every buyer.
+     */
+    buyerId: string;
+    /**
+     * A public identifier for buyers using Cash App.
+     */
+    cashtag: string;
+}
+
+export interface PaymentMethodConfigurationAcssDebit {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationAcssDebitDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationAcssDebitDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationAffirm {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationAffirmDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationAffirmDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationAfterpayClearpay {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationAfterpayClearpayDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationAfterpayClearpayDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationAlipay {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationAlipayDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationAlipayDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationAlma {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationAlmaDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationAlmaDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationAmazonPay {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationAmazonPayDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationAmazonPayDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationApplePay {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationApplePayDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationApplePayDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationApplePayLater {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether or not the payment method should be displayed.
+     */
+    displayPreference?: outputs.PaymentMethodConfigurationApplePayLaterDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationApplePayLaterDisplayPreference {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The account's preference for whether or not to display this payment method.
+     */
+    preference?: string;
+}
+
+export interface PaymentMethodConfigurationAuBecsDebit {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationAuBecsDebitDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationAuBecsDebitDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationBacsDebit {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationBacsDebitDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationBacsDebitDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationBancontact {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationBancontactDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationBancontactDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationBillie {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationBillieDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationBillieDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationBizum {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationBizumDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationBizumDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationBlik {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationBlikDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationBlikDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationBoleto {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationBoletoDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationBoletoDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationCard {
+    displayPreference: outputs.PaymentMethodConfigurationCardDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationCardDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+}
+
+export interface PaymentMethodConfigurationCartesBancaires {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationCartesBancairesDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationCartesBancairesDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationCashapp {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationCashappDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationCashappDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationCrypto {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationCryptoDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationCryptoDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationCustomerBalance {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationCustomerBalanceDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationCustomerBalanceDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationEps {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationEpsDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationEpsDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationFpx {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationFpxDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationFpxDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationGiropay {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationGiropayDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationGiropayDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationGooglePay {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationGooglePayDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationGooglePayDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationGrabpay {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationGrabpayDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationGrabpayDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationIdeal {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationIdealDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationIdealDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationJcb {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationJcbDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationJcbDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationKakaoPay {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationKakaoPayDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationKakaoPayDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationKlarna {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationKlarnaDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationKlarnaDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationKonbini {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationKonbiniDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationKonbiniDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationKrCard {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationKrCardDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationKrCardDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationLink {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationLinkDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationLinkDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationMbWay {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationMbWayDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationMbWayDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationMobilepay {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationMobilepayDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationMobilepayDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationMultibanco {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationMultibancoDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationMultibancoDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationNaverPay {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationNaverPayDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationNaverPayDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationNzBankAccount {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationNzBankAccountDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationNzBankAccountDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationOxxo {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationOxxoDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationOxxoDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationP24 {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationP24DisplayPreference;
+}
+
+export interface PaymentMethodConfigurationP24DisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationPayByBank {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationPayByBankDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationPayByBankDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationPayco {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationPaycoDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationPaycoDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationPaynow {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationPaynowDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationPaynowDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationPaypal {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationPaypalDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationPaypalDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationPayto {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationPaytoDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationPaytoDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationPix {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationPixDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationPixDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationPromptpay {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationPromptpayDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationPromptpayDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationRevolutPay {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationRevolutPayDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationRevolutPayDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationSamsungPay {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationSamsungPayDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationSamsungPayDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationSatispay {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationSatispayDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationSatispayDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationScalapay {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationScalapayDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationScalapayDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationSepaDebit {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationSepaDebitDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationSepaDebitDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationSofort {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationSofortDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationSofortDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationSunbit {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationSunbitDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationSunbitDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationSwish {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationSwishDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationSwishDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationTwint {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationTwintDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationTwintDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationUpi {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationUpiDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationUpiDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationUsBankAccount {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationUsBankAccountDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationUsBankAccountDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationWechatPay {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationWechatPayDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationWechatPayDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodConfigurationZip {
+    /**
+     * Whether this payment method may be offered at checkout. True if `displayPreference` is `on` and the payment method's capability is active.
+     */
+    available: boolean;
+    displayPreference: outputs.PaymentMethodConfigurationZipDisplayPreference;
+}
+
+export interface PaymentMethodConfigurationZipDisplayPreference {
+    /**
+     * For child configs, whether or not the account's preference will be observed. If `false`, the parent configuration's default is used.
+     */
+    overridable: boolean;
+    /**
+     * The account's display preference.
+     */
+    preference: string;
+    /**
+     * The effective display preference value.
+     */
+    value: string;
+}
+
+export interface PaymentMethodDomainAmazonPay {
+    /**
+     * The status of the payment method on the domain.
+     */
+    status: string;
+    /**
+     * Contains additional details about the status of a payment method for a specific payment method domain.
+     */
+    statusDetails: outputs.PaymentMethodDomainAmazonPayStatusDetails;
+}
+
+export interface PaymentMethodDomainAmazonPayStatusDetails {
+    /**
+     * The error message associated with the status of the payment method on the domain.
+     */
+    errorMessage: string;
+}
+
+export interface PaymentMethodDomainApplePay {
+    /**
+     * The status of the payment method on the domain.
+     */
+    status: string;
+    /**
+     * Contains additional details about the status of a payment method for a specific payment method domain.
+     */
+    statusDetails: outputs.PaymentMethodDomainApplePayStatusDetails;
+}
+
+export interface PaymentMethodDomainApplePayStatusDetails {
+    /**
+     * The error message associated with the status of the payment method on the domain.
+     */
+    errorMessage: string;
+}
+
+export interface PaymentMethodDomainGooglePay {
+    /**
+     * The status of the payment method on the domain.
+     */
+    status: string;
+    /**
+     * Contains additional details about the status of a payment method for a specific payment method domain.
+     */
+    statusDetails: outputs.PaymentMethodDomainGooglePayStatusDetails;
+}
+
+export interface PaymentMethodDomainGooglePayStatusDetails {
+    /**
+     * The error message associated with the status of the payment method on the domain.
+     */
+    errorMessage: string;
+}
+
+export interface PaymentMethodDomainKlarna {
+    /**
+     * The status of the payment method on the domain.
+     */
+    status: string;
+    /**
+     * Contains additional details about the status of a payment method for a specific payment method domain.
+     */
+    statusDetails: outputs.PaymentMethodDomainKlarnaStatusDetails;
+}
+
+export interface PaymentMethodDomainKlarnaStatusDetails {
+    /**
+     * The error message associated with the status of the payment method on the domain.
+     */
+    errorMessage: string;
+}
+
+export interface PaymentMethodDomainLink {
+    /**
+     * The status of the payment method on the domain.
+     */
+    status: string;
+    /**
+     * Contains additional details about the status of a payment method for a specific payment method domain.
+     */
+    statusDetails: outputs.PaymentMethodDomainLinkStatusDetails;
+}
+
+export interface PaymentMethodDomainLinkStatusDetails {
+    /**
+     * The error message associated with the status of the payment method on the domain.
+     */
+    errorMessage: string;
+}
+
+export interface PaymentMethodDomainPaypal {
+    /**
+     * The status of the payment method on the domain.
+     */
+    status: string;
+    /**
+     * Contains additional details about the status of a payment method for a specific payment method domain.
+     */
+    statusDetails: outputs.PaymentMethodDomainPaypalStatusDetails;
+}
+
+export interface PaymentMethodDomainPaypalStatusDetails {
+    /**
+     * The error message associated with the status of the payment method on the domain.
+     */
+    errorMessage: string;
+}
+
+export interface PaymentMethodEps {
+    /**
+     * The customer's bank. Should be one of `arzteUndApothekerBank`, `austrianAnadiBankAg`, `bankAustria`, `bankhausCarlSpangler`, `bankhausSchelhammerUndSchatteraAg`, `bawagPskAg`, `bksBankAg`, `brullKallmusBankAg`, `btvVierLanderBank`, `capitalBankGraweGruppeAg`, `deutscheBankAg`, `dolomitenbank`, `easybankAg`, `ersteBankUndSparkassen`, `hypoAlpeadriabankInternationalAg`, `hypoNoeLbFurNiederosterreichUWien`, `hypoOberosterreichSalzburgSteiermark`, `hypoTirolBankAg`, `hypoVorarlbergBankAg`, `hypoBankBurgenlandAktiengesellschaft`, `marchfelderBank`, `oberbankAg`, `raiffeisenBankengruppeOsterreich`, `schoellerbankAg`, `spardaBankWien`, `volksbankGruppe`, `volkskreditbankAg`, or `vrBankBraunau`.
+     */
+    bank: string;
+}
+
+export interface PaymentMethodFpx {
+    /**
+     * Account holder type, if provided. Can be one of `individual` or `company`.
+     */
+    accountHolderType: string;
+    /**
+     * The customer's bank, if provided. Can be one of `affinBank`, `agrobank`, `allianceBank`, `ambank`, `bankIslam`, `bankMuamalat`, `bankRakyat`, `bsn`, `cimb`, `hongLeongBank`, `hsbc`, `kfh`, `maybank2u`, `ocbc`, `publicBank`, `rhb`, `standardChartered`, `uob`, `deutscheBank`, `maybank2e`, `pbEnterprise`, or `bankOfChina`.
+     */
+    bank: string;
+}
+
+export interface PaymentMethodIdeal {
+    /**
+     * The customer's bank, if provided. Can be one of `abnAmro`, `adyen`, `asnBank`, `bunq`, `buut`, `finom`, `handelsbanken`, `ing`, `knab`, `mollie`, `moneyou`, `n26`, `nn`, `rabobank`, `regiobank`, `revolut`, `snsBank`, `triodosBank`, `vanLanschot`, or `yoursafe`.
+     */
+    bank: string;
+    /**
+     * The Bank Identifier Code of the customer's bank, if the bank was provided.
+     */
+    bic: string;
+}
+
+export interface PaymentMethodInteracPresent {
+    /**
+     * Card brand. Can be `interac`, `mastercard` or `visa`.
+     */
+    brand: string;
+    /**
+     * The cardholder name as read from the card, in [ISO 7813](https://en.wikipedia.org/wiki/ISO/IEC_7813) format. May include alphanumeric characters, special characters and first/last name separator (`/`). In some cases, the cardholder name may not be available depending on how the issuer has configured the card. Cardholder name is typically not available on swipe or contactless payments, such as those made with Apple Pay and Google Pay.
+     */
+    cardholderName: string;
+    /**
+     * Two-letter ISO code representing the country of the card. You could use this attribute to get a sense of the international breakdown of cards you've collected.
+     */
+    country: string;
+    /**
+     * A high-level description of the type of cards issued in this range. (For internal use only and not typically available in standard API requests.)
+     */
+    description: string;
+    /**
+     * Two-digit number representing the card's expiration month.
+     */
+    expMonth: number;
+    /**
+     * Four-digit number representing the card's expiration year.
+     */
+    expYear: number;
+    /**
+     * Uniquely identifies this particular card number. You can use this attribute to check whether two customers who’ve signed up with you are using the same card number, for example. For payment methods that tokenize card information (Apple Pay, Google Pay), the tokenized number might be provided instead of the underlying card number.
+     */
+    fingerprint: string;
+    /**
+     * Card funding type. Can be `credit`, `debit`, `prepaid`, or `unknown`.
+     */
+    funding: string;
+    /**
+     * Issuer identification number of the card. (For internal use only and not typically available in standard API requests.)
+     */
+    iin: string;
+    /**
+     * The name of the card's issuing bank. (For internal use only and not typically available in standard API requests.)
+     */
+    issuer: string;
+    /**
+     * The last four digits of the card.
+     */
+    last4: string;
+    /**
+     * Contains information about card networks that can be used to process the payment.
+     */
+    networks: outputs.PaymentMethodInteracPresentNetworks;
+    /**
+     * The languages that the issuing bank recommends using for localizing any customer-facing text, as read from the card. Referenced from EMV tag 5F2D, data encoded on the card's chip.
+     */
+    preferredLocales: string[];
+    /**
+     * How card details were read in this transaction.
+     */
+    readMethod: string;
+}
+
+export interface PaymentMethodInteracPresentNetworks {
+    /**
+     * All networks available for selection via [payment*method*options.card.network](https://www.terraform.io/api/payment_intents/confirm#confirm_payment_intent-payment_method_options-card-network).
+     */
+    availables: string[];
+    /**
+     * The preferred network for the card.
+     */
+    preferred: string;
+}
+
+export interface PaymentMethodKlarna {
+    /**
+     * The customer's date of birth, if provided.
+     */
+    dob: outputs.PaymentMethodKlarnaDob;
+}
+
+export interface PaymentMethodKlarnaDob {
+    /**
+     * The day of birth, between 1 and 31.
+     */
+    day: number;
+    /**
+     * The month of birth, between 1 and 12.
+     */
+    month: number;
+    /**
+     * The four-digit year of birth.
+     */
+    year: number;
+}
+
+export interface PaymentMethodKrCard {
+    /**
+     * The local credit or debit card brand.
+     */
+    brand: string;
+    /**
+     * The last four digits of the card. This may not be present for American Express cards.
+     */
+    last4: string;
+}
+
+export interface PaymentMethodLink {
+    /**
+     * Account owner's email address.
+     */
+    email: string;
+    /**
+     * [Deprecated] This is a legacy parameter that no longer has any function.
+     */
+    persistentToken: string;
+}
+
+export interface PaymentMethodNaverPay {
+    /**
+     * Uniquely identifies this particular Naver Pay account. You can use this attribute to check whether two Naver Pay accounts are the same.
+     */
+    buyerId: string;
+    /**
+     * Whether to fund this transaction with Naver Pay points or a card.
+     */
+    funding: string;
+}
+
+export interface PaymentMethodNzBankAccount {
+    /**
+     * The name on the bank account. Only present if the account holder name is different from the name of the authorized signatory collected in the PaymentMethod’s billing details.
+     */
+    accountHolderName: string;
+    /**
+     * The account number for the bank account.
+     */
+    accountNumber: string;
+    /**
+     * The numeric code for the bank account's bank.
+     */
+    bankCode: string;
+    /**
+     * The name of the bank.
+     */
+    bankName: string;
+    /**
+     * The numeric code for the bank account's bank branch.
+     */
+    branchCode: string;
+    /**
+     * Last four digits of the bank account number.
+     */
+    last4: string;
+    reference?: string;
+    /**
+     * The suffix of the bank account number.
+     */
+    suffix: string;
+}
+
+export interface PaymentMethodP24 {
+    /**
+     * The customer's bank, if provided.
+     */
+    bank: string;
+}
+
+export interface PaymentMethodPaypal {
+    /**
+     * Two-letter ISO code representing the buyer's country. Values are provided by PayPal directly (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    country: string;
+    /**
+     * Owner's email. Values are provided by PayPal directly
+     * (if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    payerEmail: string;
+    /**
+     * PayPal account PayerID. This identifier uniquely identifies the PayPal customer.
+     */
+    payerId: string;
+}
+
+export interface PaymentMethodPayto {
+    /**
+     * The account number for the bank account.
+     */
+    accountNumber?: string;
+    /**
+     * Bank-State-Branch number of the bank account.
+     */
+    bsbNumber: string;
+    /**
+     * Last four digits of the bank account number.
+     */
+    last4: string;
+    /**
+     * The PayID alias for the bank account.
+     */
+    payId: string;
+}
+
+export interface PaymentMethodRadarOptions {
+    /**
+     * A [Radar Session](https://docs.stripe.com/radar/radar-session) is a snapshot of the browser metadata and device details that help Radar make more accurate predictions on your payments.
+     */
+    session: string;
+}
+
+export interface PaymentMethodSepaDebit {
+    /**
+     * Bank code of bank associated with the bank account.
+     */
+    bankCode: string;
+    /**
+     * Branch code of bank associated with the bank account.
+     */
+    branchCode: string;
+    /**
+     * Two-letter ISO code representing the country the bank account is located in.
+     */
+    country: string;
+    /**
+     * Uniquely identifies this particular bank account. You can use this attribute to check whether two bank accounts are the same.
+     */
+    fingerprint: string;
+    /**
+     * Information about the object that generated this PaymentMethod.
+     */
+    generatedFrom: outputs.PaymentMethodSepaDebitGeneratedFrom;
+    /**
+     * IBAN of the bank account.
+     */
+    iban: string;
+    /**
+     * Last four characters of the IBAN.
+     */
+    last4: string;
+}
+
+export interface PaymentMethodSepaDebitGeneratedFrom {
+    /**
+     * The ID of the Charge that generated this PaymentMethod, if any.
+     */
+    charge: string;
+    /**
+     * The ID of the SetupAttempt that generated this PaymentMethod, if any.
+     */
+    setupAttempt: string;
+}
+
+export interface PaymentMethodSofort {
+    /**
+     * Two-letter ISO code representing the country the bank account is located in.
+     */
+    country: string;
+}
+
+export interface PaymentMethodUpi {
+    /**
+     * Configuration options for setting up an eMandate
+     */
+    mandateOptions?: outputs.PaymentMethodUpiMandateOptions;
+    /**
+     * Customer's unique Virtual Payment Address
+     */
+    vpa: string;
+}
+
+export interface PaymentMethodUpiMandateOptions {
+    /**
+     * Amount to be charged for future payments.
+     */
+    amount?: number;
+    /**
+     * One of `fixed` or `maximum`. If `fixed`, the `amount` param refers to the exact amount to be charged in future payments. If `maximum`, the amount charged can be up to the value passed for the `amount` param.
+     */
+    amountType?: string;
+    /**
+     * A description of the mandate or subscription that is meant to be displayed to the customer.
+     */
+    description?: string;
+    /**
+     * End date of the mandate or subscription.
+     */
+    endDate?: number;
+}
+
+export interface PaymentMethodUsBankAccount {
+    /**
+     * Account holder type: individual or company.
+     */
+    accountHolderType: string;
+    /**
+     * Account number of the bank account.
+     */
+    accountNumber?: string;
+    /**
+     * Account type: checkings or savings. Defaults to checking if omitted.
+     */
+    accountType: string;
+    /**
+     * The name of the bank.
+     */
+    bankName: string;
+    /**
+     * The ID of the Financial Connections Account used to create the payment method.
+     */
+    financialConnectionsAccount: string;
+    /**
+     * Uniquely identifies this particular bank account. You can use this attribute to check whether two bank accounts are the same.
+     */
+    fingerprint: string;
+    /**
+     * Last four digits of the bank account number.
+     */
+    last4: string;
+    /**
+     * Contains information about US bank account networks that can be used.
+     */
+    networks: outputs.PaymentMethodUsBankAccountNetworks;
+    /**
+     * Routing number of the bank account.
+     */
+    routingNumber: string;
+    /**
+     * Contains information about the future reusability of this PaymentMethod.
+     */
+    statusDetails: outputs.PaymentMethodUsBankAccountStatusDetails;
+}
+
+export interface PaymentMethodUsBankAccountNetworks {
+    /**
+     * The preferred network.
+     */
+    preferred: string;
+    /**
+     * All supported networks.
+     */
+    supporteds: string[];
+}
+
+export interface PaymentMethodUsBankAccountStatusDetails {
+    blocked: outputs.PaymentMethodUsBankAccountStatusDetailsBlocked;
+}
+
+export interface PaymentMethodUsBankAccountStatusDetailsBlocked {
+    /**
+     * The ACH network code that resulted in this block.
+     */
+    networkCode: string;
+    /**
+     * The reason why this PaymentMethod's fingerprint has been blocked
+     */
+    reason: string;
+}
+
+export interface PersonAdditionalTosAcceptances {
+    /**
+     * Details on the legal guardian's acceptance of the main Stripe service agreement.
+     */
+    account: outputs.PersonAdditionalTosAcceptancesAccount;
+}
+
+export interface PersonAdditionalTosAcceptancesAccount {
+    /**
+     * The Unix timestamp marking when the legal guardian accepted the service agreement.
+     */
+    date: number;
+    /**
+     * The IP address from which the legal guardian accepted the service agreement.
+     */
+    ip: string;
+    /**
+     * The user agent of the browser from which the legal guardian accepted the service agreement.
+     */
+    userAgent: string;
+}
+
+export interface PersonAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1: string;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2: string;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: string;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state: string;
+}
+
+export interface PersonAddressKana {
+    /**
+     * City/Ward.
+     */
+    city: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * Block/Building number.
+     */
+    line1: string;
+    /**
+     * Building details.
+     */
+    line2: string;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: string;
+    /**
+     * Prefecture.
+     */
+    state: string;
+    /**
+     * Town/cho-me.
+     */
+    town: string;
+}
+
+export interface PersonAddressKanji {
+    /**
+     * City/Ward.
+     */
+    city: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * Block/Building number.
+     */
+    line1: string;
+    /**
+     * Building details.
+     */
+    line2: string;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: string;
+    /**
+     * Prefecture.
+     */
+    state: string;
+    /**
+     * Town/cho-me.
+     */
+    town: string;
+}
+
+export interface PersonDob {
+    /**
+     * The day of birth, between 1 and 31.
+     */
+    day: number;
+    /**
+     * The month of birth, between 1 and 12.
+     */
+    month: number;
+    /**
+     * The four-digit year of birth.
+     */
+    year: number;
+}
+
+export interface PersonDocuments {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * One or more documents that demonstrate proof that this person is authorized to represent the company.
+     */
+    companyAuthorization?: outputs.PersonDocumentsCompanyAuthorization;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * One or more documents showing the person's passport page with photo and personal data.
+     */
+    passport?: outputs.PersonDocumentsPassport;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * One or more documents showing the person's visa required for living in the country where they are residing.
+     */
+    visa?: outputs.PersonDocumentsVisa;
+}
+
+export interface PersonDocumentsCompanyAuthorization {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * One or more document ids returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `accountRequirement`.
+     */
+    files?: string[];
+}
+
+export interface PersonDocumentsPassport {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * One or more document ids returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `accountRequirement`.
+     */
+    files?: string[];
+}
+
+export interface PersonDocumentsVisa {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * One or more document ids returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `accountRequirement`.
+     */
+    files?: string[];
+}
+
+export interface PersonFutureRequirements {
+    /**
+     * Fields that are due and can be resolved by providing the corresponding alternative fields instead. Many alternatives can list the same `originalFieldsDue`, and any of these alternatives can serve as a pathway for attempting to resolve the fields again. Re-providing `originalFieldsDue` also serves as a pathway for attempting to resolve the fields again.
+     */
+    alternatives: outputs.PersonFutureRequirementsAlternative[];
+    /**
+     * Fields that need to be resolved to keep the person's account enabled. If not resolved by the account's `future_requirements[currentDeadline]`, these fields will transition to the main `requirements` hash, and may immediately become `pastDue`, but the account may also be given a grace period depending on the account's enablement state prior to transition.
+     */
+    currentlyDues: string[];
+    /**
+     * Details about validation and verification failures for `due` requirements that must be resolved.
+     */
+    errors: outputs.PersonFutureRequirementsError[];
+    /**
+     * Fields you must collect when all thresholds are reached. As they become required, they appear in `currentlyDue` as well, and the account's `future_requirements[currentDeadline]` becomes set.
+     */
+    eventuallyDues: string[];
+    /**
+     * Fields that haven't been resolved by the account's `requirements.current_deadline`. These fields need to be resolved to enable the person's account. `future_requirements.past_due` is a subset of `requirements.past_due`.
+     */
+    pastDues: string[];
+    /**
+     * Fields that are being reviewed, or might become required depending on the results of a review. If the review fails, these fields can move to `eventuallyDue`, `currentlyDue`, `pastDue` or `alternatives`. Fields might appear in `eventuallyDue`, `currentlyDue`, `pastDue` or `alternatives` and in `pendingVerification` if one verification fails but another is still pending.
+     */
+    pendingVerifications: string[];
+}
+
+export interface PersonFutureRequirementsAlternative {
+    /**
+     * Fields that can be provided to resolve all fields in `originalFieldsDue`.
+     */
+    alternativeFieldsDues: string[];
+    /**
+     * Fields that are due and can be resolved by providing all fields in `alternativeFieldsDue`.
+     */
+    originalFieldsDues: string[];
+}
+
+export interface PersonFutureRequirementsError {
+    /**
+     * The code for the type of error.
+     */
+    code: string;
+    /**
+     * An informative message that indicates the error type and provides additional details about the error.
+     */
+    reason: string;
+    /**
+     * The specific user onboarding requirement field (in the requirements hash) that needs to be resolved.
+     */
+    requirement: string;
+}
+
+export interface PersonRegisteredAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1: string;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2: string;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: string;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state: string;
+}
+
+export interface PersonRelationship {
+    /**
+     * Whether the person is the authorizer of the account's representative.
+     */
+    authorizer: boolean;
+    /**
+     * Whether the person is a director of the account's legal entity. Directors are typically members of the governing board of the company, or responsible for ensuring the company meets its regulatory obligations.
+     */
+    director: boolean;
+    /**
+     * Whether the person has significant responsibility to control, manage, or direct the organization.
+     */
+    executive: boolean;
+    /**
+     * Whether the person is the legal guardian of the account's representative.
+     */
+    legalGuardian: boolean;
+    /**
+     * Whether the person is an owner of the account’s legal entity.
+     */
+    owner: boolean;
+    /**
+     * The percent owned by the person of the account's legal entity.
+     */
+    percentOwnership: number;
+    /**
+     * Whether the person is authorized as the primary representative of the account. This is the person nominated by the business to provide information about themselves, and general information about the account. There can only be one representative at any given time. At the time the account is created, this person should be set to the person responsible for opening the account.
+     */
+    representative: boolean;
+    /**
+     * The person's title (e.g., CEO, Support Engineer).
+     */
+    title: string;
+}
+
+export interface PersonRequirements {
+    /**
+     * Fields that are due and can be resolved by providing the corresponding alternative fields instead. Many alternatives can list the same `originalFieldsDue`, and any of these alternatives can serve as a pathway for attempting to resolve the fields again. Re-providing `originalFieldsDue` also serves as a pathway for attempting to resolve the fields again.
+     */
+    alternatives: outputs.PersonRequirementsAlternative[];
+    /**
+     * Fields that need to be resolved to keep the person's account enabled. If not resolved by the account's `currentDeadline`, these fields will appear in `pastDue` as well, and the account is disabled.
+     */
+    currentlyDues: string[];
+    /**
+     * Details about validation and verification failures for `due` requirements that must be resolved.
+     */
+    errors: outputs.PersonRequirementsError[];
+    /**
+     * Fields you must collect when all thresholds are reached. As they become required, they appear in `currentlyDue` as well, and the account's `currentDeadline` becomes set.
+     */
+    eventuallyDues: string[];
+    /**
+     * Fields that haven't been resolved by `currentDeadline`. These fields need to be resolved to enable the person's account.
+     */
+    pastDues: string[];
+    /**
+     * Fields that are being reviewed, or might become required depending on the results of a review. If the review fails, these fields can move to `eventuallyDue`, `currentlyDue`, `pastDue` or `alternatives`. Fields might appear in `eventuallyDue`, `currentlyDue`, `pastDue` or `alternatives` and in `pendingVerification` if one verification fails but another is still pending.
+     */
+    pendingVerifications: string[];
+}
+
+export interface PersonRequirementsAlternative {
+    /**
+     * Fields that can be provided to resolve all fields in `originalFieldsDue`.
+     */
+    alternativeFieldsDues: string[];
+    /**
+     * Fields that are due and can be resolved by providing all fields in `alternativeFieldsDue`.
+     */
+    originalFieldsDues: string[];
+}
+
+export interface PersonRequirementsError {
+    /**
+     * The code for the type of error.
+     */
+    code: string;
+    /**
+     * An informative message that indicates the error type and provides additional details about the error.
+     */
+    reason: string;
+    /**
+     * The specific user onboarding requirement field (in the requirements hash) that needs to be resolved.
+     */
+    requirement: string;
+}
+
+export interface PersonUsCfpbData {
+    /**
+     * The persons ethnicity details
+     */
+    ethnicityDetails: outputs.PersonUsCfpbDataEthnicityDetails;
+    /**
+     * The persons race details
+     */
+    raceDetails: outputs.PersonUsCfpbDataRaceDetails;
+    /**
+     * The persons self-identified gender
+     */
+    selfIdentifiedGender: string;
+}
+
+export interface PersonUsCfpbDataEthnicityDetails {
+    /**
+     * The persons ethnicity
+     */
+    ethnicities: string[];
+    /**
+     * Please specify your origin, when other is selected.
+     */
+    ethnicityOther: string;
+}
+
+export interface PersonUsCfpbDataRaceDetails {
+    /**
+     * Please specify your race, when other is selected.
+     */
+    raceOther: string;
+    /**
+     * The persons race.
+     */
+    races: string[];
+}
+
+export interface PersonVerification {
+    /**
+     * A document showing address, either a passport, local ID card, or utility bill from a well-known utility company.
+     */
+    additionalDocument: outputs.PersonVerificationAdditionalDocument;
+    /**
+     * A user-displayable string describing the verification state for the person. For example, this may say "Provided identity information could not be verified".
+     */
+    details: string;
+    /**
+     * One of `documentAddressMismatch`, `documentDobMismatch`, `documentDuplicateType`, `documentIdNumberMismatch`, `documentNameMismatch`, `documentNationalityMismatch`, `failedKeyedIdentity`, or `failedOther`. A machine-readable code specifying the verification state for the person.
+     */
+    detailsCode: string;
+    document: outputs.PersonVerificationDocument;
+    /**
+     * The state of verification for the person. Possible values are `unverified`, `pending`, or `verified`. Please refer [guide](https://docs.stripe.com/connect/handling-api-verification) to handle verification updates.
+     */
+    status: string;
+}
+
+export interface PersonVerificationAdditionalDocument {
+    /**
+     * The back of an ID returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `identityDocument`.
+     */
+    back: string;
+    /**
+     * A user-displayable string describing the verification state of this document. For example, if a document is uploaded and the picture is too fuzzy, this may say "Identity document is too unclear to read".
+     */
+    details: string;
+    /**
+     * One of `documentCorrupt`, `documentCountryNotSupported`, `documentExpired`, `documentFailedCopy`, `documentFailedOther`, `documentFailedTestMode`, `documentFraudulent`, `documentFailedGreyscale`, `documentIncomplete`, `documentInvalid`, `documentManipulated`, `documentMissingBack`, `documentMissingFront`, `documentNotReadable`, `documentNotUploaded`, `documentPhotoMismatch`, `documentTooLarge`, or `documentTypeNotSupported`. A machine-readable code specifying the verification state for this document.
+     */
+    detailsCode: string;
+    /**
+     * The front of an ID returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `identityDocument`.
+     */
+    front: string;
+}
+
+export interface PersonVerificationDocument {
+    /**
+     * The back of an ID returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `identityDocument`.
+     */
+    back: string;
+    /**
+     * A user-displayable string describing the verification state of this document. For example, if a document is uploaded and the picture is too fuzzy, this may say "Identity document is too unclear to read".
+     */
+    details: string;
+    /**
+     * One of `documentCorrupt`, `documentCountryNotSupported`, `documentExpired`, `documentFailedCopy`, `documentFailedOther`, `documentFailedTestMode`, `documentFraudulent`, `documentFailedGreyscale`, `documentIncomplete`, `documentInvalid`, `documentManipulated`, `documentMissingBack`, `documentMissingFront`, `documentNotReadable`, `documentNotUploaded`, `documentPhotoMismatch`, `documentTooLarge`, or `documentTypeNotSupported`. A machine-readable code specifying the verification state for this document.
+     */
+    detailsCode: string;
+    /**
+     * The front of an ID returned by a [file upload](https://api.stripe.com#create_file) with a `purpose` value of `identityDocument`.
+     */
+    front: string;
+}
+
+export interface PlanTier {
+    /**
+     * Price for the entire tier.
+     */
+    flatAmount: number;
+    /**
+     * Same as `flatAmount`, but contains a decimal value with at most 12 decimal places.
+     */
+    flatAmountDecimal: number;
+    /**
+     * Per unit price for units relevant to the tier.
+     */
+    unitAmount: number;
+    /**
+     * Same as `unitAmount`, but contains a decimal value with at most 12 decimal places.
+     */
+    unitAmountDecimal: number;
+    /**
+     * Up to and including to this quantity will be contained in the tier.
+     */
+    upTo: number;
+}
+
+export interface PlanTransformUsage {
+    /**
+     * Divide usage by this number.
+     */
+    divideBy: number;
+    /**
+     * After division, either round the result `up` or `down`.
+     */
+    round: string;
+}
+
 export interface PriceCurrencyOption {
     /**
      * When set, provides configuration for the amount to be adjusted by the customer during Checkout Sessions and Payment Links.
      */
     customUnitAmount?: outputs.PriceCurrencyOptionCustomUnitAmount;
+    /**
+     * Key for this entry.
+     */
     key: string;
     /**
-     * Only required if a [default tax behavior](<https://stripe.com/docs/tax/products-prices-tax-categories-tax-behavior#setting-a-default-tax-behavior-(recommended)>) was not provided in the Stripe Tax settings. Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
+     * Only required if a [default tax behavior](<https://docs.stripe.com/tax/products-prices-tax-categories-tax-behavior#setting-a-default-tax-behavior-(recommended)>) was not provided in the Stripe Tax settings. Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
      */
     taxBehavior?: string;
     /**
      * Each element represents a pricing tier. This parameter requires `billingScheme` to be set to `tiered`. See also the documentation for `billingScheme`.
      */
-    tiers?: any[][];
+    tiers?: outputs.PriceCurrencyOptionTier[];
     /**
-     * A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge.
+     * The unit amount in cents (or local equivalent) to be charged, represented as a whole integer if possible. Only set if `billing_scheme=per_unit`.
      */
     unitAmount?: number;
     /**
-     * Same as `unitAmount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unitAmount` and `unitAmountDecimal` can be set.
+     * The unit amount in cents (or local equivalent) to be charged, represented as a decimal string with at most 12 decimal places. Only set if `billing_scheme=per_unit`.
      */
     unitAmountDecimal?: string;
 }
@@ -257,7 +10662,34 @@ export interface PriceCurrencyOptionCustomUnitAmount {
     preset?: number;
 }
 
+export interface PriceCurrencyOptionTier {
+    /**
+     * Price for the entire tier.
+     */
+    flatAmount?: number;
+    /**
+     * Same as `flatAmount`, but contains a decimal value with at most 12 decimal places.
+     */
+    flatAmountDecimal?: string;
+    /**
+     * Per unit price for units relevant to the tier.
+     */
+    unitAmount?: number;
+    /**
+     * Same as `unitAmount`, but contains a decimal value with at most 12 decimal places.
+     */
+    unitAmountDecimal?: string;
+    /**
+     * Up to and including to this quantity will be contained in the tier.
+     */
+    upTo: string;
+}
+
 export interface PriceCustomUnitAmount {
+    /**
+     * Pass in `true` to enable `customUnitAmount`, otherwise omit `customUnitAmount`.
+     */
+    enabled: boolean;
     /**
      * The maximum unit amount the customer can specify for this item.
      */
@@ -276,40 +10708,40 @@ export interface PriceProductData {
     /**
      * Whether the product is currently available for purchase. Defaults to `true`.
      */
-    active: boolean;
+    active?: boolean;
     /**
      * The identifier for the product. Must be unique. If not provided, an identifier will be randomly generated.
      */
-    id: string;
+    id?: string;
     /**
-     * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
      */
-    metadata: {[key: string]: string};
+    metadata?: {[key: string]: string};
     /**
      * The product's name, meant to be displayable to the customer.
      */
     name: string;
     /**
-     * An arbitrary string to be displayed on your customer's credit card or bank statement. While most banks display this information consistently, some may display it incorrectly or not at all. This may be up to 22 characters. The statement description may not include `<`, `>`, `\`, `\"`, `'` characters, and will appear on your customer's statement in capital letters. Non-ASCII characters are automatically stripped.
+     * An arbitrary string to be displayed on your customer's credit card or bank statement. While most banks display this information consistently, some may display it incorrectly or not at all.
      */
-    statementDescriptor: string;
+    statementDescriptor?: string;
     /**
-     * A [tax code](https://stripe.com/docs/tax/tax-categories) ID.
+     * A [tax code](https://docs.stripe.com/tax/tax-categories) ID.
      */
-    taxCode: string;
+    taxCode?: string;
     /**
      * A label that represents units of this product. When set, this will be included in customers' receipts, invoices, Checkout, and the customer portal.
      */
-    unitLabel: string;
+    unitLabel?: string;
 }
 
 export interface PriceRecurring {
     /**
-     * Specifies billing frequency. Either `day`, `week`, `month` or `year`.
+     * The frequency at which a subscription is billed. One of `day`, `week`, `month` or `year`.
      */
     interval: string;
     /**
-     * The number of intervals between subscription billings. For example, `interval=month` and `interval_count=3` bills every 3 months. Maximum of three years interval allowed (3 years, 36 months, or 156 weeks).
+     * The number of intervals (specified in the `interval` attribute) between subscription billings. For example, `interval=month` and `interval_count=3` bills every 3 months.
      */
     intervalCount: number;
     /**
@@ -317,7 +10749,7 @@ export interface PriceRecurring {
      */
     meter: string;
     /**
-     * Default number of trial days when subscribing a customer to this price using [`trial_from_plan=true`](https://stripe.com/docs/api#create_subscription-trial_from_plan).
+     * Default number of trial days when subscribing a customer to this price using [`trial_from_plan=true`](https://docs.stripe.com/api#create_subscription-trial_from_plan).
      */
     trialPeriodDays: number;
     /**
@@ -328,22 +10760,36 @@ export interface PriceRecurring {
 
 export interface PriceTier {
     /**
-     * The flat billing amount for an entire tier, regardless of the number of units in the tier.
+     * Price for the entire tier.
      */
     flatAmount?: number;
     /**
-     * Same as `flatAmount`, but accepts a decimal value representing an integer in the minor units of the currency. Only one of `flatAmount` and `flatAmountDecimal` can be set.
+     * Same as `flatAmount`, but contains a decimal value with at most 12 decimal places.
      */
     flatAmountDecimal?: string;
     /**
-     * The per unit billing amount for each individual unit for which this tier applies.
+     * Per unit price for units relevant to the tier.
      */
     unitAmount?: number;
     /**
-     * Same as `unitAmount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unitAmount` and `unitAmountDecimal` can be set.
+     * Same as `unitAmount`, but contains a decimal value with at most 12 decimal places.
      */
     unitAmountDecimal?: string;
+    /**
+     * Up to and including to this quantity will be contained in the tier.
+     */
     upTo: string;
+}
+
+export interface PriceTransformQuantity {
+    /**
+     * Divide usage by this number.
+     */
+    divideBy: number;
+    /**
+     * After division, either round the result `up` or `down`.
+     */
+    round: string;
 }
 
 export interface ProductDefaultPriceData {
@@ -354,31 +10800,31 @@ export interface ProductDefaultPriceData {
     /**
      * Prices defined in each available currency option. Each key must be a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html) and a [supported currency](https://stripe.com/docs/currencies).
      */
-    currencyOptions: outputs.ProductDefaultPriceDataCurrencyOption[];
+    currencyOptions?: outputs.ProductDefaultPriceDataCurrencyOption[];
     /**
      * When set, provides configuration for the amount to be adjusted by the customer during Checkout Sessions and Payment Links.
      */
     customUnitAmount?: outputs.ProductDefaultPriceDataCustomUnitAmount;
     /**
-     * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
      */
-    metadata: {[key: string]: string};
+    metadata?: {[key: string]: string};
     /**
      * The recurring components of a price such as `interval` and `intervalCount`.
      */
     recurring?: outputs.ProductDefaultPriceDataRecurring;
     /**
-     * Only required if a [default tax behavior](<https://stripe.com/docs/tax/products-prices-tax-categories-tax-behavior#setting-a-default-tax-behavior-(recommended)>) was not provided in the Stripe Tax settings. Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
+     * Only required if a [default tax behavior](<https://docs.stripe.com/tax/products-prices-tax-categories-tax-behavior#setting-a-default-tax-behavior-(recommended)>) was not provided in the Stripe Tax settings. Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
      */
-    taxBehavior: string;
+    taxBehavior?: string;
     /**
      * A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge. One of `unitAmount`, `unitAmountDecimal`, or `customUnitAmount` is required.
      */
-    unitAmount: number;
+    unitAmount?: number;
     /**
      * Same as `unitAmount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unitAmount` and `unitAmountDecimal` can be set.
      */
-    unitAmountDecimal: string;
+    unitAmountDecimal?: string;
 }
 
 export interface ProductDefaultPriceDataCurrencyOption {
@@ -386,23 +10832,26 @@ export interface ProductDefaultPriceDataCurrencyOption {
      * When set, provides configuration for the amount to be adjusted by the customer during Checkout Sessions and Payment Links.
      */
     customUnitAmount?: outputs.ProductDefaultPriceDataCurrencyOptionCustomUnitAmount;
+    /**
+     * Key for this entry.
+     */
     key: string;
     /**
-     * Only required if a [default tax behavior](<https://stripe.com/docs/tax/products-prices-tax-categories-tax-behavior#setting-a-default-tax-behavior-(recommended)>) was not provided in the Stripe Tax settings. Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
+     * Only required if a [default tax behavior](<https://docs.stripe.com/tax/products-prices-tax-categories-tax-behavior#setting-a-default-tax-behavior-(recommended)>) was not provided in the Stripe Tax settings. Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
      */
-    taxBehavior: string;
+    taxBehavior?: string;
     /**
      * Each element represents a pricing tier. This parameter requires `billingScheme` to be set to `tiered`. See also the documentation for `billingScheme`.
      */
-    tiers: any[][];
+    tiers?: outputs.ProductDefaultPriceDataCurrencyOptionTier[];
     /**
      * A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge.
      */
-    unitAmount: number;
+    unitAmount?: number;
     /**
      * Same as `unitAmount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unitAmount` and `unitAmountDecimal` can be set.
      */
-    unitAmountDecimal: string;
+    unitAmountDecimal?: string;
 }
 
 export interface ProductDefaultPriceDataCurrencyOptionCustomUnitAmount {
@@ -422,6 +10871,29 @@ export interface ProductDefaultPriceDataCurrencyOptionCustomUnitAmount {
      * The starting unit amount which can be updated by the customer.
      */
     preset?: number;
+}
+
+export interface ProductDefaultPriceDataCurrencyOptionTier {
+    /**
+     * The flat billing amount for an entire tier, regardless of the number of units in the tier.
+     */
+    flatAmount?: number;
+    /**
+     * Same as `flatAmount`, but accepts a decimal value representing an integer in the minor units of the currency. Only one of `flatAmount` and `flatAmountDecimal` can be set.
+     */
+    flatAmountDecimal?: string;
+    /**
+     * The per unit billing amount for each individual unit for which this tier applies.
+     */
+    unitAmount?: number;
+    /**
+     * Same as `unitAmount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unitAmount` and `unitAmountDecimal` can be set.
+     */
+    unitAmountDecimal?: string;
+    /**
+     * Specifies the upper bound of this tier. The lower bound of a tier is the upper bound of the previous tier adding one. Use `inf` to define a fallback tier.
+     */
+    upTo: number;
 }
 
 export interface ProductDefaultPriceDataCustomUnitAmount {
@@ -463,37 +10935,37 @@ export interface ProductMarketingFeature {
 
 export interface ProductPackageDimensions {
     /**
-     * Height, in inches. Maximum precision is 2 decimal places.
+     * Height, in inches.
      */
     height: number;
     /**
-     * Length, in inches. Maximum precision is 2 decimal places.
+     * Length, in inches.
      */
     length: number;
     /**
-     * Weight, in ounces. Maximum precision is 2 decimal places.
+     * Weight, in ounces.
      */
     weight: number;
     /**
-     * Width, in inches. Maximum precision is 2 decimal places.
+     * Width, in inches.
      */
     width: number;
 }
 
 export interface PromotionCodePromotion {
     /**
-     * If promotion `type` is `coupon`, the coupon for this promotion code.
+     * If promotion `type` is `coupon`, the coupon for this promotion.
      */
     coupon: string;
     /**
-     * Specifies the type of promotion.
+     * The type of promotion.
      */
     type: string;
 }
 
 export interface PromotionCodeRestrictions {
     /**
-     * Promotion codes defined in each available currency option. Each key must be a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html) and a [supported currency](https://stripe.com/docs/currencies).
+     * Promotion code restrictions defined in each available currency option. Each key must be a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html) and a [supported currency](https://stripe.com/docs/currencies).
      */
     currencyOptions?: outputs.PromotionCodeRestrictionsCurrencyOption[];
     /**
@@ -511,11 +10983,1448 @@ export interface PromotionCodeRestrictions {
 }
 
 export interface PromotionCodeRestrictionsCurrencyOption {
+    /**
+     * Key for this entry.
+     */
     key: string;
     /**
      * Minimum amount required to redeem this Promotion Code into a Coupon (e.g., a purchase must be $100 or more to work).
      */
+    minimumAmount: number;
+}
+
+export interface QuoteAutomaticTax {
+    /**
+     * Automatically calculate taxes
+     */
+    enabled: boolean;
+    /**
+     * The account that's liable for tax. If set, the business address and tax registrations required to perform the tax calculation are loaded from this account. The tax transaction is returned in the report of the connected account.
+     */
+    liability: outputs.QuoteAutomaticTaxLiability;
+    /**
+     * The tax provider powering automatic tax.
+     */
+    provider: string;
+    /**
+     * The status of the most recent automated tax calculation for this quote.
+     */
+    status: string;
+}
+
+export interface QuoteAutomaticTaxLiability {
+    /**
+     * The connected account being referenced when `type` is `account`.
+     */
+    account: string;
+    /**
+     * Type of the account referenced.
+     */
+    type: string;
+}
+
+export interface QuoteDiscount {
+    /**
+     * ID of the coupon to create a new discount for.
+     */
+    coupon?: string;
+    /**
+     * ID of an existing discount on the object (or one of its ancestors) to reuse.
+     */
+    discount?: string;
+    /**
+     * ID of the promotion code to create a new discount for.
+     */
+    promotionCode?: string;
+}
+
+export interface QuoteFromQuote {
+    /**
+     * Whether this quote is a revision of a different quote.
+     */
+    isRevision: boolean;
+    /**
+     * The quote that was cloned.
+     */
+    quote: string;
+}
+
+export interface QuoteInvoiceSettings {
+    /**
+     * Number of days within which a customer must pay invoices generated by this quote. This value will be `null` for quotes where `collection_method=charge_automatically`.
+     */
+    daysUntilDue: number;
+    issuer: outputs.QuoteInvoiceSettingsIssuer;
+}
+
+export interface QuoteInvoiceSettingsIssuer {
+    /**
+     * The connected account being referenced when `type` is `account`.
+     */
+    account: string;
+    /**
+     * Type of the account referenced.
+     */
+    type: string;
+}
+
+export interface QuoteLineItem {
+    /**
+     * The discounts applied to this line item.
+     */
+    discounts: outputs.QuoteLineItemDiscount[];
+    /**
+     * The ID of the price object. One of `price` or `priceData` is required.
+     */
+    price: string;
+    /**
+     * Data used to generate a new [Price](https://docs.stripe.com/api/prices) object inline. One of `price` or `priceData` is required.
+     */
+    priceData: outputs.QuoteLineItemPriceData;
+    /**
+     * The quantity of the line item.
+     */
+    quantity: number;
+    /**
+     * The tax rates which apply to the line item. When set, the `defaultTaxRates` on the quote do not apply to this line item.
+     */
+    taxRates: string[];
+}
+
+export interface QuoteLineItemDiscount {
+    /**
+     * ID of the coupon to create a new discount for.
+     */
+    coupon: string;
+    /**
+     * ID of an existing discount on the object (or one of its ancestors) to reuse.
+     */
+    discount: string;
+    /**
+     * ID of the promotion code to create a new discount for.
+     */
+    promotionCode: string;
+}
+
+export interface QuoteLineItemPriceData {
+    /**
+     * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+     */
+    currency: string;
+    /**
+     * The ID of the [Product](https://docs.stripe.com/api/products) that this [Price](https://docs.stripe.com/api/prices) will belong to.
+     */
+    product: string;
+    /**
+     * The recurring components of a price such as `interval` and `intervalCount`.
+     */
+    recurring: outputs.QuoteLineItemPriceDataRecurring;
+    /**
+     * Only required if a [default tax behavior](<https://docs.stripe.com/tax/products-prices-tax-categories-tax-behavior#setting-a-default-tax-behavior-(recommended)>) was not provided in the Stripe Tax settings. Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
+     */
+    taxBehavior: string;
+    /**
+     * A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge.
+     */
+    unitAmount: number;
+    /**
+     * Same as `unitAmount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unitAmount` and `unitAmountDecimal` can be set.
+     */
+    unitAmountDecimal: number;
+}
+
+export interface QuoteLineItemPriceDataRecurring {
+    /**
+     * Specifies billing frequency. Either `day`, `week`, `month` or `year`.
+     */
+    interval: string;
+    /**
+     * The number of intervals between subscription billings. For example, `interval=month` and `interval_count=3` bills every 3 months. Maximum of three years interval allowed (3 years, 36 months, or 156 weeks).
+     */
+    intervalCount: number;
+}
+
+export interface QuoteStatusTransitions {
+    /**
+     * The time that the quote was accepted. Measured in seconds since Unix epoch.
+     */
+    acceptedAt: number;
+    /**
+     * The time that the quote was canceled. Measured in seconds since Unix epoch.
+     */
+    canceledAt: number;
+    /**
+     * The time that the quote was finalized. Measured in seconds since Unix epoch.
+     */
+    finalizedAt: number;
+}
+
+export interface QuoteSubscriptionData {
+    /**
+     * The billing mode of the quote.
+     */
+    billingMode: outputs.QuoteSubscriptionDataBillingMode;
+    /**
+     * The subscription's description, meant to be displayable to the customer. Use this field to optionally store an explanation of the subscription for rendering in Stripe surfaces and certain local payment methods UIs.
+     */
+    description: string;
+    /**
+     * When creating a new subscription, the date of which the subscription schedule will start after the quote is accepted. This date is ignored if it is in the past when the quote is accepted. Measured in seconds since the Unix epoch.
+     */
+    effectiveDate: number;
+    /**
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that will set metadata on the subscription or subscription schedule when the quote is accepted. If a recurring price is included in `lineItems`, this field will be passed to the resulting subscription's `metadata` field. If `subscription_data.effective_date` is used, this field will be passed to the resulting subscription schedule's `phases.metadata` field. Unlike object-level metadata, this field is declarative. Updates will clear prior values.
+     */
+    metadata: {[key: string]: string};
+    /**
+     * Integer representing the number of trial period days before the customer is charged for the first time.
+     */
+    trialPeriodDays: number;
+}
+
+export interface QuoteSubscriptionDataBillingMode {
+    flexible: outputs.QuoteSubscriptionDataBillingModeFlexible;
+    /**
+     * Controls how prorations and invoices for subscriptions are calculated and orchestrated.
+     */
+    type: string;
+}
+
+export interface QuoteSubscriptionDataBillingModeFlexible {
+    /**
+     * Controls how invoices and invoice items display proration amounts and discount amounts.
+     */
+    prorationDiscounts: string;
+}
+
+export interface QuoteTotalDetails {
+    /**
+     * This is the sum of all the discounts.
+     */
+    amountDiscount: number;
+    /**
+     * This is the sum of all the shipping amounts.
+     */
+    amountShipping: number;
+    /**
+     * This is the sum of all the tax amounts.
+     */
+    amountTax: number;
+    breakdown: outputs.QuoteTotalDetailsBreakdown;
+}
+
+export interface QuoteTotalDetailsBreakdown {
+    /**
+     * The aggregated discounts.
+     */
+    discounts: outputs.QuoteTotalDetailsBreakdownDiscount[];
+    /**
+     * The aggregated tax amounts by rate.
+     */
+    taxes: outputs.QuoteTotalDetailsBreakdownTax[];
+}
+
+export interface QuoteTotalDetailsBreakdownDiscount {
+    /**
+     * The amount discounted.
+     */
+    amount: number;
+    /**
+     * A discount represents the actual application of a [coupon](https://api.stripe.com#coupons) or [promotion code](https://api.stripe.com#promotion_codes).
+     * It contains information about when the discount began, when it will end, and what it is applied to.
+     */
+    discount: string;
+}
+
+export interface QuoteTotalDetailsBreakdownTax {
+    /**
+     * Amount of tax applied for this rate.
+     */
+    amount: number;
+    /**
+     * Tax rates can be applied to [invoices](https://www.terraform.io/invoicing/taxes/tax-rates), [subscriptions](https://www.terraform.io/billing/taxes/tax-rates) and [Checkout Sessions](https://www.terraform.io/payments/checkout/use-manual-tax-rates) to collect tax.
+     */
+    rate: string;
+    /**
+     * The reasoning behind this tax, for example, if the product is tax exempt. The possible values for this field may be extended as new tax rules are supported.
+     */
+    taxabilityReason: string;
+    /**
+     * The amount on which tax is calculated, in cents (or local equivalent).
+     */
+    taxableAmount: number;
+}
+
+export interface QuoteTransferData {
+    /**
+     * The amount in cents (or local equivalent) that will be transferred to the destination account when the invoice is paid. By default, the entire amount is transferred to the destination.
+     */
+    amount: number;
+    /**
+     * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice total that will be transferred to the destination account. By default, the entire amount will be transferred to the destination.
+     */
+    amountPercent: number;
+    /**
+     * The account where funds from the payment will be transferred to upon payment success.
+     */
+    destination: string;
+}
+
+export interface SetupIntentAutomaticPaymentMethods {
+    /**
+     * Controls whether this SetupIntent will accept redirect-based payment methods.
+     */
+    allowRedirects: string;
+    /**
+     * Automatically calculates compatible payment methods
+     */
+    enabled: boolean;
+}
+
+export interface SetupIntentLastSetupError {
+    /**
+     * For card errors resulting from a card issuer decline, a short string indicating [how to proceed with an error](https://docs.stripe.com/declines#retrying-issuer-declines) if they provide one.
+     */
+    adviceCode: string;
+    /**
+     * For card errors, the ID of the failed charge.
+     */
+    charge: string;
+    /**
+     * For some errors that could be handled programmatically, a short string indicating the [error code](https://docs.stripe.com/error-codes) reported.
+     */
+    code: string;
+    /**
+     * For card errors resulting from a card issuer decline, a short string indicating the [card issuer's reason for the decline](https://docs.stripe.com/declines#issuer-declines) if they provide one.
+     */
+    declineCode: string;
+    /**
+     * A URL to more information about the [error code](https://docs.stripe.com/error-codes) reported.
+     */
+    docUrl: string;
+    /**
+     * A human-readable message providing more details about the error. For card errors, these messages can be shown to your users.
+     */
+    message: string;
+    /**
+     * For card errors resulting from a card issuer decline, a 2 digit code which indicates the advice given to merchant by the card network on how to proceed with an error.
+     */
+    networkAdviceCode: string;
+    /**
+     * For payments declined by the network, an alphanumeric code which indicates the reason the payment failed.
+     */
+    networkDeclineCode: string;
+    /**
+     * If the error is parameter-specific, the parameter related to the error. For example, you can use this to display a message near the correct form field.
+     */
+    param: string;
+    /**
+     * A PaymentIntent guides you through the process of collecting a payment from your customer.
+     * We recommend that you create exactly one PaymentIntent for each order or
+     * customer session in your system. You can reference the PaymentIntent later to
+     * see the history of payment attempts for a particular session.
+     */
+    paymentIntent: string;
+    /**
+     * PaymentMethod objects represent your customer's payment instruments.
+     * You can use them with [PaymentIntents](https://docs.stripe.com/payments/payment-intents) to collect payments or save them to
+     * Customer objects to store instrument details for future payments.
+     *
+     * Related guides: [Payment Methods](https://docs.stripe.com/payments/payment-methods) and [More Payment Scenarios](https://docs.stripe.com/payments/more-payment-scenarios).
+     */
+    paymentMethod: string;
+    /**
+     * If the error is specific to the type of payment method, the payment method type that had a problem. This field is only populated for invoice-related errors.
+     */
+    paymentMethodType: string;
+    /**
+     * A URL to the request log entry in your dashboard.
+     */
+    requestLogUrl: string;
+    /**
+     * A SetupIntent guides you through the process of setting up and saving a customer's payment credentials for future payments.
+     * For example, you can use a SetupIntent to set up and save your customer's card without immediately collecting a payment.
+     * Later, you can use [PaymentIntents](https://api.stripe.com#payment_intents) to drive the payment flow.
+     *
+     * Create a SetupIntent when you're ready to collect your customer's payment credentials.
+     * Don't maintain long-lived, unconfirmed SetupIntents because they might not be valid.
+     * The SetupIntent transitions through multiple [statuses](https://docs.stripe.com/payments/intents#intent-statuses) as it guides
+     * you through the setup process.
+     *
+     * Successful SetupIntents result in payment credentials that are optimized for future payments.
+     * For example, cardholders in [certain regions](https://stripe.com/guides/strong-customer-authentication) might need to be run through
+     * [Strong Customer Authentication](https://docs.stripe.com/strong-customer-authentication) during payment method collection
+     * to streamline later [off-session payments](https://docs.stripe.com/payments/setup-intents).
+     * If you use the SetupIntent with a [Customer](https://api.stripe.com#setup_intent_object-customer),
+     * it automatically attaches the resulting payment method to that Customer after successful setup.
+     * We recommend using SetupIntents or [setupFutureUsage](https://api.stripe.com#payment_intent_object-setup_future_usage) on
+     * PaymentIntents to save payment methods to prevent saving invalid or unoptimized payment methods.
+     *
+     * By using SetupIntents, you can reduce friction for your customers, even as regulations change over time.
+     *
+     * Related guide: [Setup Intents API](https://docs.stripe.com/payments/setup-intents)
+     */
+    setupIntent: string;
+    source: string;
+    /**
+     * The type of error returned. One of `apiError`, `cardError`, `idempotencyError`, or `invalidRequestError`
+     */
+    type: string;
+}
+
+export interface SetupIntentManagedPayments {
+    /**
+     * Set to `true` to enable [Managed Payments](https://docs.stripe.com/payments/managed-payments), Stripe's merchant of record solution, for this session.
+     */
+    enabled: boolean;
+}
+
+export interface SetupIntentMandateData {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * This hash contains details about the customer acceptance of the Mandate.
+     */
+    customerAcceptance: outputs.SetupIntentMandateDataCustomerAcceptance;
+}
+
+export interface SetupIntentMandateDataCustomerAcceptance {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The time at which the customer accepted the Mandate.
+     */
+    acceptedAt?: number;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a Mandate accepted online, this hash contains details about the online acceptance.
+     */
+    online?: outputs.SetupIntentMandateDataCustomerAcceptanceOnline;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The type of customer acceptance information included with the Mandate. One of `online` or `offline`.
+     */
+    type: string;
+}
+
+export interface SetupIntentMandateDataCustomerAcceptanceOnline {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The IP address from which the Mandate was accepted by the customer.
+     */
+    ipAddress: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The user agent of the browser from which the Mandate was accepted by the customer.
+     */
+    userAgent: string;
+}
+
+export interface SetupIntentNextAction {
+    cashappHandleRedirectOrDisplayQrCode: outputs.SetupIntentNextActionCashappHandleRedirectOrDisplayQrCode;
+    pixDisplayQrCode: outputs.SetupIntentNextActionPixDisplayQrCode;
+    redirectToUrl: outputs.SetupIntentNextActionRedirectToUrl;
+    /**
+     * Type of the next action to perform. Refer to the other child attributes under `nextAction` for available values. Examples include: `redirectToUrl`, `useStripeSdk`, `alipayHandleRedirect`, `oxxoDisplayDetails`, or `verifyWithMicrodeposits`.
+     */
+    type: string;
+    upiHandleRedirectOrDisplayQrCode: outputs.SetupIntentNextActionUpiHandleRedirectOrDisplayQrCode;
+    /**
+     * When confirming a SetupIntent with Stripe.js, Stripe.js depends on the contents of this dictionary to invoke authentication flows. The shape of the contents is subject to change and is only intended to be used by Stripe.js.
+     */
+    useStripeSdk: {[key: string]: string};
+    verifyWithMicrodeposits: outputs.SetupIntentNextActionVerifyWithMicrodeposits;
+}
+
+export interface SetupIntentNextActionCashappHandleRedirectOrDisplayQrCode {
+    /**
+     * The URL to the hosted Cash App Pay instructions page, which allows customers to view the QR code, and supports QR code refreshing on expiration.
+     */
+    hostedInstructionsUrl: string;
+    /**
+     * The url for mobile redirect based auth
+     */
+    mobileAuthUrl: string;
+    qrCode: outputs.SetupIntentNextActionCashappHandleRedirectOrDisplayQrCodeQrCode;
+}
+
+export interface SetupIntentNextActionCashappHandleRedirectOrDisplayQrCodeQrCode {
+    /**
+     * The date (unix timestamp) when the QR code expires.
+     */
+    expiresAt: number;
+    /**
+     * The image*url*png string used to render QR code
+     */
+    imageUrlPng: string;
+    /**
+     * The image*url*svg string used to render QR code
+     */
+    imageUrlSvg: string;
+}
+
+export interface SetupIntentNextActionPixDisplayQrCode {
+    /**
+     * The raw data string used to generate QR code, it should be used together with QR code library.
+     */
+    data: string;
+    /**
+     * The date (unix timestamp) when the PIX expires.
+     */
+    expiresAt: number;
+    /**
+     * The URL to the hosted pix instructions page, which allows customers to view the pix QR code.
+     */
+    hostedInstructionsUrl: string;
+    /**
+     * The image*url*png string used to render png QR code
+     */
+    imageUrlPng: string;
+    /**
+     * The image*url*svg string used to render svg QR code
+     */
+    imageUrlSvg: string;
+}
+
+export interface SetupIntentNextActionRedirectToUrl {
+    /**
+     * If the customer does not exit their browser while authenticating, they will be redirected to this specified URL after completion.
+     */
+    returnUrl: string;
+    /**
+     * The URL you must redirect your customer to in order to authenticate.
+     */
+    url: string;
+}
+
+export interface SetupIntentNextActionUpiHandleRedirectOrDisplayQrCode {
+    /**
+     * The URL to the hosted UPI instructions page, which allows customers to view the QR code.
+     */
+    hostedInstructionsUrl: string;
+    qrCode: outputs.SetupIntentNextActionUpiHandleRedirectOrDisplayQrCodeQrCode;
+}
+
+export interface SetupIntentNextActionUpiHandleRedirectOrDisplayQrCodeQrCode {
+    /**
+     * The date (unix timestamp) when the QR code expires.
+     */
+    expiresAt: number;
+    /**
+     * The image*url*png string used to render QR code
+     */
+    imageUrlPng: string;
+    /**
+     * The image*url*svg string used to render QR code
+     */
+    imageUrlSvg: string;
+}
+
+export interface SetupIntentNextActionVerifyWithMicrodeposits {
+    /**
+     * The timestamp when the microdeposits are expected to land.
+     */
+    arrivalDate: number;
+    /**
+     * The URL for the hosted verification page, which allows customers to verify their bank account.
+     */
+    hostedVerificationUrl: string;
+    /**
+     * The type of the microdeposit sent to the customer. Used to distinguish between different verification methods.
+     */
+    microdepositType: string;
+}
+
+export interface SetupIntentPaymentMethodConfigurationDetails {
+    /**
+     * ID of the payment method configuration used.
+     */
+    id: string;
+    /**
+     * ID of the parent payment method configuration used.
+     */
+    parent: string;
+}
+
+export interface SetupIntentPaymentMethodData {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is an `acssDebit` PaymentMethod, this hash contains details about the ACSS Debit payment method.
+     */
+    acssDebit?: outputs.SetupIntentPaymentMethodDataAcssDebit;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * This field indicates whether this payment method can be shown again to its customer in a checkout flow. Stripe products such as Checkout and Elements use this field to determine whether a payment method can be shown as a saved payment method in a checkout flow. The field defaults to `unspecified`.
+     */
+    allowRedisplay?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is an `auBecsDebit` PaymentMethod, this hash contains details about the bank account.
+     */
+    auBecsDebit?: outputs.SetupIntentPaymentMethodDataAuBecsDebit;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a `bacsDebit` PaymentMethod, this hash contains details about the Bacs Direct Debit bank account.
+     */
+    bacsDebit?: outputs.SetupIntentPaymentMethodDataBacsDebit;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Billing information associated with the PaymentMethod that may be used or required by particular types of payment methods.
+     */
+    billingDetails?: outputs.SetupIntentPaymentMethodDataBillingDetails;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a `boleto` PaymentMethod, this hash contains details about the Boleto payment method.
+     */
+    boleto?: outputs.SetupIntentPaymentMethodDataBoleto;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is an `eps` PaymentMethod, this hash contains details about the EPS payment method.
+     */
+    eps?: outputs.SetupIntentPaymentMethodDataEps;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is an `fpx` PaymentMethod, this hash contains details about the FPX payment method.
+     */
+    fpx?: outputs.SetupIntentPaymentMethodDataFpx;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is an `ideal` PaymentMethod, this hash contains details about the iDEAL payment method.
+     */
+    ideal?: outputs.SetupIntentPaymentMethodDataIdeal;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a `klarna` PaymentMethod, this hash contains details about the Klarna payment method.
+     */
+    klarna?: outputs.SetupIntentPaymentMethodDataKlarna;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
+     */
+    metadata?: {[key: string]: string};
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a `naverPay` PaymentMethod, this hash contains details about the Naver Pay payment method.
+     */
+    naverPay?: outputs.SetupIntentPaymentMethodDataNaverPay;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is an nz*bank*account PaymentMethod, this hash contains details about the nz*bank*account payment method.
+     */
+    nzBankAccount?: outputs.SetupIntentPaymentMethodDataNzBankAccount;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a `p24` PaymentMethod, this hash contains details about the P24 payment method.
+     */
+    p24?: outputs.SetupIntentPaymentMethodDataP24;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a `payto` PaymentMethod, this hash contains details about the PayTo payment method.
+     */
+    payto?: outputs.SetupIntentPaymentMethodDataPayto;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Options to configure Radar. See [Radar Session](https://docs.stripe.com/radar/radar-session) for more information.
+     */
+    radarOptions?: outputs.SetupIntentPaymentMethodDataRadarOptions;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a `sepaDebit` PaymentMethod, this hash contains details about the SEPA debit bank account.
+     */
+    sepaDebit?: outputs.SetupIntentPaymentMethodDataSepaDebit;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a `sofort` PaymentMethod, this hash contains details about the SOFORT payment method.
+     */
+    sofort?: outputs.SetupIntentPaymentMethodDataSofort;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The type of the PaymentMethod. An additional hash is included on the PaymentMethod with a name matching this value. It contains additional information specific to the PaymentMethod type.
+     */
+    type: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is a `upi` PaymentMethod, this hash contains details about the UPI payment method.
+     */
+    upi?: outputs.SetupIntentPaymentMethodDataUpi;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * If this is an `usBankAccount` PaymentMethod, this hash contains details about the US bank account payment method.
+     */
+    usBankAccount?: outputs.SetupIntentPaymentMethodDataUsBankAccount;
+}
+
+export interface SetupIntentPaymentMethodDataAcssDebit {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Customer's bank account number.
+     */
+    accountNumber: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Institution number of the customer's bank.
+     */
+    institutionNumber: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Transit number of the customer's bank.
+     */
+    transitNumber: string;
+}
+
+export interface SetupIntentPaymentMethodDataAuBecsDebit {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The account number for the bank account.
+     */
+    accountNumber: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Bank-State-Branch number of the bank account.
+     */
+    bsbNumber: string;
+}
+
+export interface SetupIntentPaymentMethodDataBacsDebit {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Account number of the bank account that the funds will be debited from.
+     */
+    accountNumber?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Sort code of the bank account. (e.g., `10-20-30`)
+     */
+    sortCode?: string;
+}
+
+export interface SetupIntentPaymentMethodDataBillingDetails {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Billing address.
+     */
+    address?: outputs.SetupIntentPaymentMethodDataBillingDetailsAddress;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Email address.
+     */
+    email?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Full name.
+     */
+    name?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Billing phone number (including extension).
+     */
+    phone?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Taxpayer identification number. Used only for transactions between LATAM buyers and non-LATAM sellers.
+     */
+    taxId?: string;
+}
+
+export interface SetupIntentPaymentMethodDataBillingDetailsAddress {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * City, district, suburb, town, or village.
+     */
+    city?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * ZIP or postal code.
+     */
+    postalCode?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state?: string;
+}
+
+export interface SetupIntentPaymentMethodDataBoleto {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The tax ID of the customer (CPF for individual consumers or CNPJ for businesses consumers)
+     */
+    taxId: string;
+}
+
+export interface SetupIntentPaymentMethodDataEps {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The customer's bank.
+     */
+    bank?: string;
+}
+
+export interface SetupIntentPaymentMethodDataFpx {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Account holder type for FPX transaction
+     */
+    accountHolderType?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The customer's bank.
+     */
+    bank: string;
+}
+
+export interface SetupIntentPaymentMethodDataIdeal {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The customer's bank. Only use this parameter for existing customers. Don't use it for new customers.
+     */
+    bank?: string;
+}
+
+export interface SetupIntentPaymentMethodDataKlarna {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Customer's date of birth
+     */
+    dob?: outputs.SetupIntentPaymentMethodDataKlarnaDob;
+}
+
+export interface SetupIntentPaymentMethodDataKlarnaDob {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The day of birth, between 1 and 31.
+     */
+    day: number;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The month of birth, between 1 and 12.
+     */
+    month: number;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The four-digit year of birth.
+     */
+    year: number;
+}
+
+export interface SetupIntentPaymentMethodDataNaverPay {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether to use Naver Pay points or a card to fund this transaction. If not provided, this defaults to `card`.
+     */
+    funding?: string;
+}
+
+export interface SetupIntentPaymentMethodDataNzBankAccount {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The name on the bank account. Only required if the account holder name is different from the name of the authorized signatory collected in the PaymentMethod’s billing details.
+     */
+    accountHolderName?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The account number for the bank account.
+     */
+    accountNumber: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The numeric code for the bank account's bank.
+     */
+    bankCode: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The numeric code for the bank account's bank branch.
+     */
+    branchCode: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     */
+    reference?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The suffix of the bank account number.
+     */
+    suffix: string;
+}
+
+export interface SetupIntentPaymentMethodDataP24 {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The customer's bank.
+     */
+    bank?: string;
+}
+
+export interface SetupIntentPaymentMethodDataPayto {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The account number for the bank account.
+     */
+    accountNumber?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Bank-State-Branch number of the bank account.
+     */
+    bsbNumber?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The PayID alias for the bank account.
+     */
+    payId?: string;
+}
+
+export interface SetupIntentPaymentMethodDataRadarOptions {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * A [Radar Session](https://docs.stripe.com/radar/radar-session) is a snapshot of the browser metadata and device details that help Radar make more accurate predictions on your payments.
+     */
+    session?: string;
+}
+
+export interface SetupIntentPaymentMethodDataSepaDebit {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * IBAN of the bank account.
+     */
+    iban: string;
+}
+
+export interface SetupIntentPaymentMethodDataSofort {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Two-letter ISO code representing the country the bank account is located in.
+     */
+    country: string;
+}
+
+export interface SetupIntentPaymentMethodDataUpi {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Configuration options for setting up an eMandate
+     */
+    mandateOptions?: outputs.SetupIntentPaymentMethodDataUpiMandateOptions;
+}
+
+export interface SetupIntentPaymentMethodDataUpiMandateOptions {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Amount to be charged for future payments.
+     */
+    amount?: number;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * One of `fixed` or `maximum`. If `fixed`, the `amount` param refers to the exact amount to be charged in future payments. If `maximum`, the amount charged can be up to the value passed for the `amount` param.
+     */
+    amountType?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * A description of the mandate or subscription that is meant to be displayed to the customer.
+     */
+    description?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * End date of the mandate or subscription.
+     */
+    endDate?: number;
+}
+
+export interface SetupIntentPaymentMethodDataUsBankAccount {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Account holder type: individual or company.
+     */
+    accountHolderType?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Account number of the bank account.
+     */
+    accountNumber?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Account type: checkings or savings. Defaults to checking if omitted.
+     */
+    accountType?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The ID of a Financial Connections Account to use as a payment method.
+     */
+    financialConnectionsAccount?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Routing number of the bank account.
+     */
+    routingNumber?: string;
+}
+
+export interface SetupIntentPaymentMethodOptions {
+    acssDebit: outputs.SetupIntentPaymentMethodOptionsAcssDebit;
+    bacsDebit: outputs.SetupIntentPaymentMethodOptionsBacsDebit;
+    card: outputs.SetupIntentPaymentMethodOptionsCard;
+    klarna: outputs.SetupIntentPaymentMethodOptionsKlarna;
+    link: outputs.SetupIntentPaymentMethodOptionsLink;
+    paypal: outputs.SetupIntentPaymentMethodOptionsPaypal;
+    payto: outputs.SetupIntentPaymentMethodOptionsPayto;
+    pix: outputs.SetupIntentPaymentMethodOptionsPix;
+    sepaDebit: outputs.SetupIntentPaymentMethodOptionsSepaDebit;
+    upi: outputs.SetupIntentPaymentMethodOptionsUpi;
+    usBankAccount: outputs.SetupIntentPaymentMethodOptionsUsBankAccount;
+}
+
+export interface SetupIntentPaymentMethodOptionsAcssDebit {
+    /**
+     * Currency supported by the bank account
+     */
+    currency: string;
+    mandateOptions: outputs.SetupIntentPaymentMethodOptionsAcssDebitMandateOptions;
+    /**
+     * Bank account verification method. The default value is `automatic`.
+     */
+    verificationMethod: string;
+}
+
+export interface SetupIntentPaymentMethodOptionsAcssDebitMandateOptions {
+    /**
+     * A URL for custom mandate text
+     */
+    customMandateUrl: string;
+    /**
+     * List of Stripe products where this mandate can be selected automatically.
+     */
+    defaultFors: string[];
+    /**
+     * Description of the interval. Only required if the 'payment_schedule' parameter is 'interval' or 'combined'.
+     */
+    intervalDescription: string;
+    /**
+     * Payment schedule for the mandate.
+     */
+    paymentSchedule: string;
+    /**
+     * Transaction type of the mandate.
+     */
+    transactionType: string;
+}
+
+export interface SetupIntentPaymentMethodOptionsBacsDebit {
+    mandateOptions: outputs.SetupIntentPaymentMethodOptionsBacsDebitMandateOptions;
+}
+
+export interface SetupIntentPaymentMethodOptionsBacsDebitMandateOptions {
+    /**
+     * Prefix used to generate the Mandate reference. Must be at most 12 characters long. Must consist of only uppercase letters, numbers, spaces, or the following special characters: '/', '_', '-', '&', '.'. Cannot begin with 'DDIC' or 'STRIPE'.
+     */
+    referencePrefix: string;
+}
+
+export interface SetupIntentPaymentMethodOptionsCard {
+    /**
+     * Configuration options for setting up an eMandate for cards issued in India.
+     */
+    mandateOptions: outputs.SetupIntentPaymentMethodOptionsCardMandateOptions;
+    /**
+     * When specified, this parameter signals that a card has been collected
+     * as MOTO (Mail Order Telephone Order) and thus out of scope for SCA. This
+     * parameter can only be provided during confirmation.
+     */
+    moto?: boolean;
+    /**
+     * Selected network to process this SetupIntent on. Depends on the available networks of the card attached to the setup intent. Can be only set confirm-time.
+     */
+    network: string;
+    /**
+     * We strongly recommend that you rely on our SCA Engine to automatically prompt your customers for authentication based on risk level and [other requirements](https://docs.stripe.com/strong-customer-authentication). However, if you wish to request 3D Secure based on logic from your own fraud engine, provide this option. If not provided, this value defaults to `automatic`. Read our guide on [manually requesting 3D Secure](https://docs.stripe.com/payments/3d-secure/authentication-flow#manual-three-ds) for more information on how this configuration interacts with Radar and our SCA Engine.
+     */
+    requestThreeDSecure: string;
+    /**
+     * If 3D Secure authentication was performed with a third-party provider,
+     * the authentication details to use for this setup.
+     */
+    threeDSecure?: outputs.SetupIntentPaymentMethodOptionsCardThreeDSecure;
+}
+
+export interface SetupIntentPaymentMethodOptionsCardMandateOptions {
+    /**
+     * Amount to be charged for future payments, specified in the presentment currency.
+     */
+    amount: number;
+    /**
+     * One of `fixed` or `maximum`. If `fixed`, the `amount` param refers to the exact amount to be charged in future payments. If `maximum`, the amount charged can be up to the value passed for the `amount` param.
+     */
+    amountType: string;
+    /**
+     * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+     */
+    currency: string;
+    /**
+     * A description of the mandate or subscription that is meant to be displayed to the customer.
+     */
+    description: string;
+    /**
+     * End date of the mandate or subscription. If not provided, the mandate will be active until canceled. If provided, end date should be after start date.
+     */
+    endDate: number;
+    /**
+     * Specifies payment frequency. One of `day`, `week`, `month`, `year`, or `sporadic`.
+     */
+    interval: string;
+    /**
+     * The number of intervals between payments. For example, `interval=month` and `interval_count=3` indicates one payment every three months. Maximum of one year interval allowed (1 year, 12 months, or 52 weeks). This parameter is optional when `interval=sporadic`.
+     */
+    intervalCount: number;
+    /**
+     * Unique identifier for the mandate or subscription.
+     */
+    reference: string;
+    /**
+     * Start date of the mandate or subscription. Start date should not be lesser than yesterday.
+     */
+    startDate: number;
+    /**
+     * Specifies the type of mandates supported. Possible values are `india`.
+     */
+    supportedTypes: string[];
+}
+
+export interface SetupIntentPaymentMethodOptionsCardThreeDSecure {
+    /**
+     * The `transStatus` returned from the card Issuer’s ACS in the ARes.
+     */
+    aresTransStatus?: string;
+    /**
+     * The cryptogram, also known as the "authentication value" (AAV, CAVV or
+     * AEVV). This value is 20 bytes, base64-encoded into a 28-character string.
+     * (Most 3D Secure providers will return the base64-encoded version, which
+     * is what you should specify here.)
+     */
+    cryptogram?: string;
+    /**
+     * The Electronic Commerce Indicator (ECI) is returned by your 3D Secure
+     * provider and indicates what degree of authentication was performed.
+     */
+    electronicCommerceIndicator?: string;
+    /**
+     * Network specific 3DS fields. Network specific arguments require an
+     * explicit card brand choice. The parameter `payment_method_options.card.network``
+     * must be populated accordingly
+     */
+    networkOptions?: outputs.SetupIntentPaymentMethodOptionsCardThreeDSecureNetworkOptions;
+    /**
+     * The challenge indicator (`threeDSRequestorChallengeInd`) which was requested in the
+     * AReq sent to the card Issuer's ACS. A string containing 2 digits from 01-99.
+     */
+    requestorChallengeIndicator?: string;
+    /**
+     * For 3D Secure 1, the XID. For 3D Secure 2, the Directory Server
+     * Transaction ID (dsTransID).
+     */
+    transactionId?: string;
+    /**
+     * The version of 3D Secure that was performed.
+     */
+    version?: string;
+}
+
+export interface SetupIntentPaymentMethodOptionsCardThreeDSecureNetworkOptions {
+    /**
+     * Cartes Bancaires-specific 3DS fields.
+     */
+    cartesBancaires?: outputs.SetupIntentPaymentMethodOptionsCardThreeDSecureNetworkOptionsCartesBancaires;
+}
+
+export interface SetupIntentPaymentMethodOptionsCardThreeDSecureNetworkOptionsCartesBancaires {
+    /**
+     * The cryptogram calculation algorithm used by the card Issuer's ACS
+     * to calculate the Authentication cryptogram. Also known as `cavvAlgorithm`.
+     * messageExtension: CB-AVALGO
+     */
+    cbAvalgo: string;
+    /**
+     * The exemption indicator returned from Cartes Bancaires in the ARes.
+     * message extension: CB-EXEMPTION; string (4 characters)
+     * This is a 3 byte bitmap (low significant byte first and most significant
+     * bit first) that has been Base64 encoded
+     */
+    cbExemption?: string;
+    /**
+     * The risk score returned from Cartes Bancaires in the ARes.
+     * message extension: CB-SCORE; numeric value 0-99
+     */
+    cbScore?: number;
+}
+
+export interface SetupIntentPaymentMethodOptionsKlarna {
+    /**
+     * The currency of the setup intent. Three letter ISO currency code.
+     */
+    currency: string;
+    /**
+     * On-demand details if setting up a payment method for on-demand payments.
+     */
+    onDemand?: outputs.SetupIntentPaymentMethodOptionsKlarnaOnDemand;
+    /**
+     * Preferred locale of the Klarna checkout page that the customer is redirected to.
+     */
+    preferredLocale: string;
+    /**
+     * Subscription details if setting up or charging a subscription
+     */
+    subscriptions?: outputs.SetupIntentPaymentMethodOptionsKlarnaSubscription[];
+}
+
+export interface SetupIntentPaymentMethodOptionsKlarnaOnDemand {
+    /**
+     * Your average amount value. You can use a value across your customer base, or segment based on customer type, country, etc.
+     */
+    averageAmount?: number;
+    /**
+     * The maximum value you may charge a customer per purchase. You can use a value across your customer base, or segment based on customer type, country, etc.
+     */
+    maximumAmount?: number;
+    /**
+     * The lowest or minimum value you may charge a customer per purchase. You can use a value across your customer base, or segment based on customer type, country, etc.
+     */
     minimumAmount?: number;
+    /**
+     * Interval at which the customer is making purchases
+     */
+    purchaseInterval?: string;
+    /**
+     * The number of `purchaseInterval` between charges
+     */
+    purchaseIntervalCount?: number;
+}
+
+export interface SetupIntentPaymentMethodOptionsKlarnaSubscription {
+    /**
+     * Unit of time between subscription charges.
+     */
+    interval: string;
+    /**
+     * The number of intervals (specified in the `interval` attribute) between subscription charges. For example, `interval=month` and `interval_count=3` charges every 3 months.
+     */
+    intervalCount?: number;
+    /**
+     * Name for subscription.
+     */
+    name?: string;
+    /**
+     * Describes the upcoming charge for this subscription.
+     */
+    nextBilling: outputs.SetupIntentPaymentMethodOptionsKlarnaSubscriptionNextBilling;
+    /**
+     * A non-customer-facing reference to correlate subscription charges in the Klarna app. Use a value that persists across subscription charges.
+     */
+    reference: string;
+}
+
+export interface SetupIntentPaymentMethodOptionsKlarnaSubscriptionNextBilling {
+    /**
+     * The amount of the next charge for the subscription.
+     */
+    amount: number;
+    /**
+     * The date of the next charge for the subscription in YYYY-MM-DD format.
+     */
+    date: string;
+}
+
+export interface SetupIntentPaymentMethodOptionsLink {
+    /**
+     * [Deprecated] This is a legacy parameter that no longer has any function.
+     */
+    persistentToken: string;
+}
+
+export interface SetupIntentPaymentMethodOptionsPaypal {
+    /**
+     * The PayPal Billing Agreement ID (BAID). This is an ID generated by PayPal which represents the mandate between the merchant and the customer.
+     */
+    billingAgreementId: string;
+}
+
+export interface SetupIntentPaymentMethodOptionsPayto {
+    mandateOptions: outputs.SetupIntentPaymentMethodOptionsPaytoMandateOptions;
+}
+
+export interface SetupIntentPaymentMethodOptionsPaytoMandateOptions {
+    /**
+     * Amount that will be collected. It is required when `amountType` is `fixed`.
+     */
+    amount: number;
+    /**
+     * The type of amount that will be collected. The amount charged must be exact or up to the value of `amount` param for `fixed` or `maximum` type respectively. Defaults to `maximum`.
+     */
+    amountType: string;
+    /**
+     * Date, in YYYY-MM-DD format, after which payments will not be collected. Defaults to no end date.
+     */
+    endDate: string;
+    /**
+     * The periodicity at which payments will be collected. Defaults to `adhoc`.
+     */
+    paymentSchedule: string;
+    /**
+     * The number of payments that will be made during a payment period. Defaults to 1 except for when `paymentSchedule` is `adhoc`. In that case, it defaults to no limit.
+     */
+    paymentsPerPeriod: number;
+    /**
+     * The purpose for which payments are made. Has a default value based on your merchant category code.
+     */
+    purpose: string;
+    /**
+     * Date, in YYYY-MM-DD format, from which payments will be collected. Defaults to confirmation time.
+     */
+    startDate: string;
+}
+
+export interface SetupIntentPaymentMethodOptionsPix {
+    mandateOptions: outputs.SetupIntentPaymentMethodOptionsPixMandateOptions;
+}
+
+export interface SetupIntentPaymentMethodOptionsPixMandateOptions {
+    /**
+     * Amount to be charged for future payments.
+     */
+    amount: number;
+    /**
+     * Determines if the amount includes the IOF tax.
+     */
+    amountIncludesIof: string;
+    /**
+     * Type of amount.
+     */
+    amountType: string;
+    /**
+     * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase.
+     */
+    currency: string;
+    /**
+     * Date when the mandate expires and no further payments will be charged, in `YYYY-MM-DD`.
+     */
+    endDate: string;
+    /**
+     * Schedule at which the future payments will be charged.
+     */
+    paymentSchedule: string;
+    /**
+     * Subscription name displayed to buyers in their bank app.
+     */
+    reference: string;
+    /**
+     * Start date of the mandate, in `YYYY-MM-DD`.
+     */
+    startDate: string;
+}
+
+export interface SetupIntentPaymentMethodOptionsSepaDebit {
+    mandateOptions: outputs.SetupIntentPaymentMethodOptionsSepaDebitMandateOptions;
+}
+
+export interface SetupIntentPaymentMethodOptionsSepaDebitMandateOptions {
+    /**
+     * Prefix used to generate the Mandate reference. Must be at most 12 characters long. Must consist of only uppercase letters, numbers, spaces, or the following special characters: '/', '_', '-', '&', '.'. Cannot begin with 'STRIPE'.
+     */
+    referencePrefix: string;
+}
+
+export interface SetupIntentPaymentMethodOptionsUpi {
+    mandateOptions: outputs.SetupIntentPaymentMethodOptionsUpiMandateOptions;
+    setupFutureUsage?: string;
+}
+
+export interface SetupIntentPaymentMethodOptionsUpiMandateOptions {
+    /**
+     * Amount to be charged for future payments.
+     */
+    amount: number;
+    /**
+     * One of `fixed` or `maximum`. If `fixed`, the `amount` param refers to the exact amount to be charged in future payments. If `maximum`, the amount charged can be up to the value passed for the `amount` param.
+     */
+    amountType: string;
+    /**
+     * A description of the mandate or subscription that is meant to be displayed to the customer.
+     */
+    description: string;
+    /**
+     * End date of the mandate or subscription.
+     */
+    endDate: number;
+}
+
+export interface SetupIntentPaymentMethodOptionsUsBankAccount {
+    financialConnections: outputs.SetupIntentPaymentMethodOptionsUsBankAccountFinancialConnections;
+    mandateOptions: outputs.SetupIntentPaymentMethodOptionsUsBankAccountMandateOptions;
+    /**
+     * Additional fields for network related functions
+     */
+    networks?: outputs.SetupIntentPaymentMethodOptionsUsBankAccountNetworks;
+    /**
+     * Bank account verification method. The default value is `automatic`.
+     */
+    verificationMethod: string;
+}
+
+export interface SetupIntentPaymentMethodOptionsUsBankAccountFinancialConnections {
+    filters: outputs.SetupIntentPaymentMethodOptionsUsBankAccountFinancialConnectionsFilters;
+    /**
+     * The list of permissions to request. The `paymentMethod` permission must be included.
+     */
+    permissions: string[];
+    /**
+     * Data features requested to be retrieved upon account creation.
+     */
+    prefetches: string[];
+    /**
+     * For webview integrations only. Upon completing OAuth login in the native browser, the user will be redirected to this URL to return to your app.
+     */
+    returnUrl: string;
+}
+
+export interface SetupIntentPaymentMethodOptionsUsBankAccountFinancialConnectionsFilters {
+    /**
+     * The account subcategories to use to filter for possible accounts to link. Valid subcategories are `checking` and `savings`.
+     */
+    accountSubcategories: string[];
+}
+
+export interface SetupIntentPaymentMethodOptionsUsBankAccountMandateOptions {
+    /**
+     * Mandate collection method
+     */
+    collectionMethod: string;
+}
+
+export interface SetupIntentPaymentMethodOptionsUsBankAccountNetworks {
+    /**
+     * Triggers validations to run across the selected networks
+     */
+    requesteds?: string[];
+}
+
+export interface SetupIntentSingleUse {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Amount the customer is granting permission to collect later. A positive integer representing how much to charge in the [smallest currency unit](https://docs.stripe.com/currencies#zero-decimal) (e.g., 100 cents to charge $1.00 or 100 to charge ¥100, a zero-decimal currency). The minimum amount is $0.50 US or [equivalent in charge currency](https://docs.stripe.com/currencies#minimum-and-maximum-charge-amounts). The amount value supports up to eight digits (e.g., a value of 99999999 for a USD charge of $999,999.99).
+     */
+    amount: number;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+     */
+    currency: string;
 }
 
 export interface ShippingRateDeliveryEstimate {
@@ -571,178 +12480,4830 @@ export interface ShippingRateFixedAmountCurrencyOption {
      * A non-negative integer in cents representing how much to charge.
      */
     amount: number;
+    /**
+     * Key for this entry.
+     */
     key: string;
     /**
      * Specifies whether the rate is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`.
      */
-    taxBehavior?: string;
+    taxBehavior: string;
 }
 
-export interface V2BillingLicenseFeeTier {
-    /**
-     * Price for the entire tier, represented as a decimal string in minor currency units with at most 12 decimal places.
-     */
-    flatAmount?: string;
-    /**
-     * Per-unit price for units included in this tier, represented as a decimal string in minor currency units with at most 12 decimal places.
-     */
-    unitAmount?: string;
-    /**
-     * Up to and including this quantity will be contained in the tier. Only one of `upToDecimal` and `upToInf` may be set.
-     */
-    upToDecimal?: string;
-    /**
-     * No upper bound to this tier. Only one of `upToDecimal` and `upToInf` may be set.
-     */
-    upToInf?: string;
+export interface SourceAchCreditTransfer {
+    accountNumber: string;
+    bankName: string;
+    fingerprint: string;
+    refundAccountHolderName: string;
+    refundAccountHolderType: string;
+    refundRoutingNumber: string;
+    routingNumber: string;
+    swiftCode: string;
 }
 
-export interface V2BillingMeteredItemMeterSegmentCondition {
-    /**
-     * A Meter dimension.
-     */
-    dimension: string;
-    /**
-     * To count usage towards this metered item, the dimension must have this value.
-     */
-    value: string;
-}
-
-export interface V2BillingPricingPlanComponentLicenseFee {
-    /**
-     * The ID of the License Fee.
-     */
-    id: string;
-    /**
-     * The version of the LicenseFee. Defaults to 'latest', if not specified.
-     */
-    version: string;
-}
-
-export interface V2BillingPricingPlanComponentRateCard {
-    /**
-     * The ID of the Rate Card.
-     */
-    id: string;
-    /**
-     * The version of the RateCard. Defaults to 'latest', if not specified.
-     */
-    version: string;
-}
-
-export interface V2BillingPricingPlanComponentServiceAction {
-    /**
-     * The ID of the service action.
-     */
-    id: string;
-}
-
-export interface V2BillingRateCardRateTier {
-    /**
-     * Price for the entire tier, represented as a decimal string in minor currency units with at most 12 decimal places.
-     */
-    flatAmount?: string;
-    /**
-     * Per-unit price for units included in this tier, represented as a decimal string in minor currency units with at most 12 decimal places.
-     */
-    unitAmount?: string;
-    /**
-     * Up to and including this quantity will be contained in the tier. Only one of `upToDecimal` and `upToInf` may be set.
-     */
-    upToDecimal?: string;
-    /**
-     * No upper bound to this tier. Only one of `upToDecimal` and `upToInf` may be set.
-     */
-    upToInf?: string;
-}
-
-export interface V2BillingServiceActionCreditGrant {
-    /**
-     * The amount of the credit grant.
-     */
-    amount: outputs.V2BillingServiceActionCreditGrantAmount;
-    /**
-     * Defines the scope where the credit grant is applicable.
-     */
-    applicabilityConfig: outputs.V2BillingServiceActionCreditGrantApplicabilityConfig;
-    /**
-     * The category of the credit grant.
-     */
-    category: string;
-    /**
-     * The expiry configuration for the credit grant.
-     */
-    expiryConfig: outputs.V2BillingServiceActionCreditGrantExpiryConfig;
-    /**
-     * A descriptive name shown in dashboard.
-     */
-    name: string;
-    /**
-     * The desired priority for applying this credit grant. If not specified, it will be set to the default value of 50. The highest priority is 0 and the lowest is 100.
-     */
-    priority: number;
-}
-
-export interface V2BillingServiceActionCreditGrantAmount {
-    /**
-     * The custom pricing unit amount of the credit grant. Required if `type` is `customPricingUnit`.
-     */
-    customPricingUnit?: outputs.V2BillingServiceActionCreditGrantAmountCustomPricingUnit;
-    /**
-     * The monetary amount of the credit grant. Required if `type` is `monetary`.
-     */
-    monetary?: outputs.V2BillingServiceActionCreditGrantAmountMonetary;
-    /**
-     * The type of the credit grant amount. We currently support `monetary` and `customPricingUnit` billing credits.
-     */
+export interface SourceAchDebit {
+    bankName: string;
+    country: string;
+    fingerprint: string;
+    last4: string;
+    routingNumber: string;
     type: string;
 }
 
-export interface V2BillingServiceActionCreditGrantAmountCustomPricingUnit {
-    /**
-     * The id of the custom pricing unit.
-     */
-    id: string;
-    /**
-     * The value of the credit grant, decimal value represented as a string.
-     */
-    value: string;
+export interface SourceAcssDebit {
+    bankAddressCity: string;
+    bankAddressLine1: string;
+    bankAddressLine2: string;
+    bankAddressPostalCode: string;
+    bankName: string;
+    category: string;
+    country: string;
+    fingerprint: string;
+    last4: string;
+    routingNumber: string;
 }
 
-export interface V2BillingServiceActionCreditGrantAmountMonetary {
+export interface SourceAlipay {
+    dataString: string;
+    nativeUrl: string;
+    statementDescriptor: string;
+}
+
+export interface SourceAuBecsDebit {
+    bsbNumber: string;
+    fingerprint: string;
+    last4: string;
+}
+
+export interface SourceBancontact {
+    bankCode: string;
+    bankName: string;
+    bic: string;
+    ibanLast4: string;
+    preferredLanguage: string;
+    statementDescriptor: string;
+}
+
+export interface SourceCard {
+    addressLine1Check: string;
+    addressZipCheck: string;
+    brand: string;
+    country: string;
+    cvcCheck: string;
+    description: string;
+    dynamicLast4: string;
+    expMonth: number;
+    expYear: number;
+    fingerprint: string;
+    funding: string;
+    iin: string;
+    issuer: string;
+    last4: string;
+    name: string;
+    threeDSecure: string;
+    tokenizationMethod: string;
+}
+
+export interface SourceCardPresent {
+    applicationCryptogram: string;
+    applicationPreferredName: string;
+    authorizationCode: string;
+    authorizationResponseCode: string;
+    brand: string;
+    country: string;
+    cvmType: string;
+    dataType: string;
+    dedicatedFileName: string;
+    description: string;
+    emvAuthData: string;
+    evidenceCustomerSignature: string;
+    evidenceTransactionCertificate: string;
+    expMonth: number;
+    expYear: number;
+    fingerprint: string;
+    funding: string;
+    iin: string;
+    issuer: string;
+    last4: string;
+    posDeviceId: string;
+    posEntryMode: string;
+    readMethod: string;
+    reader: string;
+    terminalVerificationResults: string;
+    transactionStatusInformation: string;
+}
+
+export interface SourceCodeVerification {
+    /**
+     * The number of attempts remaining to authenticate the source object with a verification code.
+     */
+    attemptsRemaining: number;
+    /**
+     * The status of the code verification, either `pending` (awaiting verification, `attemptsRemaining` should be greater than 0), `succeeded` (successful verification) or `failed` (failed verification, cannot be verified anymore as `attemptsRemaining` should be 0).
+     */
+    status: string;
+}
+
+export interface SourceEps {
+    reference: string;
+    statementDescriptor: string;
+}
+
+export interface SourceGiropay {
+    bankCode: string;
+    bankName: string;
+    bic: string;
+    statementDescriptor: string;
+}
+
+export interface SourceIdeal {
+    bank: string;
+    bic: string;
+    ibanLast4: string;
+    statementDescriptor: string;
+}
+
+export interface SourceKlarna {
+    backgroundImageUrl: string;
+    clientToken: string;
+    firstName: string;
+    lastName: string;
+    locale: string;
+    logoUrl: string;
+    pageTitle: string;
+    payLaterAssetUrlsDescriptive: string;
+    payLaterAssetUrlsStandard: string;
+    payLaterName: string;
+    payLaterRedirectUrl: string;
+    payNowAssetUrlsDescriptive: string;
+    payNowAssetUrlsStandard: string;
+    payNowName: string;
+    payNowRedirectUrl: string;
+    payOverTimeAssetUrlsDescriptive: string;
+    payOverTimeAssetUrlsStandard: string;
+    payOverTimeName: string;
+    payOverTimeRedirectUrl: string;
+    paymentMethodCategories: string;
+    purchaseCountry: string;
+    purchaseType: string;
+    redirectUrl: string;
+    shippingDelay: number;
+    shippingFirstName: string;
+    shippingLastName: string;
+}
+
+export interface SourceMandate {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The parameters required to notify Stripe of a mandate acceptance or refusal by the customer.
+     */
+    acceptance?: outputs.SourceMandateAcceptance;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The amount specified by the mandate. (Leave null for a mandate covering all amounts)
+     */
+    amount?: number;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The currency specified by the mandate. (Must match `currency` of the source)
+     */
+    currency?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The interval of debits permitted by the mandate. Either `oneTime` (just permitting a single debit), `scheduled` (with debits on an agreed schedule or for clearly-defined events), or `variable`(for debits with any frequency)
+     */
+    interval?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The method Stripe should use to notify the customer of upcoming debit instructions and/or mandate confirmation as required by the underlying debit network. Either `email` (an email is sent directly to the customer), `manual` (a `source.mandate_notification` event is sent to your webhooks endpoint and you should handle the notification) or `none` (the underlying debit network does not require any notification).
+     */
+    notificationMethod?: string;
+}
+
+export interface SourceMandateAcceptance {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The Unix timestamp (in seconds) when the mandate was accepted or refused by the customer.
+     */
+    date?: number;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The IP address from which the mandate was accepted or refused by the customer.
+     */
+    ip?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The parameters required to store a mandate accepted offline. Should only be set if `mandate[type]` is `offline`
+     */
+    offline?: outputs.SourceMandateAcceptanceOffline;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The parameters required to store a mandate accepted online. Should only be set if `mandate[type]` is `online`
+     */
+    online?: outputs.SourceMandateAcceptanceOnline;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The status of the mandate acceptance. Either `accepted` (the mandate was accepted) or `refused` (the mandate was refused).
+     */
+    status: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The type of acceptance information included with the mandate. Either `online` or `offline`
+     */
+    type?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The user agent of the browser from which the mandate was accepted or refused by the customer.
+     */
+    userAgent?: string;
+}
+
+export interface SourceMandateAcceptanceOffline {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * An email to contact you with if a copy of the mandate is requested, required if `type` is `offline`.
+     */
+    contactEmail: string;
+}
+
+export interface SourceMandateAcceptanceOnline {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The Unix timestamp (in seconds) when the mandate was accepted or refused by the customer.
+     */
+    date?: number;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The IP address from which the mandate was accepted or refused by the customer.
+     */
+    ip?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The user agent of the browser from which the mandate was accepted or refused by the customer.
+     */
+    userAgent?: string;
+}
+
+export interface SourceMultibanco {
+    entity: string;
+    reference: string;
+    refundAccountHolderAddressCity: string;
+    refundAccountHolderAddressCountry: string;
+    refundAccountHolderAddressLine1: string;
+    refundAccountHolderAddressLine2: string;
+    refundAccountHolderAddressPostalCode: string;
+    refundAccountHolderAddressState: string;
+    refundAccountHolderName: string;
+    refundIban: string;
+}
+
+export interface SourceOwner {
+    /**
+     * Owner's address.
+     */
+    address: outputs.SourceOwnerAddress;
+    /**
+     * Owner's email address.
+     */
+    email: string;
+    /**
+     * Owner's full name.
+     */
+    name: string;
+    /**
+     * Owner's phone number (including extension).
+     */
+    phone: string;
+    /**
+     * Verified owner's address. Verified values are verified or provided by the payment method directly (and if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    verifiedAddress: outputs.SourceOwnerVerifiedAddress;
+    /**
+     * Verified owner's email address. Verified values are verified or provided by the payment method directly (and if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    verifiedEmail: string;
+    /**
+     * Verified owner's full name. Verified values are verified or provided by the payment method directly (and if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    verifiedName: string;
+    /**
+     * Verified owner's phone number (including extension). Verified values are verified or provided by the payment method directly (and if supported) at the time of authorization or settlement. They cannot be set or mutated.
+     */
+    verifiedPhone: string;
+}
+
+export interface SourceOwnerAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1: string;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2: string;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: string;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state: string;
+}
+
+export interface SourceOwnerVerifiedAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1: string;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2: string;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: string;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state: string;
+}
+
+export interface SourceP24 {
+    reference: string;
+}
+
+export interface SourceReceiver {
+    /**
+     * The address of the receiver source. This is the value that should be communicated to the customer to send their funds to.
+     */
+    address: string;
+    /**
+     * The total amount that was moved to your balance. This is almost always equal to the amount charged. In rare cases when customers deposit excess funds and we are unable to refund those, those funds get moved to your balance and show up in amountCharged as well. The amount charged is expressed in the source's currency.
+     */
+    amountCharged: number;
+    /**
+     * The total amount received by the receiver source. `amountReceived = amountReturned + amountCharged` should be true for consumed sources unless customers deposit excess funds. The amount received is expressed in the source's currency.
+     */
+    amountReceived: number;
+    /**
+     * The total amount that was returned to the customer. The amount returned is expressed in the source's currency.
+     */
+    amountReturned: number;
+    /**
+     * Type of refund attribute method, one of `email`, `manual`, or `none`.
+     */
+    refundAttributesMethod: string;
+    /**
+     * Type of refund attribute status, one of `missing`, `requested`, or `available`.
+     */
+    refundAttributesStatus: string;
+}
+
+export interface SourceRedirect {
+    /**
+     * The failure reason for the redirect, either `userAbort` (the customer aborted or dropped out of the redirect flow), `declined` (the authentication failed or the transaction was declined), or `processingError` (the redirect failed due to a technical error). Present only if the redirect status is `failed`.
+     */
+    failureReason: string;
+    /**
+     * The URL you provide to redirect the customer to after they authenticated their payment.
+     */
+    returnUrl: string;
+    /**
+     * The status of the redirect, either `pending` (ready to be used by your customer to authenticate the transaction), `succeeded` (successful authentication, cannot be reused) or `notRequired` (redirect should not be used) or `failed` (failed authentication, cannot be reused).
+     */
+    status: string;
+    /**
+     * The URL provided to you to redirect a customer to as part of a `redirect` authentication flow.
+     */
+    url: string;
+}
+
+export interface SourceSepaCreditTransfer {
+    bankName: string;
+    bic: string;
+    iban: string;
+    refundAccountHolderAddressCity: string;
+    refundAccountHolderAddressCountry: string;
+    refundAccountHolderAddressLine1: string;
+    refundAccountHolderAddressLine2: string;
+    refundAccountHolderAddressPostalCode: string;
+    refundAccountHolderAddressState: string;
+    refundAccountHolderName: string;
+    refundIban: string;
+}
+
+export interface SourceSepaDebit {
+    bankCode: string;
+    branchCode: string;
+    country: string;
+    fingerprint: string;
+    last4: string;
+    mandateReference: string;
+    mandateUrl: string;
+}
+
+export interface SourceSofort {
+    bankCode: string;
+    bankName: string;
+    bic: string;
+    country: string;
+    ibanLast4: string;
+    preferredLanguage: string;
+    statementDescriptor: string;
+}
+
+export interface SourceSourceOrder {
+    /**
+     * A positive integer in the smallest currency unit (that is, 100 cents for $1.00, or 1 for ¥1, Japanese Yen being a zero-decimal currency) representing the total amount for the order.
+     */
+    amount: number;
     /**
      * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
      */
     currency: string;
     /**
-     * A non-negative integer representing how much to charge in the [smallest currency unit](https://docs.stripe.com/currencies#minor-units).
+     * The email address of the customer placing the order.
      */
-    value: number;
+    email: string;
+    /**
+     * List of items constituting the order.
+     */
+    items: outputs.SourceSourceOrderItem[];
+    shipping: outputs.SourceSourceOrderShipping;
 }
 
-export interface V2BillingServiceActionCreditGrantApplicabilityConfig {
+export interface SourceSourceOrderItem {
     /**
-     * The applicability scope of the credit grant.
+     * The amount (price) for this order item.
      */
-    scope: outputs.V2BillingServiceActionCreditGrantApplicabilityConfigScope;
-}
-
-export interface V2BillingServiceActionCreditGrantApplicabilityConfigScope {
+    amount: number;
     /**
-     * The billable items to apply the credit grant to.
+     * This currency of this order item. Required when `amount` is present.
      */
-    billableItems?: string[];
+    currency: string;
     /**
-     * The price type that credit grants can apply to. We currently only support the `metered` price type. This will apply to metered prices and rate cards. Cannot be used in combination with `billableItems`.
+     * Human-readable description for this order item.
      */
-    priceType?: string;
-}
-
-export interface V2BillingServiceActionCreditGrantExpiryConfig {
+    description: string;
     /**
-     * The type of the expiry configuration. We currently support `endOfServicePeriod`.
+     * The ID of the associated object for this line item. Expandable if not null (e.g., expandable to a SKU).
+     */
+    parent: string;
+    /**
+     * The quantity of this order item. When type is `sku`, this is the number of instances of the SKU to be ordered.
+     */
+    quantity: number;
+    /**
+     * The type of this order item. Must be `sku`, `tax`, or `shipping`.
      */
     type: string;
+}
+
+export interface SourceSourceOrderShipping {
+    address: outputs.SourceSourceOrderShippingAddress;
+    /**
+     * The delivery service that shipped a physical product, such as Fedex, UPS, USPS, etc.
+     */
+    carrier: string;
+    /**
+     * Recipient name.
+     */
+    name: string;
+    /**
+     * Recipient phone (including extension).
+     */
+    phone: string;
+    /**
+     * The tracking number for a physical product, obtained from the delivery service. If multiple tracking numbers were generated for this purchase, please separate them with commas.
+     */
+    trackingNumber: string;
+}
+
+export interface SourceSourceOrderShippingAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1: string;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2: string;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: string;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state: string;
+}
+
+export interface SourceThreeDSecure {
+    addressLine1Check: string;
+    addressZipCheck: string;
+    authenticated: boolean;
+    brand: string;
+    card: string;
+    country: string;
+    customer: string;
+    cvcCheck: string;
+    description: string;
+    dynamicLast4: string;
+    expMonth: number;
+    expYear: number;
+    fingerprint: string;
+    funding: string;
+    iin: string;
+    issuer: string;
+    last4: string;
+    name: string;
+    threeDSecure: string;
+    tokenizationMethod: string;
+}
+
+export interface SourceWechat {
+    prepayId: string;
+    qrCodeUrl: string;
+    statementDescriptor: string;
+}
+
+export interface SubscriptionAddInvoiceItem {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Controls whether discounts apply to this invoice item. Defaults to true if no value is provided.
+     */
+    discountable?: boolean;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The coupons to redeem into discounts for the item.
+     */
+    discounts?: outputs.SubscriptionAddInvoiceItemDiscount[];
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
+     */
+    metadata?: {[key: string]: string};
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The period associated with this invoice item. If not set, `period.start.type` defaults to `maxItemPeriodStart` and `period.end.type` defaults to `minItemPeriodEnd`.
+     */
+    period?: outputs.SubscriptionAddInvoiceItemPeriod;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The ID of the price object. One of `price` or `priceData` is required.
+     */
+    price?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Data used to generate a new [Price](https://docs.stripe.com/api/prices) object inline. One of `price` or `priceData` is required.
+     */
+    priceData?: outputs.SubscriptionAddInvoiceItemPriceData;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Quantity for this item. Defaults to 1.
+     */
+    quantity?: number;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The tax rates which apply to the item. When set, the `defaultTaxRates` do not apply to this item.
+     */
+    taxRates?: string[];
+}
+
+export interface SubscriptionAddInvoiceItemDiscount {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * ID of the coupon to create a new discount for.
+     */
+    coupon?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * ID of an existing discount on the object (or one of its ancestors) to reuse.
+     */
+    discount?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * ID of the promotion code to create a new discount for.
+     */
+    promotionCode?: string;
+}
+
+export interface SubscriptionAddInvoiceItemPeriod {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * End of the invoice item period.
+     */
+    end: outputs.SubscriptionAddInvoiceItemPeriodEnd;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Start of the invoice item period.
+     */
+    start: outputs.SubscriptionAddInvoiceItemPeriodStart;
+}
+
+export interface SubscriptionAddInvoiceItemPeriodEnd {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * A precise Unix timestamp for the end of the invoice item period. Must be greater than or equal to `period.start`.
+     */
+    timestamp?: number;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Select how to calculate the end of the invoice item period.
+     */
+    type: string;
+}
+
+export interface SubscriptionAddInvoiceItemPeriodStart {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * A precise Unix timestamp for the start of the invoice item period. Must be less than or equal to `period.end`.
+     */
+    timestamp?: number;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Select how to calculate the start of the invoice item period.
+     */
+    type: string;
+}
+
+export interface SubscriptionAddInvoiceItemPriceData {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+     */
+    currency: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The ID of the [Product](https://docs.stripe.com/api/products) that this [Price](https://docs.stripe.com/api/prices) will belong to.
+     */
+    product: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Only required if a [default tax behavior](<https://docs.stripe.com/tax/products-prices-tax-categories-tax-behavior#setting-a-default-tax-behavior-(recommended)>) was not provided in the Stripe Tax settings. Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
+     */
+    taxBehavior?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge or a negative integer representing the amount to credit to the customer.
+     */
+    unitAmount?: number;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Same as `unitAmount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unitAmount` and `unitAmountDecimal` can be set.
+     */
+    unitAmountDecimal?: number;
+}
+
+export interface SubscriptionAutomaticTax {
+    /**
+     * If Stripe disabled automatic tax, this enum describes why.
+     */
+    disabledReason: string;
+    /**
+     * Whether Stripe automatically computes tax on this subscription.
+     */
+    enabled: boolean;
+    /**
+     * The account that's liable for tax. If set, the business address and tax registrations required to perform the tax calculation are loaded from this account. The tax transaction is returned in the report of the connected account.
+     */
+    liability: outputs.SubscriptionAutomaticTaxLiability;
+}
+
+export interface SubscriptionAutomaticTaxLiability {
+    /**
+     * The connected account being referenced when `type` is `account`.
+     */
+    account: string;
+    /**
+     * Type of the account referenced.
+     */
+    type: string;
+}
+
+export interface SubscriptionBillingCycleAnchorConfig {
+    /**
+     * The day of the month of the billing*cycle*anchor.
+     */
+    dayOfMonth: number;
+    /**
+     * The hour of the day of the billing*cycle*anchor.
+     */
+    hour: number;
+    /**
+     * The minute of the hour of the billing*cycle*anchor.
+     */
+    minute: number;
+    /**
+     * The month to start full cycle billing periods.
+     */
+    month: number;
+    /**
+     * The second of the minute of the billing*cycle*anchor.
+     */
+    second: number;
+}
+
+export interface SubscriptionBillingMode {
+    /**
+     * Configure behavior for flexible billing mode
+     */
+    flexible: outputs.SubscriptionBillingModeFlexible;
+    /**
+     * Controls how prorations and invoices for subscriptions are calculated and orchestrated.
+     */
+    type: string;
+    /**
+     * Details on when the current billingMode was adopted.
+     */
+    updatedAt: number;
+}
+
+export interface SubscriptionBillingModeFlexible {
+    /**
+     * Controls how invoices and invoice items display proration amounts and discount amounts.
+     */
+    prorationDiscounts: string;
+}
+
+export interface SubscriptionBillingSchedule {
+    /**
+     * Specifies which subscription items the billing schedule applies to.
+     */
+    appliesTos: outputs.SubscriptionBillingScheduleAppliesTo[];
+    /**
+     * Specifies the end of billing period.
+     */
+    billUntil: outputs.SubscriptionBillingScheduleBillUntil;
+    /**
+     * Unique identifier for the billing schedule.
+     */
+    key: string;
+}
+
+export interface SubscriptionBillingScheduleAppliesTo {
+    /**
+     * The billing schedule will apply to the subscription item with the given price ID.
+     */
+    price: string;
+    /**
+     * Controls which subscription items the billing schedule applies to.
+     */
+    type: string;
+}
+
+export interface SubscriptionBillingScheduleBillUntil {
+    /**
+     * The timestamp the billing schedule will apply until.
+     */
+    computedTimestamp: number;
+    /**
+     * Specifies the billing period.
+     */
+    duration: outputs.SubscriptionBillingScheduleBillUntilDuration;
+    /**
+     * If specified, the billing schedule will apply until the specified timestamp.
+     */
+    timestamp: number;
+    /**
+     * Describes how the billing schedule will determine the end date. Either `duration` or `timestamp`.
+     */
+    type: string;
+}
+
+export interface SubscriptionBillingScheduleBillUntilDuration {
+    /**
+     * Specifies billing duration. Either `day`, `week`, `month` or `year`.
+     */
+    interval: string;
+    /**
+     * The multiplier applied to the interval.
+     */
+    intervalCount: number;
+}
+
+export interface SubscriptionBillingThresholds {
+    /**
+     * Monetary threshold that triggers the subscription to create an invoice
+     */
+    amountGte: number;
+    /**
+     * Indicates if the `billingCycleAnchor` should be reset when a threshold is reached. If true, `billingCycleAnchor` will be updated to the date/time the threshold was last reached; otherwise, the value will remain unchanged. This value may not be `true` if the subscription contains items with plans that have `aggregate_usage=last_ever`.
+     */
+    resetBillingCycleAnchor: boolean;
+}
+
+export interface SubscriptionCancellationDetails {
+    /**
+     * Additional comments about why the user canceled the subscription, if the subscription was canceled explicitly by the user.
+     */
+    comment: string;
+    /**
+     * The customer submitted reason for why they canceled, if the subscription was canceled explicitly by the user.
+     */
+    feedback: string;
+    /**
+     * Why this subscription was canceled.
+     */
+    reason: string;
+}
+
+export interface SubscriptionDiscount {
+    /**
+     * ID of the coupon to create a new discount for.
+     */
+    coupon?: string;
+    /**
+     * ID of an existing discount on the object (or one of its ancestors) to reuse.
+     */
+    discount?: string;
+    /**
+     * ID of the promotion code to create a new discount for.
+     */
+    promotionCode?: string;
+}
+
+export interface SubscriptionInvoiceSettings {
+    /**
+     * The account tax IDs associated with the subscription. Will be set on invoices generated by the subscription.
+     */
+    accountTaxIds: string[];
+    issuer: outputs.SubscriptionInvoiceSettingsIssuer;
+}
+
+export interface SubscriptionInvoiceSettingsIssuer {
+    /**
+     * The connected account being referenced when `type` is `account`.
+     */
+    account: string;
+    /**
+     * Type of the account referenced.
+     */
+    type: string;
+}
+
+export interface SubscriptionItem {
+    /**
+     * Define thresholds at which an invoice will be sent, and the subscription advanced to a new billing period. Pass an empty string to remove previously-defined thresholds.
+     */
+    billingThresholds: outputs.SubscriptionItemBillingThresholds;
+    /**
+     * The coupons to redeem into discounts for the subscription item.
+     */
+    discounts: outputs.SubscriptionItemDiscount[];
+    /**
+     * Unique identifier for the object.
+     */
+    id: string;
+    /**
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
+     */
+    metadata: {[key: string]: string};
+    /**
+     * The ID of the price object.
+     */
+    price: string;
+    /**
+     * Data used to generate a new [Price](https://docs.stripe.com/api/prices) object inline.
+     */
+    priceData: outputs.SubscriptionItemPriceData;
+    /**
+     * Quantity for this item.
+     */
+    quantity: number;
+    /**
+     * A list of [Tax Rate](https://docs.stripe.com/api/tax_rates) ids. These Tax Rates will override the [`defaultTaxRates`](https://docs.stripe.com/api/subscriptions/create#create_subscription-default_tax_rates) on the Subscription. When updating, pass an empty string to remove previously-defined tax rates.
+     */
+    taxRates: string[];
+}
+
+export interface SubscriptionItemBillingThresholds {
+    /**
+     * Usage threshold that triggers the subscription to create an invoice
+     */
+    usageGte: number;
+}
+
+export interface SubscriptionItemDiscount {
+    /**
+     * ID of the coupon to create a new discount for.
+     */
+    coupon?: string;
+    /**
+     * ID of an existing discount on the object (or one of its ancestors) to reuse.
+     */
+    discount?: string;
+    /**
+     * ID of the promotion code to create a new discount for.
+     */
+    promotionCode?: string;
+}
+
+export interface SubscriptionItemPriceData {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+     */
+    currency: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The ID of the [Product](https://docs.stripe.com/api/products) that this [Price](https://docs.stripe.com/api/prices) will belong to.
+     */
+    product: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The recurring components of a price such as `interval` and `intervalCount`.
+     */
+    recurring: outputs.SubscriptionItemPriceDataRecurring;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Only required if a [default tax behavior](<https://docs.stripe.com/tax/products-prices-tax-categories-tax-behavior#setting-a-default-tax-behavior-(recommended)>) was not provided in the Stripe Tax settings. Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
+     */
+    taxBehavior?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge.
+     */
+    unitAmount?: number;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Same as `unitAmount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unitAmount` and `unitAmountDecimal` can be set.
+     */
+    unitAmountDecimal?: number;
+}
+
+export interface SubscriptionItemPriceDataRecurring {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Specifies billing frequency. Either `day`, `week`, `month` or `year`.
+     */
+    interval: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The number of intervals between subscription billings. For example, `interval=month` and `interval_count=3` bills every 3 months. Maximum of three years interval allowed (3 years, 36 months, or 156 weeks).
+     */
+    intervalCount?: number;
+}
+
+export interface SubscriptionManagedPayments {
+    /**
+     * Set to `true` to enable [Managed Payments](https://docs.stripe.com/payments/managed-payments), Stripe's merchant of record solution, for this session.
+     */
+    enabled: boolean;
+}
+
+export interface SubscriptionPauseCollection {
+    /**
+     * The payment collection behavior for this subscription while paused.
+     */
+    behavior: string;
+    /**
+     * The time after which the subscription will resume collecting payments.
+     */
+    resumesAt: number;
+}
+
+export interface SubscriptionPaymentSettings {
+    /**
+     * Payment-method-specific configuration to provide to invoices created by the subscription.
+     */
+    paymentMethodOptions: outputs.SubscriptionPaymentSettingsPaymentMethodOptions;
+    /**
+     * The list of payment method types to provide to every invoice created by the subscription. If not set, Stripe attempts to automatically determine the types to use by looking at the invoice’s default payment method, the subscription’s default payment method, the customer’s default payment method, and your [invoice template settings](https://dashboard.stripe.com/settings/billing/invoice).
+     */
+    paymentMethodTypes: string[];
+    /**
+     * Configure whether Stripe updates `subscription.default_payment_method` when payment succeeds. Defaults to `off`.
+     */
+    saveDefaultPaymentMethod: string;
+}
+
+export interface SubscriptionPaymentSettingsPaymentMethodOptions {
+    /**
+     * This sub-hash contains details about the Canadian pre-authorized debit payment method options to pass to invoices created by the subscription.
+     */
+    acssDebit: outputs.SubscriptionPaymentSettingsPaymentMethodOptionsAcssDebit;
+    /**
+     * This sub-hash contains details about the Bancontact payment method options to pass to invoices created by the subscription.
+     */
+    bancontact: outputs.SubscriptionPaymentSettingsPaymentMethodOptionsBancontact;
+    /**
+     * This sub-hash contains details about the Card payment method options to pass to invoices created by the subscription.
+     */
+    card: outputs.SubscriptionPaymentSettingsPaymentMethodOptionsCard;
+    /**
+     * This sub-hash contains details about the Bank transfer payment method options to pass to invoices created by the subscription.
+     */
+    customerBalance: outputs.SubscriptionPaymentSettingsPaymentMethodOptionsCustomerBalance;
+    /**
+     * This sub-hash contains details about the PayTo payment method options to pass to invoices created by the subscription.
+     */
+    payto: outputs.SubscriptionPaymentSettingsPaymentMethodOptionsPayto;
+    /**
+     * This sub-hash contains details about the Pix payment method options to pass to invoices created by the subscription.
+     */
+    pix: outputs.SubscriptionPaymentSettingsPaymentMethodOptionsPix;
+    /**
+     * This sub-hash contains details about the UPI payment method options to pass to invoices created by the subscription.
+     */
+    upi: outputs.SubscriptionPaymentSettingsPaymentMethodOptionsUpi;
+    /**
+     * This sub-hash contains details about the ACH direct debit payment method options to pass to invoices created by the subscription.
+     */
+    usBankAccount: outputs.SubscriptionPaymentSettingsPaymentMethodOptionsUsBankAccount;
+}
+
+export interface SubscriptionPaymentSettingsPaymentMethodOptionsAcssDebit {
+    mandateOptions: outputs.SubscriptionPaymentSettingsPaymentMethodOptionsAcssDebitMandateOptions;
+    /**
+     * Bank account verification method. The default value is `automatic`.
+     */
+    verificationMethod: string;
+}
+
+export interface SubscriptionPaymentSettingsPaymentMethodOptionsAcssDebitMandateOptions {
+    /**
+     * Transaction type of the mandate.
+     */
+    transactionType: string;
+}
+
+export interface SubscriptionPaymentSettingsPaymentMethodOptionsBancontact {
+    /**
+     * Preferred language of the Bancontact authorization page that the customer is redirected to.
+     */
+    preferredLanguage: string;
+}
+
+export interface SubscriptionPaymentSettingsPaymentMethodOptionsCard {
+    mandateOptions: outputs.SubscriptionPaymentSettingsPaymentMethodOptionsCardMandateOptions;
+    /**
+     * Selected network to process this Subscription on. Depends on the available networks of the card attached to the Subscription. Can be only set confirm-time.
+     */
+    network: string;
+    /**
+     * We strongly recommend that you rely on our SCA Engine to automatically prompt your customers for authentication based on risk level and [other requirements](https://docs.stripe.com/strong-customer-authentication). However, if you wish to request 3D Secure based on logic from your own fraud engine, provide this option. Read our guide on [manually requesting 3D Secure](https://docs.stripe.com/payments/3d-secure/authentication-flow#manual-three-ds) for more information on how this configuration interacts with Radar and our SCA Engine.
+     */
+    requestThreeDSecure: string;
+}
+
+export interface SubscriptionPaymentSettingsPaymentMethodOptionsCardMandateOptions {
+    /**
+     * Amount to be charged for future payments, specified in the presentment currency.
+     */
+    amount: number;
+    /**
+     * One of `fixed` or `maximum`. If `fixed`, the `amount` param refers to the exact amount to be charged in future payments. If `maximum`, the amount charged can be up to the value passed for the `amount` param.
+     */
+    amountType: string;
+    /**
+     * A description of the mandate or subscription that is meant to be displayed to the customer.
+     */
+    description: string;
+}
+
+export interface SubscriptionPaymentSettingsPaymentMethodOptionsCustomerBalance {
+    bankTransfer: outputs.SubscriptionPaymentSettingsPaymentMethodOptionsCustomerBalanceBankTransfer;
+    /**
+     * The funding method type to be used when there are not enough funds in the customer balance. Permitted values include: `bankTransfer`.
+     */
+    fundingType: string;
+}
+
+export interface SubscriptionPaymentSettingsPaymentMethodOptionsCustomerBalanceBankTransfer {
+    euBankTransfer: outputs.SubscriptionPaymentSettingsPaymentMethodOptionsCustomerBalanceBankTransferEuBankTransfer;
+    /**
+     * The bank transfer type that can be used for funding. Permitted values include: `euBankTransfer`, `gbBankTransfer`, `jpBankTransfer`, `mxBankTransfer`, or `usBankTransfer`.
+     */
+    type: string;
+}
+
+export interface SubscriptionPaymentSettingsPaymentMethodOptionsCustomerBalanceBankTransferEuBankTransfer {
+    /**
+     * The desired country code of the bank account information. Permitted values include: `DE`, `FR`, `IE`, or `NL`.
+     */
+    country: string;
+}
+
+export interface SubscriptionPaymentSettingsPaymentMethodOptionsPayto {
+    mandateOptions: outputs.SubscriptionPaymentSettingsPaymentMethodOptionsPaytoMandateOptions;
+}
+
+export interface SubscriptionPaymentSettingsPaymentMethodOptionsPaytoMandateOptions {
+    /**
+     * The maximum amount that can be collected in a single invoice. If you don't specify a maximum, then there is no limit.
+     */
+    amount: number;
+    /**
+     * Only `maximum` is supported.
+     */
+    amountType: string;
+    /**
+     * The purpose for which payments are made. Has a default value based on your merchant category code.
+     */
+    purpose: string;
+}
+
+export interface SubscriptionPaymentSettingsPaymentMethodOptionsPix {
+    /**
+     * The number of seconds (between 10 and 1209600) after which Pix payment will expire. Defaults to 86400 seconds.
+     */
+    expiresAfterSeconds: number;
+    mandateOptions: outputs.SubscriptionPaymentSettingsPaymentMethodOptionsPixMandateOptions;
+}
+
+export interface SubscriptionPaymentSettingsPaymentMethodOptionsPixMandateOptions {
+    /**
+     * Amount to be charged for future payments.
+     */
+    amount: number;
+    /**
+     * Determines if the amount includes the IOF tax.
+     */
+    amountIncludesIof: string;
+    /**
+     * Date when the mandate expires and no further payments will be charged, in `YYYY-MM-DD`.
+     */
+    endDate: string;
+    /**
+     * Schedule at which the future payments will be charged.
+     */
+    paymentSchedule: string;
+}
+
+export interface SubscriptionPaymentSettingsPaymentMethodOptionsUpi {
+    mandateOptions: outputs.SubscriptionPaymentSettingsPaymentMethodOptionsUpiMandateOptions;
+}
+
+export interface SubscriptionPaymentSettingsPaymentMethodOptionsUpiMandateOptions {
+    /**
+     * Amount to be charged for future payments.
+     */
+    amount: number;
+    /**
+     * One of `fixed` or `maximum`. If `fixed`, the `amount` param refers to the exact amount to be charged in future payments. If `maximum`, the amount charged can be up to the value passed for the `amount` param.
+     */
+    amountType: string;
+    /**
+     * A description of the mandate or subscription that is meant to be displayed to the customer.
+     */
+    description: string;
+    /**
+     * End date of the mandate or subscription.
+     */
+    endDate: number;
+}
+
+export interface SubscriptionPaymentSettingsPaymentMethodOptionsUsBankAccount {
+    financialConnections: outputs.SubscriptionPaymentSettingsPaymentMethodOptionsUsBankAccountFinancialConnections;
+    /**
+     * Bank account verification method. The default value is `automatic`.
+     */
+    verificationMethod: string;
+}
+
+export interface SubscriptionPaymentSettingsPaymentMethodOptionsUsBankAccountFinancialConnections {
+    filters: outputs.SubscriptionPaymentSettingsPaymentMethodOptionsUsBankAccountFinancialConnectionsFilters;
+    /**
+     * The list of permissions to request. The `paymentMethod` permission must be included.
+     */
+    permissions: string[];
+    /**
+     * Data features requested to be retrieved upon account creation.
+     */
+    prefetches: string[];
+}
+
+export interface SubscriptionPaymentSettingsPaymentMethodOptionsUsBankAccountFinancialConnectionsFilters {
+    /**
+     * The account subcategories to use to filter for possible accounts to link. Valid subcategories are `checking` and `savings`.
+     */
+    accountSubcategories: string[];
+}
+
+export interface SubscriptionPendingInvoiceItemInterval {
+    /**
+     * Specifies invoicing frequency. Either `day`, `week`, `month` or `year`.
+     */
+    interval: string;
+    /**
+     * The number of intervals between invoices. For example, `interval=month` and `interval_count=3` bills every 3 months. Maximum of one year interval allowed (1 year, 12 months, or 52 weeks).
+     */
+    intervalCount: number;
+}
+
+export interface SubscriptionPendingUpdate {
+    /**
+     * If the update is applied, determines the date of the first full invoice, and, for plans with `month` or `year` intervals, the day of the month for subsequent invoices. The timestamp is in UTC format.
+     */
+    billingCycleAnchor: number;
+    /**
+     * The pending subscription-level discount that will be applied when the pending update is applied.
+     */
+    discount: string;
+    /**
+     * The point after which the changes reflected by this update will be discarded and no longer applied.
+     */
+    expiresAt: number;
+    /**
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+     */
+    metadata: {[key: string]: string};
+    /**
+     * Unix timestamp representing the end of the trial period the customer will get before being charged for the first time, if the update is applied.
+     */
+    trialEnd: number;
+    /**
+     * Indicates if a plan's `trialPeriodDays` should be applied to the subscription. Setting `trialEnd` per subscription is preferred, and this defaults to `false`. Setting this flag to `true` together with `trialEnd` is not allowed. See [Using trial periods on subscriptions](https://docs.stripe.com/billing/subscriptions/trials) to learn more.
+     */
+    trialFromPlan: boolean;
+}
+
+export interface SubscriptionPresentmentDetails {
+    /**
+     * Currency used for customer payments.
+     */
+    presentmentCurrency: string;
+}
+
+export interface SubscriptionScheduleBillingMode {
+    /**
+     * Configure behavior for flexible billing mode
+     */
+    flexible: outputs.SubscriptionScheduleBillingModeFlexible;
+    /**
+     * Controls how prorations and invoices for subscriptions are calculated and orchestrated.
+     */
+    type: string;
+    /**
+     * Details on when the current billingMode was adopted.
+     */
+    updatedAt: number;
+}
+
+export interface SubscriptionScheduleBillingModeFlexible {
+    /**
+     * Controls how invoices and invoice items display proration amounts and discount amounts.
+     */
+    prorationDiscounts: string;
+}
+
+export interface SubscriptionScheduleCurrentPhase {
+    /**
+     * The end of this phase of the subscription schedule.
+     */
+    endDate: number;
+    /**
+     * The start of this phase of the subscription schedule.
+     */
+    startDate: number;
+}
+
+export interface SubscriptionScheduleDefaultSettings {
+    /**
+     * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice total that will be transferred to the application owner's Stripe account during this phase of the schedule.
+     */
+    applicationFeePercent: number;
+    automaticTax: outputs.SubscriptionScheduleDefaultSettingsAutomaticTax;
+    /**
+     * Possible values are `phaseStart` or `automatic`. If `phaseStart` then billing cycle anchor of the subscription is set to the start of the phase when entering the phase. If `automatic` then the billing cycle anchor is automatically modified as needed when entering the phase. For more information, see the billing cycle [documentation](https://docs.stripe.com/billing/subscriptions/billing-cycle).
+     */
+    billingCycleAnchor: string;
+    /**
+     * Define thresholds at which an invoice will be sent, and the subscription advanced to a new billing period
+     */
+    billingThresholds: outputs.SubscriptionScheduleDefaultSettingsBillingThresholds;
+    /**
+     * Either `chargeAutomatically`, or `sendInvoice`. When charging automatically, Stripe will attempt to pay the underlying subscription at the end of each billing cycle using the default source attached to the customer. When sending an invoice, Stripe will email your customer an invoice with payment instructions and mark the subscription as `active`.
+     */
+    collectionMethod: string;
+    /**
+     * ID of the default payment method for the subscription schedule. If not set, invoices will use the default payment method in the customer's invoice settings.
+     */
+    defaultPaymentMethod: string;
+    /**
+     * Subscription description, meant to be displayable to the customer. Use this field to optionally store an explanation of the subscription for rendering in Stripe surfaces and certain local payment methods UIs.
+     */
+    description: string;
+    invoiceSettings: outputs.SubscriptionScheduleDefaultSettingsInvoiceSettings;
+    /**
+     * The account (if any) the charge was made on behalf of for charges associated with the schedule's subscription. See the Connect documentation for details.
+     */
+    onBehalfOf: string;
+    /**
+     * The account (if any) the associated subscription's payments will be attributed to for tax reporting, and where funds from each payment will be transferred to for each of the subscription's invoices.
+     */
+    transferData: outputs.SubscriptionScheduleDefaultSettingsTransferData;
+}
+
+export interface SubscriptionScheduleDefaultSettingsAutomaticTax {
+    /**
+     * If Stripe disabled automatic tax, this enum describes why.
+     */
+    disabledReason: string;
+    /**
+     * Whether Stripe automatically computes tax on invoices created during this phase.
+     */
+    enabled: boolean;
+    /**
+     * The account that's liable for tax. If set, the business address and tax registrations required to perform the tax calculation are loaded from this account. The tax transaction is returned in the report of the connected account.
+     */
+    liability: outputs.SubscriptionScheduleDefaultSettingsAutomaticTaxLiability;
+}
+
+export interface SubscriptionScheduleDefaultSettingsAutomaticTaxLiability {
+    /**
+     * The connected account being referenced when `type` is `account`.
+     */
+    account: string;
+    /**
+     * Type of the account referenced.
+     */
+    type: string;
+}
+
+export interface SubscriptionScheduleDefaultSettingsBillingThresholds {
+    /**
+     * Monetary threshold that triggers the subscription to create an invoice
+     */
+    amountGte: number;
+    /**
+     * Indicates if the `billingCycleAnchor` should be reset when a threshold is reached. If true, `billingCycleAnchor` will be updated to the date/time the threshold was last reached; otherwise, the value will remain unchanged. This value may not be `true` if the subscription contains items with plans that have `aggregate_usage=last_ever`.
+     */
+    resetBillingCycleAnchor: boolean;
+}
+
+export interface SubscriptionScheduleDefaultSettingsInvoiceSettings {
+    /**
+     * The account tax IDs associated with the subscription schedule. Will be set on invoices generated by the subscription schedule.
+     */
+    accountTaxIds: string[];
+    /**
+     * Number of days within which a customer must pay invoices generated by this subscription schedule. This value will be `null` for subscription schedules where `billing=charge_automatically`.
+     */
+    daysUntilDue: number;
+    issuer: outputs.SubscriptionScheduleDefaultSettingsInvoiceSettingsIssuer;
+}
+
+export interface SubscriptionScheduleDefaultSettingsInvoiceSettingsIssuer {
+    /**
+     * The connected account being referenced when `type` is `account`.
+     */
+    account: string;
+    /**
+     * Type of the account referenced.
+     */
+    type: string;
+}
+
+export interface SubscriptionScheduleDefaultSettingsTransferData {
+    /**
+     * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice total that will be transferred to the destination account. By default, the entire amount is transferred to the destination.
+     */
+    amountPercent: number;
+    /**
+     * The account where funds from the payment will be transferred to upon payment success.
+     */
+    destination: string;
+}
+
+export interface SubscriptionSchedulePhase {
+    /**
+     * A list of prices and quantities that will generate invoice items appended to the next invoice for this phase.
+     */
+    addInvoiceItems: outputs.SubscriptionSchedulePhaseAddInvoiceItem[];
+    /**
+     * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice total that will be transferred to the application owner's Stripe account during this phase of the schedule.
+     */
+    applicationFeePercent: number;
+    automaticTax: outputs.SubscriptionSchedulePhaseAutomaticTax;
+    /**
+     * Possible values are `phaseStart` or `automatic`. If `phaseStart` then billing cycle anchor of the subscription is set to the start of the phase when entering the phase. If `automatic` then the billing cycle anchor is automatically modified as needed when entering the phase. For more information, see the billing cycle [documentation](https://docs.stripe.com/billing/subscriptions/billing-cycle).
+     */
+    billingCycleAnchor: string;
+    /**
+     * Define thresholds at which an invoice will be sent, and the subscription advanced to a new billing period
+     */
+    billingThresholds: outputs.SubscriptionSchedulePhaseBillingThresholds;
+    /**
+     * Either `chargeAutomatically`, or `sendInvoice`. When charging automatically, Stripe will attempt to pay the underlying subscription at the end of each billing cycle using the default source attached to the customer. When sending an invoice, Stripe will email your customer an invoice with payment instructions and mark the subscription as `active`.
+     */
+    collectionMethod: string;
+    /**
+     * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+     */
+    currency: string;
+    /**
+     * ID of the default payment method for the subscription schedule. It must belong to the customer associated with the subscription schedule. If not set, invoices will use the default payment method in the customer's invoice settings.
+     */
+    defaultPaymentMethod: string;
+    /**
+     * The default tax rates to apply to the subscription during this phase of the subscription schedule.
+     */
+    defaultTaxRates: string[];
+    /**
+     * Subscription description, meant to be displayable to the customer. Use this field to optionally store an explanation of the subscription for rendering in Stripe surfaces and certain local payment methods UIs.
+     */
+    description: string;
+    /**
+     * The stackable discounts that will be applied to the subscription on this phase. Subscription item discounts are applied before subscription discounts.
+     */
+    discounts: outputs.SubscriptionSchedulePhaseDiscount[];
+    /**
+     * The number of intervals the phase should last. If set, `endDate` must not be set.
+     */
+    duration?: outputs.SubscriptionSchedulePhaseDuration;
+    /**
+     * The end of this phase of the subscription schedule.
+     */
+    endDate: number;
+    /**
+     * The invoice settings applicable during this phase.
+     */
+    invoiceSettings: outputs.SubscriptionSchedulePhaseInvoiceSettings;
+    /**
+     * Subscription items to configure the subscription to during this phase of the subscription schedule.
+     */
+    items: outputs.SubscriptionSchedulePhaseItem[];
+    /**
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to a phase. Metadata on a schedule's phase will update the underlying subscription's `metadata` when the phase is entered. Updating the underlying subscription's `metadata` directly will not affect the current phase's `metadata`.
+     */
+    metadata: {[key: string]: string};
+    /**
+     * The account (if any) the charge was made on behalf of for charges associated with the schedule's subscription. See the Connect documentation for details.
+     */
+    onBehalfOf: string;
+    /**
+     * When transitioning phases, controls how prorations are handled (if any). Possible values are `createProrations`, `none`, and `alwaysInvoice`.
+     */
+    prorationBehavior: string;
+    /**
+     * The start of this phase of the subscription schedule.
+     */
+    startDate: number;
+    /**
+     * The account (if any) the associated subscription's payments will be attributed to for tax reporting, and where funds from each payment will be transferred to for each of the subscription's invoices.
+     */
+    transferData: outputs.SubscriptionSchedulePhaseTransferData;
+    /**
+     * If set to true the entire phase is counted as a trial and the customer will not be charged for any fees.
+     */
+    trial?: boolean;
+    /**
+     * When the trial ends within the phase.
+     */
+    trialEnd: number;
+}
+
+export interface SubscriptionSchedulePhaseAddInvoiceItem {
+    /**
+     * Controls whether discounts apply to this invoice item. Defaults to true if no value is provided.
+     */
+    discountable: boolean;
+    /**
+     * The stackable discounts that will be applied to the item.
+     */
+    discounts: outputs.SubscriptionSchedulePhaseAddInvoiceItemDiscount[];
+    /**
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+     */
+    metadata: {[key: string]: string};
+    period: outputs.SubscriptionSchedulePhaseAddInvoiceItemPeriod;
+    /**
+     * ID of the price used to generate the invoice item.
+     */
+    price: string;
+    /**
+     * Data used to generate a new [Price](https://docs.stripe.com/api/prices) object inline. One of `price` or `priceData` is required.
+     */
+    priceData?: outputs.SubscriptionSchedulePhaseAddInvoiceItemPriceData;
+    /**
+     * The quantity of the invoice item.
+     */
+    quantity: number;
+    /**
+     * The tax rates which apply to the item. When set, the `defaultTaxRates` do not apply to this item.
+     */
+    taxRates: string[];
+}
+
+export interface SubscriptionSchedulePhaseAddInvoiceItemDiscount {
+    /**
+     * ID of the coupon to create a new discount for.
+     */
+    coupon: string;
+    /**
+     * ID of an existing discount on the object (or one of its ancestors) to reuse.
+     */
+    discount: string;
+    /**
+     * ID of the promotion code to create a new discount for.
+     */
+    promotionCode: string;
+}
+
+export interface SubscriptionSchedulePhaseAddInvoiceItemPeriod {
+    end: outputs.SubscriptionSchedulePhaseAddInvoiceItemPeriodEnd;
+    start: outputs.SubscriptionSchedulePhaseAddInvoiceItemPeriodStart;
+}
+
+export interface SubscriptionSchedulePhaseAddInvoiceItemPeriodEnd {
+    /**
+     * A precise Unix timestamp for the end of the invoice item period. Must be greater than or equal to `period.start`.
+     */
+    timestamp: number;
+    /**
+     * Select how to calculate the end of the invoice item period.
+     */
+    type: string;
+}
+
+export interface SubscriptionSchedulePhaseAddInvoiceItemPeriodStart {
+    /**
+     * A precise Unix timestamp for the start of the invoice item period. Must be less than or equal to `period.end`.
+     */
+    timestamp: number;
+    /**
+     * Select how to calculate the start of the invoice item period.
+     */
+    type: string;
+}
+
+export interface SubscriptionSchedulePhaseAddInvoiceItemPriceData {
+    /**
+     * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+     */
+    currency: string;
+    /**
+     * The ID of the [Product](https://docs.stripe.com/api/products) that this [Price](https://docs.stripe.com/api/prices) will belong to.
+     */
+    product: string;
+    /**
+     * Only required if a [default tax behavior](<https://docs.stripe.com/tax/products-prices-tax-categories-tax-behavior#setting-a-default-tax-behavior-(recommended)>) was not provided in the Stripe Tax settings. Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
+     */
+    taxBehavior?: string;
+    /**
+     * A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge or a negative integer representing the amount to credit to the customer.
+     */
+    unitAmount?: number;
+    /**
+     * Same as `unitAmount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unitAmount` and `unitAmountDecimal` can be set.
+     */
+    unitAmountDecimal?: number;
+}
+
+export interface SubscriptionSchedulePhaseAutomaticTax {
+    /**
+     * If Stripe disabled automatic tax, this enum describes why.
+     */
+    disabledReason: string;
+    /**
+     * Whether Stripe automatically computes tax on invoices created during this phase.
+     */
+    enabled: boolean;
+    /**
+     * The account that's liable for tax. If set, the business address and tax registrations required to perform the tax calculation are loaded from this account. The tax transaction is returned in the report of the connected account.
+     */
+    liability: outputs.SubscriptionSchedulePhaseAutomaticTaxLiability;
+}
+
+export interface SubscriptionSchedulePhaseAutomaticTaxLiability {
+    /**
+     * The connected account being referenced when `type` is `account`.
+     */
+    account: string;
+    /**
+     * Type of the account referenced.
+     */
+    type: string;
+}
+
+export interface SubscriptionSchedulePhaseBillingThresholds {
+    /**
+     * Monetary threshold that triggers the subscription to create an invoice
+     */
+    amountGte: number;
+    /**
+     * Indicates if the `billingCycleAnchor` should be reset when a threshold is reached. If true, `billingCycleAnchor` will be updated to the date/time the threshold was last reached; otherwise, the value will remain unchanged. This value may not be `true` if the subscription contains items with plans that have `aggregate_usage=last_ever`.
+     */
+    resetBillingCycleAnchor: boolean;
+}
+
+export interface SubscriptionSchedulePhaseDiscount {
+    /**
+     * ID of the coupon to create a new discount for.
+     */
+    coupon: string;
+    /**
+     * ID of an existing discount on the object (or one of its ancestors) to reuse.
+     */
+    discount: string;
+    /**
+     * ID of the promotion code to create a new discount for.
+     */
+    promotionCode: string;
+}
+
+export interface SubscriptionSchedulePhaseDuration {
+    /**
+     * Specifies phase duration. Either `day`, `week`, `month` or `year`.
+     */
+    interval: string;
+    /**
+     * The multiplier applied to the interval.
+     */
+    intervalCount?: number;
+}
+
+export interface SubscriptionSchedulePhaseInvoiceSettings {
+    /**
+     * The account tax IDs associated with this phase of the subscription schedule. Will be set on invoices generated by this phase of the subscription schedule.
+     */
+    accountTaxIds: string[];
+    /**
+     * Number of days within which a customer must pay invoices generated by this subscription schedule. This value will be `null` for subscription schedules where `billing=charge_automatically`.
+     */
+    daysUntilDue: number;
+    /**
+     * The connected account that issues the invoice. The invoice is presented with the branding and support information of the specified account.
+     */
+    issuer: outputs.SubscriptionSchedulePhaseInvoiceSettingsIssuer;
+}
+
+export interface SubscriptionSchedulePhaseInvoiceSettingsIssuer {
+    /**
+     * The connected account being referenced when `type` is `account`.
+     */
+    account: string;
+    /**
+     * Type of the account referenced.
+     */
+    type: string;
+}
+
+export interface SubscriptionSchedulePhaseItem {
+    /**
+     * Define thresholds at which an invoice will be sent, and the related subscription advanced to a new billing period
+     */
+    billingThresholds: outputs.SubscriptionSchedulePhaseItemBillingThresholds;
+    /**
+     * The discounts applied to the subscription item. Subscription item discounts are applied before subscription discounts. Use `expand[]=discounts` to expand each discount.
+     */
+    discounts: outputs.SubscriptionSchedulePhaseItemDiscount[];
+    /**
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an item. Metadata on this item will update the underlying subscription item's `metadata` when the phase is entered.
+     */
+    metadata: {[key: string]: string};
+    /**
+     * ID of the plan to which the customer should be subscribed.
+     */
+    plan: string;
+    /**
+     * ID of the price to which the customer should be subscribed.
+     */
+    price: string;
+    /**
+     * Data used to generate a new [Price](https://docs.stripe.com/api/prices) object inline.
+     */
+    priceData?: outputs.SubscriptionSchedulePhaseItemPriceData;
+    /**
+     * Quantity of the plan to which the customer should be subscribed.
+     */
+    quantity: number;
+    /**
+     * The tax rates which apply to this `phaseItem`. When set, the `defaultTaxRates` on the phase do not apply to this `phaseItem`.
+     */
+    taxRates: string[];
+}
+
+export interface SubscriptionSchedulePhaseItemBillingThresholds {
+    /**
+     * Usage threshold that triggers the subscription to create an invoice
+     */
+    usageGte: number;
+}
+
+export interface SubscriptionSchedulePhaseItemDiscount {
+    /**
+     * ID of the coupon to create a new discount for.
+     */
+    coupon: string;
+    /**
+     * ID of an existing discount on the object (or one of its ancestors) to reuse.
+     */
+    discount: string;
+    /**
+     * ID of the promotion code to create a new discount for.
+     */
+    promotionCode: string;
+}
+
+export interface SubscriptionSchedulePhaseItemPriceData {
+    /**
+     * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+     */
+    currency: string;
+    /**
+     * The ID of the [Product](https://docs.stripe.com/api/products) that this [Price](https://docs.stripe.com/api/prices) will belong to.
+     */
+    product: string;
+    /**
+     * The recurring components of a price such as `interval` and `intervalCount`.
+     */
+    recurring: outputs.SubscriptionSchedulePhaseItemPriceDataRecurring;
+    /**
+     * Only required if a [default tax behavior](<https://docs.stripe.com/tax/products-prices-tax-categories-tax-behavior#setting-a-default-tax-behavior-(recommended)>) was not provided in the Stripe Tax settings. Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
+     */
+    taxBehavior?: string;
+    /**
+     * A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge.
+     */
+    unitAmount?: number;
+    /**
+     * Same as `unitAmount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unitAmount` and `unitAmountDecimal` can be set.
+     */
+    unitAmountDecimal?: number;
+}
+
+export interface SubscriptionSchedulePhaseItemPriceDataRecurring {
+    /**
+     * Specifies billing frequency. Either `day`, `week`, `month` or `year`.
+     */
+    interval: string;
+    /**
+     * The number of intervals between subscription billings. For example, `interval=month` and `interval_count=3` bills every 3 months. Maximum of three years interval allowed (3 years, 36 months, or 156 weeks).
+     */
+    intervalCount?: number;
+}
+
+export interface SubscriptionSchedulePhaseTransferData {
+    /**
+     * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice total that will be transferred to the destination account. By default, the entire amount is transferred to the destination.
+     */
+    amountPercent: number;
+    /**
+     * The account where funds from the payment will be transferred to upon payment success.
+     */
+    destination: string;
+}
+
+export interface SubscriptionTransferData {
+    /**
+     * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice total that will be transferred to the destination account. By default, the entire amount is transferred to the destination.
+     */
+    amountPercent: number;
+    /**
+     * The account where funds from the payment will be transferred to upon payment success.
+     */
+    destination: string;
+}
+
+export interface SubscriptionTrialSettings {
+    /**
+     * Defines how a subscription behaves when a trial ends.
+     */
+    endBehavior: outputs.SubscriptionTrialSettingsEndBehavior;
+}
+
+export interface SubscriptionTrialSettingsEndBehavior {
+    /**
+     * Indicates how the subscription should change when the trial ends if the user did not provide a payment method.
+     */
+    missingPaymentMethod: string;
+}
+
+export interface TaxIdOwner {
+    /**
+     * The account being referenced when `type` is `account`.
+     */
+    account: string;
+    /**
+     * The Connect Application being referenced when `type` is `application`.
+     */
+    application: string;
+    /**
+     * The customer being referenced when `type` is `customer`.
+     */
+    customer: string;
+    /**
+     * The Account representing the customer being referenced when `type` is `customer`.
+     */
+    customerAccount: string;
+    /**
+     * Type of owner referenced.
+     */
+    type: string;
+}
+
+export interface TaxIdVerification {
+    /**
+     * Verification status, one of `pending`, `verified`, `unverified`, or `unavailable`.
+     */
+    status: string;
+    /**
+     * Verified address.
+     */
+    verifiedAddress: string;
+    /**
+     * Verified name.
+     */
+    verifiedName: string;
+}
+
+export interface TaxRateFlatAmount {
+    /**
+     * Amount of the tax when the `rateType` is `flatAmount`. This positive integer represents how much to charge in the smallest currency unit (e.g., 100 cents to charge $1.00 or 100 to charge ¥100, a zero-decimal currency). The amount value supports up to eight digits (e.g., a value of 99999999 for a USD charge of $999,999.99).
+     */
+    amount: number;
+    /**
+     * Three-letter ISO currency code, in lowercase.
+     */
+    currency: string;
+}
+
+export interface TaxRegistrationCountryOptions {
+    ae: outputs.TaxRegistrationCountryOptionsAe;
+    al: outputs.TaxRegistrationCountryOptionsAl;
+    am: outputs.TaxRegistrationCountryOptionsAm;
+    ao: outputs.TaxRegistrationCountryOptionsAo;
+    at: outputs.TaxRegistrationCountryOptionsAt;
+    au: outputs.TaxRegistrationCountryOptionsAu;
+    aw: outputs.TaxRegistrationCountryOptionsAw;
+    az: outputs.TaxRegistrationCountryOptionsAz;
+    ba: outputs.TaxRegistrationCountryOptionsBa;
+    bb: outputs.TaxRegistrationCountryOptionsBb;
+    bd: outputs.TaxRegistrationCountryOptionsBd;
+    be: outputs.TaxRegistrationCountryOptionsBe;
+    bf: outputs.TaxRegistrationCountryOptionsBf;
+    bg: outputs.TaxRegistrationCountryOptionsBg;
+    bh: outputs.TaxRegistrationCountryOptionsBh;
+    bj: outputs.TaxRegistrationCountryOptionsBj;
+    bs: outputs.TaxRegistrationCountryOptionsBs;
+    by: outputs.TaxRegistrationCountryOptionsBy;
+    ca: outputs.TaxRegistrationCountryOptionsCa;
+    cd: outputs.TaxRegistrationCountryOptionsCd;
+    ch: outputs.TaxRegistrationCountryOptionsCh;
+    cl: outputs.TaxRegistrationCountryOptionsCl;
+    cm: outputs.TaxRegistrationCountryOptionsCm;
+    co: outputs.TaxRegistrationCountryOptionsCo;
+    cr: outputs.TaxRegistrationCountryOptionsCr;
+    cv: outputs.TaxRegistrationCountryOptionsCv;
+    cy: outputs.TaxRegistrationCountryOptionsCy;
+    cz: outputs.TaxRegistrationCountryOptionsCz;
+    de: outputs.TaxRegistrationCountryOptionsDe;
+    dk: outputs.TaxRegistrationCountryOptionsDk;
+    ec: outputs.TaxRegistrationCountryOptionsEc;
+    ee: outputs.TaxRegistrationCountryOptionsEe;
+    eg: outputs.TaxRegistrationCountryOptionsEg;
+    es: outputs.TaxRegistrationCountryOptionsEs;
+    et: outputs.TaxRegistrationCountryOptionsEt;
+    fi: outputs.TaxRegistrationCountryOptionsFi;
+    fr: outputs.TaxRegistrationCountryOptionsFr;
+    gb: outputs.TaxRegistrationCountryOptionsGb;
+    ge: outputs.TaxRegistrationCountryOptionsGe;
+    gn: outputs.TaxRegistrationCountryOptionsGn;
+    gr: outputs.TaxRegistrationCountryOptionsGr;
+    hr: outputs.TaxRegistrationCountryOptionsHr;
+    hu: outputs.TaxRegistrationCountryOptionsHu;
+    id: outputs.TaxRegistrationCountryOptionsId;
+    ie: outputs.TaxRegistrationCountryOptionsIe;
+    in: outputs.TaxRegistrationCountryOptionsIn;
+    is: outputs.TaxRegistrationCountryOptionsIs;
+    it: outputs.TaxRegistrationCountryOptionsIt;
+    jp: outputs.TaxRegistrationCountryOptionsJp;
+    ke: outputs.TaxRegistrationCountryOptionsKe;
+    kg: outputs.TaxRegistrationCountryOptionsKg;
+    kh: outputs.TaxRegistrationCountryOptionsKh;
+    kr: outputs.TaxRegistrationCountryOptionsKr;
+    kz: outputs.TaxRegistrationCountryOptionsKz;
+    la: outputs.TaxRegistrationCountryOptionsLa;
+    lk: outputs.TaxRegistrationCountryOptionsLk;
+    lt: outputs.TaxRegistrationCountryOptionsLt;
+    lu: outputs.TaxRegistrationCountryOptionsLu;
+    lv: outputs.TaxRegistrationCountryOptionsLv;
+    ma: outputs.TaxRegistrationCountryOptionsMa;
+    md: outputs.TaxRegistrationCountryOptionsMd;
+    me: outputs.TaxRegistrationCountryOptionsMe;
+    mk: outputs.TaxRegistrationCountryOptionsMk;
+    mr: outputs.TaxRegistrationCountryOptionsMr;
+    mt: outputs.TaxRegistrationCountryOptionsMt;
+    mx: outputs.TaxRegistrationCountryOptionsMx;
+    my: outputs.TaxRegistrationCountryOptionsMy;
+    ng: outputs.TaxRegistrationCountryOptionsNg;
+    nl: outputs.TaxRegistrationCountryOptionsNl;
+    no: outputs.TaxRegistrationCountryOptionsNo;
+    np: outputs.TaxRegistrationCountryOptionsNp;
+    nz: outputs.TaxRegistrationCountryOptionsNz;
+    om: outputs.TaxRegistrationCountryOptionsOm;
+    pe: outputs.TaxRegistrationCountryOptionsPe;
+    ph: outputs.TaxRegistrationCountryOptionsPh;
+    pl: outputs.TaxRegistrationCountryOptionsPl;
+    pt: outputs.TaxRegistrationCountryOptionsPt;
+    ro: outputs.TaxRegistrationCountryOptionsRo;
+    rs: outputs.TaxRegistrationCountryOptionsRs;
+    ru: outputs.TaxRegistrationCountryOptionsRu;
+    sa: outputs.TaxRegistrationCountryOptionsSa;
+    se: outputs.TaxRegistrationCountryOptionsSe;
+    sg: outputs.TaxRegistrationCountryOptionsSg;
+    si: outputs.TaxRegistrationCountryOptionsSi;
+    sk: outputs.TaxRegistrationCountryOptionsSk;
+    sn: outputs.TaxRegistrationCountryOptionsSn;
+    sr: outputs.TaxRegistrationCountryOptionsSr;
+    th: outputs.TaxRegistrationCountryOptionsTh;
+    tj: outputs.TaxRegistrationCountryOptionsTj;
+    tr: outputs.TaxRegistrationCountryOptionsTr;
+    tw: outputs.TaxRegistrationCountryOptionsTw;
+    tz: outputs.TaxRegistrationCountryOptionsTz;
+    ua: outputs.TaxRegistrationCountryOptionsUa;
+    ug: outputs.TaxRegistrationCountryOptionsUg;
+    us: outputs.TaxRegistrationCountryOptionsUs;
+    uy: outputs.TaxRegistrationCountryOptionsUy;
+    uz: outputs.TaxRegistrationCountryOptionsUz;
+    vn: outputs.TaxRegistrationCountryOptionsVn;
+    za: outputs.TaxRegistrationCountryOptionsZa;
+    zm: outputs.TaxRegistrationCountryOptionsZm;
+    zw: outputs.TaxRegistrationCountryOptionsZw;
+}
+
+export interface TaxRegistrationCountryOptionsAe {
+    standard: outputs.TaxRegistrationCountryOptionsAeStandard;
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsAeStandard {
+    /**
+     * Place of supply scheme used in an Default standard registration.
+     */
+    placeOfSupplyScheme: string;
+}
+
+export interface TaxRegistrationCountryOptionsAl {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: outputs.TaxRegistrationCountryOptionsAlStandard;
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsAlStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: string;
+}
+
+export interface TaxRegistrationCountryOptionsAm {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsAo {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: outputs.TaxRegistrationCountryOptionsAoStandard;
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsAoStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: string;
+}
+
+export interface TaxRegistrationCountryOptionsAt {
+    standard: outputs.TaxRegistrationCountryOptionsAtStandard;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsAtStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: string;
+}
+
+export interface TaxRegistrationCountryOptionsAu {
+    standard: outputs.TaxRegistrationCountryOptionsAuStandard;
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsAuStandard {
+    /**
+     * Place of supply scheme used in an Default standard registration.
+     */
+    placeOfSupplyScheme: string;
+}
+
+export interface TaxRegistrationCountryOptionsAw {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: outputs.TaxRegistrationCountryOptionsAwStandard;
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsAwStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: string;
+}
+
+export interface TaxRegistrationCountryOptionsAz {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsBa {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: outputs.TaxRegistrationCountryOptionsBaStandard;
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsBaStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: string;
+}
+
+export interface TaxRegistrationCountryOptionsBb {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: outputs.TaxRegistrationCountryOptionsBbStandard;
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsBbStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: string;
+}
+
+export interface TaxRegistrationCountryOptionsBd {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: outputs.TaxRegistrationCountryOptionsBdStandard;
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsBdStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: string;
+}
+
+export interface TaxRegistrationCountryOptionsBe {
+    standard: outputs.TaxRegistrationCountryOptionsBeStandard;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsBeStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: string;
+}
+
+export interface TaxRegistrationCountryOptionsBf {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: outputs.TaxRegistrationCountryOptionsBfStandard;
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsBfStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: string;
+}
+
+export interface TaxRegistrationCountryOptionsBg {
+    standard: outputs.TaxRegistrationCountryOptionsBgStandard;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsBgStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: string;
+}
+
+export interface TaxRegistrationCountryOptionsBh {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: outputs.TaxRegistrationCountryOptionsBhStandard;
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsBhStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: string;
+}
+
+export interface TaxRegistrationCountryOptionsBj {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsBs {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: outputs.TaxRegistrationCountryOptionsBsStandard;
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsBsStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: string;
+}
+
+export interface TaxRegistrationCountryOptionsBy {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsCa {
+    provinceStandard: outputs.TaxRegistrationCountryOptionsCaProvinceStandard;
+    /**
+     * Type of registration in Canada.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsCaProvinceStandard {
+    /**
+     * Two-letter CA province code ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    province: string;
+}
+
+export interface TaxRegistrationCountryOptionsCd {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: outputs.TaxRegistrationCountryOptionsCdStandard;
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsCdStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: string;
+}
+
+export interface TaxRegistrationCountryOptionsCh {
+    standard: outputs.TaxRegistrationCountryOptionsChStandard;
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsChStandard {
+    /**
+     * Place of supply scheme used in an Default standard registration.
+     */
+    placeOfSupplyScheme: string;
+}
+
+export interface TaxRegistrationCountryOptionsCl {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsCm {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsCo {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsCr {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsCv {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsCy {
+    standard: outputs.TaxRegistrationCountryOptionsCyStandard;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsCyStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: string;
+}
+
+export interface TaxRegistrationCountryOptionsCz {
+    standard: outputs.TaxRegistrationCountryOptionsCzStandard;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsCzStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: string;
+}
+
+export interface TaxRegistrationCountryOptionsDe {
+    standard: outputs.TaxRegistrationCountryOptionsDeStandard;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsDeStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: string;
+}
+
+export interface TaxRegistrationCountryOptionsDk {
+    standard: outputs.TaxRegistrationCountryOptionsDkStandard;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsDkStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: string;
+}
+
+export interface TaxRegistrationCountryOptionsEc {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsEe {
+    standard: outputs.TaxRegistrationCountryOptionsEeStandard;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsEeStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: string;
+}
+
+export interface TaxRegistrationCountryOptionsEg {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsEs {
+    standard: outputs.TaxRegistrationCountryOptionsEsStandard;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsEsStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: string;
+}
+
+export interface TaxRegistrationCountryOptionsEt {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: outputs.TaxRegistrationCountryOptionsEtStandard;
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsEtStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: string;
+}
+
+export interface TaxRegistrationCountryOptionsFi {
+    standard: outputs.TaxRegistrationCountryOptionsFiStandard;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsFiStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: string;
+}
+
+export interface TaxRegistrationCountryOptionsFr {
+    standard: outputs.TaxRegistrationCountryOptionsFrStandard;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsFrStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: string;
+}
+
+export interface TaxRegistrationCountryOptionsGb {
+    standard: outputs.TaxRegistrationCountryOptionsGbStandard;
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsGbStandard {
+    /**
+     * Place of supply scheme used in an Default standard registration.
+     */
+    placeOfSupplyScheme: string;
+}
+
+export interface TaxRegistrationCountryOptionsGe {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsGn {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: outputs.TaxRegistrationCountryOptionsGnStandard;
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsGnStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: string;
+}
+
+export interface TaxRegistrationCountryOptionsGr {
+    standard: outputs.TaxRegistrationCountryOptionsGrStandard;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsGrStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: string;
+}
+
+export interface TaxRegistrationCountryOptionsHr {
+    standard: outputs.TaxRegistrationCountryOptionsHrStandard;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsHrStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: string;
+}
+
+export interface TaxRegistrationCountryOptionsHu {
+    standard: outputs.TaxRegistrationCountryOptionsHuStandard;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsHuStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: string;
+}
+
+export interface TaxRegistrationCountryOptionsId {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsIe {
+    standard: outputs.TaxRegistrationCountryOptionsIeStandard;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsIeStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: string;
+}
+
+export interface TaxRegistrationCountryOptionsIn {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsIs {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: outputs.TaxRegistrationCountryOptionsIsStandard;
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsIsStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: string;
+}
+
+export interface TaxRegistrationCountryOptionsIt {
+    standard: outputs.TaxRegistrationCountryOptionsItStandard;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsItStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: string;
+}
+
+export interface TaxRegistrationCountryOptionsJp {
+    standard: outputs.TaxRegistrationCountryOptionsJpStandard;
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsJpStandard {
+    /**
+     * Place of supply scheme used in an Default standard registration.
+     */
+    placeOfSupplyScheme: string;
+}
+
+export interface TaxRegistrationCountryOptionsKe {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsKg {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsKh {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsKr {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsKz {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsLa {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsLk {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsLt {
+    standard: outputs.TaxRegistrationCountryOptionsLtStandard;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsLtStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: string;
+}
+
+export interface TaxRegistrationCountryOptionsLu {
+    standard: outputs.TaxRegistrationCountryOptionsLuStandard;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsLuStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: string;
+}
+
+export interface TaxRegistrationCountryOptionsLv {
+    standard: outputs.TaxRegistrationCountryOptionsLvStandard;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsLvStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: string;
+}
+
+export interface TaxRegistrationCountryOptionsMa {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsMd {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsMe {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: outputs.TaxRegistrationCountryOptionsMeStandard;
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsMeStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: string;
+}
+
+export interface TaxRegistrationCountryOptionsMk {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: outputs.TaxRegistrationCountryOptionsMkStandard;
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsMkStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: string;
+}
+
+export interface TaxRegistrationCountryOptionsMr {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: outputs.TaxRegistrationCountryOptionsMrStandard;
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsMrStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: string;
+}
+
+export interface TaxRegistrationCountryOptionsMt {
+    standard: outputs.TaxRegistrationCountryOptionsMtStandard;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsMtStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: string;
+}
+
+export interface TaxRegistrationCountryOptionsMx {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsMy {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsNg {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsNl {
+    standard: outputs.TaxRegistrationCountryOptionsNlStandard;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsNlStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: string;
+}
+
+export interface TaxRegistrationCountryOptionsNo {
+    standard: outputs.TaxRegistrationCountryOptionsNoStandard;
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsNoStandard {
+    /**
+     * Place of supply scheme used in an Default standard registration.
+     */
+    placeOfSupplyScheme: string;
+}
+
+export interface TaxRegistrationCountryOptionsNp {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsNz {
+    standard: outputs.TaxRegistrationCountryOptionsNzStandard;
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsNzStandard {
+    /**
+     * Place of supply scheme used in an Default standard registration.
+     */
+    placeOfSupplyScheme: string;
+}
+
+export interface TaxRegistrationCountryOptionsOm {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: outputs.TaxRegistrationCountryOptionsOmStandard;
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsOmStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: string;
+}
+
+export interface TaxRegistrationCountryOptionsPe {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsPh {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsPl {
+    standard: outputs.TaxRegistrationCountryOptionsPlStandard;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsPlStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: string;
+}
+
+export interface TaxRegistrationCountryOptionsPt {
+    standard: outputs.TaxRegistrationCountryOptionsPtStandard;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsPtStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: string;
+}
+
+export interface TaxRegistrationCountryOptionsRo {
+    standard: outputs.TaxRegistrationCountryOptionsRoStandard;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsRoStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: string;
+}
+
+export interface TaxRegistrationCountryOptionsRs {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: outputs.TaxRegistrationCountryOptionsRsStandard;
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsRsStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: string;
+}
+
+export interface TaxRegistrationCountryOptionsRu {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsSa {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsSe {
+    standard: outputs.TaxRegistrationCountryOptionsSeStandard;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsSeStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: string;
+}
+
+export interface TaxRegistrationCountryOptionsSg {
+    standard: outputs.TaxRegistrationCountryOptionsSgStandard;
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsSgStandard {
+    /**
+     * Place of supply scheme used in an Default standard registration.
+     */
+    placeOfSupplyScheme: string;
+}
+
+export interface TaxRegistrationCountryOptionsSi {
+    standard: outputs.TaxRegistrationCountryOptionsSiStandard;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsSiStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: string;
+}
+
+export interface TaxRegistrationCountryOptionsSk {
+    standard: outputs.TaxRegistrationCountryOptionsSkStandard;
+    /**
+     * Type of registration in an EU country.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsSkStandard {
+    /**
+     * Place of supply scheme used in an EU standard registration.
+     */
+    placeOfSupplyScheme: string;
+}
+
+export interface TaxRegistrationCountryOptionsSn {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsSr {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: outputs.TaxRegistrationCountryOptionsSrStandard;
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsSrStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: string;
+}
+
+export interface TaxRegistrationCountryOptionsTh {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsTj {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsTr {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsTw {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsTz {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsUa {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsUg {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsUs {
+    localAmusementTax: outputs.TaxRegistrationCountryOptionsUsLocalAmusementTax;
+    localLeaseTax: outputs.TaxRegistrationCountryOptionsUsLocalLeaseTax;
+    /**
+     * Two-letter US state code ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state: string;
+    stateSalesTax: outputs.TaxRegistrationCountryOptionsUsStateSalesTax;
+    /**
+     * Type of registration in the US.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsUsLocalAmusementTax {
+    /**
+     * A [FIPS code](https://www.census.gov/library/reference/code-lists/ansi.html) representing the local jurisdiction.
+     */
+    jurisdiction: string;
+}
+
+export interface TaxRegistrationCountryOptionsUsLocalLeaseTax {
+    /**
+     * A [FIPS code](https://www.census.gov/library/reference/code-lists/ansi.html) representing the local jurisdiction.
+     */
+    jurisdiction: string;
+}
+
+export interface TaxRegistrationCountryOptionsUsStateSalesTax {
+    /**
+     * Elections for the state sales tax registration.
+     */
+    elections: outputs.TaxRegistrationCountryOptionsUsStateSalesTaxElection[];
+}
+
+export interface TaxRegistrationCountryOptionsUsStateSalesTaxElection {
+    /**
+     * A [FIPS code](https://www.census.gov/library/reference/code-lists/ansi.html) representing the local jurisdiction.
+     */
+    jurisdiction: string;
+    /**
+     * The type of the election for the state sales tax registration.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsUy {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: outputs.TaxRegistrationCountryOptionsUyStandard;
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsUyStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: string;
+}
+
+export interface TaxRegistrationCountryOptionsUz {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsVn {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsZa {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: outputs.TaxRegistrationCountryOptionsZaStandard;
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsZaStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: string;
+}
+
+export interface TaxRegistrationCountryOptionsZm {
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsZw {
+    /**
+     * Options for the standard registration.
+     */
+    standard?: outputs.TaxRegistrationCountryOptionsZwStandard;
+    /**
+     * Type of registration in `country`.
+     */
+    type: string;
+}
+
+export interface TaxRegistrationCountryOptionsZwStandard {
+    /**
+     * Place of supply scheme used in an standard registration.
+     */
+    placeOfSupplyScheme?: string;
+}
+
+export interface TerminalConfigurationBbposWisepad3 {
+    /**
+     * A File ID representing an image to display on the reader
+     */
+    splashscreen: string;
+}
+
+export interface TerminalConfigurationBbposWiseposE {
+    /**
+     * A File ID representing an image to display on the reader
+     */
+    splashscreen: string;
+}
+
+export interface TerminalConfigurationCellular {
+    /**
+     * Whether a cellular-capable reader can connect to the internet over cellular.
+     */
+    enabled: boolean;
+}
+
+export interface TerminalConfigurationOffline {
+    /**
+     * Determines whether to allow transactions to be collected while reader is offline. Defaults to false.
+     */
+    enabled: boolean;
+}
+
+export interface TerminalConfigurationRebootWindow {
+    /**
+     * Integer between 0 to 23 that represents the end hour of the reboot time window. The value must be different than the start_hour.
+     */
+    endHour: number;
+    /**
+     * Integer between 0 to 23 that represents the start hour of the reboot time window.
+     */
+    startHour: number;
+}
+
+export interface TerminalConfigurationStripeS700 {
+    /**
+     * A File ID representing an image to display on the reader
+     */
+    splashscreen: string;
+}
+
+export interface TerminalConfigurationStripeS710 {
+    /**
+     * A File ID representing an image to display on the reader
+     */
+    splashscreen: string;
+}
+
+export interface TerminalConfigurationTipping {
+    aed: outputs.TerminalConfigurationTippingAed;
+    aud: outputs.TerminalConfigurationTippingAud;
+    cad: outputs.TerminalConfigurationTippingCad;
+    chf: outputs.TerminalConfigurationTippingChf;
+    czk: outputs.TerminalConfigurationTippingCzk;
+    dkk: outputs.TerminalConfigurationTippingDkk;
+    eur: outputs.TerminalConfigurationTippingEur;
+    gbp: outputs.TerminalConfigurationTippingGbp;
+    gip: outputs.TerminalConfigurationTippingGip;
+    hkd: outputs.TerminalConfigurationTippingHkd;
+    huf: outputs.TerminalConfigurationTippingHuf;
+    jpy: outputs.TerminalConfigurationTippingJpy;
+    mxn: outputs.TerminalConfigurationTippingMxn;
+    myr: outputs.TerminalConfigurationTippingMyr;
+    nok: outputs.TerminalConfigurationTippingNok;
+    nzd: outputs.TerminalConfigurationTippingNzd;
+    pln: outputs.TerminalConfigurationTippingPln;
+    ron: outputs.TerminalConfigurationTippingRon;
+    sek: outputs.TerminalConfigurationTippingSek;
+    sgd: outputs.TerminalConfigurationTippingSgd;
+    usd: outputs.TerminalConfigurationTippingUsd;
+}
+
+export interface TerminalConfigurationTippingAed {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts: number[];
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages: number[];
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold: number;
+}
+
+export interface TerminalConfigurationTippingAud {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts: number[];
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages: number[];
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold: number;
+}
+
+export interface TerminalConfigurationTippingCad {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts: number[];
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages: number[];
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold: number;
+}
+
+export interface TerminalConfigurationTippingChf {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts: number[];
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages: number[];
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold: number;
+}
+
+export interface TerminalConfigurationTippingCzk {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts: number[];
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages: number[];
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold: number;
+}
+
+export interface TerminalConfigurationTippingDkk {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts: number[];
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages: number[];
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold: number;
+}
+
+export interface TerminalConfigurationTippingEur {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts: number[];
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages: number[];
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold: number;
+}
+
+export interface TerminalConfigurationTippingGbp {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts: number[];
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages: number[];
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold: number;
+}
+
+export interface TerminalConfigurationTippingGip {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts: number[];
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages: number[];
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold: number;
+}
+
+export interface TerminalConfigurationTippingHkd {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts: number[];
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages: number[];
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold: number;
+}
+
+export interface TerminalConfigurationTippingHuf {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts: number[];
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages: number[];
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold: number;
+}
+
+export interface TerminalConfigurationTippingJpy {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts: number[];
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages: number[];
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold: number;
+}
+
+export interface TerminalConfigurationTippingMxn {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts: number[];
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages: number[];
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold: number;
+}
+
+export interface TerminalConfigurationTippingMyr {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts: number[];
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages: number[];
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold: number;
+}
+
+export interface TerminalConfigurationTippingNok {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts: number[];
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages: number[];
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold: number;
+}
+
+export interface TerminalConfigurationTippingNzd {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts: number[];
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages: number[];
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold: number;
+}
+
+export interface TerminalConfigurationTippingPln {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts: number[];
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages: number[];
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold: number;
+}
+
+export interface TerminalConfigurationTippingRon {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts: number[];
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages: number[];
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold: number;
+}
+
+export interface TerminalConfigurationTippingSek {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts: number[];
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages: number[];
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold: number;
+}
+
+export interface TerminalConfigurationTippingSgd {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts: number[];
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages: number[];
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold: number;
+}
+
+export interface TerminalConfigurationTippingUsd {
+    /**
+     * Fixed amounts displayed when collecting a tip
+     */
+    fixedAmounts: number[];
+    /**
+     * Percentages displayed when collecting a tip
+     */
+    percentages: number[];
+    /**
+     * Below this amount, fixed amounts will be displayed; above it, percentages will be displayed
+     */
+    smartTipThreshold: number;
+}
+
+export interface TerminalConfigurationVerifoneM425 {
+    /**
+     * A File ID representing an image to display on the reader
+     */
+    splashscreen: string;
+}
+
+export interface TerminalConfigurationVerifoneP400 {
+    /**
+     * A File ID representing an image to display on the reader
+     */
+    splashscreen: string;
+}
+
+export interface TerminalConfigurationVerifoneP630 {
+    /**
+     * A File ID representing an image to display on the reader
+     */
+    splashscreen: string;
+}
+
+export interface TerminalConfigurationVerifoneUx700 {
+    /**
+     * A File ID representing an image to display on the reader
+     */
+    splashscreen: string;
+}
+
+export interface TerminalConfigurationVerifoneV660p {
+    /**
+     * A File ID representing an image to display on the reader
+     */
+    splashscreen: string;
+}
+
+export interface TerminalConfigurationWifi {
+    enterpriseEapPeap: outputs.TerminalConfigurationWifiEnterpriseEapPeap;
+    enterpriseEapTls: outputs.TerminalConfigurationWifiEnterpriseEapTls;
+    personalPsk: outputs.TerminalConfigurationWifiPersonalPsk;
+    /**
+     * Security type of the WiFi network. The hash with the corresponding name contains the credentials for this security type.
+     */
+    type: string;
+}
+
+export interface TerminalConfigurationWifiEnterpriseEapPeap {
+    /**
+     * A File ID representing a PEM file containing the server certificate
+     */
+    caCertificateFile: string;
+    /**
+     * Password for connecting to the WiFi network
+     */
+    password: string;
+    /**
+     * Name of the WiFi network
+     */
+    ssid: string;
+    /**
+     * Username for connecting to the WiFi network
+     */
+    username: string;
+}
+
+export interface TerminalConfigurationWifiEnterpriseEapTls {
+    /**
+     * A File ID representing a PEM file containing the server certificate
+     */
+    caCertificateFile: string;
+    /**
+     * A File ID representing a PEM file containing the client certificate
+     */
+    clientCertificateFile: string;
+    /**
+     * A File ID representing a PEM file containing the client RSA private key
+     */
+    privateKeyFile: string;
+    /**
+     * Password for the private key file
+     */
+    privateKeyFilePassword: string;
+    /**
+     * Name of the WiFi network
+     */
+    ssid: string;
+}
+
+export interface TerminalConfigurationWifiPersonalPsk {
+    /**
+     * Password for connecting to the WiFi network
+     */
+    password: string;
+    /**
+     * Name of the WiFi network
+     */
+    ssid: string;
+}
+
+export interface TerminalLocationAddress {
+    /**
+     * City, district, suburb, town, or village.
+     */
+    city: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * Address line 1, such as the street, PO Box, or company name.
+     */
+    line1: string;
+    /**
+     * Address line 2, such as the apartment, suite, unit, or building.
+     */
+    line2: string;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: string;
+    /**
+     * State, county, province, or region ([ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2)).
+     */
+    state: string;
+}
+
+export interface TerminalLocationAddressKana {
+    /**
+     * City/Ward.
+     */
+    city: string;
+    /**
+     * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+     */
+    country: string;
+    /**
+     * Block/Building number.
+     */
+    line1: string;
+    /**
+     * Building details.
+     */
+    line2: string;
+    /**
+     * ZIP or postal code.
+     */
+    postalCode: string;
+    /**
+     * Prefecture.
+     */
+    state: string;
+    /**
+     * Town/cho-me.
+     */
+    town: string;
+}
+
+export interface TerminalReaderAction {
+    /**
+     * The reader action failed due to an [API error](https://docs.stripe.com/api/errors). Only present when `status` is `failed` and the underlying failure was an API error. Avoid parsing the `message` field for programmatic logic; use `type` or `code` instead. The `message` field is for display to humans only and may be updated at anytime. Requires [reader version](https://docs.stripe.com/terminal/readers/stripe-reader-s700-s710#reader-software-version) 2.42 or later. Readers on older versions always return null.
+     */
+    apiError: outputs.TerminalReaderActionApiError;
+    /**
+     * Represents a reader action to collect customer inputs
+     */
+    collectInputs: outputs.TerminalReaderActionCollectInputs;
+    /**
+     * Represents a reader action to collect a payment method
+     */
+    collectPaymentMethod: outputs.TerminalReaderActionCollectPaymentMethod;
+    /**
+     * Represents a reader action to confirm a payment
+     */
+    confirmPaymentIntent: outputs.TerminalReaderActionConfirmPaymentIntent;
+    /**
+     * Failure code, only set if status is `failed`.
+     */
+    failureCode: string;
+    /**
+     * Detailed failure message, only set if status is `failed`.
+     */
+    failureMessage: string;
+    /**
+     * Represents a reader action to print content
+     */
+    printContent: outputs.TerminalReaderActionPrintContent;
+    /**
+     * Represents a reader action to process a payment intent
+     */
+    processPaymentIntent: outputs.TerminalReaderActionProcessPaymentIntent;
+    /**
+     * Represents a reader action to process a setup intent
+     */
+    processSetupIntent: outputs.TerminalReaderActionProcessSetupIntent;
+    /**
+     * Represents a reader action to refund a payment
+     */
+    refundPayment: outputs.TerminalReaderActionRefundPayment;
+    /**
+     * Represents a reader action to set the reader display
+     */
+    setReaderDisplay: outputs.TerminalReaderActionSetReaderDisplay;
+    /**
+     * Status of the action performed by the reader.
+     */
+    status: string;
+    /**
+     * Type of action performed by the reader.
+     */
+    type: string;
+}
+
+export interface TerminalReaderActionApiError {
+    /**
+     * For card errors resulting from a card issuer decline, a short string indicating [how to proceed with an error](https://docs.stripe.com/declines#retrying-issuer-declines) if they provide one.
+     */
+    adviceCode: string;
+    /**
+     * For card errors, the ID of the failed charge.
+     */
+    charge: string;
+    /**
+     * For some errors that could be handled programmatically, a short string indicating the [error code](https://docs.stripe.com/error-codes) reported.
+     */
+    code: string;
+    /**
+     * For card errors resulting from a card issuer decline, a short string indicating the [card issuer's reason for the decline](https://docs.stripe.com/declines#issuer-declines) if they provide one.
+     */
+    declineCode: string;
+    /**
+     * A URL to more information about the [error code](https://docs.stripe.com/error-codes) reported.
+     */
+    docUrl: string;
+    /**
+     * A human-readable message providing more details about the error. For card errors, these messages can be shown to your users.
+     */
+    message: string;
+    /**
+     * For card errors resulting from a card issuer decline, a 2 digit code which indicates the advice given to merchant by the card network on how to proceed with an error.
+     */
+    networkAdviceCode: string;
+    /**
+     * For payments declined by the network, an alphanumeric code which indicates the reason the payment failed.
+     */
+    networkDeclineCode: string;
+    /**
+     * If the error is parameter-specific, the parameter related to the error. For example, you can use this to display a message near the correct form field.
+     */
+    param: string;
+    /**
+     * A PaymentIntent guides you through the process of collecting a payment from your customer.
+     * We recommend that you create exactly one PaymentIntent for each order or
+     * customer session in your system. You can reference the PaymentIntent later to
+     * see the history of payment attempts for a particular session.
+     */
+    paymentIntent: string;
+    /**
+     * PaymentMethod objects represent your customer's payment instruments.
+     * You can use them with [PaymentIntents](https://docs.stripe.com/payments/payment-intents) to collect payments or save them to
+     * Customer objects to store instrument details for future payments.
+     *
+     * Related guides: [Payment Methods](https://docs.stripe.com/payments/payment-methods) and [More Payment Scenarios](https://docs.stripe.com/payments/more-payment-scenarios).
+     */
+    paymentMethod: string;
+    /**
+     * If the error is specific to the type of payment method, the payment method type that had a problem. This field is only populated for invoice-related errors.
+     */
+    paymentMethodType: string;
+    /**
+     * A URL to the request log entry in your dashboard.
+     */
+    requestLogUrl: string;
+    /**
+     * A SetupIntent guides you through the process of setting up and saving a customer's payment credentials for future payments.
+     * For example, you can use a SetupIntent to set up and save your customer's card without immediately collecting a payment.
+     * Later, you can use [PaymentIntents](https://api.stripe.com#payment_intents) to drive the payment flow.
+     *
+     * Create a SetupIntent when you're ready to collect your customer's payment credentials.
+     * Don't maintain long-lived, unconfirmed SetupIntents because they might not be valid.
+     * The SetupIntent transitions through multiple [statuses](https://docs.stripe.com/payments/intents#intent-statuses) as it guides
+     * you through the setup process.
+     *
+     * Successful SetupIntents result in payment credentials that are optimized for future payments.
+     * For example, cardholders in [certain regions](https://stripe.com/guides/strong-customer-authentication) might need to be run through
+     * [Strong Customer Authentication](https://docs.stripe.com/strong-customer-authentication) during payment method collection
+     * to streamline later [off-session payments](https://docs.stripe.com/payments/setup-intents).
+     * If you use the SetupIntent with a [Customer](https://api.stripe.com#setup_intent_object-customer),
+     * it automatically attaches the resulting payment method to that Customer after successful setup.
+     * We recommend using SetupIntents or [setupFutureUsage](https://api.stripe.com#payment_intent_object-setup_future_usage) on
+     * PaymentIntents to save payment methods to prevent saving invalid or unoptimized payment methods.
+     *
+     * By using SetupIntents, you can reduce friction for your customers, even as regulations change over time.
+     *
+     * Related guide: [Setup Intents API](https://docs.stripe.com/payments/setup-intents)
+     */
+    setupIntent: string;
+    source: string;
+    /**
+     * The type of error returned. One of `apiError`, `cardError`, `idempotencyError`, or `invalidRequestError`
+     */
+    type: string;
+}
+
+export interface TerminalReaderActionCollectInputs {
+    /**
+     * List of inputs to be collected.
+     */
+    inputs: outputs.TerminalReaderActionCollectInputsInput[];
+    /**
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+     */
+    metadata: {[key: string]: string};
+}
+
+export interface TerminalReaderActionCollectInputsInput {
+    /**
+     * Default text of input being collected.
+     */
+    customText: outputs.TerminalReaderActionCollectInputsInputCustomText;
+    /**
+     * Information about a email being collected using a reader
+     */
+    email: outputs.TerminalReaderActionCollectInputsInputEmail;
+    /**
+     * Information about a number being collected using a reader
+     */
+    numeric: outputs.TerminalReaderActionCollectInputsInputNumeric;
+    /**
+     * Information about a phone number being collected using a reader
+     */
+    phone: outputs.TerminalReaderActionCollectInputsInputPhone;
+    /**
+     * Indicate that this input is required, disabling the skip button.
+     */
+    required: boolean;
+    /**
+     * Information about a selection being collected using a reader
+     */
+    selection: outputs.TerminalReaderActionCollectInputsInputSelection;
+    /**
+     * Information about a signature being collected using a reader
+     */
+    signature: outputs.TerminalReaderActionCollectInputsInputSignature;
+    /**
+     * Indicate that this input was skipped by the user.
+     */
+    skipped: boolean;
+    /**
+     * Information about text being collected using a reader
+     */
+    text: outputs.TerminalReaderActionCollectInputsInputText;
+    /**
+     * List of toggles being collected. Values are present if collection is complete.
+     */
+    toggles: outputs.TerminalReaderActionCollectInputsInputToggle[];
+    /**
+     * Type of input being collected.
+     */
+    type: string;
+}
+
+export interface TerminalReaderActionCollectInputsInputCustomText {
+    /**
+     * Customize the default description for this input
+     */
+    description: string;
+    /**
+     * Customize the default label for this input's skip button
+     */
+    skipButton: string;
+    /**
+     * Customize the default label for this input's submit button
+     */
+    submitButton: string;
+    /**
+     * Customize the default title for this input
+     */
+    title: string;
+}
+
+export interface TerminalReaderActionCollectInputsInputEmail {
+    /**
+     * The collected email address
+     */
+    value: string;
+}
+
+export interface TerminalReaderActionCollectInputsInputNumeric {
+    /**
+     * The collected number
+     */
+    value: string;
+}
+
+export interface TerminalReaderActionCollectInputsInputPhone {
+    /**
+     * The collected phone number
+     */
+    value: string;
+}
+
+export interface TerminalReaderActionCollectInputsInputSelection {
+    /**
+     * List of possible choices to be selected
+     */
+    choices: outputs.TerminalReaderActionCollectInputsInputSelectionChoice[];
+    /**
+     * The id of the selected choice
+     */
+    id: string;
+    /**
+     * The text of the selected choice
+     */
+    text: string;
+}
+
+export interface TerminalReaderActionCollectInputsInputSelectionChoice {
+    /**
+     * The identifier for the selected choice. Maximum 50 characters.
+     */
+    id: string;
+    /**
+     * The button style for the choice. Can be `primary` or `secondary`.
+     */
+    style: string;
+    /**
+     * The text to be selected. Maximum 30 characters.
+     */
+    text: string;
+}
+
+export interface TerminalReaderActionCollectInputsInputSignature {
+    /**
+     * The File ID of a collected signature image
+     */
+    value: string;
+}
+
+export interface TerminalReaderActionCollectInputsInputText {
+    /**
+     * The collected text value
+     */
+    value: string;
+}
+
+export interface TerminalReaderActionCollectInputsInputToggle {
+    /**
+     * The toggle's default value. Can be `enabled` or `disabled`.
+     */
+    defaultValue: string;
+    /**
+     * The toggle's description text. Maximum 50 characters.
+     */
+    description: string;
+    /**
+     * The toggle's title text. Maximum 50 characters.
+     */
+    title: string;
+    /**
+     * The toggle's collected value. Can be `enabled` or `disabled`.
+     */
+    value: string;
+}
+
+export interface TerminalReaderActionCollectPaymentMethod {
+    /**
+     * Represents a per-transaction override of a reader configuration
+     */
+    collectConfig: outputs.TerminalReaderActionCollectPaymentMethodCollectConfig;
+    /**
+     * Most recent PaymentIntent processed by the reader.
+     */
+    paymentIntent: string;
+    /**
+     * PaymentMethod objects represent your customer's payment instruments.
+     * You can use them with [PaymentIntents](https://docs.stripe.com/payments/payment-intents) to collect payments or save them to
+     * Customer objects to store instrument details for future payments.
+     */
+    paymentMethod: string;
+}
+
+export interface TerminalReaderActionCollectPaymentMethodCollectConfig {
+    /**
+     * Enable customer-initiated cancellation when processing this payment.
+     */
+    enableCustomerCancellation: boolean;
+    /**
+     * Override showing a tipping selection screen on this transaction.
+     */
+    skipTipping: boolean;
+    /**
+     * Represents a per-transaction tipping configuration
+     */
+    tipping: outputs.TerminalReaderActionCollectPaymentMethodCollectConfigTipping;
+}
+
+export interface TerminalReaderActionCollectPaymentMethodCollectConfigTipping {
+    /**
+     * Amount used to calculate tip suggestions on tipping selection screen for this transaction. Must be a positive integer in the smallest currency unit (e.g., 100 cents to represent $1.00 or 100 to represent ¥100, a zero-decimal currency).
+     */
+    amountEligible: number;
+}
+
+export interface TerminalReaderActionConfirmPaymentIntent {
+    /**
+     * Represents a per-transaction override of a reader configuration
+     */
+    confirmConfig: outputs.TerminalReaderActionConfirmPaymentIntentConfirmConfig;
+    /**
+     * Most recent PaymentIntent processed by the reader.
+     */
+    paymentIntent: string;
+}
+
+export interface TerminalReaderActionConfirmPaymentIntentConfirmConfig {
+    /**
+     * If the customer doesn't abandon authenticating the payment, they're redirected to this URL after completion.
+     */
+    returnUrl: string;
+}
+
+export interface TerminalReaderActionPrintContent {
+    /**
+     * Metadata of an uploaded file
+     */
+    image: outputs.TerminalReaderActionPrintContentImage;
+    /**
+     * The type of content to print. Currently supports `image`.
+     */
+    type: string;
+}
+
+export interface TerminalReaderActionPrintContentImage {
+    /**
+     * Creation time of the object (in seconds since the Unix epoch).
+     */
+    createdAt: number;
+    /**
+     * The original name of the uploaded file (e.g. `receipt.png`).
+     */
+    filename: string;
+    /**
+     * The size (in bytes) of the uploaded file.
+     */
+    size: number;
+    /**
+     * The format of the uploaded file.
+     */
+    type: string;
+}
+
+export interface TerminalReaderActionProcessPaymentIntent {
+    /**
+     * Most recent PaymentIntent processed by the reader.
+     */
+    paymentIntent: string;
+    /**
+     * Represents a per-transaction override of a reader configuration
+     */
+    processConfig: outputs.TerminalReaderActionProcessPaymentIntentProcessConfig;
+}
+
+export interface TerminalReaderActionProcessPaymentIntentProcessConfig {
+    /**
+     * Enable customer-initiated cancellation when processing this payment.
+     */
+    enableCustomerCancellation: boolean;
+    /**
+     * If the customer doesn't abandon authenticating the payment, they're redirected to this URL after completion.
+     */
+    returnUrl: string;
+    /**
+     * Override showing a tipping selection screen on this transaction.
+     */
+    skipTipping: boolean;
+    /**
+     * Represents a per-transaction tipping configuration
+     */
+    tipping: outputs.TerminalReaderActionProcessPaymentIntentProcessConfigTipping;
+}
+
+export interface TerminalReaderActionProcessPaymentIntentProcessConfigTipping {
+    /**
+     * Amount used to calculate tip suggestions on tipping selection screen for this transaction. Must be a positive integer in the smallest currency unit (e.g., 100 cents to represent $1.00 or 100 to represent ¥100, a zero-decimal currency).
+     */
+    amountEligible: number;
+}
+
+export interface TerminalReaderActionProcessSetupIntent {
+    /**
+     * ID of a card PaymentMethod generated from the cardPresent PaymentMethod that may be attached to a Customer for future transactions. Only present if it was possible to generate a card PaymentMethod.
+     */
+    generatedCard: string;
+    /**
+     * Represents a per-setup override of a reader configuration
+     */
+    processConfig: outputs.TerminalReaderActionProcessSetupIntentProcessConfig;
+    /**
+     * Most recent SetupIntent processed by the reader.
+     */
+    setupIntent: string;
+}
+
+export interface TerminalReaderActionProcessSetupIntentProcessConfig {
+    /**
+     * Enable customer-initiated cancellation when processing this SetupIntent.
+     */
+    enableCustomerCancellation: boolean;
+}
+
+export interface TerminalReaderActionRefundPayment {
+    /**
+     * The amount being refunded.
+     */
+    amount: number;
+    /**
+     * Charge that is being refunded.
+     */
+    charge: string;
+    /**
+     * Set of [key-value pairs](https://docs.stripe.com/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+     */
+    metadata: {[key: string]: string};
+    /**
+     * Payment intent that is being refunded.
+     */
+    paymentIntent: string;
+    /**
+     * The reason for the refund.
+     */
+    reason: string;
+    /**
+     * Unique identifier for the refund object.
+     */
+    refund: string;
+    /**
+     * Boolean indicating whether the application fee should be refunded when refunding this charge. If a full charge refund is given, the full application fee will be refunded. Otherwise, the application fee will be refunded in an amount proportional to the amount of the charge refunded. An application fee can be refunded only by the application that created the charge.
+     */
+    refundApplicationFee: boolean;
+    /**
+     * Represents a per-transaction override of a reader configuration
+     */
+    refundPaymentConfig: outputs.TerminalReaderActionRefundPaymentRefundPaymentConfig;
+    /**
+     * Boolean indicating whether the transfer should be reversed when refunding this charge. The transfer will be reversed proportionally to the amount being refunded (either the entire or partial amount). A transfer can be reversed only by the application that created the charge.
+     */
+    reverseTransfer: boolean;
+}
+
+export interface TerminalReaderActionRefundPaymentRefundPaymentConfig {
+    /**
+     * Enable customer-initiated cancellation when refunding this payment.
+     */
+    enableCustomerCancellation: boolean;
+}
+
+export interface TerminalReaderActionSetReaderDisplay {
+    /**
+     * Cart object to be displayed by the reader, including line items, amounts, and currency.
+     */
+    cart: outputs.TerminalReaderActionSetReaderDisplayCart;
+    /**
+     * Type of information to be displayed by the reader. Only `cart` is currently supported.
+     */
+    type: string;
+}
+
+export interface TerminalReaderActionSetReaderDisplayCart {
+    /**
+     * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+     */
+    currency: string;
+    /**
+     * List of line items in the cart.
+     */
+    lineItems: outputs.TerminalReaderActionSetReaderDisplayCartLineItem[];
+    /**
+     * Tax amount for the entire cart. A positive integer in the [smallest currency unit](https://docs.stripe.com/currencies#zero-decimal).
+     */
+    tax: number;
+    /**
+     * Total amount for the entire cart, including tax. A positive integer in the [smallest currency unit](https://docs.stripe.com/currencies#zero-decimal).
+     */
+    total: number;
+}
+
+export interface TerminalReaderActionSetReaderDisplayCartLineItem {
+    /**
+     * The amount of the line item. A positive integer in the [smallest currency unit](https://docs.stripe.com/currencies#zero-decimal).
+     */
+    amount: number;
+    /**
+     * Description of the line item.
+     */
+    description: string;
+    /**
+     * The quantity of the line item.
+     */
+    quantity: number;
+}
+
+export interface TreasuryFinancialAccountBalance {
+    /**
+     * Funds the user can spend right now.
+     */
+    cash: {[key: string]: number};
+    /**
+     * Funds not spendable yet, but will become available at a later time.
+     */
+    inboundPending: {[key: string]: number};
+    /**
+     * Funds in the account, but not spendable because they are being held for pending outbound flows.
+     */
+    outboundPending: {[key: string]: number};
+}
+
+export interface TreasuryFinancialAccountFeatures {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Toggle settings for enabling/disabling a feature
+     */
+    cardIssuing?: outputs.TreasuryFinancialAccountFeaturesCardIssuing;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Toggle settings for enabling/disabling a feature
+     */
+    depositInsurance?: outputs.TreasuryFinancialAccountFeaturesDepositInsurance;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Settings related to Financial Addresses features on a Financial Account
+     */
+    financialAddresses?: outputs.TreasuryFinancialAccountFeaturesFinancialAddresses;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * InboundTransfers contains inbound transfers features for a FinancialAccount.
+     */
+    inboundTransfers?: outputs.TreasuryFinancialAccountFeaturesInboundTransfers;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Toggle settings for enabling/disabling a feature
+     */
+    intraStripeFlows?: outputs.TreasuryFinancialAccountFeaturesIntraStripeFlows;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * String representing the object's type. Objects of the same type share the same value.
+     */
+    object?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Settings related to Outbound Payments features on a Financial Account
+     */
+    outboundPayments?: outputs.TreasuryFinancialAccountFeaturesOutboundPayments;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * OutboundTransfers contains outbound transfers features for a FinancialAccount.
+     */
+    outboundTransfers?: outputs.TreasuryFinancialAccountFeaturesOutboundTransfers;
+}
+
+export interface TreasuryFinancialAccountFeaturesCardIssuing {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether the FinancialAccount should have the Feature.
+     */
+    requested: boolean;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether the Feature is operational.
+     */
+    status?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Additional details; includes at least one entry when the status is not `active`.
+     */
+    statusDetails?: outputs.TreasuryFinancialAccountFeaturesCardIssuingStatusDetail[];
+}
+
+export interface TreasuryFinancialAccountFeaturesCardIssuingStatusDetail {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Represents the reason why the status is `pending` or `restricted`.
+     */
+    code?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Represents what the user should do, if anything, to activate the Feature.
+     */
+    resolution?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The `platformRestrictions` that are restricting this Feature.
+     */
+    restriction?: string;
+}
+
+export interface TreasuryFinancialAccountFeaturesDepositInsurance {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether the FinancialAccount should have the Feature.
+     */
+    requested: boolean;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether the Feature is operational.
+     */
+    status?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Additional details; includes at least one entry when the status is not `active`.
+     */
+    statusDetails?: outputs.TreasuryFinancialAccountFeaturesDepositInsuranceStatusDetail[];
+}
+
+export interface TreasuryFinancialAccountFeaturesDepositInsuranceStatusDetail {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Represents the reason why the status is `pending` or `restricted`.
+     */
+    code?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Represents what the user should do, if anything, to activate the Feature.
+     */
+    resolution?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The `platformRestrictions` that are restricting this Feature.
+     */
+    restriction?: string;
+}
+
+export interface TreasuryFinancialAccountFeaturesFinancialAddresses {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Toggle settings for enabling/disabling the ABA address feature
+     */
+    aba?: outputs.TreasuryFinancialAccountFeaturesFinancialAddressesAba;
+}
+
+export interface TreasuryFinancialAccountFeaturesFinancialAddressesAba {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether the FinancialAccount should have the Feature.
+     */
+    requested: boolean;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether the Feature is operational.
+     */
+    status?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Additional details; includes at least one entry when the status is not `active`.
+     */
+    statusDetails?: outputs.TreasuryFinancialAccountFeaturesFinancialAddressesAbaStatusDetail[];
+}
+
+export interface TreasuryFinancialAccountFeaturesFinancialAddressesAbaStatusDetail {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Represents the reason why the status is `pending` or `restricted`.
+     */
+    code?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Represents what the user should do, if anything, to activate the Feature.
+     */
+    resolution?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The `platformRestrictions` that are restricting this Feature.
+     */
+    restriction?: string;
+}
+
+export interface TreasuryFinancialAccountFeaturesInboundTransfers {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Toggle settings for enabling/disabling an inbound ACH specific feature
+     */
+    ach?: outputs.TreasuryFinancialAccountFeaturesInboundTransfersAch;
+}
+
+export interface TreasuryFinancialAccountFeaturesInboundTransfersAch {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether the FinancialAccount should have the Feature.
+     */
+    requested: boolean;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether the Feature is operational.
+     */
+    status?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Additional details; includes at least one entry when the status is not `active`.
+     */
+    statusDetails?: outputs.TreasuryFinancialAccountFeaturesInboundTransfersAchStatusDetail[];
+}
+
+export interface TreasuryFinancialAccountFeaturesInboundTransfersAchStatusDetail {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Represents the reason why the status is `pending` or `restricted`.
+     */
+    code?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Represents what the user should do, if anything, to activate the Feature.
+     */
+    resolution?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The `platformRestrictions` that are restricting this Feature.
+     */
+    restriction?: string;
+}
+
+export interface TreasuryFinancialAccountFeaturesIntraStripeFlows {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether the FinancialAccount should have the Feature.
+     */
+    requested: boolean;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether the Feature is operational.
+     */
+    status?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Additional details; includes at least one entry when the status is not `active`.
+     */
+    statusDetails?: outputs.TreasuryFinancialAccountFeaturesIntraStripeFlowsStatusDetail[];
+}
+
+export interface TreasuryFinancialAccountFeaturesIntraStripeFlowsStatusDetail {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Represents the reason why the status is `pending` or `restricted`.
+     */
+    code?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Represents what the user should do, if anything, to activate the Feature.
+     */
+    resolution?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The `platformRestrictions` that are restricting this Feature.
+     */
+    restriction?: string;
+}
+
+export interface TreasuryFinancialAccountFeaturesOutboundPayments {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Toggle settings for enabling/disabling an outbound ACH specific feature
+     */
+    ach?: outputs.TreasuryFinancialAccountFeaturesOutboundPaymentsAch;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Toggle settings for enabling/disabling a feature
+     */
+    usDomesticWire?: outputs.TreasuryFinancialAccountFeaturesOutboundPaymentsUsDomesticWire;
+}
+
+export interface TreasuryFinancialAccountFeaturesOutboundPaymentsAch {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether the FinancialAccount should have the Feature.
+     */
+    requested: boolean;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether the Feature is operational.
+     */
+    status?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Additional details; includes at least one entry when the status is not `active`.
+     */
+    statusDetails?: outputs.TreasuryFinancialAccountFeaturesOutboundPaymentsAchStatusDetail[];
+}
+
+export interface TreasuryFinancialAccountFeaturesOutboundPaymentsAchStatusDetail {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Represents the reason why the status is `pending` or `restricted`.
+     */
+    code?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Represents what the user should do, if anything, to activate the Feature.
+     */
+    resolution?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The `platformRestrictions` that are restricting this Feature.
+     */
+    restriction?: string;
+}
+
+export interface TreasuryFinancialAccountFeaturesOutboundPaymentsUsDomesticWire {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether the FinancialAccount should have the Feature.
+     */
+    requested: boolean;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether the Feature is operational.
+     */
+    status?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Additional details; includes at least one entry when the status is not `active`.
+     */
+    statusDetails?: outputs.TreasuryFinancialAccountFeaturesOutboundPaymentsUsDomesticWireStatusDetail[];
+}
+
+export interface TreasuryFinancialAccountFeaturesOutboundPaymentsUsDomesticWireStatusDetail {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Represents the reason why the status is `pending` or `restricted`.
+     */
+    code?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Represents what the user should do, if anything, to activate the Feature.
+     */
+    resolution?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The `platformRestrictions` that are restricting this Feature.
+     */
+    restriction?: string;
+}
+
+export interface TreasuryFinancialAccountFeaturesOutboundTransfers {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Toggle settings for enabling/disabling an outbound ACH specific feature
+     */
+    ach?: outputs.TreasuryFinancialAccountFeaturesOutboundTransfersAch;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Toggle settings for enabling/disabling a feature
+     */
+    usDomesticWire?: outputs.TreasuryFinancialAccountFeaturesOutboundTransfersUsDomesticWire;
+}
+
+export interface TreasuryFinancialAccountFeaturesOutboundTransfersAch {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether the FinancialAccount should have the Feature.
+     */
+    requested: boolean;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether the Feature is operational.
+     */
+    status?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Additional details; includes at least one entry when the status is not `active`.
+     */
+    statusDetails?: outputs.TreasuryFinancialAccountFeaturesOutboundTransfersAchStatusDetail[];
+}
+
+export interface TreasuryFinancialAccountFeaturesOutboundTransfersAchStatusDetail {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Represents the reason why the status is `pending` or `restricted`.
+     */
+    code?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Represents what the user should do, if anything, to activate the Feature.
+     */
+    resolution?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The `platformRestrictions` that are restricting this Feature.
+     */
+    restriction?: string;
+}
+
+export interface TreasuryFinancialAccountFeaturesOutboundTransfersUsDomesticWire {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether the FinancialAccount should have the Feature.
+     */
+    requested: boolean;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Whether the Feature is operational.
+     */
+    status?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Additional details; includes at least one entry when the status is not `active`.
+     */
+    statusDetails?: outputs.TreasuryFinancialAccountFeaturesOutboundTransfersUsDomesticWireStatusDetail[];
+}
+
+export interface TreasuryFinancialAccountFeaturesOutboundTransfersUsDomesticWireStatusDetail {
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Represents the reason why the status is `pending` or `restricted`.
+     */
+    code?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * Represents what the user should do, if anything, to activate the Feature.
+     */
+    resolution?: string;
+    /**
+     * **NOTE:** This field is write-only and its value will not be updated in state as part of read operations.
+     * The `platformRestrictions` that are restricting this Feature.
+     */
+    restriction?: string;
+}
+
+export interface TreasuryFinancialAccountFinancialAddress {
+    /**
+     * ABA Records contain U.S. bank account details per the ABA format.
+     */
+    aba: outputs.TreasuryFinancialAccountFinancialAddressAba;
+    /**
+     * The list of networks that the address supports
+     */
+    supportedNetworks: string[];
+    /**
+     * The type of financial address
+     */
+    type: string;
+}
+
+export interface TreasuryFinancialAccountFinancialAddressAba {
+    /**
+     * The name of the person or business that owns the bank account.
+     */
+    accountHolderName: string;
+    /**
+     * The account number.
+     */
+    accountNumber: string;
+    /**
+     * The last four characters of the account number.
+     */
+    accountNumberLast4: string;
+    /**
+     * Name of the bank.
+     */
+    bankName: string;
+    /**
+     * Routing number for the account.
+     */
+    routingNumber: string;
+}
+
+export interface TreasuryFinancialAccountPlatformRestrictions {
+    /**
+     * Restricts all inbound money movement.
+     */
+    inboundFlows: string;
+    /**
+     * Restricts all outbound money movement.
+     */
+    outboundFlows: string;
+}
+
+export interface TreasuryFinancialAccountStatusDetails {
+    /**
+     * Details related to the closure of this FinancialAccount
+     */
+    closed: outputs.TreasuryFinancialAccountStatusDetailsClosed;
+}
+
+export interface TreasuryFinancialAccountStatusDetailsClosed {
+    /**
+     * The array that contains reasons for a FinancialAccount closure.
+     */
+    reasons: string[];
 }
 
 export interface V2CoreEventDestinationAmazonEventbridge {
@@ -764,13 +17325,50 @@ export interface V2CoreEventDestinationAmazonEventbridge {
     awsRegion: string;
 }
 
+export interface V2CoreEventDestinationAzureEventGrid {
+    /**
+     * The name of the Azure partner topic.
+     */
+    azurePartnerTopicName: string;
+    /**
+     * The status of the Azure partner topic.
+     */
+    azurePartnerTopicStatus: string;
+    /**
+     * The Azure region.
+     */
+    azureRegion: string;
+    /**
+     * The name of the Azure resource group.
+     */
+    azureResourceGroupName: string;
+    /**
+     * The Azure subscription ID.
+     */
+    azureSubscriptionId: string;
+}
+
+export interface V2CoreEventDestinationStatusDetails {
+    /**
+     * Details about why the event destination has been disabled.
+     */
+    disabled: outputs.V2CoreEventDestinationStatusDetailsDisabled;
+}
+
+export interface V2CoreEventDestinationStatusDetailsDisabled {
+    /**
+     * Reason event destination has been disabled.
+     */
+    reason: string;
+}
+
 export interface V2CoreEventDestinationWebhookEndpoint {
     /**
      * The signing secret of the webhook endpoint, only includable on creation.
      */
     signingSecret: string;
     /**
-     * The URL of the webhook endpoint.
+     * The URL of the webhook endpoint, includable.
      */
     url: string;
 }
