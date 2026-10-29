@@ -23,6 +23,8 @@ jobs:
         with:
           node-version: '24'
       - uses: pulumi/actions@v7
+        with:
+          pulumi-version-file: .pulumi.version
 
       - name: Apply upstream patches
         run: make upstream PROVIDER_VERSION=0.0.0-ci
