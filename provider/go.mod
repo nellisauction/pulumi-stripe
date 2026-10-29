@@ -11,6 +11,8 @@ replace (
 
 require (
 	github.com/pulumi/pulumi-terraform-bridge/v3 v3.140.0
+	github.com/pulumi/pulumi/pkg/v3 v3.263.0
+	github.com/pulumi/pulumi/sdk/v3 v3.263.0
 	github.com/stripe/terraform-provider-stripe/shim v0.0.0
 )
 
@@ -86,7 +88,7 @@ require (
 	github.com/go-git/gcfg/v2 v2.0.2 // indirect
 	github.com/go-git/go-billy/v6 v6.0.0-alpha.2 // indirect
 	github.com/go-git/go-git/v6 v6.0.0-alpha.5 // indirect
-	github.com/go-jose/go-jose/v4 v4.1.4 // indirect
+	github.com/go-jose/go-jose/v4 v4.1.6 // indirect
 	github.com/go-logr/logr v1.4.4 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/godbus/dbus/v5 v5.2.2 // indirect
@@ -175,8 +177,6 @@ require (
 	github.com/pulumi/pulumi-dotnet/pulumi-language-dotnet/v3 v3.110.0 // indirect
 	github.com/pulumi/pulumi-java v1.34.0 // indirect
 	github.com/pulumi/pulumi-yaml v1.38.1 // indirect
-	github.com/pulumi/pulumi/pkg/v3 v3.263.0 // indirect
-	github.com/pulumi/pulumi/sdk/v3 v3.263.0 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/rogpeppe/go-internal v1.14.1 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
